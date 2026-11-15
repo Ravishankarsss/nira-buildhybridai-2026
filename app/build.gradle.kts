@@ -59,6 +59,14 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.coil.compose)
 
+    // OpenCV: geometry and morphology only, always through core/image/ImageOps. Not AI.
+    implementation(libs.opencv)
+    // CameraX: photographing a garment inside the app.
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
+
     testImplementation(libs.junit)
     // Real JSON parser for JVM unit tests. Without it the Android org.json stubs return
     // default values and a rules-file test would pass without reading anything.
