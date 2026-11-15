@@ -1,7 +1,7 @@
 package com.mos.nira.features.artwork.domain
 
 /**
- * Technical representation of an extracted dominant color.
+ * Technical representation of an extracted dominant or engineered print color.
  */
 data class DominantColor(
     val id: Int,
@@ -14,7 +14,11 @@ data class DominantColor(
     val labB: Double,
     val pixelCount: Int,
     val pixelPercentage: Float, // 0.0f to 100.0f
-    val groupId: Int = id
+    val groupId: Int = id,
+    val isLocked: Boolean = false,
+    val isGarmentBase: Boolean = false,
+    val assignedShade: ShadeEntry? = null,
+    val nearestShades: List<ShadeMatch> = emptyList()
 ) {
     val formattedRgb: String get() = "RGB($r, $g, $b)"
     val formattedLab: String get() = String.format("L* %.1f  a* %.1f  b* %.1f", labL, labA, labB)
@@ -29,6 +33,16 @@ data class ColorGroup(
     val primaryColor: DominantColor,
     val members: List<DominantColor>,
     val totalPercentage: Float
+)
+
+/**
+ * Configuration options for auto-detecting and tuning print color separation.
+ */
+data class PrintColorConfig(
+    val maxScreens: Int = 8,
+    val mergeThresholdDeltaE00: Double = 3.2,
+    val minCoveragePercentage: Float = 0.5f, // Drop colors below 0.5% coverage as speckle/noise
+    val garmentColorHex: String? = null // When specified, pixels matching this are treated as fabric base
 )
 
 /**
@@ -69,7 +83,8 @@ data class ArtworkAnalysisRecord(
     val timestamp: Long,
     val palette: List<DominantColor>,
     val colorGroups: List<ColorGroup> = emptyList(),
-    val algorithmVersion: String = "1.0.0-kmeans-cielab"
+    val garmentColor: DominantColor? = null,
+    val algorithmVersion: String = "2.0.0-ciede2000-automerge"
 )
 
 /**
@@ -79,7 +94,9 @@ data class ArtworkAnalysisInput(
     val imageReference: String,
     val palette: List<DominantColor>,
     val metadata: ArtworkMetadata,
-    val garmentContext: String? = null
+    val garmentContext: String? = null,
+    val garmentColor: DominantColor? = null,
+    val maxScreens: Int = 8
 )
 
 /**

@@ -1,0 +1,904 @@
+{
+  "schema_version": 1,
+  "rules_version": "2026-11-15-research-v2",
+  "status": "Starting knowledge file. Every technique has verified_by_ravi = false. NIRA must show unverified rules with a visible 'not floor-verified' label. Always follow the ink or chemical maker's technical data sheet.",
+  "confidence_key": {
+    "sourced_multi": "Two or more independent public sources agree.",
+    "sourced_single": "One public source (supplier data sheet, trade guide or patent).",
+    "article_only": "Taken only from the Textile Learner articles supplied by the user; not cross-checked on the web.",
+    "conflict": "Sources disagree. Both values are kept in the note. Do not use for decisions until verified.",
+    "assumption": "No reliable source found. Placeholder only."
+  },
+  "artwork_fit_key": {
+    "SOLID_ONLY": "Needs solid single-colour shapes with clear edges. Not for gradients or photo artwork.",
+    "SOLID_PREFERRED": "Best on solid shapes; fine detail and tone are lost.",
+    "TONAL_OK": "Can reproduce gradients and photo artwork with halftones.",
+    "ANY": "Reproduces any artwork including photos, with no screen per colour."
+  },
+  "corrections_to_source_articles": [
+    {
+      "topic": "Discharge printing",
+      "article_statement": "Described as a form of dye-sublimation that transfers dye onto polyester.",
+      "correct": "Discharge printing removes (bleaches) the existing dye from a dyed ground, mainly reactive-dyed cotton, and can leave a new colour in its place. It does not work on polyester.",
+      "confidence": "sourced_multi",
+      "source": "https://www.printing.org/docs/default-source/default-document-library/resources/tgb-99-garment-discharge-printing.pdf ; https://www.printablepress.com/discharge-ink-screen-printing-guide/"
+    },
+    {
+      "topic": "Burn-out chemicals",
+      "article_statement": "One list names NaCl / Na2SO4 as the acid liberating salt.",
+      "correct": "The burn-out agent is sodium hydrogen sulphate (sodium bisulfate) or aluminium sulphate, which form acid on dry heat and destroy the cellulose. The article's own body text also says this.",
+      "confidence": "sourced_multi",
+      "source": "https://www.dyeman.com/products/devore ; https://en.wikipedia.org/wiki/Devor%C3%A9 ; https://www.clubmartin.com/textile-glossary/dyeing-finishing/devore-burnout-printing/"
+    },
+    {
+      "topic": "Thermofixation time for disperse prints on polyester",
+      "article_statement": "Given as 120-130 seconds in one table and 30-60 seconds in the procedure.",
+      "correct": "Not resolved. Stored as 30-130 seconds with confidence 'conflict'.",
+      "confidence": "conflict",
+      "source": "User-supplied article only."
+    }
+  ],
+  "techniques": [
+    {
+      "id": "plastisol",
+      "name": "Plastisol print",
+      "group": "screen_ink_system",
+      "what_it_is": "PVC-based ink that sits on the fabric surface and is cured by heat. Opaque, good on dark garments, slightly raised plastic feel.",
+      "artwork_fit": "TONAL_OK",
+      "suitable_fibres": [
+        "cotton",
+        "cotton_polyester_blend"
+      ],
+      "cautions_fibres": [
+        "polyester: use low-cure / low-bleed ink because of dye migration"
+      ],
+      "parameters": {
+        "cure_temp_c": {
+          "value": 160,
+          "published": "320 F through the whole ink film",
+          "confidence": "sourced_multi"
+        },
+        "mesh_tpi": {
+          "min": 110,
+          "max": 160,
+          "note": "See print_rules.json for the full mesh table",
+          "confidence": "sourced_multi"
+        }
+      },
+      "risks": [
+        "Cracking if under-cured or on high-stretch fabric",
+        "Heavy hand feel on large solid areas"
+      ],
+      "source": "https://lawsonsp.com/blogs/plastisol-ink-support-articles/plastisol-ink-troubleshooting-guide ; user article 'Different Garment Print Types'",
+      "verified_by_ravi": false
+    },
+    {
+      "id": "water_based_pigment",
+      "name": "Water-based pigment print",
+      "group": "screen_ink_system",
+      "what_it_is": "Pigment held on the fibre by a binder film. Soft, breathable feel. No washing-off needed.",
+      "artwork_fit": "TONAL_OK",
+      "suitable_fibres": [
+        "cotton",
+        "cotton_polyester_blend",
+        "linen"
+      ],
+      "cautions_fibres": [
+        "dark garments: weak coverage without a white base or discharge"
+      ],
+      "parameters": {
+        "dry_temp_c": {
+          "value": 80,
+          "confidence": "article_only"
+        },
+        "cure_temp_c": {
+          "min": 135,
+          "max": 160,
+          "note": "Article: polymerise at 135-150 C for 3-5 min. Web sources for water-based garment inks: 149-160 C (300-320 F).",
+          "confidence": "sourced_multi"
+        },
+        "cure_time_min": {
+          "min": 3,
+          "max": 5,
+          "confidence": "article_only"
+        },
+        "pigment_to_binder_ratio": {
+          "min": "1:2",
+          "max": "1:5",
+          "confidence": "article_only"
+        },
+        "mesh_tpi": {
+          "min": 156,
+          "max": 230,
+          "confidence": "sourced_multi"
+        }
+      },
+      "paste_recipe_per_100g": {
+        "pigment_g": 5,
+        "binder_g": "10 (or 2)",
+        "diammonium_phosphate_g": 1,
+        "urea_g": 1,
+        "water_ml": "4-5",
+        "fixer_g": 2,
+        "synthetic_thickener_g": "75-80",
+        "confidence": "article_only",
+        "note": "Laboratory example from the article for P/C fabric. Factory recipes will differ."
+      },
+      "risks": [
+        "Stiff handle and lower rub fastness with heavy dark shades",
+        "Abrasion marks at creases on polyester/cotton"
+      ],
+      "source": "User article 'Pigment Printing on P/C Blended Fabric' ; https://www.learnhowtoscreenprint.com/blogs/news/the-definitive-guide-to-curing-ink",
+      "verified_by_ravi": false
+    },
+    {
+      "id": "discharge",
+      "name": "Discharge print",
+      "group": "screen_ink_system",
+      "what_it_is": "Water-based ink with an activator that destroys the garment's dye during curing and can leave pigment in its place. Very soft print on dark cotton with no white base.",
+      "artwork_fit": "TONAL_OK",
+      "garment_colour": "dark or medium, dyed with dischargeable reactive dyes",
+      "suitable_fibres": [
+        "cotton (100%, reactive-dyed, dischargeable)"
+      ],
+      "not_suitable_fibres": [
+        "polyester",
+        "pigment-dyed or vat-dyed cotton"
+      ],
+      "parameters": {
+        "cotton_percent_min": {
+          "value": 100,
+          "note": "Most suppliers say 100% cotton only and that blends will not discharge. One guide accepts blends with at least 80% cotton. Treat blends as 'test first'.",
+          "confidence": "conflict"
+        },
+        "activator_percent_by_weight": {
+          "min": 3,
+          "max": 6,
+          "note": "Ranges seen: 3-5, 3-6, 3-8 and 5-10. Use the ink maker's figure.",
+          "confidence": "sourced_multi"
+        },
+        "pot_life_hours": {
+          "min": 4,
+          "max": 12,
+          "note": "Sources give 4-8, 8 and 12 hours after adding activator.",
+          "confidence": "sourced_multi"
+        },
+        "cure_temp_c": {
+          "value": 160,
+          "published": "320 F; one trade guide gives 149-177 C",
+          "confidence": "sourced_multi"
+        },
+        "cure_time_s": {
+          "min": 90,
+          "max": 180,
+          "note": "Minimum 90 s; a trade guide recommends a full 2-3 minutes with good air flow.",
+          "confidence": "sourced_multi"
+        },
+        "mesh_tpi": {
+          "min": 110,
+          "max": 230,
+          "note": "Whites 110-230, colours 160-305.",
+          "confidence": "sourced_multi"
+        }
+      },
+      "risks": [
+        "Result depends on the fabric dye; always test the actual fabric lot",
+        "Final shade is ink pigment plus the discharged ground colour",
+        "Activator (zinc formaldehyde sulfoxylate type) releases formaldehyde on curing: ventilation and buyer chemical restrictions must be checked"
+      ],
+      "source": "https://www.printing.org/docs/default-source/default-document-library/resources/tgb-99-garment-discharge-printing.pdf ; https://www.screenprintsupplies.com/products/screen-printing-inks/wb-ink/discharge/cci-d-base/ ; https://www.screenprintsupplies.com/products/screen-printing-inks/wb-ink/discharge/activator/ ; https://www.printablepress.com/discharge-ink-screen-printing-guide/",
+      "verified_by_ravi": false
+    },
+    {
+      "id": "non_pvc",
+      "name": "Non-PVC print",
+      "group": "screen_ink_system",
+      "what_it_is": "Plastisol-like result using water-based, silicone or hybrid inks without PVC or phthalates. Softer feel.",
+      "artwork_fit": "TONAL_OK",
+      "parameters": {},
+      "risks": [
+        "Parameters depend fully on the ink brand"
+      ],
+      "confidence": "article_only",
+      "source": "User article 'Different Garment Print Types'",
+      "verified_by_ravi": false
+    },
+    {
+      "id": "silicone",
+      "name": "Silicone print",
+      "group": "screen_ink_system",
+      "what_it_is": "Silicone ink with good wash durability, soft hand and high stretch.",
+      "artwork_fit": "SOLID_PREFERRED",
+      "parameters": {},
+      "risks": [
+        "No process parameters were verified in this research; take catalyst %, mesh and cure from the ink maker"
+      ],
+      "confidence": "article_only",
+      "source": "User article 'Different Garment Print Types'",
+      "verified_by_ravi": false
+    },
+    {
+      "id": "puff",
+      "name": "Puff (emboss) print",
+      "group": "special_effect",
+      "what_it_is": "Plastisol with a heat-activated foaming additive that expands on curing to give a raised, soft 3D surface.",
+      "artwork_fit": "SOLID_ONLY",
+      "suitable_fibres": [
+        "cotton",
+        "cotton_polyester_blend",
+        "nylon"
+      ],
+      "parameters": {
+        "additive_percent_by_weight": {
+          "min": 10,
+          "max": 20,
+          "note": "Some sources allow 5-20%.",
+          "confidence": "sourced_multi"
+        },
+        "mesh_tpi": {
+          "min": 86,
+          "max": 110,
+          "note": "Above 110 starves the deposit. One supplier allows 40-110.",
+          "confidence": "sourced_multi"
+        },
+        "cure_temp_c": {
+          "value": 160,
+          "note": "Standard puff plastisol 143-166 C (290-330 F). Low-cure puff additives cure at 127-132 C (260-270 F) and must not be overheated.",
+          "confidence": "sourced_multi"
+        },
+        "cure_time_s": {
+          "min": 60,
+          "max": 90,
+          "confidence": "sourced_multi"
+        }
+      },
+      "risks": [
+        "Not for fine detail",
+        "Poor air permeability, so avoid large areas",
+        "The raised effect can flatten after repeated washing",
+        "Height depends on ink deposit and exact cure temperature"
+      ],
+      "source": "https://www.fn.ink/products/fn-ink%E2%84%A2-puff-ink ; https://thrivescreenprinting.com/what-is-puff-print ; https://pulsemerch.com/puff-screen-printing/ ; user article 'How to Print on Fabric and Textile'",
+      "verified_by_ravi": false
+    },
+    {
+      "id": "high_density",
+      "name": "High-density (HD) print",
+      "aliases": [
+        "HD print"
+      ],
+      "group": "special_effect",
+      "what_it_is": "Very thick ink printed through a thick stencil to give a raised print with sharp edges and a flat top. It does not expand like puff.",
+      "artwork_fit": "SOLID_ONLY",
+      "parameters": {
+        "mesh_tpi": {
+          "min": 60,
+          "max": 110,
+          "note": "24T-43T. Finer raised detail may use up to 160-200.",
+          "confidence": "sourced_multi"
+        },
+        "stencil_thickness_micron": {
+          "min": 150,
+          "max": 400,
+          "note": "Capillary film of 200-400 micron is commonly recommended.",
+          "confidence": "sourced_multi"
+        },
+        "cure_temp_c": {
+          "value": 160,
+          "note": "The whole thick film must reach 160 C (320 F); slow the belt. Some products cure at 163-193 C (325-380 F).",
+          "confidence": "sourced_multi"
+        }
+      },
+      "risks": [
+        "Cracking if the thick film is under-cured or the fabric stretches a lot",
+        "Long cure time",
+        "Best for letters, numbers, borders and geometric shapes"
+      ],
+      "source": "https://lancergroup.com/wp-content/uploads/834835-HD1.pdf ; https://anatol.com/blog/5-tips-for-creating-eye-popping-screen-prints-with-high-density-ink ; user article 'How to Print on Fabric and Textile'",
+      "verified_by_ravi": false
+    },
+    {
+      "id": "suede",
+      "name": "Suede ink print",
+      "group": "special_effect",
+      "what_it_is": "Additive mixed into plastisol to give a suede-like feel.",
+      "artwork_fit": "SOLID_ONLY",
+      "parameters": {},
+      "confidence": "article_only",
+      "source": "User article 'Different Garment Print Types'",
+      "verified_by_ravi": false
+    },
+    {
+      "id": "glitter",
+      "name": "Glitter print",
+      "group": "special_effect",
+      "what_it_is": "Large reflective flakes carried in a clear base for a sparkle effect.",
+      "artwork_fit": "SOLID_ONLY",
+      "parameters": {
+        "mesh_tpi": {
+          "min": 24,
+          "max": 40,
+          "note": "Flakes must pass the mesh. Finer 'sparkle' grades run 60-86. One general guide says 86-110, which is too fine for coarse glitter.",
+          "confidence": "sourced_multi"
+        }
+      },
+      "risks": [
+        "Fine detail is not possible at these mesh counts",
+        "Usually printed last, or just before a flash"
+      ],
+      "source": "https://anatol.com/blog/screen-printing-that-pops-getting-started-with-glitter-ink ; https://lawsonsp.com/blogs/education-and-training/screen-printing-mesh-count-production-guide ; https://www.atlasscreensupply.com/screen-printing-mesh-count-chart",
+      "verified_by_ravi": false
+    },
+    {
+      "id": "metallic_shimmer",
+      "name": "Metallic / shimmer print",
+      "group": "special_effect",
+      "what_it_is": "Small metallic particles in the ink. Smoother and subtler than glitter.",
+      "artwork_fit": "SOLID_PREFERRED",
+      "parameters": {
+        "mesh_tpi": {
+          "min": 86,
+          "max": 110,
+          "note": "Shimmer 86-125; metallic 86-110, and very fine-particle metallics up to 156-230.",
+          "confidence": "sourced_multi"
+        }
+      },
+      "risks": [
+        "Check particle size with the ink maker before choosing mesh"
+      ],
+      "source": "https://anatol.com/blog/screen-printing-that-pops-getting-started-with-glitter-ink ; https://www.screenprinting.com/blogs/news/which-mesh-count-is-right-for-me ; https://decoratorsassociation.org/screen-printing-mesh-count-guide",
+      "verified_by_ravi": false
+    },
+    {
+      "id": "foil",
+      "name": "Foil print",
+      "group": "special_effect",
+      "what_it_is": "An adhesive (or plastisol) is screen printed and cured, then a metallic foil sheet is heat-pressed on. The foil stays only where the adhesive is.",
+      "artwork_fit": "SOLID_ONLY",
+      "extra_steps": [
+        "One adhesive screen",
+        "Cure adhesive",
+        "Heat press with foil",
+        "Peel"
+      ],
+      "parameters": {
+        "adhesive_mesh_tpi": {
+          "min": 60,
+          "max": 110,
+          "note": "24T-43T, thick even deposit. Too much adhesive loses fine detail.",
+          "confidence": "sourced_multi"
+        },
+        "adhesive_cure_temp_c": {
+          "value": 160,
+          "note": "320 F for the named foil adhesives; one foil brand says 140-150 C for 3 min. Follow the adhesive maker.",
+          "confidence": "sourced_multi"
+        },
+        "press_temp_c": {
+          "min": 140,
+          "max": 160,
+          "note": "Foil suppliers say stay under 160 C (320 F) because excess heat damages colour and release. Press-maker guides quote 166-191 C (330-375 F).",
+          "confidence": "conflict"
+        },
+        "press_time_s": {
+          "min": 6,
+          "max": 15,
+          "confidence": "sourced_multi"
+        },
+        "press_pressure": {
+          "value": "medium to firm",
+          "confidence": "sourced_multi"
+        },
+        "peel": {
+          "value": "cold (most common); some foils allow warm peel",
+          "confidence": "sourced_multi"
+        }
+      },
+      "risks": [
+        "Over-heating or re-pressing tarnishes the foil",
+        "Uneven pressure gives patchy foil",
+        "Wash durability must be tested"
+      ],
+      "source": "https://www.atlasscreensupply.com/textile-foil-25ft.htm ; https://rbdigital.ca/products/amagic-textile-heat-press-pattern-foil-for-screen-printing ; https://anatol.com/blog/how-to-make-your-screen-prints-stand-out-with-foil ; user article 'Different Garment Print Types'",
+      "verified_by_ravi": false
+    },
+    {
+      "id": "flock",
+      "name": "Flock print",
+      "group": "special_effect",
+      "what_it_is": "Adhesive is printed, then short fibres (rayon, nylon, polyester, cotton) are applied, usually electrostatically, to give a velvet-like surface. Can also be applied as a ready-made flock transfer.",
+      "artwork_fit": "SOLID_ONLY",
+      "extra_steps": [
+        "One adhesive screen",
+        "Electrostatic flocking",
+        "Cure",
+        "Remove loose fibre"
+      ],
+      "parameters": {
+        "flocking_time_s": {
+          "min": 10,
+          "max": 30,
+          "confidence": "sourced_single"
+        },
+        "adhesive_cure_temp_c": {
+          "min": 135,
+          "max": 163,
+          "note": "275-325 F through the whole adhesive layer (plastisol adhesive). The flock insulates, so more heat or a slower belt is needed.",
+          "confidence": "sourced_single"
+        },
+        "transfer_press_temp_c": {
+          "min": 149,
+          "max": 177,
+          "note": "300-350 F for 5-60 s, from a patent example only.",
+          "confidence": "sourced_single"
+        },
+        "adhesive_mesh_tpi": {
+          "value": null,
+          "note": "Not verified. A thick adhesive layer is required.",
+          "confidence": "assumption"
+        }
+      },
+      "risks": [
+        "Under-cured adhesive: test by scratching",
+        "Messy process; slow",
+        "Multi-colour flock needs one adhesive pass per colour or a flock transfer"
+      ],
+      "source": "https://screenprintingmag.com/printing-direct-flock/ ; https://www.printing.org/docs/default-source/default-document-library/journal/04-4-flocking-primer.pdf ; user article 'Different Garment Print Types'",
+      "verified_by_ravi": false
+    },
+    {
+      "id": "caviar_bead",
+      "name": "Caviar bead print",
+      "group": "special_effect",
+      "what_it_is": "Glue is printed in the design shape and small resin beads are applied to it.",
+      "artwork_fit": "SOLID_ONLY",
+      "parameters": {},
+      "risks": [
+        "Bead loss in wash; check child-safety rules for small parts on kidswear"
+      ],
+      "confidence": "article_only",
+      "source": "User article 'Different Garment Print Types'",
+      "verified_by_ravi": false
+    },
+    {
+      "id": "distressed",
+      "name": "Distressed / khadi print",
+      "group": "design_effect",
+      "what_it_is": "A worn, cracked or vintage look. This is mainly an artwork treatment (texture knocked out of the design) printed with a normal ink system.",
+      "artwork_fit": "TONAL_OK",
+      "parameters": {},
+      "confidence": "article_only",
+      "source": "User article 'Different Garment Print Types'",
+      "verified_by_ravi": false
+    },
+    {
+      "id": "plastisol_transfer",
+      "name": "Sticker / plastisol transfer print",
+      "aliases": [
+        "sticker print",
+        "heat transfer"
+      ],
+      "group": "transfer",
+      "what_it_is": "The design is printed on release paper first and fused to the garment with heat and pressure.",
+      "artwork_fit": "TONAL_OK",
+      "parameters": {},
+      "risks": [
+        "Press settings come from the transfer maker"
+      ],
+      "confidence": "article_only",
+      "source": "User articles",
+      "verified_by_ravi": false
+    },
+    {
+      "id": "spot_colour_screen",
+      "name": "Spot colour screen print",
+      "group": "separation_route",
+      "what_it_is": "One screen per solid colour. Best for logos, text and flat graphics.",
+      "artwork_fit": "SOLID_PREFERRED",
+      "screens": "number of colours, plus white base on dark garments",
+      "parameters": {},
+      "confidence": "sourced_multi",
+      "source": "See print_rules.json",
+      "verified_by_ravi": false,
+      "dark_garment_note": "On a dark garment, a white print colour can also serve as the base for colours printed over it, so it does not always need a separate base screen."
+    },
+    {
+      "id": "spot_halftone_gradient",
+      "name": "Spot colour with halftone gradient",
+      "group": "separation_route",
+      "what_it_is": "A spot ink that fades out through halftone dots, either into the garment or over another ink (for example blue fading over a white logo). One screen per ink.",
+      "artwork_fit": "TONAL_OK",
+      "screens": "one per ink; the ink underneath may also serve as the base",
+      "parameters": {
+        "mesh_tpi": {
+          "min": 230,
+          "max": 305,
+          "note": "For the fading ink. Mesh should be 4 to 5 times the halftone LPI; garment work is typically 45 to 55 LPI.",
+          "confidence": "sourced_multi"
+        },
+        "solid_ink_mesh_tpi": {
+          "min": 110,
+          "max": 160,
+          "note": "For the solid ink underneath; a white on a dark garment uses the lower end.",
+          "confidence": "sourced_multi"
+        }
+      },
+      "risks": [
+        "Dot gain shortens or darkens the fade",
+        "Fine dots at the end of the fade can drop out on coarse mesh",
+        "Registration between the two screens shows at the edge of the shape"
+      ],
+      "floor_note": "Example confirmed by Ravi on 15 Nov 2026: white solid logo with blue halftone over it on a black T-shirt, 2 screens, or 3 with a separate flashed base.",
+      "source": "See print_rules.json halftone_rules and mesh_rules",
+      "verified_by_ravi": true
+    },
+    {
+      "id": "cmyk_process_screen",
+      "name": "CMYK four-colour process screen print",
+      "group": "separation_route",
+      "what_it_is": "Cyan, magenta, yellow and black halftone screens whose transparent inks overlap to build full-colour images.",
+      "artwork_fit": "ANY",
+      "garment_colour": "white or light only",
+      "screens": 4,
+      "parameters": {
+        "mesh_tpi": {
+          "min": 305,
+          "max": 355,
+          "note": "For process colour on light shirts. Mesh should be 4-5 times the halftone LPI.",
+          "confidence": "sourced_multi"
+        }
+      },
+      "risks": [
+        "Not for dark garments without a white base, where simulated process is normally used",
+        "Dot gain and registration shift colours across a bulk run",
+        "Exact brand colours are safer as separate spot inks"
+      ],
+      "source": "https://www.catspitproductionsllc.com/specialtyinks.html ; https://www.atlasscreensupply.com/screen-printing-mesh-count-chart",
+      "verified_by_ravi": false
+    },
+    {
+      "id": "simulated_process",
+      "name": "Simulated process screen print",
+      "group": "separation_route",
+      "what_it_is": "Photo-like artwork built from halftones of several opaque spot inks, normally over a white base on dark garments, with a highlight white last.",
+      "artwork_fit": "ANY",
+      "garment_colour": "dark (also works on light)",
+      "screens": "base white + chosen spot inks (often 4-8) + highlight white",
+      "parameters": {
+        "mesh_tpi": {
+          "min": 230,
+          "max": 305,
+          "confidence": "sourced_multi"
+        }
+      },
+      "source": "See print_rules.json",
+      "verified_by_ravi": false
+    },
+    {
+      "id": "dtg",
+      "name": "DTG (direct-to-garment) digital print",
+      "group": "digital",
+      "what_it_is": "Inkjet printing of CMYK inks (plus white on dark garments) straight onto the finished garment. No screens.",
+      "artwork_fit": "ANY",
+      "screens": 0,
+      "suitable_fibres": [
+        "cotton (best)",
+        "cotton_polyester_blend (one ink maker: up to 50% polyester)"
+      ],
+      "parameters": {
+        "pretreatment": {
+          "value": "required on dark garments so the white ink sits on the surface",
+          "confidence": "sourced_multi"
+        },
+        "cure_temp_c": {
+          "min": 160,
+          "max": 170,
+          "published": "320-338 F",
+          "confidence": "sourced_multi"
+        },
+        "cure_time_s": {
+          "min": 35,
+          "max": 180,
+          "note": "About 90 s is commonly quoted; dark garments with white ink take longer than light ones.",
+          "confidence": "sourced_multi"
+        }
+      },
+      "best_for": "Small quantities, many colours, photo artwork, personalisation",
+      "risks": [
+        "Limited print area",
+        "Extra cost and steps on coloured garments",
+        "Slower per piece than screen printing for bulk"
+      ],
+      "source": "https://www.dupont.com/content/dam/dupont/amer/us/en/artistri/public/documents/en/DI-NA0031-EN-PDS_DTG_pigment_inks.pdf ; https://jotoimagingsupplies.com/blogs/blogs/how-to-apply-pretreatment-fluid-to-garments-a-complete-step-by-step-guide ; user article 'How to Print on Fabric and Textile'",
+      "verified_by_ravi": false
+    },
+    {
+      "id": "dtf",
+      "name": "DTF (direct-to-film) transfer",
+      "group": "digital",
+      "what_it_is": "CMYK plus a white backing is printed on PET film, coated with adhesive powder, cured, then heat-pressed onto the garment.",
+      "artwork_fit": "ANY",
+      "screens": 0,
+      "suitable_fibres": [
+        "cotton",
+        "polyester",
+        "blends",
+        "light and dark"
+      ],
+      "parameters": {
+        "press_temp_c": {
+          "min": 160,
+          "max": 170,
+          "note": "Lower (about 138-150 C) is advised on polyester.",
+          "confidence": "sourced_multi"
+        },
+        "press_time_s": {
+          "min": 10,
+          "max": 15,
+          "confidence": "sourced_multi"
+        },
+        "pretreatment": {
+          "value": "not required",
+          "confidence": "sourced_single"
+        }
+      },
+      "risks": [
+        "Film-like feel that sits on the fabric",
+        "Not in the user's articles; added from web research"
+      ],
+      "source": "https://en.wikipedia.org/wiki/Direct-to-film_printing ; https://dtfdatabase.com/blog/heat-pressing-polyester-htv-dtf-temperature-iron-burn-repair-guide/",
+      "verified_by_ravi": false
+    },
+    {
+      "id": "sublimation",
+      "name": "Dye sublimation print",
+      "group": "digital",
+      "what_it_is": "Disperse dye is printed on paper and turned to gas by heat so it enters polyester fibre. No hand feel, very durable.",
+      "artwork_fit": "ANY",
+      "screens": 0,
+      "garment_colour": "white or light only (there is no white ink)",
+      "suitable_fibres": [
+        "polyester"
+      ],
+      "not_suitable_fibres": [
+        "cotton"
+      ],
+      "parameters": {
+        "press_temp_c": {
+          "min": 196,
+          "max": 204,
+          "published": "385-400 F",
+          "confidence": "sourced_multi"
+        },
+        "press_time_s": {
+          "min": 35,
+          "max": 60,
+          "confidence": "sourced_multi"
+        },
+        "polyester_percent_min": {
+          "value": null,
+          "note": "Not verified. Colour gets weaker as polyester content falls.",
+          "confidence": "assumption"
+        }
+      },
+      "source": "https://dtfdatabase.com/blog/heat-pressing-polyester-htv-dtf-temperature-iron-burn-repair-guide/ ; https://dtftransfers.com/blogs/news/dtf-dark-garments ; user article 'How to Print on Fabric and Textile'",
+      "verified_by_ravi": false
+    },
+    {
+      "id": "digital_reactive",
+      "name": "Digital print with reactive dyes",
+      "group": "digital",
+      "what_it_is": "Inkjet printing on fabric with reactive dyes. Bright, durable colour; suits cellulosics such as viscose. Needs steaming and washing.",
+      "artwork_fit": "ANY",
+      "screens": 0,
+      "parameters": {},
+      "risks": [
+        "More complex and costly than pigment digital printing; more water use"
+      ],
+      "confidence": "article_only",
+      "source": "User article 'How to Print on Fabric and Textile'",
+      "verified_by_ravi": false
+    },
+    {
+      "id": "digital_pigment",
+      "name": "Digital print with pigment inks",
+      "group": "digital",
+      "what_it_is": "Inkjet printing on prepared fabric with pigment inks, fixed by heat. Faster and cheaper than reactive; less bright, lower wet rub fastness.",
+      "artwork_fit": "ANY",
+      "screens": 0,
+      "parameters": {},
+      "confidence": "article_only",
+      "source": "User article 'How to Print on Fabric and Textile'",
+      "verified_by_ravi": false
+    },
+    {
+      "id": "all_over_print",
+      "name": "All-over print (AOP): rotary or flat-bed screen",
+      "aliases": [
+        "AOP",
+        "rotary screen print"
+      ],
+      "group": "fabric_printing",
+      "what_it_is": "A repeating design printed on fabric before cutting. Rotary screens suit long continuous runs; one screen per colour.",
+      "artwork_fit": "TONAL_OK",
+      "screens": "one per colour",
+      "nira_checks": [
+        "Repeat size",
+        "Number of colours",
+        "Thinnest line in the design against the minimum printable line"
+      ],
+      "parameters": {},
+      "confidence": "article_only",
+      "source": "User article 'How to Print on Fabric and Textile'",
+      "verified_by_ravi": false
+    },
+    {
+      "id": "burnout",
+      "name": "Burn-out (devoré) print",
+      "group": "fabric_printing",
+      "what_it_is": "An acid-forming paste is printed on a blended fabric and heated. The cellulose fibre is destroyed in the printed area and washed out, leaving a sheer pattern of the other fibre.",
+      "artwork_fit": "SOLID_ONLY",
+      "suitable_fibres": [
+        "polyester/cotton blends",
+        "polyester/viscose blends",
+        "silk/cellulose blends"
+      ],
+      "not_suitable_fibres": [
+        "100% cotton (it would make holes)",
+        "100% polyester (nothing to remove)"
+      ],
+      "parameters": {
+        "burnout_agent": {
+          "value": "sodium hydrogen sulphate (sodium bisulfate) or aluminium sulphate",
+          "confidence": "sourced_multi"
+        },
+        "best_blend": {
+          "value": "60% polyester / 40% cotton; 40/60 also possible",
+          "confidence": "sourced_multi"
+        },
+        "process_loss_percent": {
+          "value": 35,
+          "note": "Stated as 'more than 35%'.",
+          "confidence": "article_only"
+        },
+        "knit_gsm_for_finished_120_130": {
+          "min": 160,
+          "max": 170,
+          "confidence": "article_only"
+        },
+        "best_construction": {
+          "value": "single jersey",
+          "confidence": "article_only"
+        },
+        "heat_step": {
+          "value": null,
+          "note": "A craft source gives 170 C for 5 min. Factory conditions not verified.",
+          "confidence": "assumption"
+        },
+        "cost_usd_per_kg_print": {
+          "min": 4.5,
+          "max": 5.0,
+          "note": "Example in the article; out of date as a price.",
+          "confidence": "article_only"
+        }
+      },
+      "risks": [
+        "High process loss must be added to fabric consumption and cost",
+        "Over-heating can damage the remaining polyester",
+        "High sampling cost"
+      ],
+      "source": "User article 'Burn Out Print' ; https://www.dyeman.com/products/devore ; https://www.clubmartin.com/textile-glossary/dyeing-finishing/devore-burnout-printing/ ; https://www.slideshare.net/slideshow/a-burnout-printing/47145387",
+      "verified_by_ravi": false
+    },
+    {
+      "id": "disperse_on_polyester",
+      "name": "Disperse dye print on polyester (direct style)",
+      "group": "fabric_printing",
+      "what_it_is": "Screen printing polyester with disperse dye paste, then fixing the dye into the fibre with steam or dry heat, followed by reduction clearing.",
+      "artwork_fit": "TONAL_OK",
+      "suitable_fibres": [
+        "polyester"
+      ],
+      "fixation_methods": [
+        {
+          "method": "Atmospheric steaming",
+          "temp_c": "102-105",
+          "time": "30 min",
+          "note": "Carrier needed; allows dyes of low sublimation fastness"
+        },
+        {
+          "method": "Pressure steaming",
+          "temp_c": "125-130",
+          "pressure_bar": "1-2",
+          "time": "30 min",
+          "note": "Brightest prints; lowest production rate"
+        },
+        {
+          "method": "High-temperature steaming",
+          "temp_c": "165-180",
+          "time": "5-20 min",
+          "note": "No carrier; urea added"
+        },
+        {
+          "method": "Thermofixation",
+          "temp_c": "200-210",
+          "time": "30-130 s (conflict in the source)",
+          "note": "Continuous; 10-15% colour yield lost; needs dyes of high sublimation fastness"
+        }
+      ],
+      "after_treatment": "Reduction clearing at 60 C for 20 min with 2 g/l caustic soda and 2 g/l sodium hydrosulphite, then wash",
+      "paste_recipe_per_100g": {
+        "disperse_dye_g": "3-5",
+        "acid_donor_g": 1,
+        "sodium_chlorate_g": 1,
+        "water_ml": "5-10",
+        "thickener_g": "80-90",
+        "urea_g": "2 (HT steam and thermofix only)",
+        "carrier_g": "1 (atmospheric steam only)"
+      },
+      "confidence": "article_only",
+      "source": "User article on print fixation methods for polyester",
+      "verified_by_ravi": false
+    },
+    {
+      "id": "disperse_reactive_pc",
+      "name": "Disperse-reactive print on polyester/cotton",
+      "group": "fabric_printing",
+      "what_it_is": "A paste containing disperse dye (for the polyester) and reactive dye (for the cotton), so both fibres take colour evenly.",
+      "artwork_fit": "TONAL_OK",
+      "suitable_fibres": [
+        "polyester/cotton blends"
+      ],
+      "rules": {
+        "dye_split_by_blend": "disperse dye share = polyester %, reactive dye share = cotton %. Example: 70/30 blend at 3 g dye per 100 g paste gives 2.1 g disperse and 0.9 g reactive.",
+        "fixation": "Dry at 80 C, then pressure steam at 125-130 C, 1-2 bar, 25-30 min",
+        "after_treatment": "Cold rinse, hot wash, soap at the boil with 2-3 g/l non-ionic detergent, rinse"
+      },
+      "confidence": "article_only",
+      "source": "User article 'Printing of P/C Blended Fabric Using Disperse-Reactive System'",
+      "verified_by_ravi": false
+    }
+  ],
+  "non_print_decorations": {
+    "note": "Tech packs often mix prints with other decorations. NIRA records these and passes them through, but does not engineer them.",
+    "items": [
+      "embroidery",
+      "terry / chenille embroidery",
+      "applique",
+      "tulle or fabric bow",
+      "cut-and-sew colour panels"
+    ]
+  },
+  "tech_pack_term_map": {
+    "note": "Words commonly seen on buyer tech packs, mapped to technique ids in this file.",
+    "HD PRINT": "high_density",
+    "PUFF": "puff",
+    "EMBOSS": "puff",
+    "FOIL": "foil",
+    "FLOCK": "flock",
+    "AOP": "all_over_print",
+    "RUBBER PRINT": "plastisol",
+    "PIGMENT PRINT": "water_based_pigment",
+    "DISCHARGE": "discharge",
+    "STICKER": "plastisol_transfer",
+    "EMB": "non_print:embroidery",
+    "TERRY EMB": "non_print:terry / chenille embroidery",
+    "GRADIENT": "spot_halftone_gradient",
+    "HALFTONE": "spot_halftone_gradient",
+    "FADE": "spot_halftone_gradient"
+  },
+  "change_log": [
+    "v2 (15 Nov 2026): added spot_halftone_gradient, garment_colour_principles and floor notes after a device test on a real garment photo."
+  ],
+  "garment_colour_principles": {
+    "rules": [
+      "Measure the garment colour from the image. Do not assume pure black or pure white.",
+      "On a dark or coloured garment, areas that match the garment carry no ink: the fabric shows through.",
+      "Never plan a screen in the garment colour.",
+      "White base goes only under the print, with a choke. A white print colour can also act as the base for colours printed over it.",
+      "Count screens from real print colours and their families, not from every shade a photo contains."
+    ],
+    "confidence": "assumption",
+    "floor_confirmation": "Confirmed by Ravi on 15 Nov 2026 for a white + blue gradient logo on a black T-shirt.",
+    "verified_by_ravi": true
+  }
+}

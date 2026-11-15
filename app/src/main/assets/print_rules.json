@@ -1,0 +1,503 @@
+{
+  "schema_version": 1,
+  "rules_version": "2026-11-15-v2-after-device-test",
+  "status": "STARTING VALUES from public trade sources. Rule-of-thumb only. Verify on the production floor and against the ink maker's technical data sheet before use.",
+  "confidence_key": {
+    "sourced": "Value taken from a named public source (see 'source').",
+    "interpolated": "Value calculated between two sourced values. Not directly published.",
+    "assumption": "No reliable public source found. Placeholder to be replaced with factory data."
+  },
+  "units": {
+    "mesh": "Both US threads per inch (tpi) and metric threads per cm (t_cm). t_cm = tpi / 2.54.",
+    "temperature": "Degrees Celsius, with Fahrenheit as published.",
+    "ink_deposit": "Wet grams per square metre of printed (inked) area, one stroke."
+  },
+  "mesh_conversion": [
+    {
+      "tpi": 86,
+      "t_cm": 34
+    },
+    {
+      "tpi": 110,
+      "t_cm": 43
+    },
+    {
+      "tpi": 137,
+      "t_cm": 54
+    },
+    {
+      "tpi": 156,
+      "t_cm": 62
+    },
+    {
+      "tpi": 180,
+      "t_cm": 71
+    },
+    {
+      "tpi": 200,
+      "t_cm": 79
+    },
+    {
+      "tpi": 230,
+      "t_cm": 90
+    },
+    {
+      "tpi": 280,
+      "t_cm": 110
+    },
+    {
+      "tpi": 305,
+      "t_cm": 120
+    }
+  ],
+  "mesh_rules": [
+    {
+      "id": "underbase_white_dark_garment",
+      "applies_to": "White underbase on dark garments (plastisol)",
+      "tpi_min": 110,
+      "tpi_max": 156,
+      "t_cm_min": 43,
+      "t_cm_max": 62,
+      "confidence": "sourced",
+      "note": "Lower mesh gives more opacity but a heavier hand feel.",
+      "source": "https://screenprintdirect.com/blogs/screen_printing_101/screen-mesh-101-for-dummies ; https://printunite.com/tools/screen-mesh-guide"
+    },
+    {
+      "id": "plastisol_bold_spot",
+      "applies_to": "Standard plastisol, bold solid designs",
+      "tpi_min": 110,
+      "tpi_max": 137,
+      "t_cm_min": 43,
+      "t_cm_max": 54,
+      "confidence": "sourced",
+      "source": "https://screenprintdirect.com/blogs/screen_printing_101/screen-mesh-101-for-dummies"
+    },
+    {
+      "id": "plastisol_general_spot",
+      "applies_to": "General plastisol spot colours, average detail",
+      "tpi_min": 137,
+      "tpi_max": 160,
+      "t_cm_min": 54,
+      "t_cm_max": 63,
+      "confidence": "sourced",
+      "note": "156 tpi (62T) is the common all-purpose choice.",
+      "source": "https://printunite.com/tools/screen-mesh-guide ; https://daxshow.com/page/screen-printing-mesh-count-chart/"
+    },
+    {
+      "id": "water_based_and_discharge",
+      "applies_to": "Water-based pigment and discharge inks",
+      "tpi_min": 156,
+      "tpi_max": 230,
+      "t_cm_min": 62,
+      "t_cm_max": 90,
+      "confidence": "sourced",
+      "note": "Very low mesh lets thin water-based ink bleed; thick water-based whites for darks may run lower. Follow the ink data sheet.",
+      "source": "https://salute-ink.com/screen-mesh-for-printing/ ; https://daxshow.com/page/screen-printing-mesh-count-chart/"
+    },
+    {
+      "id": "fine_detail_small_text",
+      "applies_to": "Thin lines, small text (under about 10 pt), detailed logos",
+      "tpi_min": 196,
+      "tpi_max": 230,
+      "t_cm_min": 77,
+      "t_cm_max": 90,
+      "confidence": "sourced",
+      "source": "https://www.print-technology.com/what-mesh-count-to-use-for-fine-detail-screen-printing/"
+    },
+    {
+      "id": "halftone_simulated_process",
+      "applies_to": "Halftones, gradients, simulated process, CMYK",
+      "tpi_min": 230,
+      "tpi_max": 305,
+      "t_cm_min": 90,
+      "t_cm_max": 120,
+      "confidence": "sourced",
+      "note": "Choose the exact mesh from halftone_rules using the LPI.",
+      "source": "https://www.atlasscreensupply.com/screen-printing-mesh-count-chart"
+    },
+    {
+      "id": "heavy_special_effect",
+      "applies_to": "Heavy white, athletic numbers, metallic, thick special-effect inks, rough fabrics",
+      "tpi_min": 80,
+      "tpi_max": 110,
+      "t_cm_min": 31,
+      "t_cm_max": 43,
+      "confidence": "sourced",
+      "note": "Glitter and high-density inks usually need even coarser mesh; take that value from the ink maker.",
+      "source": "https://kolormatrix.com/blogs/news/understanding-screen-printing-mesh-count-why-110-156-230-amp-305-mesh-print-differently ; https://salute-ink.com/silk-screen-mesh/"
+    }
+  ],
+  "halftone_rules": {
+    "mesh_to_lpi_ratio_min": 4.0,
+    "mesh_to_lpi_ratio_max": 5.0,
+    "formula": "minimum mesh (tpi) = LPI x 4 to 5. Use 5 for a safer result.",
+    "garment_lpi_typical_min": 45,
+    "garment_lpi_typical_max": 55,
+    "garment_lpi_practical_ceiling": 65,
+    "angle_degrees": 22.5,
+    "lpi_to_mesh_table": [
+      {
+        "lpi": 35,
+        "tpi_min": 160,
+        "tpi_max": 160
+      },
+      {
+        "lpi": 45,
+        "tpi_min": 200,
+        "tpi_max": 230
+      },
+      {
+        "lpi": 55,
+        "tpi_min": 230,
+        "tpi_max": 280
+      },
+      {
+        "lpi": 65,
+        "tpi_min": 280,
+        "tpi_max": 305
+      }
+    ],
+    "confidence": "sourced",
+    "note": "Sources agree on a 4x to 5x ratio. One source quotes a different ratio and is not used here.",
+    "source": "https://www.atlasscreensupply.com/screen-printing-mesh-count-chart ; https://texloom.studio/blog/color-separation-photoshop-screen-printing ; https://vectosolve.com/blog/halftone-screen-printing-gradients"
+  },
+  "detail_rules": {
+    "min_line_width_mm_by_mesh": [
+      {
+        "tpi": 110,
+        "min_line_mm": 1.0,
+        "confidence": "sourced"
+      },
+      {
+        "tpi": 156,
+        "min_line_mm": 0.6,
+        "confidence": "interpolated"
+      },
+      {
+        "tpi": 200,
+        "min_line_mm": 0.4,
+        "confidence": "interpolated"
+      },
+      {
+        "tpi": 230,
+        "min_line_mm": 0.25,
+        "confidence": "sourced"
+      },
+      {
+        "tpi": 305,
+        "min_line_mm": 0.25,
+        "confidence": "sourced"
+      }
+    ],
+    "note": "Warn the user when a colour layer has lines thinner than the limit for its mesh.",
+    "source": "https://photo2vector.com/blog/screen-printing-artwork-from-photo"
+  },
+  "underbase_rules": {
+    "needed_when": "Light or bright colours printed on a dark base fabric",
+    "choke_mm_default": 0.5,
+    "choke_mm_min": 0.2,
+    "choke_mm_max": 0.5,
+    "confidence": "sourced",
+    "note": "0.5 mm is the published figure. The lower limit 0.2 mm is an assumption for tight-registration presses. Never choke so far that thin text loses its white base.",
+    "underbase_mesh_rule_id": "underbase_white_dark_garment",
+    "source": "https://photo2vector.com/blog/screen-printing-artwork-from-photo ; https://texloom.studio/blog/color-separation-photoshop-screen-printing"
+  },
+  "print_order_rules": {
+    "sequence": [
+      "1. Underbase white (if needed)",
+      "2. Flash",
+      "3. Top colours, lower mesh before higher mesh (coarse first, fine second)",
+      "4. Highlight white last (if used)"
+    ],
+    "flash_after_underbase": true,
+    "flash_every_n_colours_on_dark": 3,
+    "plastisol_flash_temp_c_min": 82,
+    "plastisol_flash_temp_c_max": 93,
+    "plastisol_flash_temp_f": "180-200",
+    "plastisol_flash_seconds_min": 3,
+    "plastisol_flash_seconds_max": 5,
+    "confidence": "sourced",
+    "note": "Light-to-dark colour order within the top colours is common shop practice but was not confirmed by a source here; treat it as an assumption.",
+    "source": "https://blog.madelab.io/how-to-choose-the-right-mesh-count-for-every-print-job/ ; https://mclogan.com/blogs/news/choosing-compatible-screen-printing-inks"
+  },
+  "ink_systems": [
+    {
+      "id": "plastisol_standard",
+      "name": "Plastisol (standard)",
+      "cure_temp_c": 160,
+      "cure_temp_f": 320,
+      "density_g_cm3": 1.25,
+      "suitable_fibres": [
+        "cotton",
+        "cotton_polyester_blend"
+      ],
+      "hand_feel": "Raised, sits on the fabric",
+      "confidence": "sourced",
+      "note": "The whole ink film must reach cure temperature, not only the surface.",
+      "source": "https://lawsonsp.com/blogs/plastisol-ink-support-articles/plastisol-ink-troubleshooting-guide ; https://4calculators.com/calculators/screen-print-ink-usage-calculator/"
+    },
+    {
+      "id": "plastisol_low_cure",
+      "name": "Plastisol (low-cure / low-bleed, for polyester)",
+      "cure_temp_c_min": 132,
+      "cure_temp_c_max": 149,
+      "cure_temp_f": "270-300",
+      "density_g_cm3": 1.25,
+      "suitable_fibres": [
+        "polyester",
+        "cotton_polyester_blend",
+        "tri_blend"
+      ],
+      "confidence": "sourced",
+      "note": "Exact cure point comes from the ink data sheet. Density assumed same as standard plastisol.",
+      "source": "https://daxshow.com/page/screen-printing-on-polyester/ ; https://totalink.com/learn/plastisol-ink-for-screen-printing"
+    },
+    {
+      "id": "water_based_pigment",
+      "name": "Water-based pigment",
+      "cure_temp_c_min": 149,
+      "cure_temp_c_max": 160,
+      "cure_temp_f": "300-320",
+      "density_g_cm3": 1.1,
+      "suitable_fibres": [
+        "cotton",
+        "cotton_polyester_blend"
+      ],
+      "hand_feel": "Soft, goes into the fabric",
+      "confidence": "sourced",
+      "note": "Weak coverage on dark fabric without underbase or discharge. Density 1.1 is an assumption.",
+      "source": "https://www.learnhowtoscreenprint.com/blogs/news/the-definitive-guide-to-curing-ink ; https://www.printablepress.com/plastisol-vs-water-based-ink-screen-printing/"
+    },
+    {
+      "id": "discharge",
+      "name": "Discharge",
+      "cure_temp_c": 160,
+      "cure_temp_f": 320,
+      "density_g_cm3": 1.1,
+      "suitable_fibres": [
+        "cotton"
+      ],
+      "not_suitable_fibres": [
+        "polyester"
+      ],
+      "hand_feel": "Very soft",
+      "confidence": "sourced",
+      "note": "Works by removing the cotton dye, so the result depends on the fabric dye being dischargeable. Time and temperature both matter. Density 1.1 is an assumption.",
+      "source": "https://totalink.com/learn/plastisol-ink-for-screen-printing ; https://lawsonsp.com/blogs/plastisol-ink-support-articles/plastisol-ink-troubleshooting-guide"
+    }
+  ],
+  "fabric_rules": [
+    {
+      "id": "polyester_dye_migration",
+      "when": "Fibre is 100% polyester or a polyester blend",
+      "risk": "Dye migration: polyester dye moves into the ink and changes its colour, mostly whites and pastels.",
+      "dye_starts_moving_above_c": 129,
+      "dye_starts_moving_above_f": 265,
+      "recommended_cure_c_min": 143,
+      "recommended_cure_c_max": 154,
+      "recommended_cure_f": "290-310",
+      "actions": [
+        "Use low-bleed or low-cure ink",
+        "Use a dye-migration blocker as underbase",
+        "Cure at the lowest temperature the ink maker allows",
+        "Check the print again after 24 to 48 hours; migration can appear late"
+      ],
+      "confidence": "sourced",
+      "source": "https://lawsonsp.com/blogs/plastisol-ink-support-articles/plastisol-ink-troubleshooting-guide"
+    },
+    {
+      "id": "cotton_polyester_blend_white",
+      "when": "50/50 cotton/polyester with white or light print",
+      "actions": [
+        "Use a bleed-resistant white"
+      ],
+      "confidence": "sourced",
+      "source": "https://totalink.com/blogs/news/white-plastisol-ink"
+    },
+    {
+      "id": "dark_cotton",
+      "when": "Dark 100% cotton base",
+      "actions": [
+        "Underbase white with plastisol or water-based top colours",
+        "Or discharge, if the fabric dye is dischargeable"
+      ],
+      "confidence": "sourced",
+      "source": "https://www.printablepress.com/plastisol-vs-water-based-ink-screen-printing/"
+    },
+    {
+      "id": "light_cotton",
+      "when": "White or light 100% cotton base",
+      "actions": [
+        "No underbase needed",
+        "Water-based or plastisol both suitable"
+      ],
+      "confidence": "assumption",
+      "source": "General practice; not confirmed from a source in this research."
+    }
+  ],
+  "ink_consumption": {
+    "formula": "ink_g = printed_area_m2 x coverage_fraction x deposit_g_m2 x strokes x pieces x (1 + wastage_fraction)",
+    "deposit_formula": "deposit_g_m2 = wet_film_thickness_micron x density_g_cm3",
+    "note": "printed_area_m2 is the print box (width x height). coverage_fraction is that colour's share of the box. If the app already gives the colour's own area in cm2, use that and set coverage to 1.",
+    "plastisol_deposit_g_m2_by_mesh": [
+      {
+        "tpi": 110,
+        "t_cm": 43,
+        "thickness_micron_min": 30,
+        "thickness_micron_max": 50,
+        "deposit_g_m2_min": 38,
+        "deposit_g_m2_max": 63,
+        "deposit_g_m2_default": 45,
+        "confidence": "sourced"
+      },
+      {
+        "tpi": 137,
+        "t_cm": 54,
+        "deposit_g_m2_min": 33,
+        "deposit_g_m2_max": 54,
+        "deposit_g_m2_default": 40,
+        "confidence": "interpolated"
+      },
+      {
+        "tpi": 156,
+        "t_cm": 62,
+        "deposit_g_m2_min": 30,
+        "deposit_g_m2_max": 48,
+        "deposit_g_m2_default": 36,
+        "confidence": "interpolated"
+      },
+      {
+        "tpi": 200,
+        "t_cm": 79,
+        "deposit_g_m2_min": 23,
+        "deposit_g_m2_max": 38,
+        "deposit_g_m2_default": 28,
+        "confidence": "interpolated"
+      },
+      {
+        "tpi": 230,
+        "t_cm": 90,
+        "deposit_g_m2_min": 19,
+        "deposit_g_m2_max": 33,
+        "deposit_g_m2_default": 24,
+        "confidence": "interpolated"
+      },
+      {
+        "tpi": 305,
+        "t_cm": 120,
+        "thickness_micron_min": 10,
+        "thickness_micron_max": 20,
+        "deposit_g_m2_min": 13,
+        "deposit_g_m2_max": 25,
+        "deposit_g_m2_default": 18,
+        "confidence": "sourced"
+      }
+    ],
+    "cross_check": "An ink maker's sheet gives 0.02278 g per square inch at 305 mesh with double pass, which is about 35 g/m2 for two strokes, or about 18 g/m2 per stroke. This matches the 305 mesh default above.",
+    "water_based_paste_pickup_g_m2_default": 90,
+    "water_based_paste_pickup_g_m2_range": "10-400",
+    "water_based_confidence": "sourced",
+    "water_based_note": "Published default for print paste pick-up at full coverage in textile printing. Wide range; replace with factory figures.",
+    "strokes_default": 1,
+    "underbase_strokes_default": 2,
+    "underbase_strokes_confidence": "assumption",
+    "wastage_fraction_default": 0.1,
+    "wastage_confidence": "assumption",
+    "wastage_note": "No reliable public figure found. One trade example adds 5% extra. 10% is a placeholder; replace with factory data.",
+    "source": "https://4calculators.com/calculators/screen-print-ink-usage-calculator/ ; https://qcrsolutions.com/photochromic-textile-screen-ink-technical-data/ ; https://screenprintingmag.com/how-much-ink-do-you-need/ ; https://www.textileschool.com/calculators/print-paste-consumption/"
+  },
+  "dye_calculator": {
+    "formulas": {
+      "dye_g": "fabric_weight_kg x 1000 x shade_percent / 100",
+      "liquor_volume_l": "fabric_weight_kg x liquor_ratio",
+      "chemical_g_from_g_per_l": "chemical_g_per_l x liquor_volume_l",
+      "chemical_g_from_percent_owf": "fabric_weight_kg x 1000 x chemical_percent / 100"
+    },
+    "confidence": "sourced",
+    "note": "Standard exhaust dyeing arithmetic (percent on weight of fabric, liquor ratio 1:n). All recipe values are entered by the user. The app never creates a recipe from an image.",
+    "source": "Standard textile dyeing calculation; no recipe values are included in this file."
+  },
+  "display_disclaimer": "Rule-of-thumb estimate from public trade sources. Verify on the production floor and with the ink maker's technical data sheet.",
+  "change_log": [
+    "v2 (15 Nov 2026): added process_inks, garment_mask, white_base, recommendation, resolution and regression_cases after a device test on a real garment photo (white-to-blue gradient logo on a black T-shirt)."
+  ],
+  "process_inks": {
+    "cyan": "#00AEEF",
+    "magenta": "#EC008C",
+    "yellow": "#FFF200",
+    "black": "#231F20",
+    "confidence": "assumption",
+    "note": "Nominal screen colours for the model only. Replace with the ink maker's measured values. Offer CMYK process only on white or light garments, or over a white base."
+  },
+  "garment_mask": {
+    "estimate_from": "median Lab of the image border region; user 'tap the fabric' overrides; presets are only an initial guess",
+    "border_fraction": 0.08,
+    "spread_multiplier": 3.0,
+    "min_threshold_de00": 3.0,
+    "flatten_lighting": true,
+    "smooth_texture": true,
+    "speck_min_area_fraction": 0.0005,
+    "confidence": "assumption",
+    "note": "A photo never shows fabric as one pure colour: black fabric measured L* 9 to 30 in the device test. Never assume #000000 or #FFFFFF. All numbers here are starting values to tune on real garment photos."
+  },
+  "white_base": {
+    "needed_when": "garment L* below 70, or garment chroma above 15, and the print has colours lighter or brighter than the garment",
+    "garment_L_threshold": 70,
+    "garment_chroma_threshold": 15,
+    "area": "only under print pixels, never under bare fabric",
+    "choke_mm_from": "underbase_rules.choke_mm_default",
+    "white_print_colour_can_act_as_base": true,
+    "highlight_white": "only the brightest highlights above an adjustable threshold",
+    "user_switch": "'Use white base' overrides the automatic decision",
+    "confidence": "assumption",
+    "floor_confirmation": "Ravi confirmed on 15 Nov 2026 that a white + blue gradient logo on black prints as white solid with blue halftone over it: 2 screens, or 3 if a separate base is flashed first.",
+    "note": "The lightness and chroma limits are placeholders. Mid-tone garments (red, grey) also need a base for many colours."
+  },
+  "ink_model": {
+    "light_garment": "transparent ink (absorbance) model: darker pixel means more ink",
+    "dark_or_coloured_garment": "opaque ink over garment: pixel = (1 - coverage) x garment + coverage x ink, in linear RGB. A pixel equal to the garment has zero ink on every screen.",
+    "never": "Never create a screen whose ink is the garment colour (for example black ink on a black garment).",
+    "confidence": "assumption",
+    "note": "Model choice follows the white_base rule. Both models ignore dot gain and registration."
+  },
+  "recommendation": {
+    "principle": "Recommend the option with the fewest screens that meets the quality tolerance, not the option with the lowest colour error.",
+    "quality_tolerance_mean_de00": 3.0,
+    "quality_tolerance_p95_de00": 8.0,
+    "start_from": "one spot ink per colour family of print colours",
+    "gradient_rule": "A smooth transition between two inks is reported as 'ink A as halftone over ink B' and counts as 2 screens.",
+    "offer_cmyk_when": "artwork is tonal with at least 4 distinct hue families, on a white or light garment or over a white base",
+    "cmyk_min_hue_families": 4,
+    "user_choice": "The user can always pick another option. Show the reason for the recommendation in one line.",
+    "confidence": "assumption",
+    "note": "Tolerances are placeholders aligned with the shade match grades (below 2 good, 2 to 4 visible). Tune with real jobs."
+  },
+  "resolution": {
+    "px_per_cm_min_for_fine_detail": 59,
+    "px_per_cm_ideal": 118,
+    "equivalent_dpi": "59 px/cm is about 150 dpi; 118 px/cm is about 300 dpi at print size",
+    "below_min_action": "Warn that fine lines and small text cannot be trusted; suggest retaking closer so the print fills the frame.",
+    "analysis_max_long_side_px": 2048,
+    "crop_to_print_box_first": true,
+    "edge_refinement": "For flat spot layers only: upsample, smooth, re-threshold. Deterministic.",
+    "never": "No AI or generative upscaling in any measurement.",
+    "confidence": "assumption",
+    "note": "300 dpi at print size is common artwork practice; it was not verified from a source in this research."
+  },
+  "regression_cases": [
+    {
+      "id": "gradient_logo_on_dark_garment",
+      "description": "Photo of a dark textured garment with uneven lighting; one solid white logo with a blue gradient fading over its top part.",
+      "wrong_result_seen": "8 to 10 print colours (6 were fabric), inked area 84.9%, black screen at 73.5%, base white at 89.2%, CMYK + whites (6 screens) recommended.",
+      "expected": {
+        "print_colours": 2,
+        "inked_area": "only the logo (about 13% of the whole photo in the device test)",
+        "print_box": "tight around the logo",
+        "garment_colour_screen": "none",
+        "recommended_screens": 2,
+        "with_separate_white_base": 3,
+        "blue": "halftone over white"
+      }
+    }
+  ]
+}

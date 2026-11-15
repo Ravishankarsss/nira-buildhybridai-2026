@@ -1,6 +1,5 @@
 package com.mos.nira.features.artwork.data
 
-import android.content.Context
 import com.mos.nira.features.artwork.domain.ArtworkAnalysisRecord
 import com.mos.nira.features.artwork.domain.ColorGroup
 import com.mos.nira.features.artwork.domain.DominantColor
@@ -14,7 +13,7 @@ import java.io.File
  * Local file-based JSON repository for persistent storage of Artwork Analysis History.
  * Stores structured analysis metadata in app-private storage (`context.filesDir/analyses/`).
  */
-class ArtworkRepository(private val context: Context) {
+class ArtworkRepository(private val context: android.content.Context) {
 
     private val analysesDir: File
         get() = File(context.filesDir, "analyses").apply {
@@ -70,7 +69,6 @@ class ArtworkRepository(private val context: Context) {
             val file = File(analysesDir, "$id.json")
             val record = if (file.exists()) deserializeRecord(JSONObject(file.readText())) else null
 
-            // Delete associated thumbnail if present
             record?.thumbnailPath?.let { path ->
                 val thumbFile = File(path)
                 if (thumbFile.exists()) thumbFile.delete()
@@ -109,6 +107,8 @@ class ArtworkRepository(private val context: Context) {
                 put("pixelCount", color.pixelCount)
                 put("pixelPercentage", color.pixelPercentage.toDouble())
                 put("groupId", color.groupId)
+                put("isLocked", color.isLocked)
+                put("isGarmentBase", color.isGarmentBase)
             }
             paletteArray.put(cJson)
         }
@@ -128,6 +128,20 @@ class ArtworkRepository(private val context: Context) {
         }
         root.put("colorGroups", groupsArray)
 
+        record.garmentColor?.let { g ->
+            val gJson = JSONObject().apply {
+                put("id", g.id)
+                put("hex", g.hex)
+                put("r", g.r)
+                put("g", g.g)
+                put("b", g.b)
+                put("labL", g.labL)
+                put("labA", g.labA)
+                put("labB", g.labB)
+            }
+            root.put("garmentColor", gJson)
+        }
+
         return root
     }
 
@@ -140,7 +154,7 @@ class ArtworkRepository(private val context: Context) {
         val height = json.getInt("height")
         val fileSizeBytes = json.optLong("fileSizeBytes", 0L)
         val timestamp = json.getLong("timestamp")
-        val algorithmVersion = json.optString("algorithmVersion", "1.0.0-kmeans-cielab")
+        val algorithmVersion = json.optString("algorithmVersion", "2.0.0-ciede2000-automerge")
 
         val palette = ArrayList<DominantColor>()
         val paletteArray = json.optJSONArray("palette") ?: JSONArray()
@@ -158,7 +172,9 @@ class ArtworkRepository(private val context: Context) {
                     labB = cJson.getDouble("labB"),
                     pixelCount = cJson.optInt("pixelCount", 0),
                     pixelPercentage = cJson.getDouble("pixelPercentage").toFloat(),
-                    groupId = cJson.optInt("groupId", cJson.getInt("id"))
+                    groupId = cJson.optInt("groupId", cJson.getInt("id")),
+                    isLocked = cJson.optBoolean("isLocked", false),
+                    isGarmentBase = cJson.optBoolean("isGarmentBase", false)
                 )
             )
         }
@@ -189,6 +205,22 @@ class ArtworkRepository(private val context: Context) {
             )
         }
 
+        val garmentColor = json.optJSONObject("garmentColor")?.let { gJson ->
+            DominantColor(
+                id = gJson.optInt("id", -1),
+                hex = gJson.getString("hex"),
+                r = gJson.getInt("r"),
+                g = gJson.getInt("g"),
+                b = gJson.getInt("b"),
+                labL = gJson.getDouble("labL"),
+                labA = gJson.getDouble("labA"),
+                labB = gJson.getDouble("labB"),
+                pixelCount = 0,
+                pixelPercentage = 0f,
+                isGarmentBase = true
+            )
+        }
+
         return ArtworkAnalysisRecord(
             id = id,
             fileName = fileName,
@@ -200,6 +232,7 @@ class ArtworkRepository(private val context: Context) {
             timestamp = timestamp,
             palette = palette,
             colorGroups = groups,
+            garmentColor = garmentColor,
             algorithmVersion = algorithmVersion
         )
     }

@@ -8,14 +8,14 @@ import kotlin.math.min
 import kotlin.math.roundToInt
 
 /**
- * Technical Color Separator for preliminary digital color separation previews.
+ * Technical Color Separator for digital color separation previews.
  *
- * NOTE: This produces preliminary digital separation masks for design visualization.
- * It does not produce production halftone films or mechanical print plates.
+ * Runs separation at up to 1024px on the longest dimension for high visual fidelity
+ * while remaining memory-safe. Uses CIEDE2000 for deterministic nearest-cluster assignment.
  */
 object ColorSeparator {
 
-    private const val SEPARATION_MAX_DIMENSION = 400
+    const val SEPARATION_MAX_DIMENSION = 1024
 
     data class SeparationLayer(
         val dominantColor: DominantColor,
@@ -26,23 +26,31 @@ object ColorSeparator {
 
     data class SeparationResult(
         val layers: List<SeparationLayer>,
-        val compositeBitmap: Bitmap    // Composite re-combination of all layers
+        val compositeBitmap: Bitmap,   // Composite re-combination of all layers
+        val unassignedCoverage: Float = 0f
     )
 
     /**
-     * Generates digital separation layers for each dominant color in [palette].
+     * Generates digital separation layers for each color in [palette].
+     *
+     * @param sourceBitmap Input artwork bitmap
+     * @param palette Target print color palette
+     * @param garmentColor Optional base fabric color; matching pixels are excluded from ink layers
+     * @param maxDimension Processing resolution limit (default 1024px)
      */
     fun separateColors(
         sourceBitmap: Bitmap,
-        palette: List<DominantColor>
+        palette: List<DominantColor>,
+        garmentColor: DominantColor? = null,
+        maxDimension: Int = SEPARATION_MAX_DIMENSION
     ): SeparationResult {
         if (palette.isEmpty()) {
             val emptyBitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
             return SeparationResult(emptyList(), emptyBitmap)
         }
 
-        // Scale to a safe dimension for separation preview
-        val scaled = createScaled(sourceBitmap, SEPARATION_MAX_DIMENSION)
+        // Scale to max 1024px for sharp high-fidelity layer inspection
+        val scaled = createScaled(sourceBitmap, maxDimension)
         val width = scaled.width
         val height = scaled.height
         val totalPixels = width * height
@@ -54,11 +62,12 @@ object ColorSeparator {
             scaled.recycle()
         }
 
-        // Precompute Lab coordinates for palette colors
         val paletteLabs = palette.map { ColorConverter.Lab(it.labL, it.labA, it.labB) }
+        val garmentLab = garmentColor?.let { ColorConverter.Lab(it.labL, it.labA, it.labB) }
         val layerPixelCounts = IntArray(palette.size)
+        var garmentOrTransparentCount = 0
 
-        // Maps each pixel to its closest palette color index (or -1 if transparent)
+        // Maps each pixel to its closest palette color index (-1 if transparent or garment)
         val pixelAssignments = IntArray(totalPixels)
 
         for (i in 0 until totalPixels) {
@@ -66,6 +75,7 @@ object ColorSeparator {
             val alpha = (p shr 24) and 0xFF
             if (alpha < 64) {
                 pixelAssignments[i] = -1
+                garmentOrTransparentCount++
                 continue
             }
 
@@ -74,18 +84,32 @@ object ColorSeparator {
             val b = p and 0xFF
             val pixelLab = ColorConverter.rgbToLab(r, g, b)
 
+            // If closer to garment background color than any palette ink (within threshold), skip
+            if (garmentLab != null) {
+                val dGarment = ColorConverter.deltaE00(pixelLab, garmentLab)
+                if (dGarment < 5.0) {
+                    var closerToPalette = false
+                    for (c in paletteLabs) {
+                        if (ColorConverter.deltaE00(pixelLab, c) < dGarment) {
+                            closerToPalette = true
+                            break
+                        }
+                    }
+                    if (!closerToPalette) {
+                        pixelAssignments[i] = -1
+                        garmentOrTransparentCount++
+                        continue
+                    }
+                }
+            }
+
             var bestIdx = 0
-            var minDistanceSq = Double.MAX_VALUE
+            var minDistance = Double.MAX_VALUE
 
             for (c in paletteLabs.indices) {
-                val center = paletteLabs[c]
-                val dl = pixelLab.l - center.l
-                val da = pixelLab.a - center.a
-                val db = pixelLab.b - center.b
-                val dSq = dl * dl + da * da + db * db
-
-                if (dSq < minDistanceSq) {
-                    minDistanceSq = dSq
+                val dist = ColorConverter.deltaE00(pixelLab, paletteLabs[c])
+                if (dist < minDistance) {
+                    minDistance = dist
                     bestIdx = c
                 }
             }
@@ -102,16 +126,12 @@ object ColorSeparator {
             val color = palette[c]
             val maskPixels = IntArray(totalPixels)
             val tintedPixels = IntArray(totalPixels)
-
             val tintedRgb = Color.rgb(color.r, color.g, color.b)
 
             for (i in 0 until totalPixels) {
                 if (pixelAssignments[i] == c) {
-                    // Opaque white on transparent black mask
-                    maskPixels[i] = -0x1 // 0xFFFFFFFF
-                    // Tinted color layer
+                    maskPixels[i] = -0x1 // 0xFFFFFFFF (opaque white on transparent)
                     tintedPixels[i] = tintedRgb or (0xFF shl 24)
-                    // Composite reconstruction
                     compositePixels[i] = tintedRgb or (0xFF shl 24)
                 } else {
                     maskPixels[i] = 0x00000000
@@ -144,7 +164,11 @@ object ColorSeparator {
         val compositeBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         compositeBitmap.setPixels(compositePixels, 0, width, 0, 0, width, height)
 
-        return SeparationResult(layers, compositeBitmap)
+        val unassignedCoverage = if (totalPixels > 0) {
+            (garmentOrTransparentCount.toFloat() / totalPixels.toFloat()) * 100.0f
+        } else 0f
+
+        return SeparationResult(layers, compositeBitmap, unassignedCoverage)
     }
 
     private fun createScaled(source: Bitmap, maxDim: Int): Bitmap {

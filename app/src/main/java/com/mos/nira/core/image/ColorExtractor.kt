@@ -3,49 +3,49 @@ package com.mos.nira.core.image
 import android.graphics.Bitmap
 import com.mos.nira.features.artwork.domain.ColorGroup
 import com.mos.nira.features.artwork.domain.DominantColor
+import com.mos.nira.features.artwork.domain.PrintColorConfig
 import java.util.Random
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 
 /**
- * Deterministic color extractor using K-Means++ clustering in CIE L*a*b* color space.
+ * Deterministic color extractor using CIEDE2000 clustering, edge filtering,
+ * and adaptive cluster merging.
  *
- * Steps:
- * 1. Downscales bitmap to a memory-safe resolution for analysis (e.g. max 300x300).
- * 2. Filters transparent and semi-transparent pixels (alpha < 128).
- * 3. Initializes cluster centers with deterministic K-Means++ in Lab space.
- * 4. Runs iterative K-Means clustering until convergence or max iterations reached.
- * 5. Computes cluster percentages and removes low-presence noise clusters.
- * 6. Groups perceptually similar colors using CIE Delta E.
+ * Stage 1 Requirements:
+ * 1. Auto-detect real number of print colours: over-cluster (K = 14..18), then merge
+ *    clusters closer than a CIEDE2000 threshold (default ~3.2 ΔE00).
+ * 2. Drop colours below minimum coverage % (e.g. 0.5% speckle noise).
+ * 3. Ignore anti-aliased edge pixels between two distinct color regions during clustering
+ *    to prevent synthetic blending artifacts from being identified as independent inks.
+ * 4. Exclude garment/base colour when specified.
+ * 5. Respect maxScreens constraint.
  */
 object ColorExtractor {
 
     private const val MAX_PROCESSING_DIMENSION = 300
+    private const val OVERCLUSTER_K = 16
     private const val MAX_KMEANS_ITERATIONS = 20
-    private const val DELTA_E_SIMILARITY_THRESHOLD = 9.0 // Perceptually close colors for grouping
+    private const val EDGE_GRADIENT_THRESHOLD = 25 // Color distance threshold to flag an edge pixel
 
     data class ExtractionResult(
         val palette: List<DominantColor>,
         val colorGroups: List<ColorGroup>,
-        val totalValidPixels: Int
+        val totalValidPixels: Int,
+        val excludedGarmentPixels: Int = 0
     )
 
     /**
-     * Extracts dominant colors from [sourceBitmap].
-     *
-     * @param sourceBitmap The input image bitmap.
-     * @param targetPaletteSize Desired number of dominant clusters (clamped to 3..16, default 8).
-     * @param seed Random seed for deterministic reproducibility.
+     * Extracts print colors using over-clustering and CIEDE2000 merging.
      */
     fun extractPalette(
         sourceBitmap: Bitmap,
-        targetPaletteSize: Int = 8,
+        config: PrintColorConfig = PrintColorConfig(),
         seed: Long = 42L
     ): ExtractionResult {
-        val clampedK = targetPaletteSize.coerceIn(3, 16)
-
-        // Step 1: Scale down safely for memory & CPU efficiency
+        // Step 1: Scale down safely for memory & CPU efficiency (max 300px)
         val scaledBitmap = createAnalysisBitmap(sourceBitmap, MAX_PROCESSING_DIMENSION)
         val width = scaledBitmap.width
         val height = scaledBitmap.height
@@ -58,24 +58,42 @@ object ColorExtractor {
             scaledBitmap.recycle()
         }
 
-        // Step 2: Filter transparent pixels and prepare RGB/Lab buffers
-        val validRgbList = ArrayList<Int>(totalPixels)
-        val validLabList = ArrayList<ColorConverter.Lab>(totalPixels)
+        // Step 2: Edge detection mask to flag anti-aliased edge transition pixels
+        val isEdgePixel = detectAntiAliasedEdges(pixels, width, height)
 
-        for (p in pixels) {
+        // Step 3: Filter transparent pixels and edge pixels for the cluster core
+        val coreRgbList = ArrayList<Int>(totalPixels)
+        val coreLabList = ArrayList<ColorConverter.Lab>(totalPixels)
+        val allValidRgbList = ArrayList<Int>(totalPixels)
+        val allValidLabList = ArrayList<ColorConverter.Lab>(totalPixels)
+
+        val garmentLab = config.garmentColorHex?.let {
+            val rgb = ColorConverter.hexToRgb(it)
+            ColorConverter.rgbToLab(rgb.r, rgb.g, rgb.b)
+        }
+
+        for (i in 0 until totalPixels) {
+            val p = pixels[i]
             val alpha = (p shr 24) and 0xFF
             if (alpha >= 128) {
                 val r = (p shr 16) and 0xFF
                 val g = (p shr 8) and 0xFF
                 val b = p and 0xFF
-                validRgbList.add(p)
-                validLabList.add(ColorConverter.rgbToLab(r, g, b))
+                val lab = ColorConverter.rgbToLab(r, g, b)
+
+                allValidRgbList.add(p)
+                allValidLabList.add(lab)
+
+                // Only feed non-edge pixels to clustering initialization and core assignment
+                if (!isEdgePixel[i]) {
+                    coreRgbList.add(p)
+                    coreLabList.add(lab)
+                }
             }
         }
 
-        val validCount = validRgbList.size
+        val validCount = allValidRgbList.size
         if (validCount == 0) {
-            // Fallback for completely transparent image
             val defaultColor = DominantColor(
                 id = 0,
                 hex = "#FFFFFF",
@@ -90,21 +108,21 @@ object ColorExtractor {
             )
             return ExtractionResult(
                 palette = listOf(defaultColor),
-                colorGroups = listOf(
-                    ColorGroup(0, defaultColor, listOf(defaultColor), 100.0f)
-                ),
+                colorGroups = listOf(ColorGroup(0, defaultColor, listOf(defaultColor), 100.0f)),
                 totalValidPixels = 0
             )
         }
 
-        // If unique colors are fewer than K, adapt K
-        val k = min(clampedK, validCount)
+        // If core pixels are too few, fall back to all valid pixels
+        val trainingRgbList = if (coreRgbList.size >= OVERCLUSTER_K) coreRgbList else allValidRgbList
+        val trainingLabList = if (coreLabList.size >= OVERCLUSTER_K) coreLabList else allValidLabList
+        val trainingCount = trainingLabList.size
 
-        // Step 3: Deterministic K-Means++ initialization
-        val clusterCenters = initializeKMeansPlusPlus(validLabList, k, seed)
+        // Step 4: Over-cluster with K-Means++
+        val kInitial = min(OVERCLUSTER_K, trainingCount)
+        val clusterCenters = initializeKMeansPlusPlus(trainingLabList, kInitial, seed)
 
-        // Step 4: Iterative K-Means in Lab space
-        val clusterAssignments = IntArray(validCount)
+        val clusterAssignments = IntArray(trainingCount)
         var iterations = 0
         var changed = true
 
@@ -112,21 +130,16 @@ object ColorExtractor {
             changed = false
             iterations++
 
-            // Assign each pixel to nearest cluster center
-            for (i in 0 until validCount) {
-                val pixelLab = validLabList[i]
+            for (i in 0 until trainingCount) {
+                val pixelLab = trainingLabList[i]
                 var bestCluster = 0
-                var minDistanceSq = Double.MAX_VALUE
+                var minDistance = Double.MAX_VALUE
 
-                for (c in 0 until k) {
+                for (c in 0 until kInitial) {
                     val center = clusterCenters[c]
-                    val dl = pixelLab.l - center.l
-                    val da = pixelLab.a - center.a
-                    val db = pixelLab.b - center.b
-                    val distSq = dl * dl + da * da + db * db
-
-                    if (distSq < minDistanceSq) {
-                        minDistanceSq = distSq
+                    val dist = ColorConverter.deltaE00(pixelLab, center)
+                    if (dist < minDistance) {
+                        minDistance = dist
                         bestCluster = c
                     }
                 }
@@ -137,22 +150,21 @@ object ColorExtractor {
                 }
             }
 
-            // Recompute cluster centers
-            val countPerCluster = IntArray(k)
-            val sumL = DoubleArray(k)
-            val sumA = DoubleArray(k)
-            val sumB = DoubleArray(k)
+            val countPerCluster = IntArray(kInitial)
+            val sumL = DoubleArray(kInitial)
+            val sumA = DoubleArray(kInitial)
+            val sumB = DoubleArray(kInitial)
 
-            for (i in 0 until validCount) {
+            for (i in 0 until trainingCount) {
                 val c = clusterAssignments[i]
-                val lab = validLabList[i]
+                val lab = trainingLabList[i]
                 countPerCluster[c]++
                 sumL[c] += lab.l
                 sumA[c] += lab.a
                 sumB[c] += lab.b
             }
 
-            for (c in 0 until k) {
+            for (c in 0 until kInitial) {
                 if (countPerCluster[c] > 0) {
                     clusterCenters[c] = ColorConverter.Lab(
                         sumL[c] / countPerCluster[c],
@@ -163,68 +175,253 @@ object ColorExtractor {
             }
         }
 
-        // Step 5: Gather cluster RGB representatives & counts
-        val countPerCluster = IntArray(k)
-        val sumR = LongArray(k)
-        val sumG = LongArray(k)
-        val sumB = LongArray(k)
-
-        for (i in 0 until validCount) {
-            val c = clusterAssignments[i]
-            val pixel = validRgbList[i]
-            countPerCluster[c]++
-            sumR[c] += ((pixel shr 16) and 0xFF).toLong()
-            sumG[c] += ((pixel shr 8) and 0xFF).toLong()
-            sumB[c] += (pixel and 0xFF).toLong()
+        // Step 5: Gather RGB centroids for all initial clusters
+        class TempCluster(
+            var centerLab: ColorConverter.Lab,
+            var count: Int,
+            var sumR: Long,
+            var sumG: Long,
+            var sumB: Long
+        ) {
+            val r: Int get() = if (count > 0) (sumR / count).toInt().coerceIn(0, 255) else 0
+            val g: Int get() = if (count > 0) (sumG / count).toInt().coerceIn(0, 255) else 0
+            val b: Int get() = if (count > 0) (sumB / count).toInt().coerceIn(0, 255) else 0
         }
 
-        // Build DominantColor list, sorted by descending pixel count
-        val rawPalette = ArrayList<DominantColor>()
-        for (c in 0 until k) {
-            val count = countPerCluster[c]
+        val clusters = ArrayList<TempCluster>()
+        for (c in 0 until kInitial) {
+            var count = 0
+            var sumR = 0L
+            var sumG = 0L
+            var sumB = 0L
+            for (i in 0 until trainingCount) {
+                if (clusterAssignments[i] == c) {
+                    count++
+                    val p = trainingRgbList[i]
+                    sumR += ((p shr 16) and 0xFF).toLong()
+                    sumG += ((p shr 8) and 0xFF).toLong()
+                    sumB += (p and 0xFF).toLong()
+                }
+            }
             if (count > 0) {
-                val avgR = (sumR[c] / count).toInt().coerceIn(0, 255)
-                val avgG = (sumG[c] / count).toInt().coerceIn(0, 255)
-                val avgB = (sumB[c] / count).toInt().coerceIn(0, 255)
-                val lab = ColorConverter.rgbToLab(avgR, avgG, avgB)
-                val percentage = (count.toFloat() / validCount.toFloat()) * 100.0f
-
-                rawPalette.add(
-                    DominantColor(
-                        id = c,
-                        hex = ColorConverter.rgbToHex(avgR, avgG, avgB),
-                        r = avgR,
-                        g = avgG,
-                        b = avgB,
-                        labL = lab.l,
-                        labA = lab.a,
-                        labB = lab.b,
-                        pixelCount = count,
-                        pixelPercentage = percentage
-                    )
-                )
+                clusters.add(TempCluster(clusterCenters[c], count, sumR, sumG, sumB))
             }
         }
 
-        rawPalette.sortByDescending { it.pixelCount }
+        // Step 6: Iteratively merge clusters closer than CIEDE2000 threshold
+        val mergeThreshold = config.mergeThresholdDeltaE00
+        var mergedAny = true
+        while (mergedAny && clusters.size > 1) {
+            mergedAny = false
+            var bestI = -1
+            var bestJ = -1
+            var minMergeDist = Double.MAX_VALUE
 
-        // Re-index IDs sequentially
-        val sortedPalette = rawPalette.mapIndexed { index, color ->
-            color.copy(id = index, groupId = index)
+            for (i in 0 until clusters.size) {
+                for (j in (i + 1) until clusters.size) {
+                    val dE00 = ColorConverter.deltaE00(clusters[i].centerLab, clusters[j].centerLab)
+                    if (dE00 < mergeThreshold && dE00 < minMergeDist) {
+                        minMergeDist = dE00
+                        bestI = i
+                        bestJ = j
+                    }
+                }
+            }
+
+            if (bestI != -1 && bestJ != -1) {
+                val c1 = clusters[bestI]
+                val c2 = clusters[bestJ]
+                val mergedCount = c1.count + c2.count
+                val mergedSumR = c1.sumR + c2.sumR
+                val mergedSumG = c1.sumG + c2.sumG
+                val mergedSumB = c1.sumB + c2.sumB
+
+                val avgR = (mergedSumR / mergedCount).toInt().coerceIn(0, 255)
+                val avgG = (mergedSumG / mergedCount).toInt().coerceIn(0, 255)
+                val avgB = (mergedSumB / mergedCount).toInt().coerceIn(0, 255)
+                val mergedLab = ColorConverter.rgbToLab(avgR, avgG, avgB)
+
+                c1.centerLab = mergedLab
+                c1.count = mergedCount
+                c1.sumR = mergedSumR
+                c1.sumG = mergedSumG
+                c1.sumB = mergedSumB
+
+                clusters.removeAt(bestJ)
+                mergedAny = true
+            }
         }
 
-        // Step 6: Identify and group perceptually similar colors using Delta E
-        val colorGroups = groupSimilarColors(sortedPalette)
+        // Step 7: Assign ALL valid pixels (including edge pixels) to the nearest remaining cluster
+        val finalCounts = IntArray(clusters.size)
+        val finalSumR = LongArray(clusters.size)
+        val finalSumG = LongArray(clusters.size)
+        val finalSumB = LongArray(clusters.size)
+
+        for (i in 0 until validCount) {
+            val lab = allValidLabList[i]
+            val p = allValidRgbList[i]
+            var bestIdx = 0
+            var minDist = Double.MAX_VALUE
+
+            for (c in clusters.indices) {
+                val dist = ColorConverter.deltaE00(lab, clusters[c].centerLab)
+                if (dist < minDist) {
+                    minDist = dist
+                    bestIdx = c
+                }
+            }
+
+            finalCounts[bestIdx]++
+            finalSumR[bestIdx] += ((p shr 16) and 0xFF).toLong()
+            finalSumG[bestIdx] += ((p shr 8) and 0xFF).toLong()
+            finalSumB[bestIdx] += (p and 0xFF).toLong()
+        }
+
+        // Update cluster centroids based on full pixel assignments
+        for (c in clusters.indices) {
+            clusters[c].count = finalCounts[c]
+            clusters[c].sumR = finalSumR[c]
+            clusters[c].sumG = finalSumG[c]
+            clusters[c].sumB = finalSumB[c]
+            if (clusters[c].count > 0) {
+                clusters[c].centerLab = ColorConverter.rgbToLab(clusters[c].r, clusters[c].g, clusters[c].b)
+            }
+        }
+
+        // Step 8: Separate garment base color (if specified) and drop low coverage noise
+        var excludedGarmentPixels = 0
+        val remainingClusters = ArrayList<TempCluster>()
+
+        for (c in clusters) {
+            val percentage = (c.count.toFloat() / validCount.toFloat()) * 100.0f
+            if (garmentLab != null && ColorConverter.deltaE00(c.centerLab, garmentLab) < 5.0) {
+                excludedGarmentPixels += c.count
+            } else if (percentage >= config.minCoveragePercentage) {
+                remainingClusters.add(c)
+            }
+        }
+
+        // If all colors were filtered out, preserve the largest one
+        if (remainingClusters.isEmpty() && clusters.isNotEmpty()) {
+            remainingClusters.add(clusters.maxByOrNull { it.count }!!)
+        }
+
+        // Step 9: Enforce maxScreens (merge closest clusters until <= maxScreens)
+        while (remainingClusters.size > config.maxScreens) {
+            var bestI = -1
+            var bestJ = -1
+            var minMergeDist = Double.MAX_VALUE
+
+            for (i in 0 until remainingClusters.size) {
+                for (j in (i + 1) until remainingClusters.size) {
+                    val dE00 = ColorConverter.deltaE00(remainingClusters[i].centerLab, remainingClusters[j].centerLab)
+                    if (dE00 < minMergeDist) {
+                        minMergeDist = dE00
+                        bestI = i
+                        bestJ = j
+                    }
+                }
+            }
+
+            if (bestI != -1 && bestJ != -1) {
+                val c1 = remainingClusters[bestI]
+                val c2 = remainingClusters[bestJ]
+                val mergedCount = c1.count + c2.count
+                val mergedSumR = c1.sumR + c2.sumR
+                val mergedSumG = c1.sumG + c2.sumG
+                val mergedSumB = c1.sumB + c2.sumB
+
+                val avgR = (mergedSumR / mergedCount).toInt().coerceIn(0, 255)
+                val avgG = (mergedSumG / mergedCount).toInt().coerceIn(0, 255)
+                val avgB = (mergedSumB / mergedCount).toInt().coerceIn(0, 255)
+                val mergedLab = ColorConverter.rgbToLab(avgR, avgG, avgB)
+
+                c1.centerLab = mergedLab
+                c1.count = mergedCount
+                c1.sumR = mergedSumR
+                c1.sumG = mergedSumG
+                c1.sumB = mergedSumB
+
+                remainingClusters.removeAt(bestJ)
+            } else {
+                break
+            }
+        }
+
+        // Sort by descending pixel count
+        remainingClusters.sortByDescending { it.count }
+
+        // Recalculate percentages relative to valid printing pixels
+        val printPixelsCount = validCount - excludedGarmentPixels
+        val totalDenom = if (printPixelsCount > 0) printPixelsCount.toFloat() else validCount.toFloat()
+
+        val finalPalette = remainingClusters.mapIndexed { index, c ->
+            val percentage = (c.count.toFloat() / totalDenom) * 100.0f
+            DominantColor(
+                id = index,
+                hex = ColorConverter.rgbToHex(c.r, c.g, c.b),
+                r = c.r,
+                g = c.g,
+                b = c.b,
+                labL = c.centerLab.l,
+                labA = c.centerLab.a,
+                labB = c.centerLab.b,
+                pixelCount = c.count,
+                pixelPercentage = percentage,
+                groupId = index
+            )
+        }
+
+        val colorGroups = groupSimilarColors(finalPalette)
 
         return ExtractionResult(
-            palette = sortedPalette,
+            palette = finalPalette,
             colorGroups = colorGroups,
-            totalValidPixels = validCount
+            totalValidPixels = validCount,
+            excludedGarmentPixels = excludedGarmentPixels
         )
     }
 
     /**
-     * Groups colors that have Delta E < DELTA_E_SIMILARITY_THRESHOLD.
+     * Flags anti-aliased edge transition pixels between two colors using local gradient magnitude.
+     */
+    private fun detectAntiAliasedEdges(pixels: IntArray, width: Int, height: Int): BooleanArray {
+        val isEdge = BooleanArray(pixels.size)
+        for (y in 1 until (height - 1)) {
+            for (x in 1 until (width - 1)) {
+                val idx = y * width + x
+                val p = pixels[idx]
+                if (((p shr 24) and 0xFF) < 128) continue
+
+                val pRight = pixels[idx + 1]
+                val pDown = pixels[idx + width]
+
+                val r = (p shr 16) and 0xFF
+                val g = (p shr 8) and 0xFF
+                val b = p and 0xFF
+
+                val rR = (pRight shr 16) and 0xFF
+                val gR = (pRight shr 8) and 0xFF
+                val bR = pRight and 0xFF
+
+                val rD = (pDown shr 16) and 0xFF
+                val gD = (pDown shr 8) and 0xFF
+                val bD = pDown and 0xFF
+
+                val gradX = abs(r - rR) + abs(g - gR) + abs(b - bR)
+                val gradY = abs(r - rD) + abs(g - gD) + abs(b - bD)
+
+                if (gradX > EDGE_GRADIENT_THRESHOLD || gradY > EDGE_GRADIENT_THRESHOLD) {
+                    isEdge[idx] = true
+                }
+            }
+        }
+        return isEdge
+    }
+
+    /**
+     * Groups colors that have CIEDE2000 < 5.0 into visual families.
      */
     private fun groupSimilarColors(palette: List<DominantColor>): List<ColorGroup> {
         val assigned = BooleanArray(palette.size)
@@ -245,9 +442,9 @@ object ColorExtractor {
                 if (!assigned[j]) {
                     val candidate = palette[j]
                     val candidateLab = ColorConverter.Lab(candidate.labL, candidate.labA, candidate.labB)
-                    val distance = ColorConverter.deltaE(primaryLab, candidateLab)
+                    val distance = ColorConverter.deltaE00(primaryLab, candidateLab)
 
-                    if (distance <= DELTA_E_SIMILARITY_THRESHOLD) {
+                    if (distance <= 5.0) {
                         members.add(candidate)
                         assigned[j] = true
                         totalPercentage += candidate.pixelPercentage
@@ -276,23 +473,19 @@ object ColorExtractor {
         val rand = Random(seed)
         val centers = ArrayList<ColorConverter.Lab>(k)
 
-        // 1. Pick first center randomly
         val firstIdx = rand.nextInt(labList.size)
         centers.add(labList[firstIdx])
 
         val distancesSq = DoubleArray(labList.size) { Double.MAX_VALUE }
 
-        // 2. Pick remaining centers proportional to D(x)^2
         while (centers.size < k) {
             val lastCenter = centers.last()
             var sumDistancesSq = 0.0
 
             for (i in labList.indices) {
                 val lab = labList[i]
-                val dl = lab.l - lastCenter.l
-                val da = lab.a - lastCenter.a
-                val db = lab.b - lastCenter.b
-                val dSq = dl * dl + da * da + db * db
+                val d = ColorConverter.deltaE00(lab, lastCenter)
+                val dSq = d * d
 
                 if (dSq < distancesSq[i]) {
                     distancesSq[i] = dSq
@@ -301,7 +494,6 @@ object ColorExtractor {
             }
 
             if (sumDistancesSq == 0.0) {
-                // If all distances are 0, pick a random point
                 centers.add(labList[rand.nextInt(labList.size)])
             } else {
                 val targetThreshold = rand.nextDouble() * sumDistancesSq

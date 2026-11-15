@@ -13,3 +13,15 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Google Services
+google-services.json
+app/google-services.json
+
+# User shade libraries & private CSV data
+user_libraries/*.csv
+**/user_libraries/*.csv
+*.csv.user
+
+# Temporary copies of source for code review (not part of the app)
+/review/

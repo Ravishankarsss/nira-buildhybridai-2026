@@ -18,7 +18,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -49,6 +52,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mos.nira.features.artwork.domain.ArtworkMetadata
+import com.mos.nira.features.artwork.domain.DominantColor
 
 private val NavyBg = Color(0xFF0B1020)
 private val CardBg = Color(0xFF171F35)
@@ -61,9 +65,11 @@ private val TextMuted = Color(0xFF9BA6C0)
 fun ArtworkPreviewScreen(
     bitmap: Bitmap?,
     metadata: ArtworkMetadata?,
-    paletteSize: Int,
+    maxScreens: Int,
+    garmentColor: DominantColor?,
     analysisState: AnalysisState,
-    onPaletteSizeChange: (Int) -> Unit,
+    onMaxScreensChange: (Int) -> Unit,
+    onSelectGarmentHex: (String?) -> Unit,
     onReplaceImage: (Uri) -> Unit,
     onStartAnalysis: () -> Unit,
     onBack: () -> Unit,
@@ -148,7 +154,6 @@ fun ArtworkPreviewScreen(
                     CircularProgressIndicator(color = Cyan)
                 }
 
-                // Zoom hint overlay
                 Text(
                     text = if (scale > 1.05f) "Pinch to zoom (${String.format("%.1fx", scale)}) • Tap to reset" else "Pinch to zoom & pan",
                     color = TextWhite.copy(alpha = 0.6f),
@@ -208,21 +213,13 @@ fun ArtworkPreviewScreen(
                         Text("File Size", color = TextMuted, fontSize = 12.sp)
                         Text(metadata.fileSizeFormatted, color = TextWhite, fontSize = 12.sp, fontFamily = FontFamily.Monospace)
                     }
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text("MIME Type", color = TextMuted, fontSize = 12.sp)
-                        Text(metadata.mimeType, color = TextWhite, fontSize = 12.sp)
-                    }
                 }
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Extraction Configuration Card
+        // Print Engineering Constraints: Garment Color & Max Screens
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(18.dp),
@@ -233,32 +230,31 @@ fun ArtworkPreviewScreen(
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
+                Text(
+                    text = "PRINT CONSTRAINTS & GARMENT BASE",
+                    color = Violet,
+                    fontSize = 11.sp,
+                    letterSpacing = 1.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Max screens slider
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = "TARGET PALETTE SIZE",
-                        color = Violet,
-                        fontSize = 11.sp,
-                        letterSpacing = 1.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = "$paletteSize COLORS",
-                        color = Cyan,
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        fontFamily = FontFamily.Monospace
-                    )
+                    Text("Maximum Screens Allowed", color = TextMuted, fontSize = 12.sp)
+                    Text("$maxScreens SCREENS", color = Cyan, fontSize = 13.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
                 }
 
                 Slider(
-                    value = paletteSize.toFloat(),
-                    onValueChange = { onPaletteSizeChange(it.toInt()) },
-                    valueRange = 3f..16f,
-                    steps = 12,
+                    value = maxScreens.toFloat(),
+                    onValueChange = { onMaxScreensChange(it.toInt()) },
+                    valueRange = 2f..16f,
+                    steps = 13,
                     colors = SliderDefaults.colors(
                         thumbColor = Cyan,
                         activeTrackColor = Violet,
@@ -266,11 +262,50 @@ fun ArtworkPreviewScreen(
                     )
                 )
 
-                Text(
-                    text = "Controls CIELAB K-Means clustering density (range: 3 to 16 dominant shades).",
-                    color = TextMuted,
-                    fontSize = 11.sp
-                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Garment base swatch presets
+                Text("Garment Base Color (Excluded from Ink Layers):", color = TextMuted, fontSize = 12.sp)
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    val presets = listOf(
+                        "None" to null,
+                        "White" to "#FFFFFF",
+                        "Black" to "#000000",
+                        "Navy" to "#0B1020",
+                        "Heather" to "#B0B0B0"
+                    )
+
+                    presets.forEach { (name, hex) ->
+                        val isSelected = (garmentColor?.hex?.equals(hex, ignoreCase = true) == true) || (hex == null && garmentColor == null)
+                        OutlinedButton(
+                            onClick = { onSelectGarmentHex(hex) },
+                            shape = RoundedCornerShape(8.dp),
+                            border = if (isSelected) androidx.compose.foundation.BorderStroke(1.5.dp, Cyan) else null,
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                containerColor = if (isSelected) Color(0xFF232D48) else Color.Transparent
+                            )
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                if (hex != null) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(12.dp)
+                                            .clip(CircleShape)
+                                            .background(Color(android.graphics.Color.parseColor(hex)))
+                                            .border(1.dp, Color.White.copy(alpha = 0.3f), CircleShape)
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                }
+                                Text(name, color = if (isSelected) Cyan else TextWhite, fontSize = 11.sp)
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -320,7 +355,7 @@ fun ArtworkPreviewScreen(
                     ),
                     shape = RoundedCornerShape(14.dp)
                 ) {
-                    Text("Analyze Artwork & Extract Colors  →", fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                    Text("Auto-Detect Print Colours (CIEDE2000)  →", fontWeight = FontWeight.Bold, fontSize = 15.sp)
                 }
             }
         }

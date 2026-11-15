@@ -15,8 +15,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,6 +31,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mos.nira.features.artwork.domain.DominantColor
+import com.mos.nira.features.artwork.domain.ShadeEntry
+import com.mos.nira.features.artwork.domain.ShadeMatch
 
 private val CardBg = Color(0xFF171F35)
 private val BorderViolet = Color(0xFF8B7CFF)
@@ -98,12 +103,21 @@ fun ColorSwatchCard(
                     fontFamily = FontFamily.Monospace
                 )
 
-                Text(
-                    text = color.formattedLab,
-                    color = TextMuted.copy(alpha = 0.8f),
-                    fontSize = 11.sp,
-                    fontFamily = FontFamily.Monospace
-                )
+                if (color.assignedShade != null) {
+                    Text(
+                        text = "Matched Shade: [${color.assignedShade.type}] ${color.assignedShade.code} (${color.assignedShade.name})",
+                        color = AccentCyan,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                } else {
+                    Text(
+                        text = color.formattedLab,
+                        color = TextMuted.copy(alpha = 0.8f),
+                        fontSize = 11.sp,
+                        fontFamily = FontFamily.Monospace
+                    )
+                }
             }
         }
     }
@@ -112,6 +126,7 @@ fun ColorSwatchCard(
 @Composable
 fun ColorDetailInspector(
     color: DominantColor,
+    onAssignShade: (ShadeEntry) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val composeColor = Color(color.r, color.g, color.b)
@@ -135,7 +150,7 @@ fun ColorDetailInspector(
                         .size(60.dp)
                         .clip(RoundedCornerShape(14.dp))
                         .background(composeColor)
-                        .border(1.dp, Color.White.copy(alpha = 0.25f), RoundedCornerShape(14.dp))
+                        .border(1.dp, Color.White.copy(alpha = 2.5f), RoundedCornerShape(14.dp))
                 )
 
                 Spacer(modifier = Modifier.width(16.dp))
@@ -177,14 +192,94 @@ fun ColorDetailInspector(
                 )
             }
 
+            // Top 3 Nearest Shades Section
+            if (color.nearestShades.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "NEAREST LIBRARY SHADE MATCHES (CIEDE2000)",
+                    color = BorderViolet,
+                    fontSize = 10.sp,
+                    letterSpacing = 1.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    color.nearestShades.take(3).forEach { match ->
+                        ShadeMatchRow(
+                            match = match,
+                            isAssigned = color.assignedShade?.code == match.shade.code,
+                            onAssign = { onAssignShade(match.shade) }
+                        )
+                    }
+                }
+            }
+
             Spacer(modifier = Modifier.height(10.dp))
 
             Text(
-                text = "Note: L*a*b* values are estimated via IEC 61966-2-1 standard sRGB D65 illuminant conversion, not direct spectrophotometer reflectance measurements.",
+                text = "Note: L*a*b* values and CIEDE2000 matches are mathematical estimates derived from digital RGB input under D65 illuminant, not direct physical spectrophotometer reflectance readings.",
                 color = TextMuted.copy(alpha = 0.7f),
                 fontSize = 10.sp,
                 lineHeight = 14.sp
             )
+        }
+    }
+}
+
+@Composable
+fun ShadeMatchRow(
+    match: ShadeMatch,
+    isAssigned: Boolean,
+    onAssign: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(10.dp))
+            .background(if (isAssigned) Color(0xFF232D48) else Color(0xFF0F1526))
+            .border(
+                1.dp,
+                if (isAssigned) AccentCyan else Color.White.copy(alpha = 0.05f),
+                RoundedCornerShape(10.dp)
+            )
+            .padding(10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = "[${match.shade.type}] ${match.shade.code}",
+                    color = TextWhite,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily.Monospace
+                )
+                Spacer(modifier = Modifier.width(6.dp))
+                Text(
+                    text = match.shade.name,
+                    color = TextMuted,
+                    fontSize = 11.sp
+                )
+            }
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = "${String.format("%.2f", match.deltaE00)} ΔE00 • ${match.grade} (${match.shade.libraryName})",
+                color = AccentCyan,
+                fontSize = 10.sp
+            )
+        }
+
+        OutlinedButton(
+            onClick = onAssign,
+            shape = RoundedCornerShape(8.dp),
+            contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 8.dp, vertical = 4.dp),
+            colors = ButtonDefaults.outlinedButtonColors(
+                containerColor = if (isAssigned) BorderViolet else Color.Transparent
+            )
+        ) {
+            Text(if (isAssigned) "Assigned ✓" else "Assign", fontSize = 10.sp, color = TextWhite)
         }
     }
 }

@@ -20,13 +20,21 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,6 +49,7 @@ import com.mos.nira.features.artwork.components.ColorDetailInspector
 import com.mos.nira.features.artwork.components.ColorSwatchCard
 import com.mos.nira.features.artwork.domain.ColorGroup
 import com.mos.nira.features.artwork.domain.DominantColor
+import com.mos.nira.features.artwork.domain.ShadeEntry
 
 private val NavyBg = Color(0xFF0B1020)
 private val CardBg = Color(0xFF171F35)
@@ -55,11 +64,123 @@ fun ColorIntelligenceScreen(
     palette: List<DominantColor>,
     colorGroups: List<ColorGroup>,
     selectedColor: DominantColor?,
+    garmentColor: DominantColor?,
     onColorSelected: (DominantColor) -> Unit,
+    onMergeColors: (keepId: Int, mergeId: Int) -> Unit,
+    onRemoveColor: (colorId: Int) -> Unit,
+    onToggleLock: (colorId: Int) -> Unit,
+    onAddHexColor: (String) -> Unit,
+    onSetGarmentColor: (DominantColor?) -> Unit,
+    onOpenShadeLibrary: () -> Unit,
+    onAssignShade: (colorId: Int, shade: ShadeEntry) -> Unit,
     onNavigateToSeparation: () -> Unit,
+    onNavigateToPrintReport: () -> Unit = {},
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var showAddDialog by remember { mutableStateOf(false) }
+    var showMergeDialog by remember { mutableStateOf(false) }
+    var mergeTargetId by remember { mutableStateOf<Int?>(null) }
+    var hexInput by remember { mutableStateOf("#") }
+
+    if (showAddDialog) {
+        AlertDialog(
+            onDismissRequest = { showAddDialog = false },
+            title = { Text("Add Spot Colour", color = TextWhite, fontWeight = FontWeight.Bold) },
+            text = {
+                Column {
+                    Text("Enter custom 6-digit HEX color code (e.g. #FF5500):", color = TextMuted, fontSize = 12.sp)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = hexInput,
+                        onValueChange = { hexInput = it.uppercase() },
+                        singleLine = true,
+                        colors = TextFieldDefaults.colors(
+                            focusedTextColor = TextWhite,
+                            unfocusedTextColor = TextWhite,
+                            focusedContainerColor = Color(0xFF0F1526),
+                            unfocusedContainerColor = Color(0xFF0F1526),
+                            focusedIndicatorColor = Cyan
+                        )
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        onAddHexColor(hexInput)
+                        showAddDialog = false
+                        hexInput = "#"
+                    }
+                ) {
+                    Text("Add & Reassign", color = Cyan, fontWeight = FontWeight.Bold)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showAddDialog = false }) {
+                    Text("Cancel", color = TextWhite)
+                }
+            },
+            containerColor = CardBg,
+            shape = RoundedCornerShape(16.dp)
+        )
+    }
+
+    if (showMergeDialog && selectedColor != null) {
+        AlertDialog(
+            onDismissRequest = { showMergeDialog = false },
+            title = { Text("Merge ${selectedColor.hex} Into...", color = TextWhite, fontWeight = FontWeight.Bold) },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text("Select which colour to absorb this shade into:", color = TextMuted, fontSize = 12.sp)
+                    palette.filter { it.id != selectedColor.id }.forEach { target ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(if (mergeTargetId == target.id) Color(0xFF232D48) else Color(0xFF0F1526))
+                                .clickable { mergeTargetId = target.id }
+                                .padding(10.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(20.dp)
+                                    .clip(CircleShape)
+                                    .background(Color(target.r, target.g, target.b))
+                            )
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Text(target.hex, color = TextWhite, fontFamily = FontFamily.Monospace, fontSize = 13.sp)
+                            Spacer(modifier = Modifier.weight(1f))
+                            Text(target.formattedPercentage, color = Cyan, fontSize = 12.sp)
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        if (mergeTargetId != null) {
+                            onMergeColors(mergeTargetId!!, selectedColor.id)
+                            showMergeDialog = false
+                            mergeTargetId = null
+                        }
+                    },
+                    enabled = mergeTargetId != null
+                ) {
+                    Text("Confirm Merge", color = Cyan, fontWeight = FontWeight.Bold)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showMergeDialog = false }) {
+                    Text("Cancel", color = TextWhite)
+                }
+            },
+            containerColor = CardBg,
+            shape = RoundedCornerShape(16.dp)
+        )
+    }
+
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
@@ -83,15 +204,31 @@ fun ColorIntelligenceScreen(
                     Text("← Preview", color = TextWhite)
                 }
 
-                Button(
-                    onClick = onNavigateToSeparation,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Violet,
-                        contentColor = TextWhite
-                    ),
-                    shape = RoundedCornerShape(10.dp)
-                ) {
-                    Text("Digital Separation →", fontWeight = FontWeight.Bold)
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    OutlinedButton(
+                        onClick = onOpenShadeLibrary,
+                        shape = RoundedCornerShape(10.dp)
+                    ) {
+                        Text("Shades", color = Cyan, fontSize = 11.sp)
+                    }
+
+                    OutlinedButton(
+                        onClick = onNavigateToPrintReport,
+                        shape = RoundedCornerShape(10.dp)
+                    ) {
+                        Text("Report", color = Cyan, fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
+                    }
+
+                    Button(
+                        onClick = onNavigateToSeparation,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Violet,
+                            contentColor = TextWhite
+                        ),
+                        shape = RoundedCornerShape(10.dp)
+                    ) {
+                        Text("Separation →", fontWeight = FontWeight.Bold, fontSize = 11.sp)
+                    }
                 }
             }
 
@@ -124,7 +261,7 @@ fun ColorIntelligenceScreen(
 
                         Column {
                             Text(
-                                text = "COLOR INTELLIGENCE",
+                                text = "CIEDE2000 PALETTE & SHADE MATCHING",
                                 color = Cyan,
                                 fontSize = 11.sp,
                                 letterSpacing = 1.sp,
@@ -132,38 +269,93 @@ fun ColorIntelligenceScreen(
                             )
                             Spacer(modifier = Modifier.height(2.dp))
                             Text(
-                                text = "${palette.size} Dominant Colors Extracted",
+                                text = "${palette.size} Print Colours Auto-Detected",
                                 color = TextWhite,
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold
                             )
-                            Text(
-                                text = "Grouped into ${colorGroups.size} perceptual families",
-                                color = TextMuted,
-                                fontSize = 12.sp
-                            )
+                            if (garmentColor != null) {
+                                Text(
+                                    text = "Base garment (${garmentColor.hex}) excluded from print screens",
+                                    color = TextMuted,
+                                    fontSize = 11.sp
+                                )
+                            }
                         }
                     }
                 }
             }
         }
 
-        // Active Selected Color Technical Inspector
+        // Active Selected Color Technical Inspector + Editing Toolbar + Top 3 Shade Matches
         if (selectedColor != null) {
             item {
-                ColorDetailInspector(color = selectedColor)
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    ColorDetailInspector(
+                        color = selectedColor,
+                        onAssignShade = { shade -> onAssignShade(selectedColor.id, shade) }
+                    )
+
+                    // Stage 1 interactive editing controls: Merge, Remove, Lock, Set as Garment Base
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        OutlinedButton(
+                            onClick = { showMergeDialog = true },
+                            modifier = Modifier.weight(1f),
+                            shape = RoundedCornerShape(10.dp)
+                        ) {
+                            Text("Merge...", fontSize = 11.sp, color = TextWhite)
+                        }
+
+                        OutlinedButton(
+                            onClick = { onToggleLock(selectedColor.id) },
+                            modifier = Modifier.weight(1f),
+                            shape = RoundedCornerShape(10.dp)
+                        ) {
+                            Text(if (selectedColor.isLocked) "Unlock" else "Lock", fontSize = 11.sp, color = Cyan)
+                        }
+
+                        OutlinedButton(
+                            onClick = { onSetGarmentColor(selectedColor) },
+                            modifier = Modifier.weight(1f),
+                            shape = RoundedCornerShape(10.dp)
+                        ) {
+                            Text("Base Fabric", fontSize = 11.sp, color = Violet)
+                        }
+
+                        OutlinedButton(
+                            onClick = { onRemoveColor(selectedColor.id) },
+                            modifier = Modifier.weight(1f),
+                            shape = RoundedCornerShape(10.dp)
+                        ) {
+                            Text("Remove", fontSize = 11.sp, color = Color(0xFFFF6E6E))
+                        }
+                    }
+                }
             }
         }
 
-        // Color Swatches Palette Header
+        // Color Swatches Palette Header with "Add Required Colour" CTA
         item {
-            Text(
-                text = "EXTRACTED DOMINANT PALETTE",
-                color = Violet,
-                fontSize = 11.sp,
-                letterSpacing = 1.5.sp,
-                fontWeight = FontWeight.Bold
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "PRINT COLOUR PALETTE",
+                    color = Violet,
+                    fontSize = 11.sp,
+                    letterSpacing = 1.5.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                TextButton(onClick = { showAddDialog = true }) {
+                    Text("+ Add Custom HEX", color = Cyan, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                }
+            }
         }
 
         // Palette Swatches List
@@ -180,7 +372,7 @@ fun ColorIntelligenceScreen(
             item {
                 Spacer(modifier = Modifier.height(6.dp))
                 Text(
-                    text = "PERCEPTUAL COLOR FAMILIES (ΔE < 9.0)",
+                    text = "PERCEPTUAL COLOR FAMILIES (CIEDE2000 < 5.0)",
                     color = Violet,
                     fontSize = 11.sp,
                     letterSpacing = 1.5.sp,
