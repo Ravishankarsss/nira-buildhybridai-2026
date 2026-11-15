@@ -68,7 +68,9 @@ object LocaleHelper {
     }
 
     fun getLocalizedContext(context: Context): Context {
-        val code = _currentLanguageCode.value
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val code = prefs.getString(KEY_LANGUAGE, null) ?: _currentLanguageCode.value
+        _currentLanguageCode.value = code
         val locale = Locale(code)
         Locale.setDefault(locale)
 

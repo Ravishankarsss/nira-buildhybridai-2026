@@ -83,6 +83,10 @@ private val White = Color(0xFFF5F6FF)
 private val Muted = Color(0xFF9BA6C0)
 
 class MainActivity : ComponentActivity() {
+    override fun attachBaseContext(newBase: android.content.Context) {
+        super.attachBaseContext(LocaleHelper.getLocalizedContext(newBase))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         LocaleHelper.init(this)
