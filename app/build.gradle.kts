@@ -18,6 +18,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Phones only (ARM). Leaves out the x86 and x86_64 OpenCV libraries, which are about
+        // 96 MB and are needed only for PC emulators. Remove this block to run on an emulator.
+        ndk {
+            abiFilters += listOf("arm64-v8a", "armeabi-v7a")
+        }
     }
 
     buildTypes {

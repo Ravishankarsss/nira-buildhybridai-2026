@@ -25,7 +25,8 @@ Earlier versions of this file said "44 passed, 0 failed" and "Part B under 250 m
 | `71a61af` | Rules loader reads version 2 keys |
 | `727ee42` | OpenCV and CameraX behind the `ImageOps` interface |
 | `8c5bdd6` | Adjustment engine and channel ZIP export |
-| (next) | Dashboard update, garment camera, Settings |
+| `de0dc0e` | Dashboard update, garment camera, Settings |
+| (next) | APK limited to phone CPU types |
 
 ## 3. What was fixed and built today
 
@@ -74,8 +75,9 @@ Not wired yet (values still hard-coded in the engine):
 | Before OpenCV and CameraX | 11,390,902 | 11.4 |
 | After | 149,074,736 | 149.1 |
 | After dashboard and camera screen | 149,818,954 | 149.8 |
+| After limiting to phone CPU types (current) | 51,167,843 | 51.2 |
 
-OpenCV native library per CPU type: arm64-v8a 20.9 MB, armeabi-v7a 15.0 MB, x86 40.8 MB, x86_64 55.0 MB. The two x86 types (emulators only) are about 96 MB of the increase. Limiting the APK to the two ARM types would bring it to roughly 50 MB, but the app would then not run on a PC emulator. **Decision needed from Ravi.**
+OpenCV native library per CPU type: arm64-v8a 20.9 MB, armeabi-v7a 15.0 MB, x86 40.8 MB, x86_64 55.0 MB. Ravi decided on 15 Nov to build for phones only: `app/build.gradle.kts` has `abiFilters` for `arm64-v8a` and `armeabi-v7a`. The app will **not run on a PC emulator** (x86) until that block is removed.
 
 Not verified: `OpenCvImageOps` has never run (no device). Only `KotlinImageOps` is tested.
 
@@ -158,7 +160,7 @@ Settings has no language switch or Confidential mode yet; those features do not 
 4. Developer messages visible in the Print Report UI ("Part C screens and proof completed...", "Parts A, B & C"). Not fixed.
 5. Hard-coded UI text outside the dashboard; needed for Tamil.
 6. Gradle wrapper is 9.9.0 (was 9.6.0 at the Phase 1 commit). Changed by someone before this session; the build works.
-7. APK size 150 MB (3.4).
+7. APK is ARM-only (51 MB); no emulator support (3.4).
 8. Rules values still hard-coded in the engine (3.3).
 
 ## 6. Next steps (from CLAUDE.md priority order)
