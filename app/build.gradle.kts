@@ -60,6 +60,9 @@ dependencies {
     implementation(libs.coil.compose)
 
     testImplementation(libs.junit)
+    // Real JSON parser for JVM unit tests. Without it the Android org.json stubs return
+    // default values and a rules-file test would pass without reading anything.
+    testImplementation(libs.org.json)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))

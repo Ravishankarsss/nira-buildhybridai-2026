@@ -19,12 +19,25 @@ data class ProcessInksConfig(
 )
 
 /**
- * Data container for separation decision rules read from assets/print_rules.json.
+ * Data container for separation decision rules read from assets/print_rules.json (version 2).
+ *
+ * Where each value comes from in the rules file:
+ * - darkGarmentThresholdL     <- white_base.garment_L_threshold
+ * - qualityToleranceDeltaE00  <- recommendation.quality_tolerance_mean_de00
+ * - minResolutionPxPerCm      <- resolution.px_per_cm_min_for_fine_detail
+ * - chokeMmDefault            <- underbase_rules.choke_mm_default
+ * - confidence                <- white_base.confidence
+ *
+ * The defaults below are only a fallback for when the file cannot be read. They must equal the
+ * values in print_rules.json; PrintRulesRepositoryTest fails if they drift apart.
+ *
+ * highlightWhiteThresholdL and highlightWhiteMaxChroma have no value in the rules file yet
+ * (white_base.highlight_white only says "adjustable threshold"), so they stay as defaults here.
  */
 data class SeparationDecisionRules(
-    val darkGarmentThresholdL: Double = 45.0,
-    val qualityToleranceDeltaE00: Double = 4.5,
-    val minResolutionPxPerCm: Double = 40.0,
+    val darkGarmentThresholdL: Double = 70.0,
+    val qualityToleranceDeltaE00: Double = 3.0,
+    val minResolutionPxPerCm: Double = 59.0,
     val highlightWhiteThresholdL: Double = 80.0,
     val highlightWhiteMaxChroma: Double = 10.0,
     val chokeMmDefault: Double = 0.5,
@@ -69,21 +82,7 @@ class PrintRulesRepository(private val context: Context?) {
     suspend fun getProcessInks(): ProcessInksConfig = withContext(Dispatchers.IO) {
         cachedProcessInks?.let { return@withContext it }
         val root = loadJson() ?: return@withContext ProcessInksConfig()
-
-        if (root.has("process_inks")) {
-            val p = root.getJSONObject("process_inks")
-            val config = ProcessInksConfig(
-                cyanHex = p.optString("cyan", "#00AEEF"),
-                magentaHex = p.optString("magenta", "#EC008C"),
-                yellowHex = p.optString("yellow", "#FFF200"),
-                blackHex = p.optString("black", "#231F20"),
-                confidence = p.optString("confidence", "assumption"),
-                note = p.optString("note", "")
-            )
-            cachedProcessInks = config
-            return@withContext config
-        }
-        ProcessInksConfig()
+        parseProcessInks(root).also { cachedProcessInks = it }
     }
 
     /**
@@ -92,27 +91,7 @@ class PrintRulesRepository(private val context: Context?) {
     suspend fun getSeparationDecisionRules(): SeparationDecisionRules = withContext(Dispatchers.IO) {
         cachedDecisionRules?.let { return@withContext it }
         val root = loadJson() ?: return@withContext SeparationDecisionRules()
-
-        val choke = if (root.has("underbase_rules")) {
-            root.getJSONObject("underbase_rules").optDouble("choke_mm_default", 0.5)
-        } else 0.5
-
-        if (root.has("separation_decision_rules")) {
-            val s = root.getJSONObject("separation_decision_rules")
-            val rules = SeparationDecisionRules(
-                darkGarmentThresholdL = s.optDouble("dark_garment_threshold_L", 45.0),
-                qualityToleranceDeltaE00 = s.optDouble("quality_tolerance_deltaE00", 4.5),
-                minResolutionPxPerCm = s.optDouble("min_resolution_px_per_cm", 40.0),
-                highlightWhiteThresholdL = s.optDouble("highlight_white_threshold_L", 80.0),
-                highlightWhiteMaxChroma = s.optDouble("highlight_white_max_chroma", 10.0),
-                chokeMmDefault = choke,
-                confidence = s.optString("dark_garment_confidence", "assumption")
-            )
-            cachedDecisionRules = rules
-            return@withContext rules
-        }
-
-        SeparationDecisionRules(chokeMmDefault = choke)
+        parseSeparationDecisionRules(root).also { cachedDecisionRules = it }
     }
 
     /**
@@ -121,42 +100,84 @@ class PrintRulesRepository(private val context: Context?) {
     suspend fun getMeshDepositRules(): Map<Int, MeshDepositRule> = withContext(Dispatchers.IO) {
         cachedDeposits?.let { return@withContext it }
         val root = loadJson() ?: return@withContext defaultDepositRules()
-
-        val map = mutableMapOf<Int, MeshDepositRule>()
-        if (root.has("ink_consumption")) {
-            val ic = root.getJSONObject("ink_consumption")
-            if (ic.has("plastisol_deposit_g_m2_by_mesh")) {
-                val arr = ic.getJSONArray("plastisol_deposit_g_m2_by_mesh")
-                for (i in 0 until arr.length()) {
-                    val item = arr.getJSONObject(i)
-                    val tpi = item.getInt("tpi")
-                    map[tpi] = MeshDepositRule(
-                        tpi = tpi,
-                        depositGPerM2Default = item.optDouble("deposit_g_m2_default", 36.0),
-                        depositGPerM2Min = item.optDouble("deposit_g_m2_min", 30.0),
-                        depositGPerM2Max = item.optDouble("deposit_g_m2_max", 48.0),
-                        confidence = item.optString("confidence", "interpolated")
-                    )
-                }
-            }
-        }
-
-        if (map.isEmpty()) {
-            defaultDepositRules().also { cachedDeposits = it }
-        } else {
-            cachedDeposits = map
-            map
-        }
+        val map = parseMeshDepositRules(root)
+        (if (map.isEmpty()) defaultDepositRules() else map).also { cachedDeposits = it }
     }
 
-    private fun defaultDepositRules(): Map<Int, MeshDepositRule> {
-        return mapOf(
-            110 to MeshDepositRule(110, 45.0, 38.0, 63.0, "sourced"),
-            137 to MeshDepositRule(137, 40.0, 33.0, 54.0, "interpolated"),
-            156 to MeshDepositRule(156, 36.0, 30.0, 48.0, "interpolated"),
-            200 to MeshDepositRule(200, 28.0, 23.0, 38.0, "interpolated"),
-            230 to MeshDepositRule(230, 24.0, 19.0, 33.0, "interpolated"),
-            305 to MeshDepositRule(305, 18.0, 13.0, 25.0, "sourced")
-        )
+    companion object {
+
+        /**
+         * Reads "process_inks" (cyan, magenta, yellow, black) from the rules file.
+         */
+        fun parseProcessInks(root: JSONObject): ProcessInksConfig {
+            val fallback = ProcessInksConfig()
+            val p = root.optJSONObject("process_inks") ?: return fallback
+            return ProcessInksConfig(
+                cyanHex = p.optString("cyan", fallback.cyanHex),
+                magentaHex = p.optString("magenta", fallback.magentaHex),
+                yellowHex = p.optString("yellow", fallback.yellowHex),
+                blackHex = p.optString("black", fallback.blackHex),
+                confidence = p.optString("confidence", fallback.confidence),
+                note = p.optString("note", "")
+            )
+        }
+
+        /**
+         * Reads the separation decision rules from the version 2 sections
+         * "white_base", "recommendation", "resolution" and "underbase_rules".
+         */
+        fun parseSeparationDecisionRules(root: JSONObject): SeparationDecisionRules {
+            val fallback = SeparationDecisionRules()
+            val whiteBase = root.optJSONObject("white_base")
+            val recommendation = root.optJSONObject("recommendation")
+            val resolution = root.optJSONObject("resolution")
+            val underbase = root.optJSONObject("underbase_rules")
+
+            return SeparationDecisionRules(
+                darkGarmentThresholdL = whiteBase?.optDouble("garment_L_threshold", fallback.darkGarmentThresholdL)
+                    ?: fallback.darkGarmentThresholdL,
+                qualityToleranceDeltaE00 = recommendation?.optDouble("quality_tolerance_mean_de00", fallback.qualityToleranceDeltaE00)
+                    ?: fallback.qualityToleranceDeltaE00,
+                minResolutionPxPerCm = resolution?.optDouble("px_per_cm_min_for_fine_detail", fallback.minResolutionPxPerCm)
+                    ?: fallback.minResolutionPxPerCm,
+                highlightWhiteThresholdL = fallback.highlightWhiteThresholdL,
+                highlightWhiteMaxChroma = fallback.highlightWhiteMaxChroma,
+                chokeMmDefault = underbase?.optDouble("choke_mm_default", fallback.chokeMmDefault)
+                    ?: fallback.chokeMmDefault,
+                confidence = whiteBase?.optString("confidence", fallback.confidence) ?: fallback.confidence
+            )
+        }
+
+        /**
+         * Reads plastisol ink deposits by mesh from "ink_consumption". Empty if the section is missing.
+         */
+        fun parseMeshDepositRules(root: JSONObject): Map<Int, MeshDepositRule> {
+            val map = mutableMapOf<Int, MeshDepositRule>()
+            val arr = root.optJSONObject("ink_consumption")
+                ?.optJSONArray("plastisol_deposit_g_m2_by_mesh") ?: return map
+            for (i in 0 until arr.length()) {
+                val item = arr.getJSONObject(i)
+                val tpi = item.getInt("tpi")
+                map[tpi] = MeshDepositRule(
+                    tpi = tpi,
+                    depositGPerM2Default = item.optDouble("deposit_g_m2_default", 36.0),
+                    depositGPerM2Min = item.optDouble("deposit_g_m2_min", 30.0),
+                    depositGPerM2Max = item.optDouble("deposit_g_m2_max", 48.0),
+                    confidence = item.optString("confidence", "interpolated")
+                )
+            }
+            return map
+        }
+
+        fun defaultDepositRules(): Map<Int, MeshDepositRule> {
+            return mapOf(
+                110 to MeshDepositRule(110, 45.0, 38.0, 63.0, "sourced"),
+                137 to MeshDepositRule(137, 40.0, 33.0, 54.0, "interpolated"),
+                156 to MeshDepositRule(156, 36.0, 30.0, 48.0, "interpolated"),
+                200 to MeshDepositRule(200, 28.0, 23.0, 38.0, "interpolated"),
+                230 to MeshDepositRule(230, 24.0, 19.0, 33.0, "interpolated"),
+                305 to MeshDepositRule(305, 18.0, 13.0, 25.0, "sourced")
+            )
+        }
     }
 }
