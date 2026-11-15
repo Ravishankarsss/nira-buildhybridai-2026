@@ -86,9 +86,24 @@ object SeparationStrategyEngine {
     ): PartBResult {
         val startTime = System.currentTimeMillis()
 
-        val garmentRgb = ColorConverter.hexToRgb(inputs.userGarmentHex ?: inputs.garmentColorHex)
-        val garmentLab = ColorConverter.rgbToLab(garmentRgb.r, garmentRgb.g, garmentRgb.b)
-        val isDarkGarment = inputs.useWhiteBaseOverride ?: (garmentLab.l <= decisionRules.darkGarmentThresholdL)
+        // Garment colour as measured in Part A (image border, or the tapped fabric colour).
+        // The preset is used only when nothing was measured.
+        val garmentLab = measuredGarmentLab(partA, inputs)
+        val garmentRgb = ColorConverter.labToRgb(garmentLab.l, garmentLab.a, garmentLab.b)
+        val garmentLinear = doubleArrayOf(
+            ColorConverter.sRgbToLinear(garmentRgb.r),
+            ColorConverter.sRgbToLinear(garmentRgb.g),
+            ColorConverter.sRgbToLinear(garmentRgb.b)
+        )
+
+        // print_rules.json white_base: a base is needed when the garment is below the lightness
+        // limit or above the chroma limit, and the print has colours lighter than the garment.
+        // The same garment test selects the opaque ink model (ink_model).
+        val garmentIsDarkOrColoured = garmentLab.l < decisionRules.darkGarmentThresholdL ||
+            hypot(garmentLab.a, garmentLab.b) > decisionRules.garmentChromaThreshold
+        val printIsLighterThanGarment = partA.measuredPalette.isEmpty() ||
+            partA.measuredPalette.any { it.lab.l > garmentLab.l }
+        val isDarkGarment = inputs.useWhiteBaseOverride ?: (garmentIsDarkOrColoured && printIsLighterThanGarment)
 
         if (maskedPixels.isEmpty()) {
             val emptyList = listOf(
@@ -102,7 +117,8 @@ object SeparationStrategyEngine {
                 processInks = processInks,
                 isDarkGarment = isDarkGarment,
                 executionTimeMs = System.currentTimeMillis() - startTime,
-                disclaimer = MODEL_DISCLAIMER
+                disclaimer = MODEL_DISCLAIMER,
+                opaqueInkModel = garmentIsDarkOrColoured
             )
         }
 
@@ -119,6 +135,20 @@ object SeparationStrategyEngine {
             it.lab.l > decisionRules.highlightWhiteThresholdL && hypot(it.lab.a, it.lab.b) < decisionRules.highlightWhiteMaxChroma
         }
         val whiteActsAsBase = hasWhitePrintColor && inputs.whitePrintActsAsBase
+
+        // White screens added on top of the spot inks:
+        // - base white, unless a white print colour acts as the base
+        // - highlight white, only when white is not already one of the print colours
+        val spotExtraWhites = (if (isDarkGarment && !whiteActsAsBase) 1 else 0) +
+            (if (isDarkGarment && !hasWhitePrintColor) 1 else 0)
+        val spotWhiteNote = when {
+            spotExtraWhites == 2 -> "Base white underbase and highlight white added."
+            spotExtraWhites == 1 -> "Separate base white underbase added."
+            isDarkGarment && whiteActsAsBase -> "White print colour also acts as the base. No extra screen."
+            else -> null
+        }
+        // CMYK process needs a white substrate: base white and highlight white on a dark garment.
+        val cmykExtraWhites = if (isDarkGarment) 2 else 0
 
         // Detect gradient transitions between pairs of inks (e.g. blue fading into white)
         val transitionNote = detectTransitions(nonGarmentColors)
@@ -137,14 +167,16 @@ object SeparationStrategyEngine {
 
         val bestNResult = evaluateStrategyImplementation(
             strategyType = SeparationStrategyType.BEST_N_SPOT_HALFTONE,
-            name = if (isDarkGarment && !whiteActsAsBase) "Best $bestNCount Spot Inks (+ Whites)" else "Best $bestNCount Spot Inks (Halftone)",
+            name = if (spotExtraWhites > 0) "Best $bestNCount Spot Inks (+ Whites)" else "Best $bestNCount Spot Inks (Halftone)",
             inkHexes = bestNHexes,
             inkNames = bestNNames,
             totalPixelCount = totalMaskedCount,
             quantizedPalette = quantizedPalette,
             isDarkGarment = isDarkGarment,
-            whiteActsAsBase = whiteActsAsBase,
-            darkWarning = if (isDarkGarment && !whiteActsAsBase) "Base white underbase and highlight white added." else null,
+            opaque = garmentIsDarkOrColoured,
+            garmentLinear = garmentLinear,
+            extraWhiteScreens = spotExtraWhites,
+            darkWarning = spotWhiteNote,
             transitionNote = transitionNote,
             notes = "Halftone screen blending of top $bestNCount dominant artwork inks."
         )
@@ -158,14 +190,18 @@ object SeparationStrategyEngine {
             totalPixelCount = totalMaskedCount,
             quantizedPalette = quantizedPalette,
             isDarkGarment = isDarkGarment,
-            whiteActsAsBase = whiteActsAsBase
+            extraWhiteScreens = spotExtraWhites,
+            whiteNote = spotWhiteNote
         )
         strategies.add(flatSpotResult)
 
         // -------------------------------------------------------------
         // Strategy 3: CMYK Process (4 process inks)
         // -------------------------------------------------------------
-        val isTonalRichArtwork = nonGarmentColors.size >= 4
+        // Offer CMYK only for tonal artwork with enough distinct hue families
+        // (print_rules.json recommendation.cmyk_min_hue_families).
+        val hueFamilies = countHueFamilies(nonGarmentColors)
+        val isTonalRichArtwork = hueFamilies >= decisionRules.cmykMinHueFamilies
         val cmykInks = listOf(
             processInks.cyanHex,
             processInks.magentaHex,
@@ -175,19 +211,22 @@ object SeparationStrategyEngine {
         val cmykNames = listOf("Cyan", "Magenta", "Yellow", "Black")
         val cmykResult = evaluateStrategyImplementation(
             strategyType = SeparationStrategyType.CMYK_PROCESS,
-            name = if (isDarkGarment && !whiteActsAsBase) "CMYK Process (+ Whites)" else "CMYK Process",
+            name = if (cmykExtraWhites > 0) "CMYK Process (+ Whites)" else "CMYK Process",
             inkHexes = cmykInks,
             inkNames = cmykNames,
             totalPixelCount = totalMaskedCount,
             quantizedPalette = quantizedPalette,
             isDarkGarment = isDarkGarment,
-            whiteActsAsBase = false,
+            // Process inks are transparent and always print over white (garment or base white).
+            opaque = false,
+            garmentLinear = garmentLinear,
+            extraWhiteScreens = cmykExtraWhites,
             darkWarning = if (isDarkGarment) {
                 "On a dark garment, CMYK alone is not suitable without an underbase white."
             } else null,
             transitionNote = null,
             notes = if (isTonalRichArtwork) "Continuous halftone process print. ${processInks.confidence.uppercase()} confidence."
-            else "CMYK process is not cost-effective or suitable for simple ${nonGarmentColors.size}-colour artwork."
+            else "CMYK process is not suitable: the artwork has $hueFamilies hue families, fewer than ${decisionRules.cmykMinHueFamilies}."
         )
         strategies.add(cmykResult)
 
@@ -202,35 +241,56 @@ object SeparationStrategyEngine {
 
             val extResult = evaluateStrategyImplementation(
                 strategyType = SeparationStrategyType.EXTENDED_SPOT,
-                name = if (isDarkGarment && !whiteActsAsBase) "Extended $extCount Spot Inks (+ Whites)" else "Extended $extCount Spot Inks",
+                name = if (spotExtraWhites > 0) "Extended $extCount Spot Inks (+ Whites)" else "Extended $extCount Spot Inks",
                 inkHexes = extHexes,
                 inkNames = extNames,
                 totalPixelCount = totalMaskedCount,
                 quantizedPalette = quantizedPalette,
                 isDarkGarment = isDarkGarment,
-                whiteActsAsBase = whiteActsAsBase,
-                darkWarning = if (isDarkGarment && !whiteActsAsBase) "Base white underbase and highlight white added." else null,
+                opaque = garmentIsDarkOrColoured,
+                garmentLinear = garmentLinear,
+                extraWhiteScreens = spotExtraWhites,
+                darkWarning = spotWhiteNote,
                 transitionNote = transitionNote,
                 notes = "Extended spot gamut utilizing top $extCount color screen separations."
             )
             strategies.add(extResult)
         }
 
-        // Recommendation Logic: Fewest screens that meets quality tolerance (ΔE00 limit)
+        // Recommendation: the FEWEST screens that meet the quality tolerance (mean and 95%
+        // limits from print_rules.json), not the lowest colour error. CMYK is a candidate only
+        // for tonal artwork with enough hue families. The user can still pick any option.
         val qualityTolerance = decisionRules.qualityToleranceDeltaE00
-        val candidatesMeetingTolerance = strategies.filter { it.meanDeltaE00 <= qualityTolerance }
+        val qualityToleranceP95 = decisionRules.qualityToleranceP95DeltaE00
+        val candidates = strategies.filter {
+            it.strategyType != SeparationStrategyType.CMYK_PROCESS || isTonalRichArtwork
+        }
+        val candidatesMeetingTolerance = candidates.filter {
+            it.meanDeltaE00 <= qualityTolerance && it.percentile95DeltaE00 <= qualityToleranceP95
+        }
+        val meetsTolerance = candidatesMeetingTolerance.isNotEmpty()
 
-        val bestStrategy = if (candidatesMeetingTolerance.isNotEmpty()) {
+        val bestStrategy = if (meetsTolerance) {
             candidatesMeetingTolerance.minByOrNull { it.screenCount }
         } else {
-            strategies.minByOrNull { it.meanDeltaE00 }
+            candidates.minByOrNull { it.meanDeltaE00 }
         }
 
         val finalizedStrategies = strategies.map { s ->
             if (s.strategyType == bestStrategy?.strategyType) {
+                val figures = String.format(
+                    java.util.Locale.US,
+                    "mean ΔE00 %.2f, 95%% ΔE00 %.2f",
+                    s.meanDeltaE00,
+                    s.percentile95DeltaE00
+                )
                 s.copy(
                     isRecommended = true,
-                    recommendationReason = "Recommended: Fewest screens (${s.screenCount} screens) meeting quality tolerance (ΔE00 ${String.format("%.2f", s.meanDeltaE00)} ≤ $qualityTolerance)."
+                    recommendationReason = if (meetsTolerance) {
+                        "Recommended: fewest screens (${s.screenCount}) within tolerance ($figures; limits $qualityTolerance and $qualityToleranceP95)."
+                    } else {
+                        "No option is within tolerance (limits $qualityTolerance and $qualityToleranceP95). Lowest colour error: $figures."
+                    }
                 )
             } else s
         }
@@ -243,8 +303,39 @@ object SeparationStrategyEngine {
             processInks = processInks,
             isDarkGarment = isDarkGarment,
             executionTimeMs = totalTime,
-            disclaimer = MODEL_DISCLAIMER
+            disclaimer = MODEL_DISCLAIMER,
+            opaqueInkModel = garmentIsDarkOrColoured
         )
+    }
+
+    /**
+     * Garment colour measured in Part A (median of the image border, or the tapped fabric
+     * colour). Falls back to the chosen preset only when Part A has no garment profile.
+     */
+    fun measuredGarmentLab(partA: PartAResult, inputs: PrintJobInputs): ColorConverter.Lab {
+        partA.garmentProfile?.let { return it.medianLab }
+        val rgb = ColorConverter.hexToRgb(inputs.userGarmentHex ?: inputs.garmentColorHex)
+        return ColorConverter.rgbToLab(rgb.r, rgb.g, rgb.b)
+    }
+
+    /**
+     * Algorithm settings, not print rules (to be confirmed by Ravi): a colour with chroma below
+     * NEUTRAL_CHROMA_LIMIT is neutral, and chromatic colours are grouped into hue families of
+     * HUE_FAMILY_WIDTH_DEGREES around the Lab hue circle.
+     */
+    const val NEUTRAL_CHROMA_LIMIT = 12.0
+    const val HUE_FAMILY_WIDTH_DEGREES = 30.0
+
+    /** Number of distinct hue families among the chromatic print colours. */
+    fun countHueFamilies(colors: List<MeasuredColor>): Int {
+        val families = HashSet<Int>()
+        for (c in colors) {
+            if (hypot(c.lab.a, c.lab.b) < NEUTRAL_CHROMA_LIMIT) continue
+            var hue = Math.toDegrees(kotlin.math.atan2(c.lab.b, c.lab.a))
+            if (hue < 0) hue += 360.0
+            families.add((hue / HUE_FAMILY_WIDTH_DEGREES).toInt())
+        }
+        return families.size
     }
 
     /**
@@ -253,7 +344,9 @@ object SeparationStrategyEngine {
     data class QuantizedBin(val r: Int, val g: Int, val b: Int, var count: Int)
 
     /**
-     * Solves NNLS per quantized bin and evaluates quality metrics against the EXACT ORIGINAL pixel colors.
+     * Solves NNLS per 6-bit colour bin. Quality figures compare the proof with the colour of
+     * the bin (the pixel colour rounded to 6 bits per channel), weighted by pixel count.
+     * PrintReportRegressionTest measures how much that rounding adds.
      */
     private fun evaluateStrategyImplementation(
         strategyType: SeparationStrategyType,
@@ -263,7 +356,9 @@ object SeparationStrategyEngine {
         totalPixelCount: Int,
         quantizedPalette: Map<Int, QuantizedBin>,
         isDarkGarment: Boolean,
-        whiteActsAsBase: Boolean,
+        opaque: Boolean,
+        garmentLinear: DoubleArray,
+        extraWhiteScreens: Int,
         darkWarning: String?,
         transitionNote: String?,
         notes: String
@@ -276,22 +371,24 @@ object SeparationStrategyEngine {
         // Cache solved proof colors for each quantized color bin
         val binProofMap = HashMap<Int, ColorConverter.Rgb>(quantizedPalette.size)
 
-        if (isDarkGarment) {
-            // OPAQUE INK MODEL on dark garments:
-            // C_pixel = (1 - sum c_j) * C_garment + sum (c_j * C_ink_j)
+        if (opaque) {
+            // OPAQUE INK MODEL on dark or coloured garments (print_rules.json ink_model):
+            // pixel = (1 - sum c_j) * garment + sum (c_j * ink_j), in linear RGB.
+            // Solved as: sum c_j * (ink_j - garment) = pixel - garment, so a pixel equal to the
+            // garment has zero ink on every screen.
             val inkLinears = Array(numInks) { i ->
                 val rgb = ColorConverter.hexToRgb(inkHexes[i])
                 doubleArrayOf(
-                    ColorConverter.sRgbToLinear(rgb.r),
-                    ColorConverter.sRgbToLinear(rgb.g),
-                    ColorConverter.sRgbToLinear(rgb.b)
+                    ColorConverter.sRgbToLinear(rgb.r) - garmentLinear[0],
+                    ColorConverter.sRgbToLinear(rgb.g) - garmentLinear[1],
+                    ColorConverter.sRgbToLinear(rgb.b) - garmentLinear[2]
                 )
             }
 
             for ((binKey, bin) in quantizedPalette) {
-                val targetR = ColorConverter.sRgbToLinear(bin.r)
-                val targetG = ColorConverter.sRgbToLinear(bin.g)
-                val targetB = ColorConverter.sRgbToLinear(bin.b)
+                val targetR = ColorConverter.sRgbToLinear(bin.r) - garmentLinear[0]
+                val targetG = ColorConverter.sRgbToLinear(bin.g) - garmentLinear[1]
+                val targetB = ColorConverter.sRgbToLinear(bin.b) - garmentLinear[2]
                 val target = doubleArrayOf(targetR, targetG, targetB)
 
                 val amounts = LawsonHansonNnls.solve(inkLinears, target)
@@ -304,9 +401,9 @@ object SeparationStrategyEngine {
                     for (j in amounts.indices) amounts[j] /= sumC
                 }
 
-                var pR = 0.0
-                var pG = 0.0
-                var pB = 0.0
+                var pR = garmentLinear[0]
+                var pG = garmentLinear[1]
+                var pB = garmentLinear[2]
                 for (j in 0 until numInks) {
                     pR += amounts[j] * inkLinears[j][0]
                     pG += amounts[j] * inkLinears[j][1]
@@ -314,9 +411,9 @@ object SeparationStrategyEngine {
                 }
 
                 binProofMap[binKey] = ColorConverter.Rgb(
-                    ColorConverter.linearToSRgb(pR),
-                    ColorConverter.linearToSRgb(pG),
-                    ColorConverter.linearToSRgb(pB)
+                    ColorConverter.linearToSRgb(pR.coerceIn(0.0, 1.0)),
+                    ColorConverter.linearToSRgb(pG.coerceIn(0.0, 1.0)),
+                    ColorConverter.linearToSRgb(pB.coerceIn(0.0, 1.0))
                 )
             }
         } else {
@@ -377,8 +474,7 @@ object SeparationStrategyEngine {
         val meanDeltaE = if (totalPixelCount > 0) sumDelta / totalPixelCount else 0.0
         val pctWithin3 = if (totalPixelCount > 0) (countWithin3.toDouble() / totalPixelCount) * 100.0 else 0.0
 
-        val extraWhites = if (isDarkGarment && !whiteActsAsBase) 2 else if (isDarkGarment) 1 else 0
-        val screenCount = numInks + extraWhites
+        val screenCount = numInks + extraWhiteScreens
 
         return StrategyEvaluationResult(
             strategyType = strategyType,
@@ -402,7 +498,8 @@ object SeparationStrategyEngine {
         totalPixelCount: Int,
         quantizedPalette: Map<Int, QuantizedBin>,
         isDarkGarment: Boolean,
-        whiteActsAsBase: Boolean
+        extraWhiteScreens: Int,
+        whiteNote: String?
     ): StrategyEvaluationResult {
         if (measuredColors.isEmpty()) {
             return createEmptyStrategy(SeparationStrategyType.FLAT_SPOT_SOLID, "Flat Spot (Solid Screen)", 0, isDarkGarment)
@@ -447,19 +544,18 @@ object SeparationStrategyEngine {
         val meanDeltaE = if (totalPixelCount > 0) sumDelta / totalPixelCount else 0.0
         val pctWithin3 = if (totalPixelCount > 0) (countWithin3.toDouble() / totalPixelCount) * 100.0 else 0.0
 
-        val extraWhites = if (isDarkGarment && !whiteActsAsBase) 2 else if (isDarkGarment) 1 else 0
-        val screenCount = measuredColors.size + extraWhites
+        val screenCount = measuredColors.size + extraWhiteScreens
 
         return StrategyEvaluationResult(
             strategyType = SeparationStrategyType.FLAT_SPOT_SOLID,
-            name = if (isDarkGarment && !whiteActsAsBase) "Flat Spot Screens (+ Whites)" else "Flat Spot Screens (Solid)",
+            name = if (extraWhiteScreens > 0) "Flat Spot Screens (+ Whites)" else "Flat Spot Screens (Solid)",
             screenCount = screenCount,
             inkHexes = inkHexes,
             inkNames = inkNames,
             meanDeltaE00 = meanDeltaE,
             percentile95DeltaE00 = p95,
             percentWithinDeltaE3 = pctWithin3,
-            darkGarmentWarning = if (isDarkGarment && !whiteActsAsBase) "Base white underbase and highlight white added." else null,
+            darkGarmentWarning = whiteNote,
             isDarkGarment = isDarkGarment,
             notes = "Discrete solid screen posterisation. No halftone blending required.",
             proofBitmap = null
@@ -468,8 +564,8 @@ object SeparationStrategyEngine {
 
     private fun detectTransitions(colors: List<MeasuredColor>): String? {
         if (colors.size < 2) return null
-        val whiteColor = colors.find { it.lab.l > 80.0 && hypot(it.lab.a, it.lab.b) < 12.0 }
-        val chromaticColor = colors.find { hypot(it.lab.a, it.lab.b) >= 12.0 }
+        val whiteColor = colors.find { it.lab.l > 80.0 && hypot(it.lab.a, it.lab.b) < NEUTRAL_CHROMA_LIMIT }
+        val chromaticColor = colors.find { hypot(it.lab.a, it.lab.b) >= NEUTRAL_CHROMA_LIMIT }
 
         return if (whiteColor != null && chromaticColor != null) {
             val chromName = chromaticColor.nearestShade?.name ?: chromaticColor.hex
@@ -554,8 +650,17 @@ object SeparationStrategyEngine {
             ?: createEmptyStrategy(chosenStrategyType, "Unknown", 0, partB.isDarkGarment)
 
         val isDarkGarment = partB.isDarkGarment
-        val garmentRgb = ColorConverter.hexToRgb(inputs.userGarmentHex ?: inputs.garmentColorHex)
+        // Garment colour as measured in Part A, the same one Part B used.
+        val garmentLab = measuredGarmentLab(partA, inputs)
+        val garmentRgb = ColorConverter.labToRgb(garmentLab.l, garmentLab.a, garmentLab.b)
         val garmentColorInt = (0xFF shl 24) or (garmentRgb.r shl 16) or (garmentRgb.g shl 8) or garmentRgb.b
+        val garmentLinear = doubleArrayOf(
+            ColorConverter.sRgbToLinear(garmentRgb.r),
+            ColorConverter.sRgbToLinear(garmentRgb.g),
+            ColorConverter.sRgbToLinear(garmentRgb.b)
+        )
+        // Spot inks are opaque over a dark or coloured garment. Process inks stay transparent.
+        val opaqueModel = partB.opaqueInkModel && chosenStrategyType != SeparationStrategyType.CMYK_PROCESS
 
         if (totalPixels == 0 || pixels.size != totalPixels) {
             return PartCResult(
@@ -570,7 +675,22 @@ object SeparationStrategyEngine {
             )
         }
 
+        // Ink is only laid inside the print box. Coverage "over the print box" is measured
+        // against the box, not the whole photo.
+        val box = partA.printBox
+        val boxMinX = (box.minX * width).toInt().coerceIn(0, width - 1)
+        val boxMaxX = (box.maxX * width).toInt().coerceIn(boxMinX + 1, width)
+        val boxMinY = (box.minY * height).toInt().coerceIn(0, height - 1)
+        val boxMaxY = (box.maxY * height).toInt().coerceIn(boxMinY + 1, height)
+        val boxPixelCount = (boxMaxX - boxMinX) * (boxMaxY - boxMinY)
+
         val isPrintMask = PrintAreaAndPaletteEngine.computePrintMask(pixels, width, height, inputs)
+        for (i in 0 until totalPixels) {
+            if (!isPrintMask[i]) continue
+            val x = i % width
+            val y = i / width
+            if (x < boxMinX || x >= boxMaxX || y < boxMinY || y >= boxMaxY) isPrintMask[i] = false
+        }
         val printPixelCount = isPrintMask.count { it }
 
         // Determine if white print colour acts as base
@@ -630,8 +750,8 @@ object SeparationStrategyEngine {
             }
         }
 
-        // 3. Highlight White (only if dark garment)
-        if (isDarkGarment && !whiteActsAsBase) {
+        // 3. Highlight White: only when white is not already one of the print colours
+        if (isDarkGarment && !hasWhitePrint) {
             inkSpecs.add(
                 InkSpec(
                     name = "Highlight White",
@@ -650,7 +770,9 @@ object SeparationStrategyEngine {
 
         // Calculate physical choke for base white in pixels
         val chokeMm = decisionRules.chokeMmDefault
-        val pxPerCm = if (partA.pixelsPerCm > 0) partA.pixelsPerCm else (width.toDouble() / inputs.printWidthCm)
+        // Choke formula: pixels = choke_mm / 10 x (print box width in pixels of THIS image / print width in cm).
+        // Part A may have run at a different image size, so its pixels-per-cm is not used here.
+        val pxPerCm = (boxMaxX - boxMinX).toDouble() / inputs.printWidthCm
         val chokePx = max(1, ((chokeMm / 10.0) * pxPerCm).roundToInt())
         val chokedBaseWhiteMask = if (isDarkGarment && !whiteActsAsBase) {
             PrintAreaAndPaletteEngine.erodeBinaryMask(isPrintMask, width, height, chokePx)
@@ -725,22 +847,23 @@ object SeparationStrategyEngine {
 
             val binSolutions = HashMap<Int, SolvedBinData>(quantizedPalette.size)
 
-            if (isDarkGarment) {
-                // Opaque model in linear RGB
+            if (opaqueModel) {
+                // Opaque model in linear RGB, relative to the garment:
+                // sum c_j * (ink_j - garment) = pixel - garment
                 val inkLinears = Array(coloredCount) { ci ->
                     val rgb = coloredInks[ci].rgb
                     doubleArrayOf(
-                        ColorConverter.sRgbToLinear(rgb.r),
-                        ColorConverter.sRgbToLinear(rgb.g),
-                        ColorConverter.sRgbToLinear(rgb.b)
+                        ColorConverter.sRgbToLinear(rgb.r) - garmentLinear[0],
+                        ColorConverter.sRgbToLinear(rgb.g) - garmentLinear[1],
+                        ColorConverter.sRgbToLinear(rgb.b) - garmentLinear[2]
                     )
                 }
 
                 for ((binKey, bin) in quantizedPalette) {
                     val target = doubleArrayOf(
-                        ColorConverter.sRgbToLinear(bin.r),
-                        ColorConverter.sRgbToLinear(bin.g),
-                        ColorConverter.sRgbToLinear(bin.b)
+                        ColorConverter.sRgbToLinear(bin.r) - garmentLinear[0],
+                        ColorConverter.sRgbToLinear(bin.g) - garmentLinear[1],
+                        ColorConverter.sRgbToLinear(bin.b) - garmentLinear[2]
                     )
                     val rawAmounts = if (coloredCount > 0) LawsonHansonNnls.solve(inkLinears, target) else DoubleArray(0)
 
@@ -753,9 +876,9 @@ object SeparationStrategyEngine {
                         for (j in rawAmounts.indices) rawAmounts[j] /= sumC
                     }
 
-                    var pR = 0.0
-                    var pG = 0.0
-                    var pB = 0.0
+                    var pR = garmentLinear[0]
+                    var pG = garmentLinear[1]
+                    var pB = garmentLinear[2]
                     for (j in 0 until coloredCount) {
                         pR += rawAmounts[j] * inkLinears[j][0]
                         pG += rawAmounts[j] * inkLinears[j][1]
@@ -763,9 +886,9 @@ object SeparationStrategyEngine {
                     }
 
                     val proofInt = (0xFF shl 24) or
-                        (ColorConverter.linearToSRgb(pR) shl 16) or
-                        (ColorConverter.linearToSRgb(pG) shl 8) or
-                        ColorConverter.linearToSRgb(pB)
+                        (ColorConverter.linearToSRgb(pR.coerceIn(0.0, 1.0)) shl 16) or
+                        (ColorConverter.linearToSRgb(pG.coerceIn(0.0, 1.0)) shl 8) or
+                        ColorConverter.linearToSRgb(pB.coerceIn(0.0, 1.0))
 
                     binSolutions[binKey] = SolvedBinData(rawAmounts, proofInt)
                 }
@@ -851,7 +974,7 @@ object SeparationStrategyEngine {
 
         val channels = inkSpecs.mapIndexed { index, spec ->
             val avgCov = if (printPixelCount > 0) (sumCoverages[index] / printPixelCount) * 100.0 else 0.0
-            val boxCov = if (totalPixels > 0) (sumCoverages[index] / totalPixels) * 100.0 else 0.0
+            val boxCov = if (boxPixelCount > 0) (sumCoverages[index] / boxPixelCount) * 100.0 else 0.0
             val filmBitmap = try {
                 Bitmap.createBitmap(channelPixelArrays[index], width, height, Bitmap.Config.ARGB_8888)
             } catch (e: Throwable) {

@@ -25,6 +25,9 @@ data class ProcessInksConfig(
  * - darkGarmentThresholdL     <- white_base.garment_L_threshold
  * - qualityToleranceDeltaE00  <- recommendation.quality_tolerance_mean_de00
  * - minResolutionPxPerCm      <- resolution.px_per_cm_min_for_fine_detail
+ * - garmentChromaThreshold    <- white_base.garment_chroma_threshold
+ * - qualityToleranceP95DeltaE00 <- recommendation.quality_tolerance_p95_de00
+ * - cmykMinHueFamilies        <- recommendation.cmyk_min_hue_families
  * - chokeMmDefault            <- underbase_rules.choke_mm_default
  * - confidence                <- white_base.confidence
  *
@@ -41,6 +44,21 @@ data class SeparationDecisionRules(
     val highlightWhiteThresholdL: Double = 80.0,
     val highlightWhiteMaxChroma: Double = 10.0,
     val chokeMmDefault: Double = 0.5,
+    val confidence: String = "assumption",
+    val garmentChromaThreshold: Double = 15.0,
+    val qualityToleranceP95DeltaE00: Double = 8.0,
+    val cmykMinHueFamilies: Int = 4
+)
+
+/**
+ * Garment mask rules read from "garment_mask" in assets/print_rules.json.
+ * Defaults are only a fallback and must equal the file (checked by PrintRulesRepositoryTest).
+ */
+data class GarmentMaskRules(
+    val borderFraction: Double = 0.08,
+    val spreadMultiplier: Double = 3.0,
+    val minThresholdDeltaE00: Double = 3.0,
+    val speckMinAreaFraction: Double = 0.0005,
     val confidence: String = "assumption"
 )
 
@@ -105,6 +123,14 @@ class PrintRulesRepository(private val context: Context?) {
     }
 
     /**
+     * Loads the garment mask rules from print_rules.json.
+     */
+    suspend fun getGarmentMaskRules(): GarmentMaskRules = withContext(Dispatchers.IO) {
+        val root = loadJson() ?: return@withContext GarmentMaskRules()
+        parseGarmentMaskRules(root)
+    }
+
+    /**
      * Loads minimum line width in mm by mesh from print_rules.json. Empty if not available.
      */
     suspend fun getMinLineWidthMmByMesh(): Map<Int, Double> = withContext(Dispatchers.IO) {
@@ -152,7 +178,28 @@ class PrintRulesRepository(private val context: Context?) {
                 highlightWhiteMaxChroma = fallback.highlightWhiteMaxChroma,
                 chokeMmDefault = underbase?.optDouble("choke_mm_default", fallback.chokeMmDefault)
                     ?: fallback.chokeMmDefault,
-                confidence = whiteBase?.optString("confidence", fallback.confidence) ?: fallback.confidence
+                confidence = whiteBase?.optString("confidence", fallback.confidence) ?: fallback.confidence,
+                garmentChromaThreshold = whiteBase?.optDouble("garment_chroma_threshold", fallback.garmentChromaThreshold)
+                    ?: fallback.garmentChromaThreshold,
+                qualityToleranceP95DeltaE00 = recommendation?.optDouble("quality_tolerance_p95_de00", fallback.qualityToleranceP95DeltaE00)
+                    ?: fallback.qualityToleranceP95DeltaE00,
+                cmykMinHueFamilies = recommendation?.optInt("cmyk_min_hue_families", fallback.cmykMinHueFamilies)
+                    ?: fallback.cmykMinHueFamilies
+            )
+        }
+
+        /**
+         * Reads "garment_mask": border size, spread multiplier, minimum threshold and speck size.
+         */
+        fun parseGarmentMaskRules(root: JSONObject): GarmentMaskRules {
+            val fallback = GarmentMaskRules()
+            val g = root.optJSONObject("garment_mask") ?: return fallback
+            return GarmentMaskRules(
+                borderFraction = g.optDouble("border_fraction", fallback.borderFraction),
+                spreadMultiplier = g.optDouble("spread_multiplier", fallback.spreadMultiplier),
+                minThresholdDeltaE00 = g.optDouble("min_threshold_de00", fallback.minThresholdDeltaE00),
+                speckMinAreaFraction = g.optDouble("speck_min_area_fraction", fallback.speckMinAreaFraction),
+                confidence = g.optString("confidence", fallback.confidence)
             )
         }
 

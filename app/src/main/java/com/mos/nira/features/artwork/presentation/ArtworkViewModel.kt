@@ -571,7 +571,9 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
 
     fun updateGarmentColorHex(hex: String) {
         _uiState.update { current ->
-            current.copy(printJobInputs = current.printJobInputs.copy(garmentColorHex = hex, userGarmentHex = hex))
+            // A preset is only a first guess: the fabric is measured from the photo border.
+            // Only "tap the fabric" (setUserGarmentColor) fixes the garment colour exactly.
+            current.copy(printJobInputs = current.printJobInputs.copy(garmentColorHex = hex, userGarmentHex = null))
         }
         computePartAReport()
     }
@@ -661,6 +663,8 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
             try {
                 val inputs = _uiState.value.printJobInputs
                 val shades = _uiState.value.activeShades
+                val decisionRules = printRulesRepository.getSeparationDecisionRules()
+                val maskRules = printRulesRepository.getGarmentMaskRules()
                 val result = withContext(Dispatchers.Default) {
                     val maxDim = 2048
                     val width = bitmap.width
@@ -685,7 +689,9 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                         inputs = inputs,
                         shadeCandidates = shades,
                         seed = 42L,
-                        generateMaskBitmap = true
+                        generateMaskBitmap = true,
+                        decisionRules = decisionRules,
+                        maskRules = maskRules
                     )
                 }
 

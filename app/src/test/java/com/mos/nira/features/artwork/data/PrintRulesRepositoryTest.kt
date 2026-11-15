@@ -65,6 +65,33 @@ class PrintRulesRepositoryTest {
             rules.chokeMmDefault, 0.0
         )
         assertEquals(root.getJSONObject("white_base").getString("confidence"), rules.confidence)
+        assertEquals(
+            root.getJSONObject("white_base").getDouble("garment_chroma_threshold"),
+            rules.garmentChromaThreshold, 0.0
+        )
+        assertEquals(
+            root.getJSONObject("recommendation").getDouble("quality_tolerance_p95_de00"),
+            rules.qualityToleranceP95DeltaE00, 0.0
+        )
+        assertEquals(
+            root.getJSONObject("recommendation").getInt("cmyk_min_hue_families"),
+            rules.cmykMinHueFamilies
+        )
+    }
+
+    @Test
+    fun garmentMaskRules_readFromV2File() {
+        val root = loadRules()
+        val g = root.getJSONObject("garment_mask")
+        val rules = PrintRulesRepository.parseGarmentMaskRules(root)
+
+        assertEquals(g.getDouble("border_fraction"), rules.borderFraction, 0.0)
+        assertEquals(g.getDouble("spread_multiplier"), rules.spreadMultiplier, 0.0)
+        assertEquals(g.getDouble("min_threshold_de00"), rules.minThresholdDeltaE00, 0.0)
+        assertEquals(g.getDouble("speck_min_area_fraction"), rules.speckMinAreaFraction, 0.0)
+        assertEquals(g.getString("confidence"), rules.confidence)
+        // Fallback defaults must not drift from the file.
+        assertEquals(rules, GarmentMaskRules())
     }
 
     @Test

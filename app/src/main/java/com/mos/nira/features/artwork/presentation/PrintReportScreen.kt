@@ -1292,7 +1292,7 @@ fun PrintReportScreen(
                         Icon(Icons.Default.CheckCircle, contentDescription = null, tint = Color(0xFF2E7D32), modifier = Modifier.size(20.dp))
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "Parts A, B, C & D completed and verified with deterministic Kotlin engine.",
+                            text = "All figures above are calculated on this phone by the NIRA engine. No AI is used for the numbers.",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )

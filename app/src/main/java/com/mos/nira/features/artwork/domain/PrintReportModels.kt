@@ -51,7 +51,9 @@ data class PrintJobInputs(
     val printBox: NormalizedRect? = null, // Bounding box detected or adjusted by user
     val userGarmentHex: String? = null, // "Tap the fabric" override
     val useWhiteBaseOverride: Boolean? = null, // User switch to force or disable white base
-    val whitePrintActsAsBase: Boolean = false, // If white is one of print colours, acts as base without extra screen
+    // If white is one of the print colours it also acts as the base, so no extra screen is added
+    // (print_rules.json, white_base.white_print_colour_can_act_as_base). Switch off for a separate base.
+    val whitePrintActsAsBase: Boolean = true,
     val orderPieces: Int = 100, // Order quantity for ink consumption
     val highlightWhiteThreshold: Double = 80.0
 )
@@ -153,7 +155,9 @@ data class PartBResult(
     val processInks: ProcessInksConfig = ProcessInksConfig(),
     val isDarkGarment: Boolean = false,
     val executionTimeMs: Long = 0L,
-    val disclaimer: String = "Model result. No dot gain or registration error included."
+    val disclaimer: String = "Model result. No dot gain or registration error included.",
+    /** True when spot inks are modelled as opaque over the garment (dark or coloured garment). */
+    val opaqueInkModel: Boolean = false
 )
 
 // ==========================================

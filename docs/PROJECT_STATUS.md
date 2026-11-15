@@ -3,6 +3,40 @@
 Last updated: 15 November 2026, 20:15 IST (by Claude Code).
 Rule for this file: only write what was actually run. Numbers below come from real runs on the laptop.
 
+## 0. Update 15 Nov 2026, 20:40 IST — device-test fixes (Sections 1 and 2, Part D)
+
+Real results: build PASSES; unit tests 101 run, **101 pass, 0 fail**. Sections 1 to 6 below were written before this update; where they disagree, this section is right.
+
+Done in this update:
+- APK is back to all CPU types (149.3 MB), by Ravi's decision. The phone-only filter was removed.
+- Dark-garment regression test now PASSES with stricter checks: exactly 2 print colours, inked area within 2 points of 11.1%, tight print box, no screen in the garment colour, 2 screens recommended (3 with a separate white base), blue reported as halftone over white, CMYK not recommended.
+- Palette: on a non-white garment, a colour that is a halftone of one ink over the garment, or a transition between two inks, is no longer a separate ink (`selectInksByHalftoneReduction`). Tolerances come from `recommendation` in the rules file.
+- Garment mask now uses `garment_mask` from the rules file (border 0.08, threshold = 3 x spread, minimum 3.0, speck size 0.0005).
+- App colour chips no longer fix the garment colour exactly; only "tap the fabric" does.
+- White screens: white print colour acts as base by default (0 extra screens); separate base adds 1; highlight white only when white is not a print colour. CMYK on a dark garment keeps base + highlight.
+- White-base rule uses lightness 70 and chroma 15 from the rules file, and the measured garment colour, not the preset.
+- Opaque ink model now includes the garment term; CMYK always uses the transparent model over white.
+- Recommendation uses both limits (mean 3.0 and 95% 8.0) and offers CMYK only with at least `cmyk_min_hue_families` hue families.
+- Ink quantity bug fixed: coverage "over the print box" was divided by the whole photo. Ink is now laid only inside the print box.
+- Choke bug fixed: choke pixels used Part A's image scale. Formula: pixels = choke_mm / 10 x (print box width in px / print width in cm).
+- Low-resolution limit now comes from the rules file (59 px/cm).
+- Developer message "Parts A, B, C & D completed and verified..." removed from the report.
+- New Part D tests: white screens included on a dark garment; ink only on print pixels on the regression image.
+
+Measured:
+- Quality figures compare the proof with colours rounded to 6 bits, not the exact pixels. Rounding alone adds mean dE00 0.293 (regression logo) and 0.364 (photo-like image), under the 0.5 limit, so it was left as is.
+- Photo-like 1024 px image, laptop JVM (NOT a phone): Part A 9,538 ms, Part B 310 ms, Part C 880 ms. Part A was 10,584 ms before the smoothing speed-up. **Part A is still too slow**; the cost is colour clustering, and the app runs Part A at up to 2048 px, which is about 4 times more pixels.
+
+Assumptions added in code that Ravi should confirm (not in the rules file): neutral chroma limit 12, hue family width 30 degrees.
+
+NOT done from the prompt:
+- Item 1: the earlier cause of the report not opening on the device is unknown to this session; nothing was checked on device or emulator.
+- Item 3: re-running the analysis on the cropped print box at best resolution; dragging the box edges was not checked.
+- Item 7: edge refinement for flat spot layers.
+- Item 10: Part A speed, and any benchmark on the device.
+- Item 14: confidence labels on every Part D factor were not checked in the UI.
+- Highlight white limits (80 and 10) still have no value in the rules file.
+
 ## 1. Current state
 
 | Item | Result |

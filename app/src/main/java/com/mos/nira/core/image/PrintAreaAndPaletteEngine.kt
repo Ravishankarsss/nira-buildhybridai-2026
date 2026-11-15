@@ -1,6 +1,8 @@
 package com.mos.nira.core.image
 
 import android.graphics.Bitmap
+import com.mos.nira.features.artwork.data.GarmentMaskRules
+import com.mos.nira.features.artwork.data.SeparationDecisionRules
 import com.mos.nira.features.artwork.domain.ErrorCurvePoint
 import com.mos.nira.features.artwork.domain.GarmentProfile
 import com.mos.nira.features.artwork.domain.MeasuredColor
@@ -32,7 +34,6 @@ object PrintAreaAndPaletteEngine {
     const val MIN_COVERAGE_PERCENT = 1.5 // 1.5%
     const val MAX_KMEANS_ITERATIONS = 20
     const val FIXED_SEED = 42L
-    const val MIN_RESOLUTION_PX_PER_CM = 40.0 // approx 100 dpi threshold
 
     /**
      * Executes complete Part A calculation for a given pixel buffer.
@@ -44,7 +45,9 @@ object PrintAreaAndPaletteEngine {
         inputs: PrintJobInputs,
         shadeCandidates: List<ShadeEntry> = emptyList(),
         seed: Long = FIXED_SEED,
-        generateMaskBitmap: Boolean = true
+        generateMaskBitmap: Boolean = true,
+        decisionRules: SeparationDecisionRules = SeparationDecisionRules(),
+        maskRules: GarmentMaskRules = GarmentMaskRules()
     ): PartAResult {
         if (width <= 0 || height <= 0 || pixels.isEmpty() || pixels.size != width * height) {
             return PartAResult(
@@ -68,7 +71,7 @@ object PrintAreaAndPaletteEngine {
         val totalPixels = width * height
 
         // Step 1: Measure Garment Background (Median Lab + Spread)
-        val garmentProfile = estimateGarmentProfile(pixels, width, height, inputs.userGarmentHex, inputs.garmentColorHex)
+        val garmentProfile = estimateGarmentProfile(pixels, width, height, inputs.userGarmentHex, inputs.garmentColorHex, maskRules)
         val garmentLab = garmentProfile.medianLab
         val isWhiteGarment = garmentLab.l > 80.0 && hypot(garmentLab.a, garmentLab.b) < 9.0
         val effectiveGarmentThreshold = max(inputs.garmentThresholdDeltaE00, garmentProfile.adaptiveThresholdDeltaE00)
@@ -130,7 +133,7 @@ object PrintAreaAndPaletteEngine {
         }
 
         // Step 4: Speck Removal & Print Box Isolation
-        val cleanedPrintMask = removeSpecks(rawPrintMask, width, height)
+        val cleanedPrintMask = removeSpecks(rawPrintMask, width, height, maskRules.speckMinAreaFraction)
         val detectedBox = detectPrintBox(cleanedPrintMask, width, height)
         val activePrintBox = inputs.printBox ?: detectedBox
 
@@ -149,11 +152,13 @@ object PrintAreaAndPaletteEngine {
         val totalBoxAreaCm2 = printWidthCm * printHeightCm
 
         val pixelsPerCm = boxWidthPx.toDouble() / printWidthCm
-        val lowResolutionWarning = if (pixelsPerCm < MIN_RESOLUTION_PX_PER_CM) {
+        // Limit comes from print_rules.json (resolution.px_per_cm_min_for_fine_detail).
+        val lowResolutionWarning = if (pixelsPerCm < decisionRules.minResolutionPxPerCm) {
             String.format(
-                "Artwork resolution is %.1f px/cm (< %.0f px/cm, ~100 dpi). Fine lines and small text cannot be trusted. Retake closer or supply high-res vector.",
+                java.util.Locale.US,
+                "Resolution on the print box is %.1f px/cm (below %.0f px/cm). Fine lines and small text cannot be trusted. Retake closer so the print fills the frame, or supply the original artwork.",
                 pixelsPerCm,
-                MIN_RESOLUTION_PX_PER_CM
+                decisionRules.minResolutionPxPerCm
             )
         } else null
 
@@ -234,6 +239,8 @@ object PrintAreaAndPaletteEngine {
             var sumG: Long = 0L,
             var sumB: Long = 0L
         ) {
+            /** Set when this bucket was chosen as an ink: its colour stays the ink colour. */
+            var inkRgb: IntArray? = null
             val r: Int get() = if (count > 0) (sumR / count).toInt().coerceIn(0, 255) else 0
             val g: Int get() = if (count > 0) (sumG / count).toInt().coerceIn(0, 255) else 0
             val b: Int get() = if (count > 0) (sumB / count).toInt().coerceIn(0, 255) else 0
@@ -315,7 +322,26 @@ object PrintAreaAndPaletteEngine {
         // Step 9: Drop clusters under 1.5% coverage
         val thresholdCount = (printPixelCount * (MIN_COVERAGE_PERCENT / 100.0)).toInt()
         val prunedBuckets = activeBuckets.filter { it.count >= thresholdCount }.toMutableList()
-        val finalBuckets = if (prunedBuckets.isNotEmpty()) prunedBuckets else activeBuckets.take(1).toMutableList()
+        var finalBuckets = if (prunedBuckets.isNotEmpty()) prunedBuckets else activeBuckets.take(1).toMutableList()
+
+        // Step 9b: On a non-white garment, a colour that is a halftone of one ink over the garment,
+        // or a smooth transition between two inks, is not a separate ink. Keep the fewest inks
+        // that reproduce every colour within the quality tolerance from print_rules.json.
+        if (!isWhiteGarment && finalBuckets.size > 1) {
+            val garmentRgb = ColorConverter.labToRgb(garmentLab.l, garmentLab.a, garmentLab.b)
+            val keep = selectInksByHalftoneReduction(
+                colours = finalBuckets.map { intArrayOf(it.r, it.g, it.b) },
+                counts = finalBuckets.map { it.count },
+                garment = intArrayOf(garmentRgb.r, garmentRgb.g, garmentRgb.b),
+                toleranceMean = decisionRules.qualityToleranceDeltaE00,
+                toleranceP95 = decisionRules.qualityToleranceP95DeltaE00
+            )
+            if (keep.size < finalBuckets.size) {
+                finalBuckets = keep.map { index ->
+                    finalBuckets[index].also { it.inkRgb = intArrayOf(it.r, it.g, it.b) }
+                }.toMutableList()
+            }
+        }
 
         // Reassign all masked pixels to final cluster centroids for precise counts & coverage
         val finalCenters = finalBuckets.map { it.centerLab }
@@ -343,9 +369,12 @@ object PrintAreaAndPaletteEngine {
             .filter { it.count > 0 }
             .sortedByDescending { it.count }
             .mapIndexed { index, b ->
-                val hex = ColorConverter.rgbToHex(b.r, b.g, b.b)
-                val rgb = ColorConverter.Rgb(b.r, b.g, b.b)
-                val lab = ColorConverter.rgbToLab(b.r, b.g, b.b)
+                val inkR = b.inkRgb?.get(0) ?: b.r
+                val inkG = b.inkRgb?.get(1) ?: b.g
+                val inkB = b.inkRgb?.get(2) ?: b.b
+                val hex = ColorConverter.rgbToHex(inkR, inkG, inkB)
+                val rgb = ColorConverter.Rgb(inkR, inkG, inkB)
+                val lab = ColorConverter.rgbToLab(inkR, inkG, inkB)
                 val covPercent = (b.count.toDouble() / printPixelCount.toDouble()) * 100.0
                 val totalBoxCovPercent = (b.count.toDouble() / totalBoxPixels.toDouble()) * 100.0
                 val area = totalBoxAreaCm2 * (b.count.toDouble() / totalBoxPixels.toDouble())
@@ -427,7 +456,8 @@ object PrintAreaAndPaletteEngine {
         width: Int,
         height: Int,
         userGarmentHex: String?,
-        presetHex: String? = null
+        presetHex: String? = null,
+        maskRules: GarmentMaskRules = GarmentMaskRules()
     ): GarmentProfile {
         val preferredHex = userGarmentHex ?: presetHex
         if (userGarmentHex != null && userGarmentHex != "#FFFFFF") {
@@ -442,7 +472,8 @@ object PrintAreaAndPaletteEngine {
             )
         }
 
-        val margin = max(1, (0.05 * min(width, height)).toInt())
+        // Border size from print_rules.json (garment_mask.border_fraction).
+        val margin = max(1, (maskRules.borderFraction * min(width, height)).toInt())
         val borderLabs = ArrayList<ColorConverter.Lab>()
 
         for (y in 0 until height) {
@@ -488,7 +519,8 @@ object PrintAreaAndPaletteEngine {
         // Compute spread = median deltaE00 of border pixels to median Lab
         val deltas = borderLabs.map { ColorConverter.deltaE00(it, medLab) }.sorted()
         val spread = deltas[deltas.size / 2].coerceIn(1.0, 5.0)
-        val adaptiveThreshold = max(5.0, spread + 2.0)
+        // Threshold adapts to the fabric spread (garment_mask.spread_multiplier, min_threshold_de00).
+        val adaptiveThreshold = max(maskRules.minThresholdDeltaE00, spread * maskRules.spreadMultiplier)
 
         val estRgb = ColorConverter.labToRgb(medLab.l, medLab.a, medLab.b)
         val estHex = ColorConverter.rgbToHex(estRgb.r, estRgb.g, estRgb.b)
@@ -577,44 +609,67 @@ object PrintAreaAndPaletteEngine {
      */
     private fun smoothKnitTexture(pixels: IntArray, width: Int, height: Int): IntArray {
         if (width < 3 || height < 3) return pixels
-        val result = IntArray(pixels.size)
+        val n = pixels.size
 
+        // Lab once per pixel (cached by colour), instead of nine conversions per pixel.
+        val labCache = HashMap<Int, ColorConverter.Lab>(4096)
+        val labs = Array(n) { i ->
+            val p = pixels[i] and 0xFFFFFF
+            labCache.getOrPut(p) {
+                ColorConverter.rgbToLab((p shr 16) and 0xFF, (p shr 8) and 0xFF, p and 0xFF)
+            }
+        }
+
+        // The colour difference between two neighbours is the same in both directions, so it is
+        // calculated once per pair: right, down-left, down, down-right.
+        val offsets = intArrayOf(1, width - 1, width, width + 1)
+        val dxs = intArrayOf(1, -1, 0, 1)
+        val dys = intArrayOf(0, 1, 1, 1)
+        val pairDelta = Array(4) { FloatArray(n) }
+        for (y in 0 until height) {
+            for (x in 0 until width) {
+                val i = y * width + x
+                for (k in 0..3) {
+                    val nx = x + dxs[k]
+                    val ny = y + dys[k]
+                    if (nx < 0 || nx >= width || ny >= height) continue
+                    val j = i + offsets[k]
+                    pairDelta[k][i] = if (pixels[i] == pixels[j]) 0f
+                    else ColorConverter.deltaE00(labs[i], labs[j]).toFloat()
+                }
+            }
+        }
+
+        val result = IntArray(n)
         for (y in 0 until height) {
             val row = y * width
             for (x in 0 until width) {
+                val i = row + x
                 if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
-                    result[row + x] = pixels[row + x]
+                    result[i] = pixels[i]
                     continue
                 }
 
-                val pCenter = pixels[row + x]
-                val rC = (pCenter shr 16) and 0xFF
-                val gC = (pCenter shr 8) and 0xFF
-                val bC = pCenter and 0xFF
-                val labC = ColorConverter.rgbToLab(rC, gC, bC)
-
-                var sumR = rC.toDouble()
-                var sumG = gC.toDouble()
-                var sumB = bC.toDouble()
+                val pCenter = pixels[i]
+                var sumR = ((pCenter shr 16) and 0xFF).toDouble()
+                var sumG = ((pCenter shr 8) and 0xFF).toDouble()
+                var sumB = (pCenter and 0xFF).toDouble()
                 var totalW = 1.0
 
-                for (dy in -1..1) {
-                    val nRow = (y + dy) * width
-                    for (dx in -1..1) {
-                        if (dx == 0 && dy == 0) continue
-                        val pN = pixels[nRow + (x + dx)]
-                        val rN = (pN shr 16) and 0xFF
-                        val gN = (pN shr 8) and 0xFF
-                        val bN = pN and 0xFF
-                        val labN = ColorConverter.rgbToLab(rN, gN, bN)
-                        val dE = ColorConverter.deltaE00(labC, labN)
+                for (k in 0..3) {
+                    // Forward neighbour (pair stored at this pixel) and backward neighbour
+                    // (pair stored at the neighbour).
+                    for (side in 0..1) {
+                        val j = if (side == 0) i + offsets[k] else i - offsets[k]
+                        val dE = (if (side == 0) pairDelta[k][i] else pairDelta[k][j]).toDouble()
 
-                        // Bilateral weight: only smooth neighbors with small ΔE (knit texture)
+                        // Bilateral weight: only smooth neighbours with small difference (knit texture)
                         if (dE < 8.0) {
+                            val pN = pixels[j]
                             val w = exp(-(dE * dE) / 32.0)
-                            sumR += rN * w
-                            sumG += gN * w
-                            sumB += bN * w
+                            sumR += ((pN shr 16) and 0xFF) * w
+                            sumG += ((pN shr 8) and 0xFF) * w
+                            sumB += (pN and 0xFF) * w
                             totalW += w
                         }
                     }
@@ -623,7 +678,7 @@ object PrintAreaAndPaletteEngine {
                 val finalR = (sumR / totalW).roundToInt().coerceIn(0, 255)
                 val finalG = (sumG / totalW).roundToInt().coerceIn(0, 255)
                 val finalB = (sumB / totalW).roundToInt().coerceIn(0, 255)
-                result[row + x] = (0xFF shl 24) or (finalR shl 16) or (finalG shl 8) or finalB
+                result[i] = (0xFF shl 24) or (finalR shl 16) or (finalG shl 8) or finalB
             }
         }
         return result
@@ -632,7 +687,7 @@ object PrintAreaAndPaletteEngine {
     /**
      * Removes isolated single-pixel specks and noise from the binary mask.
      */
-    private fun removeSpecks(mask: BooleanArray, width: Int, height: Int): BooleanArray {
+    private fun removeSpecks(mask: BooleanArray, width: Int, height: Int, speckMinAreaFraction: Double): BooleanArray {
         if (width <= 2 || height <= 2) return mask
         val clean = BooleanArray(mask.size)
         for (y in 0 until height) {
@@ -662,7 +717,115 @@ object PrintAreaAndPaletteEngine {
                 }
             }
         }
+
+        // Drop connected regions smaller than garment_mask.speck_min_area_fraction of the image.
+        val minArea = kotlin.math.ceil(speckMinAreaFraction * mask.size).toInt()
+        if (minArea > 1) {
+            val components = KotlinImageOps.connectedComponents(clean, width, height)
+            for (i in clean.indices) {
+                if (clean[i] && components.areas[components.labels[i]] < minArea) clean[i] = false
+            }
+        }
         return clean
+    }
+
+    /**
+     * Chooses the fewest inks that reproduce every measured colour within tolerance, where a
+     * colour may be printed as a halftone between two of: the garment and the chosen inks
+     * (opaque ink model, linear RGB). Greedy: add the ink that lowers the mean error most.
+     * Returns the indices of the chosen colours.
+     */
+    fun selectInksByHalftoneReduction(
+        colours: List<IntArray>,
+        counts: List<Int>,
+        garment: IntArray,
+        toleranceMean: Double,
+        toleranceP95: Double
+    ): List<Int> {
+        val n = colours.size
+        if (n <= 1) return colours.indices.toList()
+
+        fun linear(rgb: IntArray) = doubleArrayOf(
+            ColorConverter.sRgbToLinear(rgb[0]),
+            ColorConverter.sRgbToLinear(rgb[1]),
+            ColorConverter.sRgbToLinear(rgb[2])
+        )
+        fun lab(lin: DoubleArray) = ColorConverter.rgbToLab(
+            ColorConverter.linearToSRgb(lin[0].coerceIn(0.0, 1.0)),
+            ColorConverter.linearToSRgb(lin[1].coerceIn(0.0, 1.0)),
+            ColorConverter.linearToSRgb(lin[2].coerceIn(0.0, 1.0))
+        )
+
+        val lin = colours.map { linear(it) }
+        val labs = colours.map { ColorConverter.rgbToLab(it[0], it[1], it[2]) }
+        val garmentLin = linear(garment)
+        val total = counts.sum().coerceAtLeast(1)
+
+        /** Smallest error of colour c printed as a mix of two of the given end points. */
+        fun explainError(c: Int, ends: List<DoubleArray>): Double {
+            var best = Double.MAX_VALUE
+            for (i in ends.indices) {
+                for (j in i until ends.size) {
+                    val p = ends[i]
+                    val q = ends[j]
+                    var dot = 0.0
+                    var len = 0.0
+                    for (k in 0..2) {
+                        dot += (lin[c][k] - p[k]) * (q[k] - p[k])
+                        len += (q[k] - p[k]) * (q[k] - p[k])
+                    }
+                    val t = if (len > 0.0) (dot / len).coerceIn(0.0, 1.0) else 0.0
+                    val mix = DoubleArray(3) { p[it] + t * (q[it] - p[it]) }
+                    val d = ColorConverter.deltaE00(labs[c], lab(mix))
+                    if (d < best) best = d
+                }
+            }
+            return best
+        }
+
+        fun errors(selected: List<Int>): DoubleArray {
+            val ends = ArrayList<DoubleArray>(selected.size + 1)
+            ends.add(garmentLin)
+            selected.forEach { ends.add(lin[it]) }
+            return DoubleArray(n) { if (it in selected) 0.0 else explainError(it, ends) }
+        }
+
+        fun weightedMean(err: DoubleArray): Double {
+            var sum = 0.0
+            for (i in 0 until n) sum += err[i] * counts[i]
+            return sum / total
+        }
+
+        fun weightedP95(err: DoubleArray): Double {
+            val order = (0 until n).sortedBy { err[it] }
+            var acc = 0
+            for (i in order) {
+                acc += counts[i]
+                if (acc >= total * 0.95) return err[i]
+            }
+            return err[order.last()]
+        }
+
+        val selected = ArrayList<Int>()
+        while (selected.size < n) {
+            if (selected.isNotEmpty()) {
+                val err = errors(selected)
+                if (weightedMean(err) <= toleranceMean && weightedP95(err) <= toleranceP95) break
+            }
+            var bestIndex = -1
+            var bestMean = Double.MAX_VALUE
+            for (candidate in 0 until n) {
+                if (candidate in selected) continue
+                val mean = weightedMean(errors(selected + candidate))
+                if (mean < bestMean) {
+                    bestMean = mean
+                    bestIndex = candidate
+                }
+            }
+            if (bestIndex < 0) break
+            selected.add(bestIndex)
+        }
+        return selected
     }
 
     /**
@@ -894,13 +1057,14 @@ object PrintAreaAndPaletteEngine {
         pixels: IntArray,
         width: Int,
         height: Int,
-        inputs: PrintJobInputs
+        inputs: PrintJobInputs,
+        maskRules: GarmentMaskRules = GarmentMaskRules()
     ): BooleanArray {
         val totalPixels = width * height
         val isPrintMask = BooleanArray(totalPixels)
         if (totalPixels == 0 || pixels.size != totalPixels) return isPrintMask
 
-        val profile = estimateGarmentProfile(pixels, width, height, inputs.userGarmentHex, inputs.garmentColorHex)
+        val profile = estimateGarmentProfile(pixels, width, height, inputs.userGarmentHex, inputs.garmentColorHex, maskRules)
         val garmentLab = profile.medianLab
         val isWhiteGarment = garmentLab.l > 80.0 && hypot(garmentLab.a, garmentLab.b) < 9.0
         val effectiveThreshold = max(inputs.garmentThresholdDeltaE00, profile.adaptiveThresholdDeltaE00)
