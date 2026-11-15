@@ -1,7 +1,11 @@
 package com.mos.nira.features.settings
 
+import android.app.Activity
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,12 +14,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -25,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mos.nira.R
 import com.mos.nira.core.image.OpenCvImageOps
+import com.mos.nira.core.locale.LocaleHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
@@ -33,6 +47,7 @@ private val Navy = Color(0xFF0B1020)
 private val CardColor = Color(0xFF171F35)
 private val White = Color(0xFFF5F6FF)
 private val Muted = Color(0xFF9BA6C0)
+private val Cyan = Color(0xFF55D6E8)
 
 private data class SettingsInfo(
     val rulesVersion: String? = null,
@@ -42,9 +57,12 @@ private data class SettingsInfo(
 )
 
 /**
- * Settings shows only real state read from the app: the rules file version, the geometry
- * library actually loaded, saved data and the app version. Language, Confidential mode and the
- * AI status card are added when those features exist; nothing here is a placeholder.
+ * Settings shows real state read from the app:
+ * - App language selection (English, Tamil, Hindi, Spanish, French, German, Vietnamese, Bengali, Chinese)
+ * - Rules file version
+ * - Geometry library in use
+ * - Saved analyses count
+ * - App version
  */
 @Composable
 fun SettingsScreen(
@@ -52,6 +70,11 @@ fun SettingsScreen(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val currentLangCode by LocaleHelper.currentLanguageCode.collectAsState()
+    val currentLang = LocaleHelper.supportedLanguages.find { it.code == currentLangCode }
+        ?: LocaleHelper.supportedLanguages.first()
+    var showLanguageDialog by remember { mutableStateOf(false) }
+
     val info by produceState(initialValue = SettingsInfo()) {
         value = withContext(Dispatchers.IO) {
             val rules = try {
@@ -89,6 +112,32 @@ fun SettingsScreen(
             fontWeight = FontWeight.Bold
         )
 
+        // Language Switcher Section
+        SettingsSection(stringResource(R.string.settings_section_language)) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { showLanguageDialog = true }
+                    .padding(vertical = 10.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text(text = stringResource(R.string.settings_language_title), color = Muted, fontSize = 12.sp)
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(text = currentLang.nativeName, color = White, fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
+                    Text(text = stringResource(R.string.settings_language_desc), color = Muted, fontSize = 11.sp)
+                }
+                Text(
+                    text = "Change",
+                    color = Cyan,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
+        }
+
         SettingsSection(stringResource(R.string.settings_section_rules)) {
             SettingsRow(stringResource(R.string.settings_rules_version), info.rulesVersion ?: notAvailable)
             SettingsRow(stringResource(R.string.settings_rules_status), info.rulesStatus ?: notAvailable)
@@ -103,6 +152,66 @@ fun SettingsScreen(
             SettingsRow(stringResource(R.string.settings_app_version), info.appVersion ?: notAvailable)
         }
         Spacer(modifier = Modifier.height(24.dp))
+    }
+
+    if (showLanguageDialog) {
+        AlertDialog(
+            onDismissRequest = { showLanguageDialog = false },
+            title = {
+                Text(
+                    text = stringResource(R.string.language_dialog_title),
+                    color = White,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                    LocaleHelper.supportedLanguages.forEach { lang ->
+                        val isSelected = lang.code == currentLangCode
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    showLanguageDialog = false
+                                    LocaleHelper.setLanguage(context, lang.code)
+                                    (context as? Activity)?.recreate()
+                                }
+                                .padding(vertical = 10.dp, horizontal = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = isSelected,
+                                onClick = {
+                                    showLanguageDialog = false
+                                    LocaleHelper.setLanguage(context, lang.code)
+                                    (context as? Activity)?.recreate()
+                                },
+                                colors = RadioButtonDefaults.colors(
+                                    selectedColor = Cyan,
+                                    unselectedColor = Muted
+                                )
+                            )
+                            Column(modifier = Modifier.padding(start = 12.dp)) {
+                                Text(
+                                    text = lang.nativeName,
+                                    color = if (isSelected) Cyan else White,
+                                    fontSize = 15.sp,
+                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                                )
+                            }
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { showLanguageDialog = false }) {
+                    Text(text = "Close", color = Cyan)
+                }
+            },
+            containerColor = CardColor,
+            shape = RoundedCornerShape(16.dp)
+        )
     }
 }
 

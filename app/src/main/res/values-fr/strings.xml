@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NIRA</string>
+
+    <!-- Dashboard -->
+    <string name="brand_tagline">TEXTILE INTELLIGENCE</string>
+    <string name="greeting_morning">Bonjour</string>
+    <string name="greeting_afternoon">Bon après-midi</string>
+    <string name="greeting_evening">Bonsoir</string>
+    <string name="dashboard_headline">Ingénierie d\'impression depuis l\'artwork, en toute confidentialité sur votre téléphone.</string>
+    <string name="action_analyse_artwork">Analyser un artwork</string>
+    <string name="action_analyse_artwork_hint">Choisir un fichier artwork sur ce téléphone</string>
+    <string name="action_photograph_garment">Photographier un vêtement</string>
+    <string name="action_photograph_garment_hint">Photo depuis la caméra ou la galerie</string>
+    <string name="photo_source_title">Photographier un vêtement</string>
+    <string name="photo_source_message">Prenez une photo ou choisissez-en une dans la galerie. Les valeurs d\'une photo de vêtement sont estimées.</string>
+    <string name="photo_source_camera">Prendre une photo</string>
+    <string name="photo_source_gallery">Choisir dans la galerie</string>
+    <string name="section_workspace">ESPACE DE TRAVAIL</string>
+    <string name="card_print_report">Rapport d\'Impression</string>
+    <string name="card_print_report_latest">Ouvrir le dernier : %1$s</string>
+    <string name="card_print_report_pick">Choisir un artwork pour commencer</string>
+    <string name="card_shade_library">Bibliothèque de Teintes</string>
+    <string name="card_shade_library_hint">Teintes de démonstration et importées</string>
+    <string name="card_technique_library">Bibliothèque de Techniques</string>
+    <string name="card_technique_library_hint">Techniques d\'impression et compatibilité</string>
+    <string name="card_ask_nira">Demander à NIRA</string>
+    <string name="card_ask_nira_hint">Poser une question sur ce travail</string>
+    <string name="section_recent">ANALYSES RÉCENTES</string>
+    <string name="recent_empty_title">Aucun projet pour l\'instant</string>
+    <string name="recent_empty_message">Vos analyses d\'artwork apparaîtront ici.</string>
+    <plurals name="recent_colour_count">
+        <item quantity="one">%1$d couleur</item>
+        <item quantity="many">%1$d couleurs</item>
+        <item quantity="other">%1$d couleurs</item>
+    </plurals>
+    <string name="section_coming_soon">BIENTÔT DISPONIBLE</string>
+    <string name="soon_recipe_lab">Laboratoire de Recettes</string>
+    <string name="soon_cad_studio">Studio CAD</string>
+    <string name="soon_tag">Bientôt</string>
+
+    <!-- Bottom bar -->
+    <string name="tab_home">Accueil</string>
+    <string name="tab_artwork">Artwork</string>
+    <string name="tab_ask_nira">Demander</string>
+    <string name="tab_settings">Paramètres</string>
+
+    <!-- Garment camera -->
+    <string name="camera_title">Photographier un vêtement</string>
+    <string name="camera_hint">Remplissez le cadre avec l\'impression. Gardez le téléphone bien à plat sur le vêtement.</string>
+    <string name="camera_capture">Prendre une photo</string>
+    <string name="camera_back">Retour</string>
+    <string name="camera_permission_needed">NIRA a besoin de la caméra pour photographier un vêtement. La photo reste sur ce téléphone.</string>
+    <string name="camera_permission_grant">Autoriser la caméra</string>
+    <string name="camera_error">La caméra n\'a pas pu démarrer : %1$s</string>
+    <string name="camera_save_error">La photo n\'a pas pu être enregistrée : %1$s</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Paramètres</string>
+    <string name="settings_section_language">LANGUE</string>
+    <string name="settings_language_title">Langue de l\'application</string>
+    <string name="settings_language_desc">Choisir la langue d\'affichage</string>
+    <string name="language_dialog_title">Sélectionner la langue</string>
+    <string name="lang_en">English</string>
+    <string name="lang_ta">தமிழ் (Tamil)</string>
+    <string name="lang_hi">हिन्दी (Hindi)</string>
+    <string name="lang_es">Español (Spanish)</string>
+    <string name="lang_fr">Français (French)</string>
+    <string name="lang_de">Deutsch (German)</string>
+    <string name="lang_vi">Tiếng Việt (Vietnamese)</string>
+    <string name="lang_bn">বাংলা (Bengali)</string>
+    <string name="lang_zh">中文 (Chinese)</string>
+    <string name="settings_section_rules">FICHIER DES RÈGLES D\'IMPRESSION</string>
+    <string name="settings_rules_version">Version des règles</string>
+    <string name="settings_rules_status">Statut</string>
+    <string name="settings_section_engine">MOTEUR D\'IMAGE</string>
+    <string name="settings_engine_library">Bibliothèque géométrique utilisée</string>
+    <string name="settings_section_data">DONNÉES ENREGISTRÉES</string>
+    <string name="settings_saved_analyses">Analyses enregistrées sur ce téléphone</string>
+    <string name="settings_section_app">APPLICATION</string>
+    <string name="settings_app_version">Version</string>
+    <string name="settings_not_available">non disponible</string>
+</resources>

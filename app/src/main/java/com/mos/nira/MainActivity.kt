@@ -62,6 +62,7 @@ import com.mos.nira.features.artwork.navigation.ArtworkNavHost
 import com.mos.nira.features.artwork.presentation.ArtworkViewModel
 import com.mos.nira.features.camera.GarmentCameraScreen
 import com.mos.nira.features.dashboard.ArtworkStart
+import com.mos.nira.core.locale.LocaleHelper
 import com.mos.nira.features.dashboard.BottomTab
 import com.mos.nira.features.dashboard.DashboardModel
 import com.mos.nira.features.dashboard.DayPart
@@ -70,6 +71,7 @@ import com.mos.nira.features.dashboard.RootDestinations
 import com.mos.nira.features.dashboard.WorkspaceCard
 import com.mos.nira.features.settings.SettingsScreen
 import com.mos.nira.ui.theme.NIRATheme
+import androidx.compose.runtime.key
 import java.io.File
 import java.util.Calendar
 
@@ -83,11 +85,15 @@ private val Muted = Color(0xFF9BA6C0)
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        LocaleHelper.init(this)
         enableEdgeToEdge()
 
         setContent {
-            NIRATheme {
-                NIRAAppRoot()
+            val currentLang by LocaleHelper.currentLanguageCode.collectAsState()
+            key(currentLang) {
+                NIRATheme {
+                    NIRAAppRoot()
+                }
             }
         }
     }

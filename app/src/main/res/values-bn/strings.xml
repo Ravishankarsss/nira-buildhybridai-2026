@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NIRA</string>
+
+    <!-- Dashboard -->
+    <string name="brand_tagline">TEXTILE INTELLIGENCE</string>
+    <string name="greeting_morning">সুপ্রভাত</string>
+    <string name="greeting_afternoon">শুভ অপরাহ্ন</string>
+    <string name="greeting_evening">শুভ সন্ধ্যা</string>
+    <string name="dashboard_headline">আপনার ফোনে সুরক্ষিতভাবে Artwork থেকে Print Engineering।</string>
+    <string name="action_analyse_artwork">Artwork বিশ্লেষণ করুন</string>
+    <string name="action_analyse_artwork_hint">এই ফোন থেকে একটি Artwork ফাইল নির্বাচন করুন</string>
+    <string name="action_photograph_garment">পোশাকের ছবি তুলুন</string>
+    <string name="action_photograph_garment_hint">Camera বা গ্যালারির ছবি</string>
+    <string name="photo_source_title">পোশাকের ছবি তুলুন</string>
+    <string name="photo_source_message">নতুন ছবি তুলুন, অথবা গ্যালারি থেকে বেছে নিন। পোশাকের ছবি থেকে প্রাপ্ত মানগুলি অনুমান মাত্র।</string>
+    <string name="photo_source_camera">ছবি তুলুন</string>
+    <string name="photo_source_gallery">গ্যালারি থেকে বেছে নিন</string>
+    <string name="section_workspace">WORKSPACE</string>
+    <string name="card_print_report">Print Report</string>
+    <string name="card_print_report_latest">সর্বশেষ রিপোর্ট খুলুন: %1$s</string>
+    <string name="card_print_report_pick">শুরু করতে Artwork বেছে নিন</string>
+    <string name="card_shade_library">Shade Library</string>
+    <string name="card_shade_library_hint">ডেমো এবং ইম্পোর্ট করা শেড</string>
+    <string name="card_technique_library">Technique Library</string>
+    <string name="card_technique_library_hint">প্রিন্ট টেকনিক এবং ফিট</string>
+    <string name="card_ask_nira">NIRA-কে জিজ্ঞাসা করুন</string>
+    <string name="card_ask_nira_hint">এই কাজ সম্পর্কে প্রশ্ন করুন</string>
+    <string name="section_recent">সাম্প্রতিক বিশ্লেষণ</string>
+    <string name="recent_empty_title">এখনও কোনো প্রকল্প নেই</string>
+    <string name="recent_empty_message">আপনার Artwork বিশ্লেষণগুলি এখানে প্রদর্শিত হবে।</string>
+    <plurals name="recent_colour_count">
+        <item quantity="one">%1$d রঙ</item>
+        <item quantity="other">%1$d রঙ</item>
+    </plurals>
+    <string name="section_coming_soon">শীঘ্রই আসছে</string>
+    <string name="soon_recipe_lab">Recipe Lab</string>
+    <string name="soon_cad_studio">CAD Studio</string>
+    <string name="soon_tag">শীঘ্রই</string>
+
+    <!-- Bottom bar -->
+    <string name="tab_home">হোম</string>
+    <string name="tab_artwork">Artwork</string>
+    <string name="tab_ask_nira">Ask NIRA</string>
+    <string name="tab_settings">Settings</string>
+
+    <!-- Garment camera -->
+    <string name="camera_title">পোশাকের ছবি তুলুন</string>
+    <string name="camera_hint">ফ্রেমটি প্রিন্ট দিয়ে পূর্ণ করুন। ফোনটি পোশাকের সাথে সমান্তরাল রাখুন।</string>
+    <string name="camera_capture">ছবি তুলুন</string>
+    <string name="camera_back">ফিরে যান</string>
+    <string name="camera_permission_needed">পোশাকের ছবি তুলতে NIRA-র Camera অনুমতি প্রয়োজন। ছবিটি এই ফোনেই থাকবে।</string>
+    <string name="camera_permission_grant">অনুমতি দিন</string>
+    <string name="camera_error">Camera শুরু করা যায়নি: %1$s</string>
+    <string name="camera_save_error">ছবি সংরক্ষণ করা যায়নি: %1$s</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_section_language">LANGUAGE</string>
+    <string name="settings_language_title">অ্যাপের ভাষা</string>
+    <string name="settings_language_desc">প্রদর্শন ভাষা নির্বাচন করুন</string>
+    <string name="language_dialog_title">ভাষা নির্বাচন করুন</string>
+    <string name="lang_en">English</string>
+    <string name="lang_ta">தமிழ் (Tamil)</string>
+    <string name="lang_hi">हिन्दी (Hindi)</string>
+    <string name="lang_es">Español (Spanish)</string>
+    <string name="lang_fr">Français (French)</string>
+    <string name="lang_de">Deutsch (German)</string>
+    <string name="lang_vi">Tiếng Việt (Vietnamese)</string>
+    <string name="lang_bn">বাংলা (Bengali)</string>
+    <string name="lang_zh">中文 (Chinese)</string>
+    <string name="settings_section_rules">PRINT RULES ফাইল</string>
+    <string name="settings_rules_version">Rules সংস্করণ</string>
+    <string name="settings_rules_status">স্ট্যাটাস (Status)</string>
+    <string name="settings_section_engine">IMAGE ENGINE</string>
+    <string name="settings_engine_library">ব্যবহৃত Geometry library</string>
+    <string name="settings_section_data">সংরক্ষিত ডেটা</string>
+    <string name="settings_saved_analyses">এই ফোনে সংরক্ষিত বিশ্লেষণ</string>
+    <string name="settings_section_app">APP</string>
+    <string name="settings_app_version">সংস্করণ (Version)</string>
+    <string name="settings_not_available">উপলব্ধ নয়</string>
+</resources>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NIRA</string>
+
+    <!-- Dashboard -->
+    <string name="brand_tagline">TEXTILE INTELLIGENCE</string>
+    <string name="greeting_morning">早上好</string>
+    <string name="greeting_afternoon">下午好</string>
+    <string name="greeting_evening">晚上好</string>
+    <string name="dashboard_headline">从设计图案进行印花工艺分析，在手机本地私密运行。</string>
+    <string name="action_analyse_artwork">分析图案</string>
+    <string name="action_analyse_artwork_hint">从此手机选取图案文件</string>
+    <string name="action_photograph_garment">拍摄成衣</string>
+    <string name="action_photograph_garment_hint">相机拍摄或相册选取</string>
+    <string name="photo_source_title">拍摄成衣</string>
+    <string name="photo_source_message">拍摄新照片或从相册中选择。成衣照片所得数值均为估算值。</string>
+    <string name="photo_source_camera">拍照</string>
+    <string name="photo_source_gallery">从相册选择</string>
+    <string name="section_workspace">工作台</string>
+    <string name="card_print_report">印花报告</string>
+    <string name="card_print_report_latest">打开最新：%1$s</string>
+    <string name="card_print_report_pick">选取图案以开始</string>
+    <string name="card_shade_library">色卡库</string>
+    <string name="card_shade_library_hint">示例及导入色卡</string>
+    <string name="card_technique_library">工艺库</string>
+    <string name="card_technique_library_hint">印花工艺及适配度</string>
+    <string name="card_ask_nira">咨询 NIRA</string>
+    <string name="card_ask_nira_hint">咨询当前订单相关问题</string>
+    <string name="section_recent">最近分析</string>
+    <string name="recent_empty_title">暂无项目</string>
+    <string name="recent_empty_message">您的图案分析记录将显示在这里。</string>
+    <plurals name="recent_colour_count">
+        <item quantity="other">%1$d 种颜色</item>
+    </plurals>
+    <string name="section_coming_soon">即将推出</string>
+    <string name="soon_recipe_lab">配方实验室</string>
+    <string name="soon_cad_studio">CAD 工作室</string>
+    <string name="soon_tag">即将</string>
+
+    <!-- Bottom bar -->
+    <string name="tab_home">首页</string>
+    <string name="tab_artwork">图案</string>
+    <string name="tab_ask_nira">咨询</string>
+    <string name="tab_settings">设置</string>
+
+    <!-- Garment camera -->
+    <string name="camera_title">拍摄成衣</string>
+    <string name="camera_hint">让印花图案填满取景框。手机与服装表面保持水平。</string>
+    <string name="camera_capture">拍照</string>
+    <string name="camera_back">返回</string>
+    <string name="camera_permission_needed">NIRA 需要相机权限来拍摄成衣。照片仅保存在此手机上。</string>
+    <string name="camera_permission_grant">授予相机权限</string>
+    <string name="camera_error">相机无法启动：%1$s</string>
+    <string name="camera_save_error">照片无法保存：%1$s</string>
+
+    <!-- Settings -->
+    <string name="settings_title">设置</string>
+    <string name="settings_section_language">语言</string>
+    <string name="settings_language_title">应用语言</string>
+    <string name="settings_language_desc">选择显示语言</string>
+    <string name="language_dialog_title">选择语言</string>
+    <string name="lang_en">English</string>
+    <string name="lang_ta">தமிழ் (Tamil)</string>
+    <string name="lang_hi">हिन्दी (Hindi)</string>
+    <string name="lang_es">Español (Spanish)</string>
+    <string name="lang_fr">Français (French)</string>
+    <string name="lang_de">Deutsch (German)</string>
+    <string name="lang_vi">Tiếng Việt (Vietnamese)</string>
+    <string name="lang_bn">বাংলা (Bengali)</string>
+    <string name="lang_zh">中文 (Chinese)</string>
+    <string name="settings_section_rules">印花规则文件</string>
+    <string name="settings_rules_version">规则版本</string>
+    <string name="settings_rules_status">状态</string>
+    <string name="settings_section_engine">图像引擎</string>
+    <string name="settings_engine_library">当前运行的几何算法库</string>
+    <string name="settings_section_data">已存数据</string>
+    <string name="settings_saved_analyses">本手机上保存的分析记录</string>
+    <string name="settings_section_app">应用</string>
+    <string name="settings_app_version">版本号</string>
+    <string name="settings_not_available">不可用</string>
+</resources>

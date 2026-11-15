@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NIRA</string>
+
+    <!-- Dashboard -->
+    <string name="brand_tagline">TEXTILE INTELLIGENCE</string>
+    <string name="greeting_morning">காலை வணக்கம்</string>
+    <string name="greeting_afternoon">மதிய வணக்கம்</string>
+    <string name="greeting_evening">மாலை வணக்கம்</string>
+    <string name="dashboard_headline">உங்கள் மொபைலிலேயே தனிப்பட்ட முறையில் Artwork-லிருந்து Print Engineering.</string>
+    <string name="action_analyse_artwork">Artwork ஆய்வு செய்க</string>
+    <string name="action_analyse_artwork_hint">இந்த மொபைலிலிருந்து Artwork ஃபைலைத் தேர்ந்தெடுக்கவும்</string>
+    <string name="action_photograph_garment">ஆடையைப் புகைப்படம் எடுக்கவும்</string>
+    <string name="action_photograph_garment_hint">Camera அல்லது gallery புகைப்படம்</string>
+    <string name="photo_source_title">ஆடையைப் புகைப்படம் எடுக்கவும்</string>
+    <string name="photo_source_message">புதிய புகைப்படம் எடுக்கவும் அல்லது gallery-லிருந்து தேர்ந்தெடுக்கவும். ஆடை புகைப்படத்தின் மதிப்புகள் estimates மட்டுமே.</string>
+    <string name="photo_source_camera">புகைப்படம் எடுக்க</string>
+    <string name="photo_source_gallery">Gallery-லிருந்து தேர்ந்தெடுக்க</string>
+    <string name="section_workspace">WORKSPACE</string>
+    <string name="card_print_report">Print Report</string>
+    <string name="card_print_report_latest">சமீபத்தியதைத் திறக்க: %1$s</string>
+    <string name="card_print_report_pick">தொடங்க Artwork-ஐத் தேர்ந்தெடுக்கவும்</string>
+    <string name="card_shade_library">Shade Library</string>
+    <string name="card_shade_library_hint">Demo மற்றும் imported shades</string>
+    <string name="card_technique_library">Technique Library</string>
+    <string name="card_technique_library_hint">Print techniques மற்றும் fit</string>
+    <string name="card_ask_nira">Ask NIRA</string>
+    <string name="card_ask_nira_hint">இந்த வேலையைப் பற்றிக் கேட்க</string>
+    <string name="section_recent">RECENT ANALYSES</string>
+    <string name="recent_empty_title">திட்டங்கள் எதுவும் இல்லை</string>
+    <string name="recent_empty_message">உங்கள் artwork ஆய்வுகள் இங்கே தோன்றும்.</string>
+    <plurals name="recent_colour_count">
+        <item quantity="one">%1$d colour</item>
+        <item quantity="other">%1$d colours</item>
+    </plurals>
+    <string name="section_coming_soon">COMING SOON</string>
+    <string name="soon_recipe_lab">Recipe Lab</string>
+    <string name="soon_cad_studio">CAD Studio</string>
+    <string name="soon_tag">Soon</string>
+
+    <!-- Bottom bar -->
+    <string name="tab_home">முகப்பு</string>
+    <string name="tab_artwork">Artwork</string>
+    <string name="tab_ask_nira">Ask NIRA</string>
+    <string name="tab_settings">Settings</string>
+
+    <!-- Garment camera -->
+    <string name="camera_title">ஆடையைப் புகைப்படம் எடுக்கவும்</string>
+    <string name="camera_hint">பிரிண்ட்டை frame-ல் முழுமையாகப் பொருத்தவும். போனை ஆடையின் மீது flat-ஆக வைக்கவும்.</string>
+    <string name="camera_capture">புகைப்படம் எடுக்க</string>
+    <string name="camera_back">Back</string>
+    <string name="camera_permission_needed">ஆடையைப் படம் பிடிக்க NIRA-விற்கு Camera அனுமதி தேவை. Photo இந்த போனிலேயே இருக்கும்.</string>
+    <string name="camera_permission_grant">Camera அனுமதி வழங்க</string>
+    <string name="camera_error">Camera தொடங்க முடியவில்லை: %1$s</string>
+    <string name="camera_save_error">Photo-வைச் சேமிக்க முடியவில்லை: %1$s</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_section_language">LANGUAGE</string>
+    <string name="settings_language_title">App மொழி</string>
+    <string name="settings_language_desc">காட்சி மொழியைத் தேர்ந்தெடுக்கவும்</string>
+    <string name="language_dialog_title">மொழியைத் தேர்ந்தெடுக்கவும்</string>
+    <string name="lang_en">English</string>
+    <string name="lang_ta">தமிழ் (Tamil)</string>
+    <string name="lang_hi">हिन्दी (Hindi)</string>
+    <string name="lang_es">Español (Spanish)</string>
+    <string name="lang_fr">Français (French)</string>
+    <string name="lang_de">Deutsch (German)</string>
+    <string name="lang_vi">Tiếng Việt (Vietnamese)</string>
+    <string name="lang_bn">বাংলা (Bengali)</string>
+    <string name="lang_zh">中文 (Chinese)</string>
+    <string name="settings_section_rules">PRINT RULES FILE</string>
+    <string name="settings_rules_version">Rules பதிப்பு</string>
+    <string name="settings_rules_status">Status</string>
+    <string name="settings_section_engine">IMAGE ENGINE</string>
+    <string name="settings_engine_library">பயன்பாட்டில் உள்ள Geometry library</string>
+    <string name="settings_section_data">SAVED DATA</string>
+    <string name="settings_saved_analyses">இந்த போனில் சேமிக்கப்பட்ட analyses</string>
+    <string name="settings_section_app">APP</string>
+    <string name="settings_app_version">Version</string>
+    <string name="settings_not_available">கிடைக்கவில்லை</string>
+</resources>

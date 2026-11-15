@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NIRA</string>
+
+    <!-- Dashboard -->
+    <string name="brand_tagline">TEXTILE INTELLIGENCE</string>
+    <string name="greeting_morning">Guten Morgen</string>
+    <string name="greeting_afternoon">Guten Tag</string>
+    <string name="greeting_evening">Guten Abend</string>
+    <string name="dashboard_headline">Drucktechnik aus Artwork, privat auf Ihrem Smartphone.</string>
+    <string name="action_analyse_artwork">Artwork analysieren</string>
+    <string name="action_analyse_artwork_hint">Artwork-Datei von diesem Smartphone auswählen</string>
+    <string name="action_photograph_garment">Kleidungsstück fotografieren</string>
+    <string name="action_photograph_garment_hint">Kamera- oder Galerie-Foto</string>
+    <string name="photo_source_title">Kleidungsstück fotografieren</string>
+    <string name="photo_source_message">Neues Foto aufnehmen oder aus der Galerie wählen. Werte eines Fotos sind Schätzungen.</string>
+    <string name="photo_source_camera">Foto aufnehmen</string>
+    <string name="photo_source_gallery">Aus Galerie wählen</string>
+    <string name="section_workspace">ARBEITSBEREICH</string>
+    <string name="card_print_report">Druckbericht</string>
+    <string name="card_print_report_latest">Neuesten öffnen: %1$s</string>
+    <string name="card_print_report_pick">Artwork zum Starten wählen</string>
+    <string name="card_shade_library">Farbton-Bibliothek</string>
+    <string name="card_shade_library_hint">Demo- und importierte Farbtöne</string>
+    <string name="card_technique_library">Technik-Bibliothek</string>
+    <string name="card_technique_library_hint">Drucktechniken und Eignung</string>
+    <string name="card_ask_nira">NIRA fragen</string>
+    <string name="card_ask_nira_hint">Fragen zu diesem Auftrag</string>
+    <string name="section_recent">LETZTE ANALYSEN</string>
+    <string name="recent_empty_title">Noch keine Projekte</string>
+    <string name="recent_empty_message">Ihre Artwork-Analysen erscheinen hier.</string>
+    <plurals name="recent_colour_count">
+        <item quantity="one">%1$d Farbe</item>
+        <item quantity="other">%1$d Farben</item>
+    </plurals>
+    <string name="section_coming_soon">DEMNÄCHST</string>
+    <string name="soon_recipe_lab">Rezeptur-Labor</string>
+    <string name="soon_cad_studio">CAD-Studio</string>
+    <string name="soon_tag">Bald</string>
+
+    <!-- Bottom bar -->
+    <string name="tab_home">Start</string>
+    <string name="tab_artwork">Artwork</string>
+    <string name="tab_ask_nira">Fragen</string>
+    <string name="tab_settings">Einstellungen</string>
+
+    <!-- Garment camera -->
+    <string name="camera_title">Kleidungsstück fotografieren</string>
+    <string name="camera_hint">Druck bildfüllend ausrichten. Smartphone flach zum Kleidungsstück halten.</string>
+    <string name="camera_capture">Foto aufnehmen</string>
+    <string name="camera_back">Zurück</string>
+    <string name="camera_permission_needed">NIRA benötigt Kamerazugriff, um ein Kleidungsstück zu fotografieren. Das Foto bleibt auf diesem Gerät.</string>
+    <string name="camera_permission_grant">Kamerazugriff erlauben</string>
+    <string name="camera_error">Kamera konnte nicht gestartet werden: %1$s</string>
+    <string name="camera_save_error">Foto konnte nicht gespeichert werden: %1$s</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Einstellungen</string>
+    <string name="settings_section_language">SPRACHE</string>
+    <string name="settings_language_title">App-Sprache</string>
+    <string name="settings_language_desc">Anzeigesprache auswählen</string>
+    <string name="language_dialog_title">Sprache auswählen</string>
+    <string name="lang_en">English</string>
+    <string name="lang_ta">தமிழ் (Tamil)</string>
+    <string name="lang_hi">हिन्दी (Hindi)</string>
+    <string name="lang_es">Español (Spanish)</string>
+    <string name="lang_fr">Français (French)</string>
+    <string name="lang_de">Deutsch (German)</string>
+    <string name="lang_vi">Tiếng Việt (Vietnamese)</string>
+    <string name="lang_bn">বাংলা (Bengali)</string>
+    <string name="lang_zh">中文 (Chinese)</string>
+    <string name="settings_section_rules">DRUCKREGELN-DATEI</string>
+    <string name="settings_rules_version">Regelversion</string>
+    <string name="settings_rules_status">Status</string>
+    <string name="settings_section_engine">BILD-ENGINE</string>
+    <string name="settings_engine_library">Verwendete Geometriebibliothek</string>
+    <string name="settings_section_data">GESPEICHERTE DATEN</string>
+    <string name="settings_saved_analyses">Gespeicherte Analysen auf diesem Smartphone</string>
+    <string name="settings_section_app">APP</string>
+    <string name="settings_app_version">Version</string>
+    <string name="settings_not_available">nicht verfügbar</string>
+</resources>

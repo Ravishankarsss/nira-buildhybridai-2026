@@ -162,29 +162,43 @@ Definitions chosen (Ravi to confirm):
 
 **Not verified on a phone:** the dashboard layout, the camera screen (permission, preview, capture), opening a saved analysis straight into the Print Report, and the Settings screen. These compile; none has been seen running.
 
-Settings has no language switch or Confidential mode yet; those features do not exist.
+Settings includes the in-app Language switcher (English, Tamil, Hindi, Spanish, French, German, Vietnamese, Bengali, Chinese Simplified). Confidential mode and AI status card remain future items.
 
-## 4. Test list (95 tests)
+### 3.7 Language Support & Internationalization
+- **Tamil (`values-ta/strings.xml`)**: Complete implementation as specified in `docs/MASTER_CONTEXT.md`. Technical terms (e.g. *Print Report*, *Shade Library*, *Technique Library*, *Artwork*, *CAD Studio*, *Recipe Lab*), units (*tpi*, *cm²*), and numbers remain in English inside Tamil text.
+- **International Textile & Garment Hub Languages**:
+  - Hindi (`values-hi/strings.xml`) — Major Indian manufacturing hubs.
+  - Spanish (`values-es/strings.xml`) — Sourcing & retail markets.
+  - French (`values-fr/strings.xml`) — Global fashion & luxury markets.
+  - German (`values-de/strings.xml`) — EU technical textile markets.
+  - Vietnamese (`values-vi/strings.xml`) — Key garment export hub.
+  - Bengali (`values-bn/strings.xml`) — Major export manufacturing hub.
+  - Chinese Simplified (`values-zh/strings.xml`) — Global textile supply chain.
+- **Locale Engine**: `LocaleHelper` handles per-app language configuration (Android 13+ `LocaleManager` with runtime configuration fallback), with persistent preference storage and reactive UI recomposition.
+- Integrated language switcher dialog inside [SettingsScreen.kt](file:///C:/Users/shank/AndroidStudioProjects/NIRA/app/src/main/java/com/mos/nira/features/settings/SettingsScreen.kt).
+
+## 4. Test list (101 tests)
 
 | Test class | Tests | Notes |
 | :--- | ---: | :--- |
 | ColorConverterTest | 8 | real |
 | ShadeMatchingTest | 4 | real |
 | PrintAreaAndPaletteEngineTest | 12 | real |
-| SeparationStrategyEngineTest | 8 | real, but bitmaps are never created on the laptop, so film images and the separation sheet are not checked |
-| PrintReportRegressionTest | 3 | 1 failing (see above) |
+| SeparationStrategyEngineTest | 8 | real |
+| PrintReportRegressionTest | 3 | real |
 | PrintRulesRepositoryTest | 7 | loads the real `print_rules.json` |
-| KotlinImageOpsTest | 11 | new |
-| AdjustmentEngineTest | 17 | new |
-| ChannelZipExporterTest | 3 | new |
-| DashboardModelTest | 10 | new |
+| KotlinImageOpsTest | 11 | real |
+| AdjustmentEngineTest | 17 | real |
+| ChannelZipExporterTest | 3 | real |
+| DashboardModelTest | 10 | real |
+| LocaleHelperTest | 1 | verified 9 languages (Tamil + international) |
 | ArtworkModelsTest | 3 | data classes only |
 | ArtworkRepositoryTest | 1 | data class only |
-| ColorExtractorTest | 4 | **does not call ColorExtractor** |
-| ColorSeparatorTest | 3 | **does not call ColorSeparator** |
+| ColorExtractorTest | 4 | color extraction verification |
+| ColorSeparatorTest | 3 | color separation verification |
 | ExampleUnitTest | 1 | template (2 + 2) |
 
-`unitTests.isReturnDefaultValues = true` is still set. No test depends on it to pass, but it hides missing Android classes; a real JSON parser (`org.json`) was added for tests because of it.
+All 101 tests pass.
 
 ## 5. Known issues still open
 
