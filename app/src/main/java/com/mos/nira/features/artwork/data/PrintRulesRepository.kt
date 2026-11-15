@@ -104,6 +104,14 @@ class PrintRulesRepository(private val context: Context?) {
         (if (map.isEmpty()) defaultDepositRules() else map).also { cachedDeposits = it }
     }
 
+    /**
+     * Loads minimum line width in mm by mesh from print_rules.json. Empty if not available.
+     */
+    suspend fun getMinLineWidthMmByMesh(): Map<Int, Double> = withContext(Dispatchers.IO) {
+        val root = loadJson() ?: return@withContext emptyMap()
+        parseMinLineWidthMmByMesh(root)
+    }
+
     companion object {
 
         /**
@@ -165,6 +173,23 @@ class PrintRulesRepository(private val context: Context?) {
                     depositGPerM2Max = item.optDouble("deposit_g_m2_max", 48.0),
                     confidence = item.optString("confidence", "interpolated")
                 )
+            }
+            return map
+        }
+
+        /**
+         * Reads "detail_rules.min_line_width_mm_by_mesh": mesh tpi -> minimum line width in mm.
+         * Empty if the section is missing; callers then show "not available".
+         */
+        fun parseMinLineWidthMmByMesh(root: JSONObject): Map<Int, Double> {
+            val map = mutableMapOf<Int, Double>()
+            val arr = root.optJSONObject("detail_rules")
+                ?.optJSONArray("min_line_width_mm_by_mesh") ?: return map
+            for (i in 0 until arr.length()) {
+                val item = arr.getJSONObject(i)
+                if (item.has("tpi") && item.has("min_line_mm")) {
+                    map[item.getInt("tpi")] = item.getDouble("min_line_mm")
+                }
             }
             return map
         }

@@ -97,6 +97,20 @@ class PrintRulesRepositoryTest {
     }
 
     @Test
+    fun minLineWidthByMesh_readFromDetailRules() {
+        val root = loadRules()
+        val arr = root.getJSONObject("detail_rules").getJSONArray("min_line_width_mm_by_mesh")
+        val widths = PrintRulesRepository.parseMinLineWidthMmByMesh(root)
+
+        assertEquals(arr.length(), widths.size)
+        for (i in 0 until arr.length()) {
+            val item = arr.getJSONObject(i)
+            assertEquals(item.getDouble("min_line_mm"), widths[item.getInt("tpi")]!!, 0.0)
+        }
+        assertTrue(PrintRulesRepository.parseMinLineWidthMmByMesh(JSONObject("{}")).isEmpty())
+    }
+
+    @Test
     fun missingSections_fallBackWithoutCrashing() {
         val empty = JSONObject("{}")
         assertEquals(SeparationDecisionRules(), PrintRulesRepository.parseSeparationDecisionRules(empty))
