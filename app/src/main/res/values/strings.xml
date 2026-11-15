@@ -1,3 +1,68 @@
 <resources>
     <string name="app_name">NIRA</string>
+
+    <!-- Dashboard -->
+    <string name="brand_tagline">TEXTILE INTELLIGENCE</string>
+    <string name="greeting_morning">Good morning</string>
+    <string name="greeting_afternoon">Good afternoon</string>
+    <string name="greeting_evening">Good evening</string>
+    <string name="dashboard_headline">Print engineering from artwork, privately on your phone.</string>
+    <string name="action_analyse_artwork">Analyse artwork</string>
+    <string name="action_analyse_artwork_hint">Pick an artwork file from this phone</string>
+    <string name="action_photograph_garment">Photograph a garment</string>
+    <string name="action_photograph_garment_hint">Camera or gallery photo</string>
+    <string name="photo_source_title">Photograph a garment</string>
+    <string name="photo_source_message">Take a new photo, or choose one from the gallery. Values from a garment photo are estimates.</string>
+    <string name="photo_source_camera">Take photo</string>
+    <string name="photo_source_gallery">Choose from gallery</string>
+    <string name="section_workspace">WORKSPACE</string>
+    <string name="card_print_report">Print Report</string>
+    <string name="card_print_report_latest">Open latest: %1$s</string>
+    <string name="card_print_report_pick">Pick artwork to start</string>
+    <string name="card_shade_library">Shade Library</string>
+    <string name="card_shade_library_hint">Demo and imported shades</string>
+    <string name="card_technique_library">Technique Library</string>
+    <string name="card_technique_library_hint">Print techniques and fit</string>
+    <string name="card_ask_nira">Ask NIRA</string>
+    <string name="card_ask_nira_hint">Ask about this job</string>
+    <string name="section_recent">RECENT ANALYSES</string>
+    <string name="recent_empty_title">No projects yet</string>
+    <string name="recent_empty_message">Your artwork analyses will appear here.</string>
+    <plurals name="recent_colour_count">
+        <item quantity="one">%1$d colour</item>
+        <item quantity="other">%1$d colours</item>
+    </plurals>
+    <string name="section_coming_soon">COMING SOON</string>
+    <string name="soon_recipe_lab">Recipe Lab</string>
+    <string name="soon_cad_studio">CAD Studio</string>
+    <string name="soon_tag">Soon</string>
+
+    <!-- Bottom bar -->
+    <string name="tab_home">Home</string>
+    <string name="tab_artwork">Artwork</string>
+    <string name="tab_ask_nira">Ask NIRA</string>
+    <string name="tab_settings">Settings</string>
+
+    <!-- Garment camera -->
+    <string name="camera_title">Photograph a garment</string>
+    <string name="camera_hint">Fill the frame with the print. Keep the phone flat to the garment.</string>
+    <string name="camera_capture">Take photo</string>
+    <string name="camera_back">Back</string>
+    <string name="camera_permission_needed">NIRA needs the camera to photograph a garment. The photo stays on this phone.</string>
+    <string name="camera_permission_grant">Allow camera</string>
+    <string name="camera_error">Camera could not start: %1$s</string>
+    <string name="camera_save_error">Photo could not be saved: %1$s</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_section_rules">PRINT RULES FILE</string>
+    <string name="settings_rules_version">Rules version</string>
+    <string name="settings_rules_status">Status</string>
+    <string name="settings_section_engine">IMAGE ENGINE</string>
+    <string name="settings_engine_library">Geometry library in use</string>
+    <string name="settings_section_data">SAVED DATA</string>
+    <string name="settings_saved_analyses">Saved analyses on this phone</string>
+    <string name="settings_section_app">APP</string>
+    <string name="settings_app_version">Version</string>
+    <string name="settings_not_available">not available</string>
 </resources>

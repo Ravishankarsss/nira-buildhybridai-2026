@@ -34,13 +34,24 @@ object ArtworkDestinations {
 fun ArtworkNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    viewModel: ArtworkViewModel = viewModel()
+    viewModel: ArtworkViewModel = viewModel(),
+    startDestination: String = ArtworkDestinations.LANDING,
+    onExit: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
+    // Back from the first screen of this flow leaves the flow (for example back to the dashboard).
+    val goBack: () -> Unit = {
+        if (navController.previousBackStackEntry != null) {
+            navController.popBackStack()
+        } else {
+            onExit()
+        }
+    }
+
     NavHost(
         navController = navController,
-        startDestination = ArtworkDestinations.LANDING,
+        startDestination = startDestination,
         modifier = modifier
     ) {
         composable(ArtworkDestinations.LANDING) {
@@ -96,7 +107,7 @@ fun ArtworkNavHost(
                     viewModel.analyzeArtwork()
                     navController.navigate(ArtworkDestinations.COLOR_INTELLIGENCE)
                 },
-                onBack = { navController.popBackStack() }
+                onBack = goBack
             )
         }
 
@@ -121,7 +132,7 @@ fun ArtworkNavHost(
                 onNavigateToPrintReport = {
                     navController.navigate(ArtworkDestinations.PRINT_REPORT)
                 },
-                onBack = { navController.popBackStack() }
+                onBack = goBack
             )
         }
 
@@ -136,7 +147,7 @@ fun ArtworkNavHost(
                 onAddManualShade = { type, code, name, l, a, b ->
                     viewModel.addManualShade(type, code, name, l, a, b)
                 },
-                onBack = { navController.popBackStack() }
+                onBack = goBack
             )
         }
 
@@ -145,7 +156,7 @@ fun ArtworkNavHost(
                 separationResult = uiState.separationResult,
                 selectedLayerIndex = uiState.selectedLayerIndex,
                 onSelectLayer = { viewModel.selectLayer(it) },
-                onBack = { navController.popBackStack() }
+                onBack = goBack
             )
         }
 
@@ -180,7 +191,7 @@ fun ArtworkNavHost(
                 onShareSeparationSheet = { viewModel.shareSeparationSheet(context) { } },
                 onClearExportMessage = { viewModel.clearExportMessage() },
                 onRecalculate = { viewModel.computePartAReport() },
-                onBack = { navController.popBackStack() }
+                onBack = goBack
             )
         }
 
@@ -192,7 +203,7 @@ fun ArtworkNavHost(
                     navController.navigate(ArtworkDestinations.COLOR_INTELLIGENCE)
                 },
                 onDeleteRecord = { id -> viewModel.deleteAnalysis(id) },
-                onBack = { navController.popBackStack() }
+                onBack = goBack
             )
         }
     }

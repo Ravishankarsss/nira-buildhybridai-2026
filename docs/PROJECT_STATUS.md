@@ -1,147 +1,172 @@
-# NIRA Print Report — Project Status & Implementation Log
+# NIRA — Project Status
 
-## Current Status: Part C Completed & Verified (Awaiting User Approval for Part D)
+Last updated: 15 November 2026, 20:15 IST (by Claude Code).
+Rule for this file: only write what was actually run. Numbers below come from real runs on the laptop.
 
-**Project Name:** NIRA (Textile & Garment Screen Printing Intelligence)  
-**Package:** `com.mos.nira`  
-**Phase:** NIRA Print Report — Deterministic Kotlin Core  
-**Current Stage:** PART C — Screens and Proof (Film Positives & Side-by-Side Verification)  
-**Build Status:** `:app:assembleDebug` **SUCCESS**  
-**Unit Test Status:** `:app:testDebugUnitTest` **44 Passed, 0 Failed, 0 Skipped (SUCCESS)**  
+## 1. Current state
 
----
+| Item | Result |
+| :--- | :--- |
+| Build `./gradlew :app:assembleDebug` | PASSES |
+| Unit tests `./gradlew :app:testDebugUnitTest` | 95 run, 94 pass, **1 fails** |
+| Failing test | `PrintReportRegressionTest.testRealGarmentPhotoRegression_DarkTexturedFabricWithWhiteAndBlueLogo` — palette has 8 colours, expected 2 |
+| Device test (vivo V60e) of today's work | **NOT DONE** |
+| Instrumented (on-device) tests | Not run. No device was connected to this session. |
+| Firebase in the app | **NOT STARTED** (nothing in Gradle) |
+| Pushed to GitHub | No. All commits below are local only. |
 
-## 1. Summary of Completed & Approved Stages
+Earlier versions of this file said "44 passed, 0 failed" and "Part B under 250 ms". Both were wrong for the code as found on 15 Nov: the build did not compile, and the device test measured 16,750 ms for strategy evaluation.
 
-### Part A — Print Area and Measured Palette (Approved)
-- Dynamic physical dimensions from user-specified width in cm with aspect-ratio preserving height calculation.
-- Fast white garment masking ($L^* > 80, \text{chroma} < 9$), user-adjustable non-white garment threshold with 5.0 default, and touch drag-to-erase bounding box exclusion.
-- K-Means ($K=16$) Lab clustering with CIEDE2000 metric, $3.2\ \Delta E_{00}$ cluster merging, $1.5\%$ noise pruning, and shade library matching.
-- Flat-separation posterisation error curve across $K \in \{4, 6, 8, 10, 12, 16\}$.
-- Edge-case resilience: empty images, $1 \times 1$ pixel, and 100% garment-coloured images verified.
+## 2. Commits made on 15 November (local)
 
-### Part B — Separation Strategies Comparison Table (Approved)
-- Editable nominal CMYK process inks stored in [`print_rules.json`](file:///C:/Users/shank/AndroidStudioProjects/NIRA/app/src/main/assets/print_rules.json) (`cyan: #00AEEF`, `magenta: #EC008C`, `yellow: #FFF200`, `black: #231F20`) with confidence `"assumption"` and dynamic loader [`PrintRulesRepository.kt`](file:///C:/Users/shank/AndroidStudioProjects/NIRA/app/src/main/java/com/mos/nira/features/artwork/data/PrintRulesRepository.kt).
-- Linear RGB absorbance conversion $\mathbf{a} = -\ln(\text{linear RGB})$ clipped to $[0.004, 1.0]$.
-- Pure Kotlin Lawson-Hanson Non-Negative Least Squares (NNLS) solver with Tikhonov regularization ($\lambda = 10^{-6}$).
-- 5-bit color quantization enabling $< 250\text{ ms}$ evaluation on 1-megapixel images.
-- Four separation strategies evaluated with Three Quality Figures: Mean $\Delta E_{00}$, 95th Percentile $\Delta E_{00}$, and % of pixels within $3.0\ \Delta E_{00}$.
-- Dark garment rule: automatically adds Base White Underbase and Highlight White screens (+2 screens) and displays warning: `"CMYK alone is not suitable on dark garments without an underbase white."`
-- Model disclaimer label: `"Model result. No dot gain or registration error included."`
+| Commit | What |
+| :--- | :--- |
+| `2147240` | All work since Phase 1 (shade library, rules files, Print Report engine Parts A–D), plus the build fix and garment-mask fix |
+| `71a61af` | Rules loader reads version 2 keys |
+| `727ee42` | OpenCV and CameraX behind the `ImageOps` interface |
+| `8c5bdd6` | Adjustment engine and channel ZIP export |
+| (next) | Dashboard update, garment camera, Settings |
 
----
+## 3. What was fixed and built today
 
-## 2. PART C — Screens, Proof & Film Positives Implementation
+### 3.1 Build fix
+`SeparationStrategyEngine.kt` had five leftover lines after `quantizePixels6Bit` from a half-finished edit. Removed.
 
-### 2.1 Film Positive Greyscale Channel Generation
-- **Industry Specification:**
-  - In screen printing film positive exposure, black ink on film blocks UV light from hardening photo-emulsion, creating the stencil mesh opening.
-  - **100% ink coverage ($c = 1.0$)** $\implies$ Pure **Black** (`#000000`, grey 0).
-  - **0% ink coverage ($c = 0.0$)** $\implies$ Pure **White** (`#FFFFFF`, grey 255).
-  - **Intermediate halftones ($c \in [0.0, 1.0]$)** $\implies$ Linear inverted density:
-    $$\text{grey} = \text{round}((1.0 - c) \times 255.0).\text{toInt}().\text{coerceIn}(0, 255)$$
-    $$\text{pixelColor} = 0\text{xFF000000} \mid (\text{grey} \ll 16) \mid (\text{grey} \ll 8) \mid \text{grey}$$
-- **Channel Data Model ([`FilmPositiveChannel`](file:///C:/Users/shank/AndroidStudioProjects/NIRA/app/src/main/java/com/mos/nira/features/artwork/domain/PrintReportModels.kt)):**
-  - `channelIndex: Int`
-  - `inkName: String`
-  - `inkHex: String`
-  - `inkRgb: ColorConverter.Rgb`
-  - `averageCoveragePercent: Double`: Active inked print area coverage % ($\frac{\sum c_j}{N_{\text{print}}} \times 100\%$).
-  - `boxCoveragePercent: Double`: Total print bounding box coverage % ($\frac{\sum c_j}{N_{\text{total}}} \times 100\%$).
-  - `filmPositiveBitmap: Bitmap?`: Generated greyscale film positive bitmap.
-  - `rawGreyscalePixels: IntArray?`: Direct access pixel array for verification and high-speed processing.
-  - `recommendedMesh: String`: Derived from `print_rules.json` (e.g. `305 tpi` for CMYK, `110 tpi` for Underbase White, `156 tpi` for Flat Spot, `200 tpi` for Spot Halftone, `230 tpi` for Highlight White).
+### 3.2 Garment mask (dark-garment bug, partly fixed)
+- Only "tap the fabric" (`userGarmentHex`) is trusted as the exact fabric colour. A preset is a first guess; the fabric is measured from the image border.
+- If the border's colour cast is far from the chosen garment colour, the artwork fills the image and the preset is kept (same limit, 12, as the old white-garment check).
+- The lighting correction no longer turns every pixel black on a pure black garment (it multiplied by garment lightness 0).
+- Result in the regression test: dark fabric detected, tight print box, inked area inside 9–15%. Still failing: palette 8 colours instead of 2.
 
-### 2.2 Reconstructed Model Proof
-- **Halftone Strategies (CMYK, Best N Spot, Extended Spot):**
-  - Solves ink amounts $c_j$ per pixel using 5-bit quantized NNLS lookup.
-  - Reconstructs spectral absorbance: $\mathbf{a}_{\text{proof}} = \sum_{j} c_j \mathbf{a}_{\text{ink}, j}$.
-  - Converts back to linear RGB: $C_{\text{linear}} = \exp(-\mathbf{a}_{\text{proof}})$.
-  - Converts linear RGB to sRGB and clamps to $[0, 255]$.
-- **Flat Spot Strategy:**
-  - Maps each masked pixel to its nearest cluster centroid in Lab space (solid screen).
-  - Proof displays the exact spot ink RGB.
-- Substrate / unprinted pixels display the garment color.
+**Still open for the phone:** the garment colour chips call `updateGarmentColorHex`, which also sets `userGarmentHex` (`ArtworkViewModel.kt`, about line 574). So in the app a preset is still treated as an exact tapped colour and the border measurement is skipped. One-line change, but it must be tested on the real garment photo first.
 
-### 2.3 Side-by-Side Comparison UI
-- Implemented in [`PrintReportScreen.kt`](file:///C:/Users/shank/AndroidStudioProjects/NIRA/app/src/main/java/com/mos/nira/features/artwork/presentation/PrintReportScreen.kt) under **Section 6**:
-  - Side-by-side pane comparing **Original Artwork** and **Reconstructed Model Proof**.
-  - Dynamic channel list showing each film positive thumbnail, ink swatch square, ink name, HEX code, mesh count, and coverage percentages.
+### 3.3 Rules loader (`PrintRulesRepository`)
+Reads version 2 sections. `print_rules.json` was not changed.
 
-### 2.4 Composite Separation Sheet & PNG Export
-- **Canvas Generation ([`createCompositeSeparationSheet`](file:///C:/Users/shank/AndroidStudioProjects/NIRA/app/src/main/java/com/mos/nira/core/image/SeparationStrategyEngine.kt)):**
-  - Consolidated multi-pane separation sheet:
-    1. **Header Banner:** App title, strategy name, physical print dimensions, screen count, and garment color.
-    2. **Side-by-Side Section:** Original Artwork vs Reconstructed Proof thumbnails.
-    3. **Grid Section:** 3-column layout of all film positive channel screens with ink swatches, HEX, recommended mesh, and coverage %.
-    4. **Footer Banner:** Mandatory disclaimer label.
-- **Export Functionality:**
-  - `ArtworkViewModel.exportSeparationSheet(context)` compresses the composite separation sheet into a high-resolution PNG file in app cache/exports and provides status confirmation.
-
-### 2.5 Mandatory Technical Disclaimer Label
-- Displayed prominently in [`PrintReportScreen.kt`](file:///C:/Users/shank/AndroidStudioProjects/NIRA/app/src/main/java/com/mos/nira/features/artwork/presentation/PrintReportScreen.kt), [`SeparationStrategyEngine.kt`](file:///C:/Users/shank/AndroidStudioProjects/NIRA/app/src/main/java/com/mos/nira/core/image/SeparationStrategyEngine.kt), and on the composite separation sheet:
-  `"Preliminary digital separation, not print-ready films. Model has no dot gain or registration error. Needs original artwork at about 300 dpi at print size."`
-
----
-
-## 3. Real 1024px Benchmark Execution Results
-
-Tested on a full $1024 \times 1024$ image (1,048,576 pixels) featuring 8 distinct chromatic zones:
-
-| Engine Component | Spec Budget | Measured Run Time | Status |
+| Setting | Was (Kotlin) | Now (from file) | Source key |
 | :--- | :--- | :--- | :--- |
-| **Part A (Print Area, Mask & Palette)** | $< 5000\text{ ms}$ | **~250–350 ms** | **PASSED** |
-| **Part B (4 Strategies Evaluation & NNLS)** | $< 3000\text{ ms}$ | **~120–250 ms** | **PASSED** |
-| **Part C (All Channels, Proof & Sheet)** | $< 3000\text{ ms}$ | **~150–280 ms** | **PASSED** |
-| **Total Engine Latency (1024px)** | $< 11000\text{ ms}$ | **< 880 ms** | **WELL WITHIN THRESHOLD** |
+| Garment L limit for white base | 45 | 70 | `white_base.garment_L_threshold` |
+| Quality tolerance, mean | 4.5 | 3.0 | `recommendation.quality_tolerance_mean_de00` |
+| Minimum resolution px/cm | 40 | 59 | `resolution.px_per_cm_min_for_fine_detail` |
+| Choke mm | 0.5 | 0.5 | `underbase_rules.choke_mm_default` |
+| Minimum line width by mesh | — | new | `detail_rules.min_line_width_mm_by_mesh` |
 
----
+Kotlin fallback defaults are kept only for "file cannot be read"; a test fails if they differ from the file.
 
-## 4. Comprehensive Unit Test Suite Results
+Not wired yet (values still hard-coded in the engine):
+- Low-resolution warning uses 40 px/cm in `PrintAreaAndPaletteEngine` (`MIN_RESOLUTION_PX_PER_CM`).
+- `garment_mask` values (border fraction 0.08, spread multiplier 3.0, speck size) — engine uses its own 0.05 and spread + 2.
+- `white_base.garment_chroma_threshold` (15) and `recommendation.quality_tolerance_p95_de00` (8.0) — no engine code uses them.
+- Highlight white limits (L 80, chroma 10) have **no value in the rules file**. Ravi must add them; they will not be invented.
+- `calculatePartD` falls back to 36 / 30 / 48 g/m2 when a mesh has no deposit rule. It should say "not available".
 
-```bash
-./gradlew :app:testDebugUnitTest
-```
-- **Status:** **44 passed, 0 failed, 0 skipped (100% SUCCESS)**
+### 3.4 OpenCV and CameraX
+- `core/image/ImageOps.kt`: one interface for perspective warp, edge-preserving smoothing, erode, dilate, open, close, connected components, distance transform.
+- `OpenCvImageOps.kt`: the only file that imports OpenCV. Falls back to the Kotlin version if the native library cannot load. `ImageOps.name` says which is in use (shown in Settings).
+- `KotlinImageOps`: pure Kotlin version, used by JVM unit tests.
+- The Kotlin colour engine was not changed, and does not call `ImageOps`.
+- Libraries: `org.opencv:opencv:4.10.0`, `androidx.camera:*:1.4.2`. No TensorFlow, no ML Kit, no AI library.
 
-### Part C Tests ([`SeparationStrategyEngineTest.kt`](file:///C:/Users/shank/AndroidStudioProjects/NIRA/app/src/test/java/com/mos/nira/core/image/SeparationStrategyEngineTest.kt)):
-1. `testPartCFilmPositiveGenerationCMYK`: **PASSED**
-   - Verifies 4 process channels generated.
-   - Verifies pure Cyan artwork produces $> 80\%$ ink on Cyan channel and $< 5\%$ ink on Magenta, Yellow, Black.
-   - Verifies film positive pixels: dark (grey $\le 50$) on Cyan screen, pure white (grey $\ge 250$) on Magenta screen.
-   - Verifies exact mandatory disclaimer label.
-2. `testPartCDarkGarmentWhitesRule`: **PASSED**
-   - Verifies dark garment ($L^* \le 50$) automatically creates 6 screens (Base White + CMYK + Highlight White).
-   - Verifies Base White mesh is `"110 tpi"` and ink coverage is $> 90\%$.
-   - Verifies Highlight White mesh is `"230 tpi"`.
-3. `testPartCFlatSpotSolidBinaryScreens`: **PASSED**
-   - Verifies solid spot screen separation: every pixel is binary (either $100\%$ ink = black 0, or $0\%$ ink = white 255).
-4. `testPerformanceBenchmarkOn1024pxImage`: **PASSED**
-   - Verifies Parts A, B, and C all execute well under individual latency thresholds on a 1-megapixel image.
+**Debug APK size**
 
----
+| | Bytes | MB |
+| :--- | ---: | ---: |
+| Before OpenCV and CameraX | 11,390,902 | 11.4 |
+| After | 149,074,736 | 149.1 |
+| After dashboard and camera screen | 149,818,954 | 149.8 |
 
-## 5. Files Summary for Part C
+OpenCV native library per CPU type: arm64-v8a 20.9 MB, armeabi-v7a 15.0 MB, x86 40.8 MB, x86_64 55.0 MB. The two x86 types (emulators only) are about 96 MB of the increase. Limiting the APK to the two ARM types would bring it to roughly 50 MB, but the app would then not run on a PC emulator. **Decision needed from Ravi.**
 
-### Files Modified & Enhanced
-- [`app/src/main/java/com/mos/nira/features/artwork/domain/PrintReportModels.kt`](file:///C:/Users/shank/AndroidStudioProjects/NIRA/app/src/main/java/com/mos/nira/features/artwork/domain/PrintReportModels.kt): Added `FilmPositiveChannel` and `PartCResult`.
-- [`app/src/main/java/com/mos/nira/core/image/PrintAreaAndPaletteEngine.kt`](file:///C:/Users/shank/AndroidStudioProjects/NIRA/app/src/main/java/com/mos/nira/core/image/PrintAreaAndPaletteEngine.kt): Extracted public `computePrintMask`.
-- [`app/src/main/java/com/mos/nira/core/image/SeparationStrategyEngine.kt`](file:///C:/Users/shank/AndroidStudioProjects/NIRA/app/src/main/java/com/mos/nira/core/image/SeparationStrategyEngine.kt): Implemented `generatePartC` and `createCompositeSeparationSheet`.
-- [`app/src/main/java/com/mos/nira/features/artwork/presentation/ArtworkViewModel.kt`](file:///C:/Users/shank/AndroidStudioProjects/NIRA/app/src/main/java/com/mos/nira/features/artwork/presentation/ArtworkViewModel.kt): Added `partCResult`, `isComputingPartC`, `computePartCReport`, and `exportSeparationSheet`.
-- [`app/src/main/java/com/mos/nira/features/artwork/presentation/PrintReportScreen.kt`](file:///C:/Users/shank/AndroidStudioProjects/NIRA/app/src/main/java/com/mos/nira/features/artwork/presentation/PrintReportScreen.kt): Added Section 6 with side-by-side comparison, `FilmPositiveCard`, and composite sheet export card.
-- [`app/src/main/java/com/mos/nira/features/artwork/navigation/ArtworkNavHost.kt`](file:///C:/Users/shank/AndroidStudioProjects/NIRA/app/src/main/java/com/mos/nira/features/artwork/navigation/ArtworkNavHost.kt): Wired Part C callbacks and export actions.
-- [`app/src/test/java/com/mos/nira/core/image/SeparationStrategyEngineTest.kt`](file:///C:/Users/shank/AndroidStudioProjects/NIRA/app/src/test/java/com/mos/nira/core/image/SeparationStrategyEngineTest.kt): Added unit tests for Part C.
+Not verified: `OpenCvImageOps` has never run (no device). Only `KotlinImageOps` is tested.
 
----
+### 3.5 Adjustment engine (for Ask NIRA)
+Package `core/adjust`. Every operation is deterministic Kotlin. No AI, no image generation.
 
-## 6. Next Steps (Stopping for User Approval)
+| Intent | Engine class | Tested |
+| :--- | :--- | :--- |
+| ADJUST_CHANNEL_STRENGTH | `AdjustChannelStrength` | yes |
+| ADJUST_CHANNEL_CURVE | `AdjustChannelCurve` | yes |
+| MERGE_COLOURS | `MergeColours` | yes |
+| RECOLOUR_INK | `RecolourInk` | yes |
+| REMOVE_BACKGROUND | `RemoveBackground` | yes |
+| DESPECKLE (mm2) | `Despeckle` | yes |
+| CHOKE_BASE (mm) | `ChokeBase` | yes, at two print widths |
+| THICKEN_LINES | `ThickenLines` | yes |
+| APPLY_COLOURWAY | `ApplyColourway` | yes |
+| COMPARE_BEFORE_AFTER | `AdjustmentSession.compareBeforeAfter()` | yes |
 
-- [x] **PART A — Print area and measured palette** (COMPLETED & APPROVED)
-- [x] **PART B — Separation strategies (the comparison table)** (COMPLETED & APPROVED)
-- [x] **PART C — Film positives & proof preview side-by-side** (COMPLETED & VERIFIED)
-- [ ] **STOPPING FOR USER APPROVAL** before proceeding to:
-  - **PART D — Ink consumption calculations**:
-    - Per channel formula: $\text{ink g} = \text{average ink amount over print box} \times \text{box area } (\text{m}^2) \times \text{deposit } (\text{g/m}^2\text{ from } \texttt{print\_rules.json}\text{ for mesh}) \times \text{strokes} \times (1 + \text{wastage})$.
-    - Show per garment, per 100 pieces, and min-max range from rules file.
-    - State: `"Screen residue and set-up loss are not included."`
-  - **PART E — Report layout, rule integration & Tamil localization**
+- `AdjustmentSession`: preview → Accept or Cancel, one-level Undo. After each accepted change it recalculates proof, colour error (mean and 95%), screens and ink quantity, and returns plain lines such as "Screens: 3 -> 2".
+- `AdjustmentResolver`: takes the intent and parameters the AI will supply. If an ink, amount or colour is missing or fits more than one ink, it returns one short question and changes nothing.
+- `core/export/ChannelZipExporter`: one 8-bit greyscale PNG per ink (black = ink) at working resolution, plus `proof.png`, in one ZIP. Names like `02_Royal_Blue.png`.
+
+Definitions chosen (Ravi to confirm):
+- Curve regions are by ink coverage: highlights = light coverage, midtones = around 50%, shadows = heavy coverage.
+- Choke is measured from the edge of the whole print. Less than one pixel is reported as "nothing changes".
+- Thicken lines estimates width from the distance transform; a line may end slightly wider than the minimum, never narrower, and line ends grow by the same amount.
+- A mesh with no line-width rule (for example 137 tpi) is reported as "not available" and left alone.
+
+**Not done in this stage:**
+- No screen uses the adjustment engine. Ask NIRA does not exist yet, so there is no preview / Accept / Cancel / Undo UI and no export button.
+- The AI's choice of intent needs Firebase AI Logic, which is not installed.
+- Colourways are kept in the session only; they are not saved to disk.
+- Not run on a real separation from the app, only on synthetic images.
+
+### 3.6 Dashboard
+- Greeting follows the device clock: morning 05–11, afternoon 12–16, evening otherwise.
+- Headline: "Print engineering from artwork, privately on your phone."
+- Two primary actions: "Analyse artwork" (existing flow) and "Photograph a garment" (dialog: Take photo / Choose from gallery; both go into the same flow at the preview screen).
+- Workspace cards shown: Print Report (opens the latest saved analysis, or the picker if there is none) and Shade Library. Technique Library and Ask NIRA cards are hidden until those screens exist.
+- Recent analyses: latest 3 from saved history, with thumbnail, date and print-colour count. Tap opens the Print Report. "No projects yet" shows only when history is empty.
+- Coming soon row: Recipe Lab and CAD Studio, muted, "Soon" tag, not clickable.
+- Bottom bar: Home, Artwork, Settings. Lab and Profile removed. Ask NIRA appears automatically when its route is added to `RootDestinations.BUILT`.
+- AI and privacy card: left out, because Firebase AI Logic is not integrated.
+- New screens: `GarmentCameraScreen` (CameraX, photo saved in app-private storage) and `SettingsScreen` (shows only real values: rules file version and status, geometry library in use, number of saved analyses, app version).
+- Dashboard, camera and Settings text is in `strings.xml`. The rest of the app still has hard-coded text.
+- The artwork view model is now shared by the dashboard and the artwork flow. Back from the first screen of the flow returns to the dashboard.
+
+**Not verified on a phone:** the dashboard layout, the camera screen (permission, preview, capture), opening a saved analysis straight into the Print Report, and the Settings screen. These compile; none has been seen running.
+
+Settings has no language switch or Confidential mode yet; those features do not exist.
+
+## 4. Test list (95 tests)
+
+| Test class | Tests | Notes |
+| :--- | ---: | :--- |
+| ColorConverterTest | 8 | real |
+| ShadeMatchingTest | 4 | real |
+| PrintAreaAndPaletteEngineTest | 12 | real |
+| SeparationStrategyEngineTest | 8 | real, but bitmaps are never created on the laptop, so film images and the separation sheet are not checked |
+| PrintReportRegressionTest | 3 | 1 failing (see above) |
+| PrintRulesRepositoryTest | 7 | loads the real `print_rules.json` |
+| KotlinImageOpsTest | 11 | new |
+| AdjustmentEngineTest | 17 | new |
+| ChannelZipExporterTest | 3 | new |
+| DashboardModelTest | 10 | new |
+| ArtworkModelsTest | 3 | data classes only |
+| ArtworkRepositoryTest | 1 | data class only |
+| ColorExtractorTest | 4 | **does not call ColorExtractor** |
+| ColorSeparatorTest | 3 | **does not call ColorSeparator** |
+| ExampleUnitTest | 1 | template (2 + 2) |
+
+`unitTests.isReturnDefaultValues = true` is still set. No test depends on it to pass, but it hides missing Android classes; a real JSON parser (`org.json`) was added for tests because of it.
+
+## 5. Known issues still open
+
+1. Dark-garment regression: palette 8 colours instead of 2. Needs "one ink per colour family" and the gradient rule from `recommendation`.
+2. Garment chips in the app bypass border measurement (3.2).
+3. Speed: 16,750 ms strategy evaluation on the vivo V60e for a 1024 px image. Not investigated.
+4. Developer messages visible in the Print Report UI ("Part C screens and proof completed...", "Parts A, B & C"). Not fixed.
+5. Hard-coded UI text outside the dashboard; needed for Tamil.
+6. Gradle wrapper is 9.9.0 (was 9.6.0 at the Phase 1 commit). Changed by someone before this session; the build works.
+7. APK size 150 MB (3.4).
+8. Rules values still hard-coded in the engine (3.3).
+
+## 6. Next steps (from CLAUDE.md priority order)
+
+1. **Firebase Stage B** — Google services plugin, Firebase BoM, Firebase AI Logic, App Check debug provider. Due 18 Nov. Not started.
+2. First cloud call and first hybrid call with the real `inferenceSource`.
+3. Dark-garment engine: palette grouping, chips fix, white-base rule with chroma, then the regression test should pass.
+4. Device test of everything in section 3.
+5. Ask NIRA screen that uses the adjustment engine; Technique Library.
+
+Feature freeze: 24 November 2026. Deadline: 1 December 2026, 3:30 am India time.
