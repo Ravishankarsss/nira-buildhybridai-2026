@@ -42,6 +42,7 @@ import com.mos.nira.R
 import com.mos.nira.core.ai.AppCheckDebugToken
 import com.mos.nira.core.ai.HybridInferenceRepository
 import com.mos.nira.core.ai.HybridInferenceResult
+import com.mos.nira.core.ai.HybridMode
 import com.mos.nira.core.image.OpenCvImageOps
 import com.mos.nira.core.locale.LocaleHelper
 import kotlinx.coroutines.Dispatchers
@@ -234,13 +235,61 @@ private fun TestAiSection() {
     val repository = remember { HybridInferenceRepository() }
     val context = LocalContext.current
     var isRunning by remember { mutableStateOf(false) }
+    var selectedMode by remember { mutableStateOf(HybridMode.PREFER_ON_DEVICE) }
     var result by remember { mutableStateOf<HybridInferenceResult?>(null) }
+
+    val onDeviceStatus by produceState(initialValue = "checking...") {
+        value = repository.checkOnDeviceStatus()
+    }
+
     // The App Check debug token. The SDK creates it on the first AI request, so it is read
     // again after every run. It is only shown here; it is never logged or written to a file.
     var debugToken by remember { mutableStateOf(AppCheckDebugToken.read(context)) }
     var copied by remember { mutableStateOf(false) }
 
     SettingsSection("DEVELOPER TEST (DEBUG BUILD ONLY)") {
+        SettingsRow("On-device model status (SDK report)", onDeviceStatus)
+
+        Text(
+            text = "Target Mode",
+            color = Muted,
+            fontSize = 12.sp,
+            modifier = Modifier.padding(top = 8.dp)
+        )
+        Column(modifier = Modifier.padding(vertical = 4.dp)) {
+            val modes = listOf(
+                HybridMode.PREFER_ON_DEVICE,
+                HybridMode.ONLY_ON_DEVICE,
+                HybridMode.ONLY_IN_CLOUD,
+                HybridMode.PREFER_IN_CLOUD
+            )
+            modes.forEach { mode ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { selectedMode = mode }
+                        .padding(vertical = 2.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    RadioButton(
+                        selected = (selectedMode == mode),
+                        onClick = { selectedMode = mode },
+                        colors = RadioButtonDefaults.colors(
+                            selectedColor = Cyan,
+                            unselectedColor = Muted
+                        )
+                    )
+                    Text(
+                        text = mode.name,
+                        color = if (selectedMode == mode) Cyan else White,
+                        fontSize = 13.sp,
+                        fontWeight = if (selectedMode == mode) FontWeight.Bold else FontWeight.Normal,
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+            }
+        }
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -249,7 +298,8 @@ private fun TestAiSection() {
                     result = null
                     scope.launch {
                         result = repository.generateText(
-                            "In one short sentence, what is a screen printing underbase?"
+                            prompt = "In one short sentence, what is a screen printing underbase?",
+                            mode = selectedMode
                         )
                         debugToken = AppCheckDebugToken.read(context)
                         isRunning = false

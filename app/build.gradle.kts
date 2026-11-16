@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.services)
 }
@@ -34,9 +33,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
     buildFeatures {
         compose = true
         // BuildConfig.DEBUG guards the debug-only Developer Test card in Settings.
@@ -64,6 +60,7 @@ dependencies {
 
     // OpenCV: geometry and morphology only, always through core/image/ImageOps. Not AI.
     implementation(libs.opencv)
+    implementation("com.google.guava:guava:33.4.0-android")
     // CameraX: photographing a garment inside the app.
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.camera.camera2)
@@ -76,7 +73,7 @@ dependencies {
     // On-device (Gemini Nano) part of hybrid inference. Switched off for now: version
     // 16.0.0-beta08 needs Kotlin 2.4.0 and this project is on Kotlin 2.2.10. Without it,
     // requests still go through the hybrid API and run in the cloud.
-    // implementation(libs.firebase.ai.ondevice)
+    implementation(libs.firebase.ai.ondevice)
     implementation(libs.firebase.appcheck.debug)
 
     testImplementation(libs.junit)

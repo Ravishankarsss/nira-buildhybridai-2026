@@ -5,6 +5,8 @@ import com.google.firebase.ai.InferenceMode
 import com.google.firebase.ai.InferenceSource
 import com.google.firebase.ai.OnDeviceConfig
 import com.google.firebase.ai.ai
+import com.google.firebase.ai.ondevice.FirebaseAIOnDevice
+import com.google.firebase.ai.ondevice.OnDeviceModelStatus
 import com.google.firebase.ai.type.FirebaseAIOnDeviceNotAvailableException
 import com.google.firebase.ai.type.GenerativeBackend
 import com.google.firebase.ai.type.PublicPreviewAPI
@@ -74,6 +76,24 @@ class HybridInferenceRepository {
             failure("UNAVAILABLE", e, start, mode)
         } catch (e: Exception) {
             failure("ERROR", e, start, mode)
+        }
+    }
+
+    /**
+     * Queries the real Firebase AI on-device SDK for model availability status.
+     * Returns "available", "downloadable", "downloading", "unavailable", etc. exactly as reported by the SDK.
+     */
+    suspend fun checkOnDeviceStatus(): String {
+        return try {
+            when (FirebaseAIOnDevice.checkStatus()) {
+                OnDeviceModelStatus.AVAILABLE -> "available"
+                OnDeviceModelStatus.DOWNLOADABLE -> "downloadable"
+                OnDeviceModelStatus.DOWNLOADING -> "downloading"
+                OnDeviceModelStatus.UNAVAILABLE -> "unavailable"
+                else -> "unavailable"
+            }
+        } catch (e: Exception) {
+            "unavailable"
         }
     }
 
