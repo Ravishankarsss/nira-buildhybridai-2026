@@ -3,6 +3,32 @@
 Last updated: 15 November 2026, 20:15 IST (by Claude Code).
 Rule for this file: only write what was actually run. Numbers below come from real runs on the laptop.
 
+## 000. Update 16 Nov 2026, 20:50 IST — slow app start ("Skipped 191 frames")
+
+Measured on the vivo V60e (V2513, Android 16) with `adb shell am start -S -W` and temporary timing marks (removed again).
+
+Finding: nothing heavy of ours runs on the main thread at launch. Rules loading, history loading and shade loading already run on background threads; OpenCV is only loaded when Settings opens, also in the background.
+
+| Launch step (debug build, fresh install) | Time |
+| :--- | ---: |
+| Process start until our code runs | about 620–680 ms |
+| `NiraApplication.onCreate` (Firebase + App Check) | 11 ms |
+| Language set-up and `MainActivity.onCreate` | about 35 ms |
+| Building and drawing the first Compose screen | about 2,300 ms |
+
+Cause: a debug build installed from Android Studio runs un-compiled. Pre-compiling the same build on the phone (`adb shell cmd package compile -m speed -f com.mos.nira`) changed the cold start as follows:
+
+| | Cold start | Skipped frames |
+| :--- | ---: | ---: |
+| Fresh debug install (before) | 2,865–3,126 ms | 115–137 |
+| Same build, pre-compiled | 1,160–1,270 ms | 0–45 |
+
+Code change made: the app root read the whole UI state, so the dashboard was drawn three times at launch. It now reads only the saved history: two draws. In a back-to-back test this did **not** change the launch time measurably (about 1,180 ms both ways, pre-compiled).
+
+Not explained: after the first pre-compile, later installs on this phone stayed fast (954–1,204 ms) without pre-compiling again, so a clean "after" figure for an un-compiled install could not be taken.
+
+For the demo video: run the pre-compile command once after installing, or use a release build. A release build was not tested.
+
 ## 00. Update 16 Nov 2026, 07:05 IST — Firebase Stage B
 
 Real results: build PASSES; unit tests 102 run, **102 pass, 0 fail**. Debug APK 152.4 MB. Not run on a phone yet: no AI request has been sent, so cloud inference is **not yet proven**.

@@ -54,6 +54,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -108,7 +110,11 @@ fun NIRAAppRoot() {
     val rootNavController = rememberNavController()
     // One view model for the dashboard and the artwork flow, so both see the same saved history.
     val artworkViewModel: ArtworkViewModel = viewModel()
-    val uiState by artworkViewModel.uiState.collectAsState()
+    // Only the saved history is read here. Reading the whole UI state made the root and the
+    // dashboard redraw on every unrelated change (for example when shade libraries finish loading).
+    val savedAnalyses by remember(artworkViewModel) {
+        artworkViewModel.uiState.map { it.savedAnalyses }.distinctUntilChanged()
+    }.collectAsState(initial = artworkViewModel.uiState.value.savedAnalyses)
     val navBackStackEntry by rootNavController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: RootDestinations.DASHBOARD
 
@@ -154,10 +160,11 @@ fun NIRAAppRoot() {
                 // Re-read the saved history each time the dashboard is shown.
                 LaunchedEffect(Unit) { artworkViewModel.loadSavedAnalyses() }
 
-                val saved = uiState.savedAnalyses
+                val saved = savedAnalyses
+                val recent = remember(saved) { DashboardModel.recentAnalyses(saved) }
                 NIRADashboard(
                     modifier = Modifier,
-                    recent = DashboardModel.recentAnalyses(saved),
+                    recent = recent,
                     latestFileName = DashboardModel.latestAnalysis(saved)?.fileName,
                     onAnalyseArtwork = {
                         rootNavController.navigate(RootDestinations.ARTWORK_FLOW)
@@ -221,7 +228,7 @@ fun NIRAAppRoot() {
             }
 
             composable(RootDestinations.SETTINGS) {
-                SettingsScreen(savedAnalysesCount = uiState.savedAnalyses.size)
+                SettingsScreen(savedAnalysesCount = savedAnalyses.size)
             }
         }
     }
