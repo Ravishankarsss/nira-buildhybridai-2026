@@ -39,6 +39,8 @@ android {
     }
     buildFeatures {
         compose = true
+        // BuildConfig.DEBUG guards the debug-only Developer Test card in Settings.
+        buildConfig = true
     }
     testOptions {
         unitTests {

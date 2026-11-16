@@ -29,6 +29,20 @@ Versions were checked on 16 Nov 2026 against:
 - The App Check debug token (do not paste it into any file in this project, a screenshot, the video or Devpost)
 - `local.properties`
 
+## 3a. Find the App Check debug token inside the app (use this on the vivo V60e)
+
+The vivo V60e hides debug-level Logcat lines, so the Logcat method in section 3 shows nothing on that phone. Debug builds show the token in the app instead.
+
+1. Install and open a debug build of NIRA (green **Run** button in Android Studio).
+2. Tap **Settings** and scroll to the bottom, to **DEVELOPER TEST (DEBUG BUILD ONLY)**.
+3. If **App Check debug token** says "Not created yet", tap **Run** once and wait for it to finish. The request will fail the first time; that is expected.
+4. Tap **Copy** next to the token.
+5. Register it in the Firebase console (section 4), wait one minute, then tap **Run** again.
+
+How it works: the token is read from where the `firebase-appcheck-debug` 20.1.0 library stores it (SharedPreferences file `com.google.firebase.appcheck.debug.store.<persistence key>`, key `com.google.firebase.appcheck.debug.DEBUG_SECRET`), checked in the library's own classes. The app never logs it, never writes it to a file, and the card does not exist in release builds (`BuildConfig.DEBUG`). Re-check the storage names if the Firebase BoM version changes.
+
+Uninstalling the app or clearing its data creates a new token, which must be registered again.
+
 ## 3. Find the App Check debug token in Logcat
 
 The token is created the first time a **debug build** runs on a device. Each phone or emulator has its own token.

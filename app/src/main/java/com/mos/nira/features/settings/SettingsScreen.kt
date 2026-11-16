@@ -1,7 +1,6 @@
 package com.mos.nira.features.settings
 
 import android.app.Activity
-import android.content.pm.ApplicationInfo
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -38,7 +37,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mos.nira.BuildConfig
 import com.mos.nira.R
+import com.mos.nira.core.ai.AppCheckDebugToken
 import com.mos.nira.core.ai.HybridInferenceRepository
 import com.mos.nira.core.ai.HybridInferenceResult
 import com.mos.nira.core.image.OpenCvImageOps
@@ -160,8 +161,7 @@ fun SettingsScreen(
         // TEMPORARY (Firebase Stage B): debug builds only. Sends one real request through
         // Firebase AI Logic and shows exactly what came back. Remove when the Hybrid AI
         // Analysis and Diagnostics screens exist. Text is English only on purpose.
-        val isDebuggable = (context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
-        if (isDebuggable) {
+        if (BuildConfig.DEBUG) {
             TestAiSection()
         }
         Spacer(modifier = Modifier.height(24.dp))
@@ -232,8 +232,13 @@ fun SettingsScreen(
 private fun TestAiSection() {
     val scope = rememberCoroutineScope()
     val repository = remember { HybridInferenceRepository() }
+    val context = LocalContext.current
     var isRunning by remember { mutableStateOf(false) }
     var result by remember { mutableStateOf<HybridInferenceResult?>(null) }
+    // The App Check debug token. The SDK creates it on the first AI request, so it is read
+    // again after every run. It is only shown here; it is never logged or written to a file.
+    var debugToken by remember { mutableStateOf(AppCheckDebugToken.read(context)) }
+    var copied by remember { mutableStateOf(false) }
 
     SettingsSection("DEVELOPER TEST (DEBUG BUILD ONLY)") {
         Row(
@@ -246,6 +251,7 @@ private fun TestAiSection() {
                         result = repository.generateText(
                             "In one short sentence, what is a screen printing underbase?"
                         )
+                        debugToken = AppCheckDebugToken.read(context)
                         isRunning = false
                     }
                 }
@@ -278,6 +284,50 @@ private fun TestAiSection() {
             if (r.text != null) SettingsRow("Response", r.text)
             if (r.errorMessage != null) SettingsRow("Error", r.errorMessage)
         }
+
+        // App Check debug token, for registering this phone in the Firebase console.
+        val token = debugToken
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(text = "App Check debug token", color = Muted, fontSize = 12.sp)
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = token ?: "Not created yet. Tap Run once, then look here again.",
+                    color = White,
+                    fontSize = 14.sp,
+                    lineHeight = 20.sp
+                )
+            }
+            if (token != null) {
+                Text(
+                    text = if (copied) "Copied" else "Copy",
+                    color = Cyan,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .padding(start = 8.dp)
+                        .clickable {
+                            AppCheckDebugToken.copyToClipboard(context, token)
+                            copied = true
+                        }
+                        .padding(8.dp)
+                )
+            }
+        }
+        Text(
+            text = "Firebase console > App Check > Apps > NIRA > Manage debug tokens > Add debug token. " +
+                "Paste, save, wait one minute, then tap Run.",
+            color = Muted,
+            fontSize = 12.sp,
+            lineHeight = 18.sp,
+            modifier = Modifier.padding(bottom = 10.dp)
+        )
     }
 }
 
