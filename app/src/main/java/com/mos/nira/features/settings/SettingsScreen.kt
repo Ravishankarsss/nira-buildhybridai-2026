@@ -1,6 +1,7 @@
 package com.mos.nira.features.settings
 
 import android.app.Activity
+import android.content.pm.ApplicationInfo
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,9 +39,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mos.nira.R
+import com.mos.nira.core.ai.HybridInferenceRepository
+import com.mos.nira.core.ai.HybridInferenceResult
 import com.mos.nira.core.image.OpenCvImageOps
 import com.mos.nira.core.locale.LocaleHelper
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
@@ -151,6 +156,14 @@ fun SettingsScreen(
         SettingsSection(stringResource(R.string.settings_section_app)) {
             SettingsRow(stringResource(R.string.settings_app_version), info.appVersion ?: notAvailable)
         }
+
+        // TEMPORARY (Firebase Stage B): debug builds only. Sends one real request through
+        // Firebase AI Logic and shows exactly what came back. Remove when the Hybrid AI
+        // Analysis and Diagnostics screens exist. Text is English only on purpose.
+        val isDebuggable = (context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
+        if (isDebuggable) {
+            TestAiSection()
+        }
         Spacer(modifier = Modifier.height(24.dp))
     }
 
@@ -212,6 +225,59 @@ fun SettingsScreen(
             containerColor = CardColor,
             shape = RoundedCornerShape(16.dp)
         )
+    }
+}
+
+@Composable
+private fun TestAiSection() {
+    val scope = rememberCoroutineScope()
+    val repository = remember { HybridInferenceRepository() }
+    var isRunning by remember { mutableStateOf(false) }
+    var result by remember { mutableStateOf<HybridInferenceResult?>(null) }
+
+    SettingsSection("DEVELOPER TEST (DEBUG BUILD ONLY)") {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(enabled = !isRunning) {
+                    isRunning = true
+                    result = null
+                    scope.launch {
+                        result = repository.generateText(
+                            "In one short sentence, what is a screen printing underbase?"
+                        )
+                        isRunning = false
+                    }
+                }
+                .padding(vertical = 10.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(text = "Test AI", color = White, fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
+                Text(
+                    text = "Sends one text prompt through Firebase AI Logic",
+                    color = Muted,
+                    fontSize = 11.sp
+                )
+            }
+            Text(
+                text = if (isRunning) "Running..." else "Run",
+                color = Cyan,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(start = 8.dp)
+            )
+        }
+
+        result?.let { r ->
+            SettingsRow("Inference source (reported by the SDK)", r.inferenceSource)
+            SettingsRow("Requested mode", r.requestedMode.name)
+            SettingsRow("Cloud model configured", r.cloudModelName)
+            SettingsRow("Duration", "${r.durationMs} ms")
+            if (r.text != null) SettingsRow("Response", r.text)
+            if (r.errorMessage != null) SettingsRow("Error", r.errorMessage)
+        }
     }
 }
 

@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -66,6 +67,15 @@ dependencies {
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
+
+    // Firebase BoM, AI Logic and App Check
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.ai)
+    // On-device (Gemini Nano) part of hybrid inference. Switched off for now: version
+    // 16.0.0-beta08 needs Kotlin 2.4.0 and this project is on Kotlin 2.2.10. Without it,
+    // requests still go through the hybrid API and run in the cloud.
+    // implementation(libs.firebase.ai.ondevice)
+    implementation(libs.firebase.appcheck.debug)
 
     testImplementation(libs.junit)
     // Real JSON parser for JVM unit tests. Without it the Android org.json stubs return

@@ -3,6 +3,25 @@
 Last updated: 15 November 2026, 20:15 IST (by Claude Code).
 Rule for this file: only write what was actually run. Numbers below come from real runs on the laptop.
 
+## 00. Update 16 Nov 2026, 07:05 IST — Firebase Stage B
+
+Real results: build PASSES; unit tests 102 run, **102 pass, 0 fail**. Debug APK 152.4 MB. Not run on a phone yet: no AI request has been sent, so cloud inference is **not yet proven**.
+
+Done:
+- Google services plugin 4.6.0 and Firebase BoM 35.2.0 (current on the Firebase docs on 16 Nov 2026), through `gradle/libs.versions.toml`.
+- Firebase AI Logic (`firebase-ai`) and App Check debug provider. App Check starts in `NiraApplication`, registered in the manifest, before any AI request. Debug provider is installed only in debug builds.
+- `core/ai/HybridInferenceRepository`: one function, text prompt in; text, real `inferenceSource` and duration out. Cloud model `gemini-3.8-flash`, verified on the Firebase models page.
+- Temporary "Test AI" entry in Settings, debug builds only.
+- INTERNET permission added.
+- `docs/FIREBASE_SETUP.md` written.
+- Colour engine, Print Report and view model not touched. Kotlin, AGP and Gradle not changed.
+
+Open:
+- **On-device library is switched off.** `firebase-ai-ondevice` 16.0.0-beta08 needs Kotlin 2.4.0; the project is on 2.2.10 and the build fails with it. Requests go through the hybrid API and run in the cloud. Decision needed from Ravi on the Kotlin upgrade.
+- App Check debug token must be registered by Ravi (see `docs/FIREBASE_SETUP.md`).
+- Release builds have no App Check provider (Play Integrity is a future task).
+- The first three Gradle changes of this stage were started by Antigravity and finished here.
+
 ## 0. Update 15 Nov 2026, 20:40 IST — device-test fixes (Sections 1 and 2, Part D)
 
 Real results: build PASSES; unit tests 101 run, **101 pass, 0 fail**. Sections 1 to 6 below were written before this update; where they disagree, this section is right.
