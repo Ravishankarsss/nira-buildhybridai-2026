@@ -153,4 +153,12 @@
     <string name="advice_risks">Riesgos</string>
     <string name="advice_disclaimer">Sugerencia basada en reglas de fuentes comerciales públicas. Confírmela con una prueba de impresión antes de producir.</string>
     <string name="advice_loading">Cargando reglas…</string>
+
+    <!-- Deep report -->
+    <string name="deep_report_title">Informe detallado (nube)</string>
+    <string name="deep_report_hint">Se redacta en la nube a partir de los números, la lectura de IA y la recomendación de método. No se envía la imagen de la ilustración.</string>
+    <string name="deep_report_button">Redactar informe detallado</string>
+    <string name="deep_report_running">Redactando…</string>
+    <string name="deep_report_blocked">El modo confidencial está activado, así que no se puede redactar el informe. No se envió nada.</string>
+    <string name="deep_report_disclaimer">Informe redactado por IA. Los números provienen del motor de NIRA; revise el informe antes de usarlo.</string>
 </resources>

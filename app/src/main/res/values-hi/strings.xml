@@ -152,4 +152,12 @@
     <string name="advice_risks">जोखिम</string>
     <string name="advice_disclaimer">सार्वजनिक व्यापार स्रोतों पर आधारित नियम-सलाह। उत्पादन से पहले स्ट्राइक-ऑफ़ से पुष्टि करें।</string>
     <string name="advice_loading">नियम लोड हो रहे हैं…</string>
+
+    <!-- Deep report -->
+    <string name="deep_report_title">विस्तृत रिपोर्ट (क्लाउड)</string>
+    <string name="deep_report_hint">आंकड़ों, AI विश्लेषण और विधि सलाह से क्लाउड में लिखी जाती है। आर्टवर्क की छवि नहीं भेजी जाती।</string>
+    <string name="deep_report_button">विस्तृत रिपोर्ट लिखें</string>
+    <string name="deep_report_running">लिख रहा है…</string>
+    <string name="deep_report_blocked">गोपनीय मोड चालू है, इसलिए विस्तृत रिपोर्ट नहीं लिखी जा सकती। कुछ भी नहीं भेजा गया।</string>
+    <string name="deep_report_disclaimer">AI द्वारा लिखी रिपोर्ट। आंकड़े NIRA इंजन से हैं; उपयोग से पहले रिपोर्ट जाँचें।</string>
 </resources>

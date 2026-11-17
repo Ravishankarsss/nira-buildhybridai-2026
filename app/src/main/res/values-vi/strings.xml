@@ -151,4 +151,12 @@
     <string name="advice_risks">Rủi ro</string>
     <string name="advice_disclaimer">Gợi ý theo quy tắc từ các nguồn thương mại công khai. Hãy in thử trước khi sản xuất.</string>
     <string name="advice_loading">Đang tải quy tắc…</string>
+
+    <!-- Deep report -->
+    <string name="deep_report_title">Báo cáo chi tiết (đám mây)</string>
+    <string name="deep_report_hint">Được viết trên đám mây từ các số liệu, kết quả đọc bằng AI và gợi ý phương pháp. Ảnh hình in không được gửi đi.</string>
+    <string name="deep_report_button">Viết báo cáo chi tiết</string>
+    <string name="deep_report_running">Đang viết…</string>
+    <string name="deep_report_blocked">Chế độ bảo mật đang bật nên không thể viết báo cáo chi tiết. Không có gì được gửi đi.</string>
+    <string name="deep_report_disclaimer">Báo cáo do AI viết. Số liệu lấy từ bộ máy NIRA; hãy kiểm tra báo cáo trước khi dùng.</string>
 </resources>

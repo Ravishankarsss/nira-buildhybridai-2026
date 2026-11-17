@@ -151,4 +151,12 @@
     <string name="advice_risks">Risks</string>
     <string name="advice_disclaimer">Rule-based suggestion from public trade sources. Confirm with a strike-off before production.</string>
     <string name="advice_loading">Loading rules…</string>
+
+    <!-- Deep report -->
+    <string name="deep_report_title">Deep report (cloud)</string>
+    <string name="deep_report_hint">Written in the cloud from the numbers, the AI read and the method advice. The artwork image is not sent.</string>
+    <string name="deep_report_button">Write deep report</string>
+    <string name="deep_report_running">Writing…</string>
+    <string name="deep_report_blocked">Confidential mode is on, so the deep report cannot be written. Nothing was sent.</string>
+    <string name="deep_report_disclaimer">AI-written report. The numbers come from the NIRA engine; check the report before using it.</string>
 </resources>

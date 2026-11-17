@@ -152,4 +152,12 @@
     <string name="advice_risks">Risiken</string>
     <string name="advice_disclaimer">Regelbasierter Vorschlag aus öffentlichen Fachquellen. Vor der Produktion mit einem Andruck bestätigen.</string>
     <string name="advice_loading">Regeln werden geladen…</string>
+
+    <!-- Deep report -->
+    <string name="deep_report_title">Ausführlicher Bericht (Cloud)</string>
+    <string name="deep_report_hint">Wird in der Cloud aus den Werten, der KI-Analyse und der Methodenempfehlung geschrieben. Das Bild der Vorlage wird nicht gesendet.</string>
+    <string name="deep_report_button">Ausführlichen Bericht schreiben</string>
+    <string name="deep_report_running">Wird geschrieben…</string>
+    <string name="deep_report_blocked">Der vertrauliche Modus ist aktiv, daher kann der Bericht nicht geschrieben werden. Es wurde nichts gesendet.</string>
+    <string name="deep_report_disclaimer">Von KI geschriebener Bericht. Die Werte stammen aus der NIRA-Engine; prüfen Sie den Bericht vor der Verwendung.</string>
 </resources>

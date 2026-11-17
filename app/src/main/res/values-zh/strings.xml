@@ -151,4 +151,12 @@
     <string name="advice_risks">风险</string>
     <string name="advice_disclaimer">基于公开行业资料的规则建议。投产前请通过打样确认。</string>
     <string name="advice_loading">正在加载规则…</string>
+
+    <!-- Deep report -->
+    <string name="deep_report_title">详细报告（云端）</string>
+    <string name="deep_report_hint">在云端根据数值、AI 解读和方法建议撰写。不会发送图稿图片。</string>
+    <string name="deep_report_button">撰写详细报告</string>
+    <string name="deep_report_running">正在撰写…</string>
+    <string name="deep_report_blocked">机密模式已开启，无法撰写详细报告。未发送任何内容。</string>
+    <string name="deep_report_disclaimer">AI 撰写的报告。数值来自 NIRA 引擎；使用前请核对报告。</string>
 </resources>

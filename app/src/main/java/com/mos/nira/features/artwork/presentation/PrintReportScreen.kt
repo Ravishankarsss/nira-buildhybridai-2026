@@ -116,7 +116,8 @@ fun PrintReportScreen(
     onClearExportMessage: () -> Unit,
     onRecalculate: () -> Unit,
     onBack: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    footer: @Composable () -> Unit = {}
 ) {
     var eraseModeEnabled by remember { mutableStateOf(false) }
     var widthInputText by remember(inputs.printWidthCm) { mutableStateOf(inputs.printWidthCm.toString()) }
@@ -1299,6 +1300,8 @@ fun PrintReportScreen(
                     }
                 }
             }
+
+            item { footer() }
 
             item { Spacer(modifier = Modifier.height(24.dp)) }
         }

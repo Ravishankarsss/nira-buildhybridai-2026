@@ -61,7 +61,22 @@ private val Green = Color(0xFF7BE0A0)
 private val Amber = Color(0xFFFFC870)
 private val Red = Color(0xFFFF8A80)
 
-private data class RulesData(val techniques: List<TechniqueRule>, val lightnessLimit: Double, val chromaLimit: Double)
+/** Techniques from print_techniques.json and the garment limits from print_rules.json. */
+data class AdviceRulesData(val techniques: List<TechniqueRule>, val lightnessLimit: Double, val chromaLimit: Double)
+
+/** Loads the advice rules once per screen, off the main thread. Null while loading. */
+@Composable
+fun rememberAdviceRules(): AdviceRulesData? {
+    val context = LocalContext.current
+    val rules by produceState<AdviceRulesData?>(initialValue = null) {
+        value = withContext(Dispatchers.IO) {
+            val json = context.assets.open("print_techniques.json").bufferedReader().use { it.readText() }
+            val decision = PrintRulesRepository(context).getSeparationDecisionRules()
+            AdviceRulesData(TechniqueAdvisor.parseRules(json), decision.darkGarmentThresholdL, decision.garmentChromaThreshold)
+        }
+    }
+    return rules
+}
 
 /**
  * Print method advice from print_techniques.json. The user chooses the fabric; artwork type is
@@ -77,14 +92,7 @@ fun PrintMethodAdviceCard(
     aiReadViewModel: ArtworkAiReadViewModel = viewModel(viewModelStoreOwner = activityViewModelStoreOwner()),
     choicesViewModel: PrintMethodChoicesViewModel = viewModel(viewModelStoreOwner = activityViewModelStoreOwner())
 ) {
-    val context = LocalContext.current
-    val rules by produceState<RulesData?>(initialValue = null) {
-        value = withContext(Dispatchers.IO) {
-            val json = context.assets.open("print_techniques.json").bufferedReader().use { it.readText() }
-            val decision = PrintRulesRepository(context).getSeparationDecisionRules()
-            RulesData(TechniqueAdvisor.parseRules(json), decision.darkGarmentThresholdL, decision.garmentChromaThreshold)
-        }
-    }
+    val rules = rememberAdviceRules()
 
     val allChoices by choicesViewModel.choices.collectAsState()
     val choices = allChoices.takeIf { it.key == artworkKey } ?: PrintMethodChoices(artworkKey)

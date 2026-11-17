@@ -19,6 +19,15 @@ import com.mos.nira.features.artwork.presentation.ColorIntelligenceScreen
 import com.mos.nira.features.artwork.presentation.ColorSeparationScreen
 import com.mos.nira.features.artwork.presentation.PrintReportScreen
 import com.mos.nira.features.artwork.presentation.ShadeLibraryScreen
+import com.mos.nira.core.advice.TechniqueAdvisor
+import com.mos.nira.core.ai.DeepReportPrompt
+import com.mos.nira.core.ai.MethodAdviceFacts
+import com.mos.nira.features.advice.PrintMethodChoicesViewModel
+import com.mos.nira.features.advice.rememberAdviceRules
+import com.mos.nira.features.ai.ArtworkAiReadViewModel
+import com.mos.nira.features.ai.ArtworkKey
+import com.mos.nira.features.ai.DeepReportCard
+import com.mos.nira.features.ai.activityViewModelStoreOwner
 
 object ArtworkDestinations {
     const val LANDING = "artwork_landing"
@@ -191,7 +200,40 @@ fun ArtworkNavHost(
                 onShareSeparationSheet = { viewModel.shareSeparationSheet(context) { } },
                 onClearExportMessage = { viewModel.clearExportMessage() },
                 onRecalculate = { viewModel.computePartAReport() },
-                onBack = goBack
+                onBack = goBack,
+                footer = {
+                    // Deep report: text and numbers only, from what this screen shows.
+                    val key = ArtworkKey.of(uiState.selectedBitmap, uiState.palette.filter { !it.isGarmentBase }.map { it.hex })
+                    val aiReadViewModel: ArtworkAiReadViewModel = viewModel(viewModelStoreOwner = activityViewModelStoreOwner())
+                    val choicesViewModel: PrintMethodChoicesViewModel = viewModel(viewModelStoreOwner = activityViewModelStoreOwner())
+                    val adviceRules = rememberAdviceRules()
+                    DeepReportCard(
+                        artworkKey = key,
+                        buildFacts = {
+                            val read = aiReadViewModel.doneFor(key)
+                            val methods = choicesViewModel.choicesFor(key)?.let { c ->
+                                MethodAdviceFacts(
+                                    fibre = c.fibre,
+                                    artwork = c.artwork,
+                                    garment = c.garment,
+                                    advice = adviceRules?.let { r ->
+                                        TechniqueAdvisor.advise(r.techniques, c.fibre, c.artwork, c.garment)
+                                    } ?: emptyList()
+                                )
+                            }
+                            DeepReportPrompt.facts(
+                                partA = uiState.partAResult,
+                                partB = uiState.partBResult,
+                                partC = uiState.partCResult,
+                                partD = uiState.partDResult,
+                                inputs = uiState.printJobInputs,
+                                aiRead = read?.read,
+                                aiReadSource = read?.result?.inferenceSource,
+                                methods = methods
+                            )
+                        }
+                    )
+                }
             )
         }
 

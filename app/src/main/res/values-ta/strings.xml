@@ -152,4 +152,12 @@
     <string name="advice_risks">அபாயங்கள்</string>
     <string name="advice_disclaimer">பொது வர்த்தக மூலங்களின் அடிப்படையிலான விதி ஆலோசனை. உற்பத்திக்கு முன் ஸ்ட்ரைக்-ஆஃப் மூலம் உறுதிப்படுத்தவும்.</string>
     <string name="advice_loading">விதிகள் ஏற்றப்படுகின்றன…</string>
+
+    <!-- Deep report -->
+    <string name="deep_report_title">விரிவான அறிக்கை (கிளவுட்)</string>
+    <string name="deep_report_hint">எண்கள், AI வாசிப்பு மற்றும் முறை ஆலோசனையிலிருந்து கிளவுடில் எழுதப்படுகிறது. கலைப்படைப்பு படம் அனுப்பப்படாது.</string>
+    <string name="deep_report_button">விரிவான அறிக்கை எழுது</string>
+    <string name="deep_report_running">எழுதுகிறது…</string>
+    <string name="deep_report_blocked">ரகசிய முறை இயக்கத்தில் உள்ளதால் விரிவான அறிக்கை எழுத முடியாது. எதுவும் அனுப்பப்படவில்லை.</string>
+    <string name="deep_report_disclaimer">AI எழுதிய அறிக்கை. எண்கள் NIRA எஞ்சினிலிருந்து வருகின்றன; பயன்படுத்தும் முன் அறிக்கையைச் சரிபார்க்கவும்.</string>
 </resources>
