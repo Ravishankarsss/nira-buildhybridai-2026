@@ -144,7 +144,7 @@ Dashboard redesign, garment camera, Settings, language switch inside the workflo
 | :-- | :--- | :--- |
 | J1 | `README.md`, `LICENSE` | Missing |
 | J2 | `docs/ARCHITECTURE.md`, `HACKATHON_REQUIREMENTS_MATRIX.md`, `TEST_EVIDENCE.md`, `CHANGELOG.md` | Missing (named in the master context) |
-| J3 | `docs/evidence/` with screenshots and logs | Missing |
+| J3 | `docs/evidence/` with screenshots and logs | Started (17 Nov: web cloud result, Chrome model downloading) |
 | J4 | `docs/PROJECT_STATUS.md` | Sections 1 to 6 are out of date; the dated update sections at the top are current |
 | J5 | Master context section 19 (current status) | Out of date |
 | J6 | Unpushed commits | 3 (`733b78d`, `c5c9683`, `9c7bb37`). Everything up to `dabdcf7` is already on GitHub; that push was not done by Claude Code |

@@ -8,8 +8,9 @@ Rule for this file: only write what was actually run. Numbers below come from re
 - Firebase Web app **NIRA Web** registered in project nira-90d39 (appId ends `2a65aa`, web).
 - `web/firebase-config.js` created and git-ignored.
 - Web App Check debug token from Ravi's Chrome registered under NIRA Web.
-- **Cloud call from the web page works in Ravi's Chrome** (`ONLY_IN_CLOUD`, reported by Ravi; exact source text and duration not yet recorded).
-- On-device in Chrome: **not tested yet.** Waiting for the Prompt API availability reading and, if `downloadable`, the model download.
+- **Cloud call from the web page works in Ravi's Chrome 157:** `ONLY_IN_CLOUD` → inference source `IN_CLOUD`, `gemini-3.5-flash-lite`, 9,684 ms, correct answer. Screenshot: `docs/evidence/2026-11-17_web_chrome_only_in_cloud.png`.
+- On-device in Chrome: Prompt API availability `downloading` (screenshot `docs/evidence/2026-11-17_web_chrome_prompt_api_downloading.png`). **Not tested yet**; waiting for the model download to finish.
+- Fixed: the empty "Error" row was shown on success because `.row { display: flex }` overrode the `hidden` attribute.
 
 ## 00000. Update 17 Nov 2026, 08:20 IST — first successful cloud AI call
 
