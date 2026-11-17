@@ -38,7 +38,7 @@ None of these exist as product features. Only the test button calls AI.
 | B4 | Explain the engine's numbers in plain language | Missing |
 | B5 | Answer one question about the job (Ask NIRA) | Missing (no screen) |
 | B6 | Read tech pack text into fields | Missing |
-| B7 | Deep report from the cloud, text and numbers only | Built 17 Nov: card at the end of the Print Report, English or Tamil, four sections, never the image, blocked by Confidential mode. Not yet run on the phone |
+| B7 | Deep report from the cloud, text and numbers only | **Done** 17 Nov, tested on the vivo in English and Tamil (IN_CLOUD). Four sections, never the image, blocked by Confidential mode |
 | B8 | Image input to the AI (prompt + one Bitmap) | Built 17 Nov (`HybridInferenceRepository.generate`) |
 | B9 | Structured (JSON) output from the AI | Partial: JSON asked in the prompt and parsed with tests; SDK schema mode not used |
 | B10 | Prompt files in `assets/prompts/` | Started: `artwork_read_v1.txt` |
@@ -157,11 +157,17 @@ Dashboard redesign, garment camera, Settings, language switch inside the workflo
 
 | # | Item | Status |
 | :-- | :--- | :--- |
-| L1 | Reopened analyses had no image ("artwork image not loaded"): only the gallery link was saved | **Fixed** 17 Nov: private copy saved with each new analysis. Analyses saved before the fix need the artwork picked again |
+| L1 | Reopened analyses had no image ("artwork image not loaded"): only the gallery link was saved | **Fixed and checked on the vivo** 17 Nov: a new analysis reopened with its image after a full restart. Analyses saved before the fix need the artwork picked again |
 | L2 | "AI-READY" badge on the Artwork screen meant nothing | **Removed** 17 Nov |
 | L3 | `print_techniques.json`, DTF: the risks list contains a source note ("Not in the user's articles; added from web research"), shown to users as a risk | Ravi to move it out of `risks` (rules file; not changed by Claude Code) |
 | L4 | Artwork Studio landing, history and other old screens still English-only text | See G2 |
 | L5 | Confidential mode with a reopened analysis showed "image not loaded" instead of the Confidential message (same cause as L1) | Retest after L1 with a new analysis |
+| L6 | Report silently used CMYK + whites (6 screens) for screens and ink while 3 spot inks were recommended | **Fixed and checked on the vivo** 17 Nov: the recommended separation is used until the user picks one |
+| L7 | Recommendation reason said "lowest colour error" although CMYK had a lower error (CMYK not offered by the hue-family rule) | **Fixed** 17 Nov: reason states the CMYK rule; covered by a test |
+| L8 | AI read was told 8 colours (older colour step) while the Print Report measured 3 | **Fixed** 17 Nov: AI read uses the report's measured colours when available |
+| L9 | Report note said white screens are "added to every option" | **Fixed** 17 Nov |
+| L10 | Two colour engines give different colour counts (Colour screen 8, Print Report 3 for the same artwork) | Open: confusing for users and judges. Decide which count the Colour screen shows |
+| L11 | Part A took about 30 s on the vivo for a reopened analysis | Same as D2 (speed) |
 
 ## K. Other loose ends
 
