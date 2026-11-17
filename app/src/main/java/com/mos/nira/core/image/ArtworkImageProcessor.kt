@@ -131,6 +131,33 @@ object ArtworkImageProcessor {
         }
     }
 
+    /** Folder in app-private storage that holds the saved artwork copies. */
+    const val ARTWORK_DIR = "artworks"
+
+    /**
+     * Copies the picked artwork, byte for byte, into app-private storage so a saved analysis can
+     * be reopened later. Gallery links from the picker stop working when the app closes.
+     * The copy never leaves the phone and is deleted with the analysis.
+     * Returns a file:// URI string, or null if the copy failed.
+     */
+    suspend fun saveArtworkCopy(
+        context: Context,
+        source: Uri,
+        analysisId: String
+    ): String? = withContext(Dispatchers.IO) {
+        try {
+            val dir = java.io.File(context.filesDir, ARTWORK_DIR).apply { mkdirs() }
+            val file = java.io.File(dir, analysisId)
+            context.contentResolver.openInputStream(source)?.use { input ->
+                file.outputStream().use { output -> input.copyTo(output) }
+            } ?: return@withContext null
+            Uri.fromFile(file).toString()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
     private fun calculateInSampleSize(
         rawWidth: Int,
         rawHeight: Int,

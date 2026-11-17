@@ -363,11 +363,14 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                 val analysisId = UUID.randomUUID().toString()
                 val context = getApplication<Application>()
                 val thumbPath = ArtworkImageProcessor.saveThumbnail(context, currentBitmap, analysisId)
+                // Keep a private copy so the analysis can be reopened after the app closes.
+                val savedImageUri = ArtworkImageProcessor.saveArtworkCopy(context, currentUri, analysisId)
+                    ?: currentUri.toString()
 
                 val record = ArtworkAnalysisRecord(
                     id = analysisId,
                     fileName = meta.fileName,
-                    imageUri = currentUri.toString(),
+                    imageUri = savedImageUri,
                     thumbnailPath = thumbPath,
                     width = meta.width,
                     height = meta.height,

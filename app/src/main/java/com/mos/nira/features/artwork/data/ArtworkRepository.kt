@@ -74,6 +74,13 @@ class ArtworkRepository(private val context: android.content.Context) {
                 if (thumbFile.exists()) thumbFile.delete()
             }
 
+            // Delete the private artwork copy, but only a file inside this app's own storage.
+            record?.imageUri?.takeIf { it.startsWith("file:") }?.let { uri ->
+                val copy = File(android.net.Uri.parse(uri).path ?: return@let)
+                val artworkDir = File(context.filesDir, "artworks").canonicalPath
+                if (copy.canonicalPath.startsWith(artworkDir) && copy.exists()) copy.delete()
+            }
+
             if (file.exists()) file.delete() else true
         } catch (e: Exception) {
             e.printStackTrace()
