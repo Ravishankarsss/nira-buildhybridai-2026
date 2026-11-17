@@ -78,4 +78,35 @@
     <string name="settings_section_app">ỨNG DỤNG</string>
     <string name="settings_app_version">Phiên bản</string>
     <string name="settings_not_available">không khả dụng</string>
+
+    <!-- AI read and AI privacy -->
+    <string name="ai_read_title">Đọc hình in bằng AI</string>
+    <string name="ai_read_hint">Loại hình in, họa tiết và rủi ro khi in. Các số liệu của bộ máy tính không thay đổi.</string>
+    <string name="ai_read_button">Đọc bằng AI</string>
+    <string name="ai_read_running">Đang đọc…</string>
+    <string name="ai_read_source">Nguồn: %1$s · %2$d ms</string>
+    <string name="ai_source_on_device">Trên thiết bị</string>
+    <string name="ai_source_in_cloud">Trên đám mây</string>
+    <string name="ai_read_type">Loại hình in</string>
+    <string name="ai_read_motifs">Họa tiết</string>
+    <string name="ai_read_effects">Hiệu ứng</string>
+    <string name="ai_read_risks">Rủi ro khi in</string>
+    <string name="ai_read_evidence">Căn cứ</string>
+    <string name="ai_read_disclaimer">Đây là diễn giải của AI, không phải phép đo. Hãy đối chiếu với hình in.</string>
+    <string name="ai_read_unreadable">Không đọc được câu trả lời của AI dưới dạng dữ liệu có cấu trúc. Câu trả lời gốc:</string>
+    <string name="ai_read_error">Yêu cầu AI thất bại: %1$s</string>
+    <string name="ai_read_blocked">Chế độ bảo mật đang bật và AI trên thiết bị không có trên điện thoại này. Không có gì được gửi đi.</string>
+    <string name="ai_upload_title">Gửi hình in lên đám mây?</string>
+    <string name="ai_upload_message">AI trên thiết bị không có trên điện thoại này. Để đọc hình in, ảnh sẽ được gửi một lần đến Gemini trên đám mây qua Firebase. Không gửi hình in bảo mật của khách hàng.</string>
+    <string name="ai_upload_send">Gửi một lần</string>
+    <string name="ai_upload_cancel">Hủy</string>
+    <string name="ai_read_no_image">Chưa tải ảnh hình in.</string>
+    <string name="ai_type_unknown">Chưa rõ</string>
+    <string name="settings_section_ai">AI VÀ QUYỀN RIÊNG TƯ</string>
+    <string name="settings_confidential_title">Chế độ bảo mật</string>
+    <string name="settings_confidential_desc">Chặn mọi yêu cầu AI trên đám mây. Chỉ dùng AI trên thiết bị.</string>
+    <string name="settings_ai_on_device_status">AI trên thiết bị của điện thoại này</string>
+    <string name="settings_ai_answers_device">Câu trả lời trên thiết bị</string>
+    <string name="settings_ai_answers_cloud">Câu trả lời trên đám mây</string>
+    <string name="settings_ai_images_uploaded">Ảnh đã tải lên</string>
 </resources>

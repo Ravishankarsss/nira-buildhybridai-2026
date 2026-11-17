@@ -79,4 +79,35 @@
     <string name="settings_section_app">APP</string>
     <string name="settings_app_version">संस्करण (Version)</string>
     <string name="settings_not_available">उपलब्ध नहीं</string>
+
+    <!-- AI read and AI privacy -->
+    <string name="ai_read_title">आर्टवर्क का AI विश्लेषण</string>
+    <string name="ai_read_hint">आर्टवर्क का प्रकार, मोटिफ़ और प्रिंट जोखिम। इंजन के आंकड़े नहीं बदलते।</string>
+    <string name="ai_read_button">AI से पढ़ें</string>
+    <string name="ai_read_running">पढ़ रहा है…</string>
+    <string name="ai_read_source">स्रोत: %1$s · %2$d ms</string>
+    <string name="ai_source_on_device">डिवाइस पर</string>
+    <string name="ai_source_in_cloud">क्लाउड में</string>
+    <string name="ai_read_type">आर्टवर्क का प्रकार</string>
+    <string name="ai_read_motifs">मोटिफ़</string>
+    <string name="ai_read_effects">इफ़ेक्ट</string>
+    <string name="ai_read_risks">प्रिंट जोखिम</string>
+    <string name="ai_read_evidence">प्रमाण</string>
+    <string name="ai_read_disclaimer">AI की व्याख्या, माप नहीं। आर्टवर्क से जाँच करें।</string>
+    <string name="ai_read_unreadable">AI का उत्तर संरचित डेटा के रूप में पढ़ा नहीं जा सका। मूल उत्तर:</string>
+    <string name="ai_read_error">AI अनुरोध विफल: %1$s</string>
+    <string name="ai_read_blocked">गोपनीय मोड चालू है और इस फ़ोन पर ऑन-डिवाइस AI उपलब्ध नहीं है। कुछ भी नहीं भेजा गया।</string>
+    <string name="ai_upload_title">आर्टवर्क क्लाउड पर भेजें?</string>
+    <string name="ai_upload_message">इस फ़ोन पर ऑन-डिवाइस AI उपलब्ध नहीं है। आर्टवर्क पढ़ने के लिए छवि एक बार Firebase के ज़रिए क्लाउड में Gemini को भेजी जाएगी। गोपनीय खरीदार आर्टवर्क न भेजें।</string>
+    <string name="ai_upload_send">एक बार भेजें</string>
+    <string name="ai_upload_cancel">रद्द करें</string>
+    <string name="ai_read_no_image">आर्टवर्क की छवि लोड नहीं हुई।</string>
+    <string name="ai_type_unknown">स्पष्ट नहीं</string>
+    <string name="settings_section_ai">AI और गोपनीयता</string>
+    <string name="settings_confidential_title">गोपनीय मोड</string>
+    <string name="settings_confidential_desc">सभी क्लाउड AI अनुरोध रोकता है। केवल ऑन-डिवाइस AI का उपयोग होता है।</string>
+    <string name="settings_ai_on_device_status">इस फ़ोन पर ऑन-डिवाइस AI</string>
+    <string name="settings_ai_answers_device">डिवाइस पर उत्तर</string>
+    <string name="settings_ai_answers_cloud">क्लाउड में उत्तर</string>
+    <string name="settings_ai_images_uploaded">अपलोड की गई छवियाँ</string>
 </resources>

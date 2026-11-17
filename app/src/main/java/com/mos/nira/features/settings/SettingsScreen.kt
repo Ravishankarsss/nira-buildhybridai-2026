@@ -19,6 +19,8 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -39,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mos.nira.BuildConfig
 import com.mos.nira.R
+import com.mos.nira.core.ai.AiSettings
 import com.mos.nira.core.ai.AppCheckDebugToken
 import com.mos.nira.core.ai.HybridInferenceRepository
 import com.mos.nira.core.ai.HybridInferenceResult
@@ -145,6 +148,8 @@ fun SettingsScreen(
             }
         }
 
+        AiPrivacySection()
+
         SettingsSection(stringResource(R.string.settings_section_rules)) {
             SettingsRow(stringResource(R.string.settings_rules_version), info.rulesVersion ?: notAvailable)
             SettingsRow(stringResource(R.string.settings_rules_status), info.rulesStatus ?: notAvailable)
@@ -226,6 +231,53 @@ fun SettingsScreen(
             containerColor = CardColor,
             shape = RoundedCornerShape(16.dp)
         )
+    }
+}
+
+/**
+ * AI and privacy: Confidential mode, the real on-device status from the SDK, and the real
+ * answer counters. No placeholder values: every line is read from the app or the SDK.
+ */
+@Composable
+private fun AiPrivacySection() {
+    val context = LocalContext.current
+    remember { AiSettings.load(context) }
+    val confidential by AiSettings.confidentialMode.collectAsState()
+    val counts by AiSettings.counts.collectAsState()
+    val onDeviceStatus by produceState<String?>(initialValue = null) {
+        value = HybridInferenceRepository().checkOnDeviceStatus()
+    }
+
+    SettingsSection(stringResource(R.string.settings_section_ai)) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = stringResource(R.string.settings_confidential_title),
+                    color = White,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Text(text = stringResource(R.string.settings_confidential_desc), color = Muted, fontSize = 11.sp)
+            }
+            Switch(
+                checked = confidential,
+                onCheckedChange = { AiSettings.setConfidentialMode(context, it) },
+                colors = SwitchDefaults.colors(checkedTrackColor = Cyan)
+            )
+        }
+        SettingsRow(
+            stringResource(R.string.settings_ai_on_device_status),
+            onDeviceStatus ?: "…"
+        )
+        SettingsRow(stringResource(R.string.settings_ai_answers_device), counts.answersOnDevice.toString())
+        SettingsRow(stringResource(R.string.settings_ai_answers_cloud), counts.answersInCloud.toString())
+        SettingsRow(stringResource(R.string.settings_ai_images_uploaded), counts.imagesUploaded.toString())
     }
 }
 

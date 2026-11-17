@@ -79,4 +79,35 @@
     <string name="settings_section_app">APP</string>
     <string name="settings_app_version">সংস্করণ (Version)</string>
     <string name="settings_not_available">উপলব্ধ নয়</string>
+
+    <!-- AI read and AI privacy -->
+    <string name="ai_read_title">আর্টওয়ার্কের AI বিশ্লেষণ</string>
+    <string name="ai_read_hint">আর্টওয়ার্কের ধরন, মোটিফ ও প্রিন্টের ঝুঁকি। ইঞ্জিনের সংখ্যাগুলো বদলায় না।</string>
+    <string name="ai_read_button">AI দিয়ে পড়ুন</string>
+    <string name="ai_read_running">পড়া হচ্ছে…</string>
+    <string name="ai_read_source">উৎস: %1$s · %2$d ms</string>
+    <string name="ai_source_on_device">ডিভাইসে</string>
+    <string name="ai_source_in_cloud">ক্লাউডে</string>
+    <string name="ai_read_type">আর্টওয়ার্কের ধরন</string>
+    <string name="ai_read_motifs">মোটিফ</string>
+    <string name="ai_read_effects">ইফেক্ট</string>
+    <string name="ai_read_risks">প্রিন্টের ঝুঁকি</string>
+    <string name="ai_read_evidence">প্রমাণ</string>
+    <string name="ai_read_disclaimer">AI-এর ব্যাখ্যা, পরিমাপ নয়। আর্টওয়ার্কের সঙ্গে মিলিয়ে দেখুন।</string>
+    <string name="ai_read_unreadable">AI-এর উত্তর কাঠামোবদ্ধ ডেটা হিসেবে পড়া যায়নি। মূল উত্তর:</string>
+    <string name="ai_read_error">AI অনুরোধ ব্যর্থ: %1$s</string>
+    <string name="ai_read_blocked">গোপনীয় মোড চালু আছে এবং এই ফোনে অন-ডিভাইস AI নেই। কিছুই পাঠানো হয়নি।</string>
+    <string name="ai_upload_title">আর্টওয়ার্ক ক্লাউডে পাঠাবেন?</string>
+    <string name="ai_upload_message">এই ফোনে অন-ডিভাইস AI নেই। আর্টওয়ার্ক পড়ার জন্য ছবিটি Firebase-এর মাধ্যমে একবার ক্লাউডের Gemini-তে পাঠানো হবে। গোপনীয় ক্রেতার আর্টওয়ার্ক পাঠাবেন না।</string>
+    <string name="ai_upload_send">একবার পাঠান</string>
+    <string name="ai_upload_cancel">বাতিল</string>
+    <string name="ai_read_no_image">আর্টওয়ার্কের ছবি লোড হয়নি।</string>
+    <string name="ai_type_unknown">স্পষ্ট নয়</string>
+    <string name="settings_section_ai">AI ও গোপনীয়তা</string>
+    <string name="settings_confidential_title">গোপনীয় মোড</string>
+    <string name="settings_confidential_desc">সব ক্লাউড AI অনুরোধ বন্ধ রাখে। শুধু অন-ডিভাইস AI ব্যবহার হয়।</string>
+    <string name="settings_ai_on_device_status">এই ফোনে অন-ডিভাইস AI</string>
+    <string name="settings_ai_answers_device">ডিভাইসে উত্তর</string>
+    <string name="settings_ai_answers_cloud">ক্লাউডে উত্তর</string>
+    <string name="settings_ai_images_uploaded">আপলোড করা ছবি</string>
 </resources>

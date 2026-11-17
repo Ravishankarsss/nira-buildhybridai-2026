@@ -50,6 +50,7 @@ import com.mos.nira.features.artwork.components.ColorSwatchCard
 import com.mos.nira.features.artwork.domain.ColorGroup
 import com.mos.nira.features.artwork.domain.DominantColor
 import com.mos.nira.features.artwork.domain.ShadeEntry
+import com.mos.nira.features.ai.ArtworkAiReadCard
 
 private val NavyBg = Color(0xFF0B1020)
 private val CardBg = Color(0xFF171F35)
@@ -285,6 +286,15 @@ fun ColorIntelligenceScreen(
                     }
                 }
             }
+        }
+
+        // AI read of the artwork (Firebase AI Logic). Engine numbers are passed in as facts.
+        item {
+            ArtworkAiReadCard(
+                bitmap = bitmap,
+                printColourHexes = palette.filter { !it.isGarmentBase }.map { it.hex },
+                garmentHex = garmentColor?.hex
+            )
         }
 
         // Active Selected Color Technical Inspector + Editing Toolbar + Top 3 Shade Matches

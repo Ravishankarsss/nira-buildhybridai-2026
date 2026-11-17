@@ -80,4 +80,35 @@
     <string name="settings_section_app">APLICACIÓN</string>
     <string name="settings_app_version">Versión</string>
     <string name="settings_not_available">no disponible</string>
+
+    <!-- AI read and AI privacy -->
+    <string name="ai_read_title">Lectura de la ilustración con IA</string>
+    <string name="ai_read_hint">Tipo de ilustración, motivos y riesgos de impresión. Los números del motor no cambian.</string>
+    <string name="ai_read_button">Leer con IA</string>
+    <string name="ai_read_running">Leyendo…</string>
+    <string name="ai_read_source">Origen: %1$s · %2$d ms</string>
+    <string name="ai_source_on_device">En el dispositivo</string>
+    <string name="ai_source_in_cloud">En la nube</string>
+    <string name="ai_read_type">Tipo de ilustración</string>
+    <string name="ai_read_motifs">Motivos</string>
+    <string name="ai_read_effects">Efectos</string>
+    <string name="ai_read_risks">Riesgos de impresión</string>
+    <string name="ai_read_evidence">Evidencia</string>
+    <string name="ai_read_disclaimer">Interpretación de IA, no una medición. Compruébela con la ilustración.</string>
+    <string name="ai_read_unreadable">No se pudo leer la respuesta de la IA como datos estructurados. Respuesta original:</string>
+    <string name="ai_read_error">La solicitud de IA falló: %1$s</string>
+    <string name="ai_read_blocked">El modo confidencial está activado y la IA en el dispositivo no está disponible en este teléfono. No se envió nada.</string>
+    <string name="ai_upload_title">¿Enviar la ilustración a la nube?</string>
+    <string name="ai_upload_message">La IA en el dispositivo no está disponible en este teléfono. Para leer la ilustración, la imagen se enviará una vez a Gemini en la nube a través de Firebase. No envíe ilustraciones confidenciales de clientes.</string>
+    <string name="ai_upload_send">Enviar una vez</string>
+    <string name="ai_upload_cancel">Cancelar</string>
+    <string name="ai_read_no_image">La imagen de la ilustración no está cargada.</string>
+    <string name="ai_type_unknown">No está claro</string>
+    <string name="settings_section_ai">IA Y PRIVACIDAD</string>
+    <string name="settings_confidential_title">Modo confidencial</string>
+    <string name="settings_confidential_desc">Bloquea todas las solicitudes de IA en la nube. Solo se usa la IA en el dispositivo.</string>
+    <string name="settings_ai_on_device_status">IA en el dispositivo en este teléfono</string>
+    <string name="settings_ai_answers_device">Respuestas en el dispositivo</string>
+    <string name="settings_ai_answers_cloud">Respuestas en la nube</string>
+    <string name="settings_ai_images_uploaded">Imágenes enviadas</string>
 </resources>

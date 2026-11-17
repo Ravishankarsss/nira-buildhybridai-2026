@@ -79,4 +79,35 @@
     <string name="settings_section_app">APP</string>
     <string name="settings_app_version">Version</string>
     <string name="settings_not_available">கிடைக்கவில்லை</string>
+
+    <!-- AI read and AI privacy -->
+    <string name="ai_read_title">கலைப்படைப்பின் AI வாசிப்பு</string>
+    <string name="ai_read_hint">கலைப்படைப்பு வகை, வடிவங்கள் மற்றும் அச்சு அபாயங்கள். எஞ்சின் எண்கள் மாறாது.</string>
+    <string name="ai_read_button">AI மூலம் வாசி</string>
+    <string name="ai_read_running">வாசிக்கிறது…</string>
+    <string name="ai_read_source">மூலம்: %1$s · %2$d ms</string>
+    <string name="ai_source_on_device">சாதனத்தில்</string>
+    <string name="ai_source_in_cloud">கிளவுடில்</string>
+    <string name="ai_read_type">கலைப்படைப்பு வகை</string>
+    <string name="ai_read_motifs">வடிவங்கள்</string>
+    <string name="ai_read_effects">விளைவுகள்</string>
+    <string name="ai_read_risks">அச்சு அபாயங்கள்</string>
+    <string name="ai_read_evidence">ஆதாரம்</string>
+    <string name="ai_read_disclaimer">AI விளக்கம், அளவீடு அல்ல. கலைப்படைப்புடன் சரிபார்க்கவும்.</string>
+    <string name="ai_read_unreadable">AI பதிலை கட்டமைந்த தரவாகப் படிக்க முடியவில்லை. மூலப் பதில்:</string>
+    <string name="ai_read_error">AI கோரிக்கை தோல்வியடைந்தது: %1$s</string>
+    <string name="ai_read_blocked">ரகசிய முறை இயக்கத்தில் உள்ளது, இந்த போனில் சாதன AI கிடைக்கவில்லை. எதுவும் அனுப்பப்படவில்லை.</string>
+    <string name="ai_upload_title">கலைப்படைப்பை கிளவுடுக்கு அனுப்பவா?</string>
+    <string name="ai_upload_message">இந்த போனில் சாதன AI கிடைக்கவில்லை. கலைப்படைப்பை வாசிக்க, படம் Firebase வழியாக கிளவுடில் உள்ள Gemini-க்கு ஒருமுறை அனுப்பப்படும். ரகசியமான வாங்குபவர் கலைப்படைப்பை அனுப்ப வேண்டாம்.</string>
+    <string name="ai_upload_send">ஒருமுறை அனுப்பு</string>
+    <string name="ai_upload_cancel">ரத்து செய்</string>
+    <string name="ai_read_no_image">கலைப்படைப்பு படம் ஏற்றப்படவில்லை.</string>
+    <string name="ai_type_unknown">தெளிவாக இல்லை</string>
+    <string name="settings_section_ai">AI மற்றும் தனியுரிமை</string>
+    <string name="settings_confidential_title">ரகசிய முறை</string>
+    <string name="settings_confidential_desc">எல்லா கிளவுட் AI கோரிக்கைகளையும் தடுக்கிறது. சாதன AI மட்டுமே பயன்படுத்தப்படும்.</string>
+    <string name="settings_ai_on_device_status">இந்த போனில் சாதன AI</string>
+    <string name="settings_ai_answers_device">சாதனத்தில் பதில்கள்</string>
+    <string name="settings_ai_answers_cloud">கிளவுடில் பதில்கள்</string>
+    <string name="settings_ai_images_uploaded">பதிவேற்றிய படங்கள்</string>
 </resources>

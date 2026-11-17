@@ -78,4 +78,35 @@
     <string name="settings_section_app">应用</string>
     <string name="settings_app_version">版本号</string>
     <string name="settings_not_available">不可用</string>
+
+    <!-- AI read and AI privacy -->
+    <string name="ai_read_title">AI 解读图稿</string>
+    <string name="ai_read_hint">图稿类型、图案和印刷风险。引擎的数值不会改变。</string>
+    <string name="ai_read_button">用 AI 解读</string>
+    <string name="ai_read_running">正在解读…</string>
+    <string name="ai_read_source">来源：%1$s · %2$d ms</string>
+    <string name="ai_source_on_device">设备端</string>
+    <string name="ai_source_in_cloud">云端</string>
+    <string name="ai_read_type">图稿类型</string>
+    <string name="ai_read_motifs">图案</string>
+    <string name="ai_read_effects">效果</string>
+    <string name="ai_read_risks">印刷风险</string>
+    <string name="ai_read_evidence">依据</string>
+    <string name="ai_read_disclaimer">这是 AI 的解读，不是测量结果。请对照图稿核实。</string>
+    <string name="ai_read_unreadable">无法将 AI 的回答读取为结构化数据。原始回答：</string>
+    <string name="ai_read_error">AI 请求失败：%1$s</string>
+    <string name="ai_read_blocked">机密模式已开启，且本手机不支持设备端 AI。未发送任何内容。</string>
+    <string name="ai_upload_title">将图稿发送到云端？</string>
+    <string name="ai_upload_message">本手机不支持设备端 AI。为了解读图稿，图片将通过 Firebase 发送一次到云端的 Gemini。请勿发送机密的客户图稿。</string>
+    <string name="ai_upload_send">发送一次</string>
+    <string name="ai_upload_cancel">取消</string>
+    <string name="ai_read_no_image">图稿图片未加载。</string>
+    <string name="ai_type_unknown">不确定</string>
+    <string name="settings_section_ai">AI 与隐私</string>
+    <string name="settings_confidential_title">机密模式</string>
+    <string name="settings_confidential_desc">阻止所有云端 AI 请求，只使用设备端 AI。</string>
+    <string name="settings_ai_on_device_status">本手机的设备端 AI</string>
+    <string name="settings_ai_answers_device">设备端回答</string>
+    <string name="settings_ai_answers_cloud">云端回答</string>
+    <string name="settings_ai_images_uploaded">已上传图片</string>
 </resources>

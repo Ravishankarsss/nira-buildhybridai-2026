@@ -80,4 +80,35 @@
     <string name="settings_section_app">APPLICATION</string>
     <string name="settings_app_version">Version</string>
     <string name="settings_not_available">non disponible</string>
+
+    <!-- AI read and AI privacy -->
+    <string name="ai_read_title">Lecture de l\'illustration par IA</string>
+    <string name="ai_read_hint">Type d\'illustration, motifs et risques d\'impression. Les chiffres du moteur ne changent pas.</string>
+    <string name="ai_read_button">Lire avec l\'IA</string>
+    <string name="ai_read_running">Lecture…</string>
+    <string name="ai_read_source">Source : %1$s · %2$d ms</string>
+    <string name="ai_source_on_device">Sur l\'appareil</string>
+    <string name="ai_source_in_cloud">Dans le cloud</string>
+    <string name="ai_read_type">Type d\'illustration</string>
+    <string name="ai_read_motifs">Motifs</string>
+    <string name="ai_read_effects">Effets</string>
+    <string name="ai_read_risks">Risques d\'impression</string>
+    <string name="ai_read_evidence">Justification</string>
+    <string name="ai_read_disclaimer">Interprétation de l\'IA, pas une mesure. Vérifiez-la avec l\'illustration.</string>
+    <string name="ai_read_unreadable">La réponse de l\'IA n\'a pas pu être lue comme des données structurées. Réponse brute :</string>
+    <string name="ai_read_error">La requête IA a échoué : %1$s</string>
+    <string name="ai_read_blocked">Le mode confidentiel est activé et l\'IA sur l\'appareil n\'est pas disponible sur ce téléphone. Rien n\'a été envoyé.</string>
+    <string name="ai_upload_title">Envoyer l\'illustration dans le cloud ?</string>
+    <string name="ai_upload_message">L\'IA sur l\'appareil n\'est pas disponible sur ce téléphone. Pour lire l\'illustration, l\'image sera envoyée une fois à Gemini dans le cloud via Firebase. N\'envoyez pas d\'illustrations confidentielles de clients.</string>
+    <string name="ai_upload_send">Envoyer une fois</string>
+    <string name="ai_upload_cancel">Annuler</string>
+    <string name="ai_read_no_image">L\'image de l\'illustration n\'est pas chargée.</string>
+    <string name="ai_type_unknown">Pas clair</string>
+    <string name="settings_section_ai">IA ET CONFIDENTIALITÉ</string>
+    <string name="settings_confidential_title">Mode confidentiel</string>
+    <string name="settings_confidential_desc">Bloque toutes les requêtes IA dans le cloud. Seule l\'IA sur l\'appareil est utilisée.</string>
+    <string name="settings_ai_on_device_status">IA sur l\'appareil sur ce téléphone</string>
+    <string name="settings_ai_answers_device">Réponses sur l\'appareil</string>
+    <string name="settings_ai_answers_cloud">Réponses dans le cloud</string>
+    <string name="settings_ai_images_uploaded">Images envoyées</string>
 </resources>

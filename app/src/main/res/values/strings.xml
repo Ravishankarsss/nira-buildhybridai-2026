@@ -78,4 +78,35 @@
     <string name="settings_section_app">APP</string>
     <string name="settings_app_version">Version</string>
     <string name="settings_not_available">not available</string>
+
+    <!-- AI read and AI privacy -->
+    <string name="ai_read_title">AI read of the artwork</string>
+    <string name="ai_read_hint">Artwork type, motifs and print risks. The engine numbers do not change.</string>
+    <string name="ai_read_button">Read with AI</string>
+    <string name="ai_read_running">Reading…</string>
+    <string name="ai_read_source">Source: %1$s · %2$d ms</string>
+    <string name="ai_source_on_device">On device</string>
+    <string name="ai_source_in_cloud">In cloud</string>
+    <string name="ai_read_type">Artwork type</string>
+    <string name="ai_read_motifs">Motifs</string>
+    <string name="ai_read_effects">Effects</string>
+    <string name="ai_read_risks">Print risks</string>
+    <string name="ai_read_evidence">Evidence</string>
+    <string name="ai_read_disclaimer">AI interpretation, not a measurement. Check it against the artwork.</string>
+    <string name="ai_read_unreadable">The AI answer could not be read as structured data. Raw answer:</string>
+    <string name="ai_read_error">AI request failed: %1$s</string>
+    <string name="ai_read_blocked">Confidential mode is on and on-device AI is not available on this phone. Nothing was sent.</string>
+    <string name="ai_upload_title">Send the artwork to the cloud?</string>
+    <string name="ai_upload_message">On-device AI is not available on this phone. To read the artwork, the image will be sent once to Gemini in the cloud through Firebase. Do not send confidential buyer artwork.</string>
+    <string name="ai_upload_send">Send once</string>
+    <string name="ai_upload_cancel">Cancel</string>
+    <string name="ai_read_no_image">Artwork image not loaded.</string>
+    <string name="ai_type_unknown">Not clear</string>
+    <string name="settings_section_ai">AI AND PRIVACY</string>
+    <string name="settings_confidential_title">Confidential mode</string>
+    <string name="settings_confidential_desc">Blocks every cloud AI request. Only on-device AI is used.</string>
+    <string name="settings_ai_on_device_status">On-device AI on this phone</string>
+    <string name="settings_ai_answers_device">Answers on device</string>
+    <string name="settings_ai_answers_cloud">Answers in cloud</string>
+    <string name="settings_ai_images_uploaded">Images uploaded</string>
 </resources>
