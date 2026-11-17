@@ -28,3 +28,6 @@ user_libraries/*.csv
 
 # Web version: Firebase web config (contains the web API key)
 web/firebase-config.js
+
+# Android Studio device selection (contains the phone serial number)
+.idea/deploymentTargetSelector.xml
