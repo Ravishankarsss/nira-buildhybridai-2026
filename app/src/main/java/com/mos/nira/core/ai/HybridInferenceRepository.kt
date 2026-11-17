@@ -1,5 +1,6 @@
 package com.mos.nira.core.ai
 
+import android.graphics.Bitmap
 import com.google.firebase.Firebase
 import com.google.firebase.ai.InferenceMode
 import com.google.firebase.ai.InferenceSource
@@ -10,6 +11,7 @@ import com.google.firebase.ai.ondevice.OnDeviceModelStatus
 import com.google.firebase.ai.type.FirebaseAIOnDeviceNotAvailableException
 import com.google.firebase.ai.type.GenerativeBackend
 import com.google.firebase.ai.type.PublicPreviewAPI
+import com.google.firebase.ai.type.content
 import kotlinx.coroutines.CancellationException
 
 /** The routing mode asked for. The same four modes as the Firebase AI Logic hybrid SDK. */
@@ -55,6 +57,18 @@ class HybridInferenceRepository {
     suspend fun generateText(
         prompt: String,
         mode: HybridMode = HybridMode.PREFER_ON_DEVICE
+    ): HybridInferenceResult = generate(prompt, image = null, mode = mode)
+
+    /**
+     * Sends a text prompt, optionally with one image, through Firebase AI Logic hybrid inference.
+     *
+     * The caller decides the mode with [AiPrivacyPolicy]: an image may only go to the cloud after
+     * the user has agreed, and Confidential mode never allows the cloud.
+     */
+    suspend fun generate(
+        prompt: String,
+        image: Bitmap?,
+        mode: HybridMode
     ): HybridInferenceResult {
         val start = System.nanoTime()
         return try {
@@ -62,7 +76,16 @@ class HybridInferenceRepository {
                 modelName = CLOUD_MODEL_NAME,
                 onDeviceConfig = OnDeviceConfig(mode = sdkMode(mode))
             )
-            val response = model.generateContent(prompt)
+            val response = if (image != null) {
+                model.generateContent(
+                    content {
+                        image(image)
+                        text(prompt)
+                    }
+                )
+            } else {
+                model.generateContent(prompt)
+            }
             HybridInferenceResult(
                 text = response.text,
                 inferenceSource = sourceName(response.inferenceSource),
