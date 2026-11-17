@@ -23,8 +23,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,8 +43,9 @@ import com.mos.nira.core.advice.TechniqueAdvice
 import com.mos.nira.core.advice.TechniqueAdvisor
 import com.mos.nira.core.advice.TechniqueRule
 import com.mos.nira.core.ai.ArtworkType
-import com.mos.nira.features.ai.ArtworkAiReadState
 import com.mos.nira.features.ai.ArtworkAiReadViewModel
+import com.mos.nira.features.ai.ArtworkKey
+import com.mos.nira.features.ai.activityViewModelStoreOwner
 import com.mos.nira.features.artwork.data.PrintRulesRepository
 import com.mos.nira.features.artwork.domain.DominantColor
 import kotlinx.coroutines.Dispatchers
@@ -73,8 +72,10 @@ private data class RulesData(val techniques: List<TechniqueRule>, val lightnessL
 @Composable
 fun PrintMethodAdviceCard(
     garmentColor: DominantColor?,
+    artworkKey: ArtworkKey?,
     modifier: Modifier = Modifier,
-    aiReadViewModel: ArtworkAiReadViewModel = viewModel()
+    aiReadViewModel: ArtworkAiReadViewModel = viewModel(viewModelStoreOwner = activityViewModelStoreOwner()),
+    choicesViewModel: PrintMethodChoicesViewModel = viewModel(viewModelStoreOwner = activityViewModelStoreOwner())
 ) {
     val context = LocalContext.current
     val rules by produceState<RulesData?>(initialValue = null) {
@@ -85,38 +86,35 @@ fun PrintMethodAdviceCard(
         }
     }
 
-    var fibreName by rememberSaveable { mutableStringOrNull() }
-    var artworkName by rememberSaveable { mutableStringOrNull() }
-    var artworkFromAi by rememberSaveable { androidx.compose.runtime.mutableStateOf(false) }
-    var garmentName by rememberSaveable { mutableStringOrNull() }
-    var garmentFromMeasure by rememberSaveable { androidx.compose.runtime.mutableStateOf(false) }
+    val allChoices by choicesViewModel.choices.collectAsState()
+    val choices = allChoices.takeIf { it.key == artworkKey } ?: PrintMethodChoices(artworkKey)
+    fun update(change: (PrintMethodChoices) -> PrintMethodChoices) = choicesViewModel.update(artworkKey, change)
 
     // Artwork type from the AI read, unless the user already chose one.
     val aiState by aiReadViewModel.state.collectAsState()
-    LaunchedEffect(aiState) {
-        val read = (aiState as? ArtworkAiReadState.Done)?.read ?: return@LaunchedEffect
-        if (artworkName == null || artworkFromAi) {
-            when (read.artworkType) {
-                ArtworkType.FLAT -> { artworkName = ArtworkKind.FLAT.name; artworkFromAi = true }
-                ArtworkType.TONAL -> { artworkName = ArtworkKind.TONAL.name; artworkFromAi = true }
-                ArtworkType.UNKNOWN -> Unit
-            }
-        }
+    LaunchedEffect(aiState, artworkKey) {
+        val read = aiReadViewModel.doneFor(artworkKey)?.read ?: return@LaunchedEffect
+        val kind = when (read.artworkType) {
+            ArtworkType.FLAT -> ArtworkKind.FLAT
+            ArtworkType.TONAL -> ArtworkKind.TONAL
+            ArtworkType.UNKNOWN -> null
+        } ?: return@LaunchedEffect
+        update { c -> if (c.artwork == null || c.artworkFromAi) c.copy(artwork = kind, artworkFromAi = true) else c }
     }
 
     // Garment tone from the measured garment colour, unless the user already chose one.
-    LaunchedEffect(rules, garmentColor) {
+    LaunchedEffect(rules, garmentColor, artworkKey) {
         val r = rules ?: return@LaunchedEffect
         val g = garmentColor ?: return@LaunchedEffect
-        if (garmentName == null || garmentFromMeasure) {
-            garmentName = TechniqueAdvisor.garmentTone(g.labL, g.labA, g.labB, r.lightnessLimit, r.chromaLimit).name
-            garmentFromMeasure = true
-        }
+        val tone = TechniqueAdvisor.garmentTone(g.labL, g.labA, g.labB, r.lightnessLimit, r.chromaLimit)
+        update { c -> if (c.garment == null || c.garmentFromMeasure) c.copy(garment = tone, garmentFromMeasure = true) else c }
     }
 
-    val fibre = fibreName?.let { Fibre.valueOf(it) }
-    val artwork = artworkName?.let { ArtworkKind.valueOf(it) }
-    val garment = garmentName?.let { GarmentTone.valueOf(it) }
+    val fibre = choices.fibre
+    val artwork = choices.artwork
+    val garment = choices.garment
+    val artworkFromAi = choices.artworkFromAi
+    val garmentFromMeasure = choices.garmentFromMeasure
 
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -137,17 +135,17 @@ fun PrintMethodAdviceCard(
             Label(stringResource(R.string.advice_fabric))
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Fibre.values().forEach { f ->
-                    Chip(fibreLabel(f), selected = fibre == f) { fibreName = if (fibre == f) null else f.name }
+                    Chip(fibreLabel(f), selected = fibre == f) { update { c -> c.copy(fibre = if (fibre == f) null else f) } }
                 }
             }
 
             Label(stringResource(R.string.advice_artwork))
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Chip(stringResource(R.string.advice_artwork_flat), artwork == ArtworkKind.FLAT) {
-                    artworkName = ArtworkKind.FLAT.name; artworkFromAi = false
+                    update { c -> c.copy(artwork = ArtworkKind.FLAT, artworkFromAi = false) }
                 }
                 Chip(stringResource(R.string.advice_artwork_tonal), artwork == ArtworkKind.TONAL) {
-                    artworkName = ArtworkKind.TONAL.name; artworkFromAi = false
+                    update { c -> c.copy(artwork = ArtworkKind.TONAL, artworkFromAi = false) }
                 }
             }
             if (artworkFromAi) Small(stringResource(R.string.advice_from_ai))
@@ -155,10 +153,10 @@ fun PrintMethodAdviceCard(
             Label(stringResource(R.string.advice_garment))
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Chip(stringResource(R.string.advice_garment_light), garment == GarmentTone.LIGHT) {
-                    garmentName = GarmentTone.LIGHT.name; garmentFromMeasure = false
+                    update { c -> c.copy(garment = GarmentTone.LIGHT, garmentFromMeasure = false) }
                 }
                 Chip(stringResource(R.string.advice_garment_dark), garment == GarmentTone.DARK_OR_COLOURED) {
-                    garmentName = GarmentTone.DARK_OR_COLOURED.name; garmentFromMeasure = false
+                    update { c -> c.copy(garment = GarmentTone.DARK_OR_COLOURED, garmentFromMeasure = false) }
                 }
             }
             if (garmentFromMeasure) Small(stringResource(R.string.advice_from_measured))
@@ -190,7 +188,6 @@ fun PrintMethodAdviceCard(
     }
 }
 
-private fun mutableStringOrNull() = androidx.compose.runtime.mutableStateOf<String?>(null)
 
 @Composable
 private fun TechniqueItem(advice: TechniqueAdvice) {

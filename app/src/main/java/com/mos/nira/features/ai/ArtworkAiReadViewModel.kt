@@ -28,7 +28,7 @@ sealed interface ArtworkAiReadState {
     data object NoImage : ArtworkAiReadState
 
     /** read is null when the answer had no usable structure; the raw text is then shown. */
-    data class Done(val result: HybridInferenceResult, val read: ArtworkRead?) : ArtworkAiReadState
+    data class Done(val key: ArtworkKey?, val result: HybridInferenceResult, val read: ArtworkRead?) : ArtworkAiReadState
 }
 
 /**
@@ -47,6 +47,10 @@ class ArtworkAiReadViewModel(application: Application) : AndroidViewModel(applic
     init {
         AiSettings.load(application)
     }
+
+    /** The finished AI read for this artwork, or null. Never a result from another artwork. */
+    fun doneFor(key: ArtworkKey?): ArtworkAiReadState.Done? =
+        (_state.value as? ArtworkAiReadState.Done)?.takeIf { key != null && it.key == key }
 
     fun read(bitmap: Bitmap?, printColourHexes: List<String>, garmentHex: String?) {
         pending = Triple(bitmap, printColourHexes, garmentHex)
@@ -89,7 +93,11 @@ class ArtworkAiReadViewModel(application: Application) : AndroidViewModel(applic
                     val image = withContext(Dispatchers.Default) { scaleForAi(bitmap) }
                     val result = repository.generate(prompt, image, route.mode)
                     AiSettings.record(app, result, imageAttached = true)
-                    _state.value = ArtworkAiReadState.Done(result, ArtworkReadPrompt.parse(result.text))
+                    _state.value = ArtworkAiReadState.Done(
+                        ArtworkKey.of(bitmap, hexes),
+                        result,
+                        ArtworkReadPrompt.parse(result.text)
+                    )
                 }
             }
         }

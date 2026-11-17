@@ -52,9 +52,14 @@ fun ArtworkAiReadCard(
     printColourHexes: List<String>,
     garmentHex: String?,
     modifier: Modifier = Modifier,
-    viewModel: ArtworkAiReadViewModel = viewModel()
+    viewModel: ArtworkAiReadViewModel = viewModel(viewModelStoreOwner = activityViewModelStoreOwner())
 ) {
-    val state by viewModel.state.collectAsState()
+    val rawState by viewModel.state.collectAsState()
+    // The view model is shared, so a finished read from another artwork must not be shown here.
+    val key = ArtworkKey.of(bitmap, printColourHexes)
+    val state = rawState.let { s ->
+        if (s is ArtworkAiReadState.Done && s.key != key) ArtworkAiReadState.Idle else s
+    }
 
     if (state == ArtworkAiReadState.AskImageUpload) {
         AlertDialog(
