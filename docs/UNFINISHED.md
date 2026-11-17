@@ -32,20 +32,20 @@ None of these exist as product features. Only the test button calls AI.
 
 | # | Feature | Status |
 | :-- | :--- | :--- |
-| B1 | Classify artwork as FLAT or TONAL, describe motifs | Missing |
+| B1 | Classify artwork as FLAT or TONAL, describe motifs | Built 17 Nov (AI read card, Colour screen). Not run on the phone yet |
 | B2 | Name likely print technique from a garment photo, with evidence | Missing |
-| B3 | Flag print risks (thin lines, small text, gradients) | Missing |
+| B3 | Flag print risks (thin lines, small text, gradients) | Built 17 Nov (same card). Not run on the phone yet |
 | B4 | Explain the engine's numbers in plain language | Missing |
 | B5 | Answer one question about the job (Ask NIRA) | Missing (no screen) |
 | B6 | Read tech pack text into fields | Missing |
 | B7 | Deep report from the cloud, text and numbers only | Missing |
-| B8 | Image input to the AI (prompt + one Bitmap) | Missing: the repository sends text only |
-| B9 | Structured (JSON) output from the AI | Missing |
-| B10 | Prompt files in `assets/prompts/` | Missing: folder does not exist |
-| B11 | Source badge and duration on every AI answer | Missing (only in the test card) |
-| B12 | Counters: answers on device, in cloud, images uploaded | Missing |
-| B13 | Confidential mode switch that blocks cloud calls | Missing |
-| B14 | Confirm dialog before any image goes to the cloud | Missing |
+| B8 | Image input to the AI (prompt + one Bitmap) | Built 17 Nov (`HybridInferenceRepository.generate`) |
+| B9 | Structured (JSON) output from the AI | Partial: JSON asked in the prompt and parsed with tests; SDK schema mode not used |
+| B10 | Prompt files in `assets/prompts/` | Started: `artwork_read_v1.txt` |
+| B11 | Source badge and duration on every AI answer | Built for the AI read card |
+| B12 | Counters: answers on device, in cloud, images uploaded | Built 17 Nov (Settings, Android) |
+| B13 | Confidential mode switch that blocks cloud calls | Built 17 Nov (Settings; tested rule `AiPrivacyPolicy`) |
+| B14 | Confirm dialog before any image goes to the cloud | Built 17 Nov (AI read card) |
 | B15 | Diagnostics screen (mode, source, model, device status, errors) | Missing |
 | B16 | On-device availability check with the real SDK status call | Missing |
 | B17 | Remote Config for model name and prompt versions | Missing (model name is a constant) |
