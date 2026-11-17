@@ -14,7 +14,7 @@ Firebase project: `nira-90d39`. Android app: `com.mos.nira`.
 | On-device library | `firebase-ai-ondevice` 16.0.0-beta08, active since Kotlin 2.4.0 (see section 6) | `app/build.gradle.kts` |
 | App Check start-up | `NiraApplication.kt`, registered in the manifest | runs before any AI request |
 | AI calls | `core/ai/HybridInferenceRepository.kt` | the only class that calls AI |
-| Cloud model | `gemini-3.8-flash` (constant `CLOUD_MODEL_NAME`) | checked on the Firebase models page, 16 Nov 2026 |
+| Cloud model | `gemini-3.5-flash-lite` (constant `CLOUD_MODEL_NAME`) | stable on the Firebase models page; chosen after real runs on the phone, 17 Nov 2026 |
 | Test button | Settings → "DEVELOPER TEST (DEBUG BUILD ONLY)" → Test AI | temporary |
 
 Versions were checked on 16 Nov 2026 against:
@@ -85,6 +85,7 @@ It can take a minute or two before the token is accepted.
    - Text about App Check or "attestation": the token is not registered yet, or it was copied wrongly. Repeat sections 3 and 4.
    - Text about the network: check Wi-Fi or mobile data.
    - Text about the model name or "not found": tell Claude Code; the model name must be checked again on the Firebase models page.
+   - "The request failed to complete in the allotted time" or "Deadline expired": the cloud model did not answer in 180 s. This happened with `gemini-3.8-flash` on 17 Nov; `gemini-3.5-flash-lite` answers in a few seconds.
 4. Take a screenshot of the result and keep it in `docs/evidence/` (with the token not visible).
 
 App Check enforcement for Firebase AI Logic is switched on in the console under **Security → App Check → APIs → Firebase AI Logic → Enforce**. With enforcement on, a request without a registered token fails; that is the correct behaviour.
@@ -100,11 +101,13 @@ Real test on the vivo V60e (model V2513, MediaTek MT6878, Android 16), 17 Nov 20
 | On-device model status (SDK `checkStatus`) | `unavailable` | — | — |
 | `ONLY_ON_DEVICE` | `UNAVAILABLE` | "On-device model is not available" | 10 ms |
 | `ONLY_IN_CLOUD` | `ERROR` | "Firebase App Check token is invalid." (server: 403, App attestation failed) | 2,182 ms |
+| `ONLY_IN_CLOUD`, after the token was saved, `gemini-3.5-flash-lite` | `IN_CLOUD` | correct answer | 3,883 ms |
+| `PREFER_ON_DEVICE`, `gemini-3.5-flash-lite` | `IN_CLOUD` | correct answer (fallback to cloud) | 2,380 ms |
 
 What this means:
 - The vivo V60e cannot run Gemini Nano. The phone has no AICore service. This is the SDK's own answer, not an assumption.
 - On-device inference on Android needs a supported phone (see the device list linked from https://firebase.google.com/docs/ai-logic/hybrid/android/get-started), or the web version in Chrome on the laptop.
-- The cloud call fails only because the App Check debug token shown in the app is not registered in the Firebase console (sections 3a and 4). The request reaches Firebase and is rejected there, which shows App Check enforcement is working.
+- The first cloud call failed because the debug token was not saved in the console ("No tokens registered"). After Ravi saved it on 17 Nov, cloud calls work. The rejection before that shows App Check enforcement is working.
 
 On-device limits from the Firebase docs: about 4,000 input tokens, output above about 256 tokens discouraged, English and Korean validated, app must be in the foreground, Android 8.0 (API 26) or higher.
 

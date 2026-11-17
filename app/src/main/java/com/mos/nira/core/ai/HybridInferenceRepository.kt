@@ -127,11 +127,16 @@ class HybridInferenceRepository {
         /**
          * Cloud model used when a request runs in the cloud. The SDK has no default cloud model.
          *
-         * Checked on 16 Nov 2026 against https://firebase.google.com/docs/ai-logic/models :
-         * "gemini-3.8-flash" is a stable model for the Gemini Developer API with no shutdown
-         * date listed. Use an explicit stable name, not a "-latest" alias. Check the page again
-         * before submission; this is planned to move to Remote Config.
+         * "gemini-3.5-flash-lite" is a stable model for the Gemini Developer API with no shutdown
+         * date listed on https://firebase.google.com/docs/ai-logic/models (checked 16 Nov 2026).
+         * Use an explicit stable name, not a "-latest" alias. Check the page again before
+         * submission; this is planned to move to Remote Config.
+         *
+         * Chosen from real runs on the vivo V60e on 17 Nov 2026 (one short text prompt):
+         *   gemini-3.5-flash-lite  answered in 2.4 to 8.1 s
+         *   gemini-4-hydrogen      answered in 65 s
+         *   gemini-3.8-flash       no answer: timed out after 180 s, twice
          */
-        const val CLOUD_MODEL_NAME = "gemini-3.8-flash"
+        const val CLOUD_MODEL_NAME = "gemini-3.5-flash-lite"
     }
 }

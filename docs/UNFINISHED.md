@@ -13,11 +13,11 @@ Status words used here:
 
 | # | Requirement | Status | What exists | What is left |
 | :-- | :--- | :--- | :--- | :--- |
-| A1 | Firebase AI Logic called at runtime | Not verified | `HybridInferenceRepository`, "Test AI" button | Register the App Check token and see one successful `IN_CLOUD` answer on the phone |
-| A2 | Cloud inference | Not verified | Same as A1 | Same as A1. No product feature uses the cloud yet |
-| A3 | Real on-device inference (Gemini Nano) | **Missing** | Hybrid API is called with `PREFER_ON_DEVICE` | Android: on-device library is switched off because it needs Kotlin 2.4.0. Web: no web version exists. One of the two must work |
-| A4 | Actual hybrid routing | **Missing** | Modes exist in the repository | Needs A3. Today every request can only run in the cloud |
-| A5 | App Check | Partial | Debug provider in debug builds | Token not registered yet. Release builds have no provider (Play Integrity not set up) |
+| A1 | Firebase AI Logic called at runtime | **Done** (17 Nov, vivo V60e) | `HybridInferenceRepository`, "Test AI" button | — |
+| A2 | Cloud inference | **Done** (17 Nov, `IN_CLOUD`, 2–10 s) | Same as A1 | No product feature uses the cloud yet |
+| A3 | Real on-device inference (Gemini Nano) | **Missing** | Kotlin 2.4.0 and `firebase-ai-ondevice` active; status check works | The vivo V60e has no on-device model. Needs the Chrome web version or a supported Android phone |
+| A4 | Actual hybrid routing | Partial | `PREFER_ON_DEVICE` falls back to the cloud and shows `IN_CLOUD` (tested 17 Nov) | Needs A3 to show an `ON_DEVICE` answer |
+| A5 | App Check | Partial | Debug provider in debug builds; vivo token registered and accepted | Release builds have no provider (Play Integrity not set up) |
 | A6 | Public repository with all source | **Missing** | Private repository | Secret scan, then make public (Ravi's approval) |
 | A7 | Open-source licence | **Missing** | — | Add `LICENSE` (Apache 2.0) |
 | A8 | README and instructions | **Missing** | — | `README.md`: what it is, how to build, Firebase setup, disclosure of pre-existing work |

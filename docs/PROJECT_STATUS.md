@@ -3,6 +3,33 @@
 Last updated: 15 November 2026, 20:15 IST (by Claude Code).
 Rule for this file: only write what was actually run. Numbers below come from real runs on the laptop.
 
+## 00000. Update 17 Nov 2026, 08:20 IST — first successful cloud AI call
+
+**Cloud inference through Firebase AI Logic now works on the vivo V60e.**
+
+Build PASSES; unit tests 102 run, 102 pass.
+
+What fixed it:
+1. The App Check debug token had never been saved in the Firebase console (the NIRA app showed "No tokens registered"). Ravi added it on 17 Nov.
+2. The cloud model `gemini-3.8-flash` timed out twice (no answer after 180 s). Changed to `gemini-3.5-flash-lite`, also stable on the Firebase models page.
+
+Real results on the vivo V60e, Test AI card, debug build, prompt "In one short sentence, what is a screen printing underbase?":
+
+| Requested mode | Model | Inference source (from the SDK) | Duration | Result |
+| :--- | :--- | :--- | ---: | :--- |
+| ONLY_IN_CLOUD | gemini-3.8-flash | ERROR | 181,415 ms / 179,106 ms | Timed out (twice) |
+| ONLY_IN_CLOUD | gemini-4-hydrogen | IN_CLOUD | 65,156 ms | Correct answer, too slow |
+| ONLY_IN_CLOUD | gemini-3.5-flash-lite | IN_CLOUD | 3,883 ms | Correct answer |
+| PREFER_ON_DEVICE | gemini-3.5-flash-lite | IN_CLOUD | 2,380 ms; 10,477 ms | Correct answer; fell back to cloud |
+| PREFER_IN_CLOUD | gemini-3.5-flash-lite | IN_CLOUD | 8,060 ms | Correct answer |
+| ONLY_ON_DEVICE | — | UNAVAILABLE | 7 ms | "On-device model is not available" |
+
+Proven now: Firebase AI Logic called at runtime, App Check debug token accepted, cloud inference, and hybrid fallback (`PREFER_ON_DEVICE` falls back to the cloud and the app shows the real source `IN_CLOUD`).
+
+Still not proven: **on-device inference on any device.** The vivo V60e has no on-device model (SDK status `unavailable`). Needs the Chrome web version or a supported Android phone.
+
+Not known: why `gemini-3.8-flash` timed out. The endpoint answered the laptop in 2 s and the phone could reach it, so it is not a network block.
+
 ## 0000. Update 17 Nov 2026, 07:55 IST — AI calls tested on the phone
 
 Build PASSES; unit tests 102 run, 102 pass (state: commit `6adb251` plus an uncommitted dashboard change in `MainActivity.kt` that Claude Code did not write).
