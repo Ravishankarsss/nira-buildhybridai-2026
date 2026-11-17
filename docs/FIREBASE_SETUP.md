@@ -1,6 +1,6 @@
 # NIRA — Firebase setup (Stage B)
 
-Last updated: 16 November 2026.
+Last updated: 17 November 2026.
 Firebase project: `nira-90d39`. Android app: `com.mos.nira`.
 
 ## 1. What is in the app
@@ -11,7 +11,7 @@ Firebase project: `nira-90d39`. Android app: `com.mos.nira`.
 | Firebase BoM | 35.2.0 | `gradle/libs.versions.toml` |
 | Firebase AI Logic | `firebase-ai` (version from the BoM, 18.2.0) | `app/build.gradle.kts` |
 | App Check debug provider | `firebase-appcheck-debug` (version from the BoM) | `app/build.gradle.kts` |
-| On-device library | `firebase-ai-ondevice` 16.0.0-beta08 — **listed but switched off**, see section 6 | `app/build.gradle.kts` |
+| On-device library | `firebase-ai-ondevice` 16.0.0-beta08, active since Kotlin 2.4.0 (see section 6) | `app/build.gradle.kts` |
 | App Check start-up | `NiraApplication.kt`, registered in the manifest | runs before any AI request |
 | AI calls | `core/ai/HybridInferenceRepository.kt` | the only class that calls AI |
 | Cloud model | `gemini-3.8-flash` (constant `CLOUD_MODEL_NAME`) | checked on the Firebase models page, 16 Nov 2026 |
@@ -89,15 +89,26 @@ It can take a minute or two before the token is accepted.
 
 App Check enforcement for Firebase AI Logic is switched on in the console under **Security → App Check → APIs → Firebase AI Logic → Enforce**. With enforcement on, a request without a registered token fails; that is the correct behaviour.
 
-## 6. On-device inference on Android — not active yet
+## 6. On-device inference on Android — switched on, not available on the vivo V60e
 
-The hybrid API is in use (`HybridInferenceRepository` asks for `PREFER_ON_DEVICE`), but the on-device library is switched off:
+Since commit `6adb251` the project uses Kotlin 2.4.0 and the on-device library `firebase-ai-ondevice` 16.0.0-beta08 is active. It brings in ML Kit GenAI (Prompt API), which is the on-device part of Firebase AI Logic. No ML Kit vision model is included.
 
-- `firebase-ai-ondevice` 16.0.0-beta08 needs **Kotlin 2.4.0**. This project uses Kotlin 2.2.10, and the build fails with the library added.
-- Without the library every request runs in the cloud, and the app shows the real source, `IN_CLOUD`.
-- To switch it on: upgrade Kotlin to 2.4.0 (Ravi's decision), then remove the `//` in front of `implementation(libs.firebase.ai.ondevice)` in `app/build.gradle.kts`.
-- The vivo V60e is not expected to run Gemini Nano. This must be checked with the real SDK status call once the library is on; do not assume.
-- On-device limits from the Firebase docs: about 4,000 input tokens, output above about 256 tokens discouraged, English and Korean validated, app must be in the foreground, Android 8.0 (API 26) or higher.
+Real test on the vivo V60e (model V2513, MediaTek MT6878, Android 16), 17 Nov 2026, debug build:
+
+| Test AI mode | Inference source shown | Message | Duration |
+| :--- | :--- | :--- | ---: |
+| On-device model status (SDK `checkStatus`) | `unavailable` | — | — |
+| `ONLY_ON_DEVICE` | `UNAVAILABLE` | "On-device model is not available" | 10 ms |
+| `ONLY_IN_CLOUD` | `ERROR` | "Firebase App Check token is invalid." (server: 403, App attestation failed) | 2,182 ms |
+
+What this means:
+- The vivo V60e cannot run Gemini Nano. The phone has no AICore service. This is the SDK's own answer, not an assumption.
+- On-device inference on Android needs a supported phone (see the device list linked from https://firebase.google.com/docs/ai-logic/hybrid/android/get-started), or the web version in Chrome on the laptop.
+- The cloud call fails only because the App Check debug token shown in the app is not registered in the Firebase console (sections 3a and 4). The request reaches Firebase and is rejected there, which shows App Check enforcement is working.
+
+On-device limits from the Firebase docs: about 4,000 input tokens, output above about 256 tokens discouraged, English and Korean validated, app must be in the foreground, Android 8.0 (API 26) or higher.
+
+A Logcat warning "SegmentationRegistrar is not found" appears at start. It comes from the ML Kit common library looking for optional parts that are not installed, and can be ignored.
 
 ## 7. Release builds
 

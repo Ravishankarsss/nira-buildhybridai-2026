@@ -3,6 +3,17 @@
 Last updated: 15 November 2026, 20:15 IST (by Claude Code).
 Rule for this file: only write what was actually run. Numbers below come from real runs on the laptop.
 
+## 0000. Update 17 Nov 2026, 07:55 IST — AI calls tested on the phone
+
+Build PASSES; unit tests 102 run, 102 pass (state: commit `6adb251` plus an uncommitted dashboard change in `MainActivity.kt` that Claude Code did not write).
+
+Real results on the vivo V60e, run through the Test AI card:
+- **Cloud (`ONLY_IN_CLOUD`): fails** with "Firebase App Check token is invalid." (403, App attestation failed). Cause: the debug token shown in the app is not registered in the Firebase console. Not a code error. Ravi must register it.
+- **On-device (`ONLY_ON_DEVICE`): UNAVAILABLE.** SDK status `unavailable`; the phone has no AICore service. On-device AI cannot be shown on this phone.
+- Cloud inference is therefore still **not proven**, and on-device inference is **not proven on any device**.
+
+Kotlin is now 2.4.0 and `firebase-ai-ondevice` is active (commit `6adb251`, not by Claude Code). `kotlin-android` plugin and `kotlinOptions` were removed in that commit and Guava was added.
+
 ## 000. Update 16 Nov 2026, 20:50 IST — slow app start ("Skipped 191 frames")
 
 Measured on the vivo V60e (V2513, Android 16) with `adb shell am start -S -W` and temporary timing marks (removed again).
