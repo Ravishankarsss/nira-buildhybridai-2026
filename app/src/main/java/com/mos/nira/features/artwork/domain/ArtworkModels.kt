@@ -86,27 +86,3 @@ data class ArtworkAnalysisRecord(
     val garmentColor: DominantColor? = null,
     val algorithmVersion: String = "2.0.0-ciede2000-automerge"
 )
-
-/**
- * Pre-structured data container for future AI integration (Phase 2+).
- */
-data class ArtworkAnalysisInput(
-    val imageReference: String,
-    val palette: List<DominantColor>,
-    val metadata: ArtworkMetadata,
-    val garmentContext: String? = null,
-    val garmentColor: DominantColor? = null,
-    val maxScreens: Int = 8
-)
-
-/**
- * Structured response container for future AI analysis (Phase 2+).
- */
-data class ArtworkAIAnalysis(
-    val artworkDescription: String,
-    val detectedPrintEffects: List<String>,
-    val visualDesignObservations: List<String>,
-    val suggestedTextilePrintProcess: String,
-    val confidence: Float,
-    val technicalEvidence: Map<String, String>
-)

@@ -1,7 +1,6 @@
 package com.mos.nira.features.artwork.domain
 
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
 import org.junit.Test
 
 class ArtworkModelsTest {
@@ -47,26 +46,5 @@ class ArtworkModelsTest {
         )
         assertEquals("4000 × 3000 px", metaLarge.resolutionFormatted)
         assertEquals("3.42 MB", metaLarge.fileSizeFormatted)
-    }
-
-    @Test
-    fun futureAIContracts_canInstantiateCleanly() {
-        val input = ArtworkAnalysisInput(
-            imageReference = "content://media/123",
-            palette = emptyList(),
-            metadata = ArtworkMetadata("test.png", 100, 100, 1000L, "image/png"),
-            garmentContext = "100% Cotton reactive screen print"
-        )
-        assertNotNull(input)
-
-        val output = ArtworkAIAnalysis(
-            artworkDescription = "Geometric textile artwork with 3 primary spot shades",
-            detectedPrintEffects = listOf("Plastisol", "High-density puff"),
-            visualDesignObservations = listOf("Crisp edge definition", "No gradients"),
-            suggestedTextilePrintProcess = "Automatic flatbed screen printing",
-            confidence = 0.94f,
-            technicalEvidence = mapOf("EdgeContrast" to "High", "ColorCount" to "3")
-        )
-        assertEquals(0.94f, output.confidence, 0.001f)
     }
 }

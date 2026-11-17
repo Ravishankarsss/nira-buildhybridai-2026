@@ -98,8 +98,6 @@ fun ArtworkStudioLandingScreen(
                         fontWeight = FontWeight.SemiBold
                     )
                 }
-
-                SurfaceBadge(text = "AI-READY")
             }
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -324,19 +322,3 @@ fun RecentAnalysisRow(
     }
 }
 
-@Composable
-private fun SurfaceBadge(text: String) {
-    Box(
-        modifier = Modifier
-            .background(Color(0xFF1E2846), RoundedCornerShape(8.dp))
-            .padding(horizontal = 10.dp, vertical = 5.dp)
-    ) {
-        Text(
-            text = text,
-            color = Cyan,
-            fontSize = 10.sp,
-            fontWeight = FontWeight.Bold,
-            letterSpacing = 1.sp
-        )
-    }
-}
