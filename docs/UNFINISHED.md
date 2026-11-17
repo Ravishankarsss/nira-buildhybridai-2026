@@ -38,7 +38,7 @@ None of these exist as product features. Only the test button calls AI.
 | B4 | Explain the engine's numbers in plain language | Missing |
 | B5 | Answer one question about the job (Ask NIRA) | Missing (no screen) |
 | B6 | Read tech pack text into fields | Missing |
-| B7 | Deep report from the cloud, text and numbers only | Missing |
+| B7 | Deep report from the cloud, text and numbers only | Built 17 Nov: card at the end of the Print Report, English or Tamil, four sections, never the image, blocked by Confidential mode. Not yet run on the phone |
 | B8 | Image input to the AI (prompt + one Bitmap) | Built 17 Nov (`HybridInferenceRepository.generate`) |
 | B9 | Structured (JSON) output from the AI | Partial: JSON asked in the prompt and parsed with tests; SDK schema mode not used |
 | B10 | Prompt files in `assets/prompts/` | Started: `artwork_read_v1.txt` |
