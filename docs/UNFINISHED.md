@@ -73,7 +73,7 @@ None of these exist as product features. Only the test button calls AI.
 | # | Item | Status |
 | :-- | :--- | :--- |
 | D1 | Dark-garment fixes (2 colours, tight box, 2 screens) | Done in tests. **Not verified on the real garment photo on the phone** |
-| D2 | Speed of Part A | **Too slow.** 9.5 s on a laptop for a photo-like 1024 px image; the app runs it at up to 2048 px (about 4 times more pixels). Not measured on the phone |
+| D2 | Speed of Part A | Improved 18 Nov: laptop, photo-like 1024 px image, 7.8 s → 2.1 s, results byte-identical (parallel cores, Lab once per colour). Phone before: about 30 s for one reopened analysis. Phone after: not yet measured |
 | D3 | Re-run analysis on the cropped print box at best resolution | Missing |
 | D4 | Drag the print box edges | `setPrintBox` exists in the view model; no screen calls it |
 | D5 | Edge refinement for flat spot layers | Missing |
@@ -166,8 +166,8 @@ Dashboard redesign, garment camera, Settings, language switch inside the workflo
 | L7 | Recommendation reason said "lowest colour error" although CMYK had a lower error (CMYK not offered by the hue-family rule) | **Fixed** 17 Nov: reason states the CMYK rule; covered by a test |
 | L8 | AI read was told 8 colours (older colour step) while the Print Report measured 3 | **Fixed** 17 Nov: AI read uses the report's measured colours when available |
 | L9 | Report note said white screens are "added to every option" | **Fixed** 17 Nov |
-| L10 | Two colour engines give different colour counts (Colour screen 8, Print Report 3 for the same artwork) | Open: confusing for users and judges. Decide which count the Colour screen shows |
-| L11 | Part A took about 30 s on the vivo for a reopened analysis | Same as D2 (speed) |
+| L10 | Two colour engines give different colour counts (Colour screen 8, Print Report 3 for the same artwork) | **Fixed** 18 Nov: Colour screen leads with the measured print colours; the older list is labelled "All colour clusters in the image"; lists show the measured count. Not yet checked on the phone |
+| L11 | Part A took about 30 s on the vivo for a reopened analysis | See D2 |
 
 ## K. Other loose ends
 

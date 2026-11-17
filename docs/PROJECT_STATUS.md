@@ -17,6 +17,24 @@ Rule for this file: only write what was actually run. Numbers below come from re
   - Likely cause (not confirmed): laptop on the phone's hotspot, a metered connection; Chrome downloads the model only on unmetered networks.
   - Next: retry on office Wi-Fi on 18 Nov. Backup: borrow a phone with Gemini Nano support.
 
+## 000000a. Update 18 Nov 2026 — Part A speed
+
+Laptop JVM, photo-like 1024 px test image (`PrintReportRegressionTest.testPhotoLike1024Benchmark_ReportsRealTimes`):
+
+| Step | Before | After |
+| :--- | ---: | ---: |
+| Garment profile | 621 ms | 398 ms |
+| Lighting flattening | 576 ms | 277 ms |
+| Knit smoothing | 1,164 ms | 282 ms |
+| K-means K=16 | 972 ms | 157 ms |
+| Assign pixels | 529 ms | 152 ms |
+| Error curve (6 clusterings) | 3,452 ms | 427 ms |
+| **Part A total** | **7,840 ms** | **2,090–2,250 ms** |
+
+How: independent work runs on all cores, Lab computed once per distinct colour, assignment once per distinct colour; sums kept in the original order. A fingerprint of Part A output on three test images (colours, pixel counts, coverage, error curve, print box, mask) was byte-identical before and after.
+
+Phone (vivo V60e): before about 30 s for one reopened analysis; after **not yet measured**.
+
 ## 00000. Update 17 Nov 2026, 08:20 IST — first successful cloud AI call
 
 **Cloud inference through Firebase AI Logic now works on the vivo V60e.**
