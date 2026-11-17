@@ -85,6 +85,7 @@ None of these exist as product features. Only the test button calls AI.
 | D11 | Confidence label on every Part D factor | Partial: some badges are fixed text ("sourced", "assumption") instead of the label from the rules file |
 | D12 | 27 of 29 entries in `print_techniques.json` are `verified_by_ravi: false`; "Not floor-verified" is not shown anywhere | Missing |
 | D13 | Dye and paste calculator from user recipes | Missing |
+| D14 | Pantone and buyer colour codes | Partial. Rule kept: no Pantone data in the app or repository (checked 17 Nov: none in code, assets or `nira_demo_shades.csv`). Users can import their own licensed library as CSV and add codes by hand (types TCX, TPG, TN, TSX, C, U, FACTORY, BUYER). Missing: reading the buyer's Pantone code from a tech pack (B6), and showing "buyer Pantone code" under "Needs physical validation" in the report (C11) |
 
 ## E. Built but not connected to any screen
 
