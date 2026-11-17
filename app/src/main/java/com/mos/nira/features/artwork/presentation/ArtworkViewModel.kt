@@ -83,6 +83,8 @@ data class ArtworkStudioUiState(
     val partBResult: PartBResult? = null,
     val isComputingPartB: Boolean = false,
     val selectedStrategyType: SeparationStrategyType = SeparationStrategyType.CMYK_PROCESS,
+    // True once the user has picked a separation. Until then the recommended one is used.
+    val userPickedStrategy: Boolean = false,
     // Part C: Screens, Proof & Film Positives State
     val partCResult: PartCResult? = null,
     val isComputingPartC: Boolean = false,
@@ -250,7 +252,8 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                     isSavedLocally = false,
                     currentRecordId = null,
                     partAResult = null,
-                    partBResult = null
+                    partBResult = null,
+                    userPickedStrategy = false
                 )
             }
 
@@ -512,7 +515,8 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                     colorGroups = record.colorGroups,
                     garmentColor = record.garmentColor,
                     currentRecordId = record.id,
-                    isSavedLocally = true
+                    isSavedLocally = true,
+                    userPickedStrategy = false
                 )
             }
 
@@ -717,6 +721,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
         _uiState.update { current ->
             current.copy(
                 selectedStrategyType = type,
+                userPickedStrategy = true,
                 partBResult = current.partBResult?.copy(selectedStrategyType = type)
             )
         }
@@ -784,10 +789,19 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                     )
                 }
 
-                _uiState.update { it.copy(partBResult = result, isComputingPartB = false) }
+                // Screens and ink follow the recommended separation until the user picks one.
+                val chosen = if (_uiState.value.userPickedStrategy) {
+                    result.selectedStrategyType
+                } else {
+                    result.strategies.firstOrNull { it.isRecommended }?.strategyType ?: result.selectedStrategyType
+                }
+                val finalResult = result.copy(selectedStrategyType = chosen)
+                _uiState.update {
+                    it.copy(partBResult = finalResult, selectedStrategyType = chosen, isComputingPartB = false)
+                }
 
                 // Automatically trigger Part C generation for chosen strategy
-                computePartCReport(result.selectedStrategyType)
+                computePartCReport(chosen)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {

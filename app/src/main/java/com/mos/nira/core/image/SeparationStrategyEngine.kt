@@ -276,6 +276,12 @@ object SeparationStrategyEngine {
             candidates.minByOrNull { it.meanDeltaE00 }
         }
 
+        // Say plainly when CMYK was left out by the hue-family rule, so a lower CMYK error
+        // is not mistaken for a missed recommendation.
+        val cmykNote = if (!isTonalRichArtwork) {
+            " CMYK process is offered only for tonal artwork with at least ${decisionRules.cmykMinHueFamilies} hue families; this artwork has $hueFamilies."
+        } else ""
+
         val finalizedStrategies = strategies.map { s ->
             if (s.strategyType == bestStrategy?.strategyType) {
                 val figures = String.format(
@@ -287,9 +293,9 @@ object SeparationStrategyEngine {
                 s.copy(
                     isRecommended = true,
                     recommendationReason = if (meetsTolerance) {
-                        "Recommended: fewest screens (${s.screenCount}) within tolerance ($figures; limits $qualityTolerance and $qualityToleranceP95)."
+                        "Recommended: fewest screens (${s.screenCount}) within tolerance ($figures; limits $qualityTolerance and $qualityToleranceP95).$cmykNote"
                     } else {
-                        "No option is within tolerance (limits $qualityTolerance and $qualityToleranceP95). Lowest colour error: $figures."
+                        "No offered option is within tolerance (limits $qualityTolerance and $qualityToleranceP95). Lowest colour error among the offered options: $figures.$cmykNote"
                     }
                 )
             } else s

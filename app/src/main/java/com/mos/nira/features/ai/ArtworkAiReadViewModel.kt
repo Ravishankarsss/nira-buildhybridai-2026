@@ -43,6 +43,8 @@ class ArtworkAiReadViewModel(application: Application) : AndroidViewModel(applic
     val state: StateFlow<ArtworkAiReadState> = _state.asStateFlow()
 
     private var pending: Triple<Bitmap?, List<String>, String?>? = null
+    private var factColours: List<String>? = null
+    private var factGarment: String? = null
 
     init {
         AiSettings.load(application)
@@ -52,8 +54,21 @@ class ArtworkAiReadViewModel(application: Application) : AndroidViewModel(applic
     fun doneFor(key: ArtworkKey?): ArtworkAiReadState.Done? =
         (_state.value as? ArtworkAiReadState.Done)?.takeIf { key != null && it.key == key }
 
-    fun read(bitmap: Bitmap?, printColourHexes: List<String>, garmentHex: String?) {
+    /**
+     * printColourHexes identifies the artwork (same list on every screen). factColourHexes and
+     * factGarmentHex, when given, are the Print Report engine's measurements and are the facts
+     * put into the prompt, so the AI and the report talk about the same colours.
+     */
+    fun read(
+        bitmap: Bitmap?,
+        printColourHexes: List<String>,
+        garmentHex: String?,
+        factColourHexes: List<String>? = null,
+        factGarmentHex: String? = null
+    ) {
         pending = Triple(bitmap, printColourHexes, garmentHex)
+        factColours = factColourHexes
+        factGarment = factGarmentHex
         run(imageUploadAllowed = false)
     }
 
@@ -88,7 +103,7 @@ class ArtworkAiReadViewModel(application: Application) : AndroidViewModel(applic
                 is AiRoute.Run -> {
                     val prompt = withContext(Dispatchers.IO) {
                         val template = app.assets.open(ArtworkReadPrompt.ASSET_PATH).bufferedReader().use { it.readText() }
-                        ArtworkReadPrompt.build(template, hexes, garmentHex)
+                        ArtworkReadPrompt.build(template, factColours ?: hexes, factGarment ?: garmentHex)
                     }
                     val image = withContext(Dispatchers.Default) { scaleForAi(bitmap) }
                     val result = repository.generate(prompt, image, route.mode)

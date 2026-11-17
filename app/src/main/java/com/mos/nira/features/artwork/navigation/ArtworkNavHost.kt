@@ -141,6 +141,8 @@ fun ArtworkNavHost(
                 onNavigateToPrintReport = {
                     navController.navigate(ArtworkDestinations.PRINT_REPORT)
                 },
+                measuredPrintColourHexes = uiState.partAResult?.measuredPalette?.map { it.hex },
+                measuredGarmentHex = uiState.partAResult?.garmentProfile?.estimatedHex,
                 onBack = goBack
             )
         }

@@ -78,6 +78,9 @@ fun ColorIntelligenceScreen(
     onAssignShade: (colorId: Int, shade: ShadeEntry) -> Unit,
     onNavigateToSeparation: () -> Unit,
     onNavigateToPrintReport: () -> Unit = {},
+    // Print colours and garment colour measured by the Print Report engine, when calculated.
+    measuredPrintColourHexes: List<String>? = null,
+    measuredGarmentHex: String? = null,
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -295,7 +298,9 @@ fun ColorIntelligenceScreen(
             ArtworkAiReadCard(
                 bitmap = bitmap,
                 printColourHexes = palette.filter { !it.isGarmentBase }.map { it.hex },
-                garmentHex = garmentColor?.hex
+                garmentHex = garmentColor?.hex,
+                factColourHexes = measuredPrintColourHexes,
+                factGarmentHex = measuredGarmentHex
             )
         }
 

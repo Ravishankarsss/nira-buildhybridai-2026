@@ -153,6 +153,11 @@ class PrintReportRegressionTest {
         }
         // CMYK + whites must not be recommended for a 2-colour logo.
         assertFalse(partB.strategies.first { it.strategyType == SeparationStrategyType.CMYK_PROCESS }.isRecommended)
+        // The reason says why CMYK was not offered, so a lower CMYK error is not misread.
+        assertTrue(
+            "reason must explain the CMYK rule: ${recommended?.recommendationReason}",
+            recommended?.recommendationReason?.contains("CMYK process is offered only for tonal artwork") == true
+        )
 
         // With "separate white base" switched on: 3 screens.
         val separateBase = SeparationStrategyEngine.evaluateStrategies(

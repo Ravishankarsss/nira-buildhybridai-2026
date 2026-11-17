@@ -52,6 +52,9 @@ fun ArtworkAiReadCard(
     printColourHexes: List<String>,
     garmentHex: String?,
     modifier: Modifier = Modifier,
+    // Facts for the prompt: the Print Report's measured colours when available.
+    factColourHexes: List<String>? = null,
+    factGarmentHex: String? = null,
     viewModel: ArtworkAiReadViewModel = viewModel(viewModelStoreOwner = activityViewModelStoreOwner())
 ) {
     val rawState by viewModel.state.collectAsState()
@@ -99,7 +102,15 @@ fun ArtworkAiReadCard(
 
             val running = state == ArtworkAiReadState.Running
             Button(
-                onClick = { viewModel.read(bitmap, printColourHexes, garmentHex) },
+                onClick = {
+                    viewModel.read(
+                        bitmap,
+                        printColourHexes,
+                        garmentHex,
+                        factColourHexes = factColourHexes,
+                        factGarmentHex = factGarmentHex
+                    )
+                },
                 enabled = !running,
                 colors = ButtonDefaults.buttonColors(containerColor = Violet, contentColor = Color(0xFF0B1020)),
                 shape = RoundedCornerShape(12.dp)
