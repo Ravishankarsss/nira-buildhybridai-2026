@@ -1,6 +1,6 @@
 # NIRA — What is not finished
 
-Checked on 16 November 2026, 20:55 IST, against `docs/MASTER_CONTEXT.md` (version 2) and the code at commit `9c7bb37`.
+First written 16 November 2026; updated 17 November 2026. Checked against `docs/MASTER_CONTEXT.md` (version 2) and the code at commit `9c7bb37`.
 Build passes; 102 unit tests pass. Feature freeze: 24 November. Deadline: 1 December, 3:30 am India time.
 
 Status words used here:
@@ -18,13 +18,13 @@ Status words used here:
 | A3 | Real on-device inference (Gemini Nano) | **Missing** | Kotlin 2.4.0 and `firebase-ai-ondevice` active; status check works | The vivo V60e has no on-device model. Needs the Chrome web version or a supported Android phone |
 | A4 | Actual hybrid routing | Partial | `PREFER_ON_DEVICE` falls back to the cloud and shows `IN_CLOUD` (tested 17 Nov) | Needs A3 to show an `ON_DEVICE` answer |
 | A5 | App Check | Partial | Debug provider in debug builds; vivo token registered and accepted | Release builds have no provider (Play Integrity not set up) |
-| A6 | Public repository with all source | **Missing** | Private repository | Secret scan, then make public (Ravi's approval) |
-| A7 | Open-source licence | **Missing** | — | Add `LICENSE` (Apache 2.0) |
-| A8 | README and instructions | **Missing** | — | `README.md`: what it is, how to build, Firebase setup, disclosure of pre-existing work |
+| A6 | Public repository with all source | Ready to publish, waiting for Ravi | Secret scan done 17 Nov (clean); phone serial removed from Git | Ravi approves, then push and make public |
+| A7 | Open-source licence | **Done** 17 Nov | `LICENSE` (Apache 2.0) | — |
+| A8 | README and instructions | **Done** 17 Nov | `README.md` | Update screenshots and status before submission |
 | A9 | Demo video, 3 minutes or less, public on YouTube | **Missing** | — | Record after the hybrid flow works |
 | A10 | Devpost text and submission | **Missing** | — | Write and submit |
 | A11 | Working project for judges, free of charge | Partial | Debug APK builds | Decide how judges get it (APK and/or web). Not tested on any phone other than the vivo |
-| A12 | Disclosure of work done before and during the contest | **Missing** | — | Short honest statement in README and Devpost |
+| A12 | Disclosure of work done before and during the contest | Partial | Section in `README.md` | Copy into the Devpost text |
 
 ## B. AI features (Layer B and C in the master context)
 
@@ -50,7 +50,7 @@ None of these exist as product features. Only the test button calls AI.
 | B16 | On-device availability check with the real SDK status call | Missing |
 | B17 | Remote Config for model name and prompt versions | Missing (model name is a constant) |
 | B18 | Firestore history and Authentication | Missing (optional in the master context) |
-| B19 | Unused AI data classes `ArtworkAnalysisInput`, `ArtworkAIAnalysis` | Left over from Phase 1; nothing uses them |
+| B19 | Unused AI data classes `ArtworkAnalysisInput`, `ArtworkAIAnalysis` | **Done** 17 Nov: removed |
 
 ## C. Screens
 
@@ -143,15 +143,25 @@ Dashboard redesign, garment camera, Settings, language switch inside the workflo
 
 | # | Item | Status |
 | :-- | :--- | :--- |
-| J1 | `README.md`, `LICENSE` | Missing |
+| J1 | `README.md`, `LICENSE` | **Done** 17 Nov |
 | J2 | `docs/ARCHITECTURE.md`, `HACKATHON_REQUIREMENTS_MATRIX.md`, `TEST_EVIDENCE.md`, `CHANGELOG.md` | Missing (named in the master context) |
 | J3 | `docs/evidence/` with screenshots and logs | Started (17 Nov: web cloud result, Chrome model downloading) |
 | J4 | `docs/PROJECT_STATUS.md` | Sections 1 to 6 are out of date; the dated update sections at the top are current |
 | J5 | Master context section 19 (current status) | Out of date |
 | J6 | Unpushed commits | 3 (`733b78d`, `c5c9683`, `9c7bb37`). Everything up to `dabdcf7` is already on GitHub; that push was not done by Claude Code |
-| J7 | Secret scan before going public | Not done |
+| J7 | Secret scan before going public | **Done** 17 Nov: no keys or private files in any commit. Repeat right before publishing |
 | J8 | Gradle wrapper 9.9.0 (was 9.6.0) | Changed before 15 Nov by someone; not reviewed |
 | J9 | Web version for Chrome | Partial: `web/` page with four modes; cloud call works in Chrome (17 Nov). On-device not tested yet |
+
+## L. Found in the phone check of 17 Nov
+
+| # | Item | Status |
+| :-- | :--- | :--- |
+| L1 | Reopened analyses had no image ("artwork image not loaded"): only the gallery link was saved | **Fixed** 17 Nov: private copy saved with each new analysis. Analyses saved before the fix need the artwork picked again |
+| L2 | "AI-READY" badge on the Artwork screen meant nothing | **Removed** 17 Nov |
+| L3 | `print_techniques.json`, DTF: the risks list contains a source note ("Not in the user's articles; added from web research"), shown to users as a risk | Ravi to move it out of `risks` (rules file; not changed by Claude Code) |
+| L4 | Artwork Studio landing, history and other old screens still English-only text | See G2 |
+| L5 | Confidential mode with a reopened analysis showed "image not loaded" instead of the Confidential message (same cause as L1) | Retest after L1 with a new analysis |
 
 ## K. Other loose ends
 
@@ -161,6 +171,19 @@ Dashboard redesign, garment camera, Settings, language switch inside the workflo
 - The "Test AI" card and the debug-token display are temporary and must be removed or moved to Diagnostics.
 - Cloud model name `gemini-3.8-flash` must be re-checked on the Firebase models page before submission.
 - Photos taken with the in-app camera are kept in app storage and are never cleaned up.
+
+## Work order agreed on 17 Nov
+
+Done on 17 Nov: cloud AI (phone and Chrome), AI read card, Confidential mode and counters, print method advice, README, licence, secret scan, reopen-image fix.
+
+Next, in this order:
+1. On-device proof in Chrome Beta (office Wi-Fi, Ravi) — A3, A4.
+2. Deep cloud report from text and numbers only — B7, C11.
+3. Join the journey: photo → colours → AI read → method advice → Print Report → deep report; print method advice inside the Print Report — D6, C11.
+4. Print Report on the real garment photo on the phone, and Part A speed — D1, D2.
+5. Text of the screens in the video into `strings.xml` (English and Tamil) — G2.
+6. Evidence screenshots, then video and Devpost text (Ravi) — A9, A10, J3.
+7. Ravi approves: push and make the repository public — A6.
 
 ## Suggested order (Ravi decides)
 
