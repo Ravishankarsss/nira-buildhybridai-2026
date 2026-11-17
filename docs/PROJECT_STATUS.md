@@ -3,6 +3,14 @@
 Last updated: 15 November 2026, 20:15 IST (by Claude Code).
 Rule for this file: only write what was actually run. Numbers below come from real runs on the laptop.
 
+## 000000. Update 17 Nov 2026 — web version: cloud call works in Chrome
+
+- Firebase Web app **NIRA Web** registered in project nira-90d39 (appId ends `2a65aa`, web).
+- `web/firebase-config.js` created and git-ignored.
+- Web App Check debug token from Ravi's Chrome registered under NIRA Web.
+- **Cloud call from the web page works in Ravi's Chrome** (`ONLY_IN_CLOUD`, reported by Ravi; exact source text and duration not yet recorded).
+- On-device in Chrome: **not tested yet.** Waiting for the Prompt API availability reading and, if `downloadable`, the model download.
+
 ## 00000. Update 17 Nov 2026, 08:20 IST — first successful cloud AI call
 
 **Cloud inference through Firebase AI Logic now works on the vivo V60e.**

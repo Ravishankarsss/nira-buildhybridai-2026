@@ -150,7 +150,7 @@ Dashboard redesign, garment camera, Settings, language switch inside the workflo
 | J6 | Unpushed commits | 3 (`733b78d`, `c5c9683`, `9c7bb37`). Everything up to `dabdcf7` is already on GitHub; that push was not done by Claude Code |
 | J7 | Secret scan before going public | Not done |
 | J8 | Gradle wrapper 9.9.0 (was 9.6.0) | Changed before 15 Nov by someone; not reviewed |
-| J9 | Web version for Chrome | Missing (planned second platform and the planned place for on-device proof) |
+| J9 | Web version for Chrome | Partial: `web/` page with four modes; cloud call works in Chrome (17 Nov). On-device not tested yet |
 
 ## K. Other loose ends
 

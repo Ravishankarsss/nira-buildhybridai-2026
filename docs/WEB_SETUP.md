@@ -24,6 +24,10 @@ Firebase JS SDK 13.2.0 is loaded from the official Firebase CDN (`www.gstatic.co
 
 On 15 Nov Chrome reported `downloadable`, which means Chrome considers this laptop eligible. Whether the model actually runs is only known after the download.
 
+## Status (17 Nov 2026)
+
+Steps 1 to 5 are done on this laptop: NIRA Web app registered, config file created, debug token from Ravi's Chrome registered, cloud call works.
+
 ## Step 1 — Register a Web app in Firebase (once)
 
 1. Open https://console.firebase.google.com → project **nira-90d39**.
