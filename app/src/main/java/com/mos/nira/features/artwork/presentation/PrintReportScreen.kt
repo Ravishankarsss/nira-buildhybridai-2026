@@ -806,7 +806,7 @@ fun PrintReportScreen(
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Text(
-                                        text = "Dark garment detected: Base white underbase and highlight white screens added to every option. CMYK alone is not suitable without an underbase white.",
+                                        text = "Dark or coloured garment: a white base is needed under the print. Each option below shows the white screens it adds; a white print colour can also act as the base. CMYK alone is not suitable without a white base.",
                                         style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.onErrorContainer,
                                         fontWeight = FontWeight.Medium
