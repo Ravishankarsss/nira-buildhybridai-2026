@@ -104,6 +104,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
     val uiState: StateFlow<ArtworkStudioUiState> = _uiState.asStateFlow()
 
     private val enabledLibraryNames = mutableSetOf("Built-in NIRA Demo")
+    private var partAJob: Job? = null
     private var partBJob: Job? = null
 
     init {
@@ -253,6 +254,8 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                     currentRecordId = null,
                     partAResult = null,
                     partBResult = null,
+                    partCResult = null,
+                    partDResult = null,
                     userPickedStrategy = false
                 )
             }
@@ -517,6 +520,11 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                     garmentColor = record.garmentColor,
                     currentRecordId = record.id,
                     isSavedLocally = true,
+                    // Clear the previous artwork's report so it is never shown for this one.
+                    partAResult = null,
+                    partBResult = null,
+                    partCResult = null,
+                    partDResult = null,
                     userPickedStrategy = false
                 )
             }
@@ -677,7 +685,8 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
 
     fun computePartAReport() {
         val bitmap = _uiState.value.selectedBitmap ?: return
-        viewModelScope.launch {
+        partAJob?.cancel()
+        partAJob = viewModelScope.launch {
             _uiState.update { it.copy(isComputingPrintReport = true, printReportError = null) }
             try {
                 val inputs = _uiState.value.printJobInputs
@@ -720,6 +729,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                 // Automatically trigger Part B strategy comparison
                 computePartBReport()
             } catch (e: Exception) {
+                if (e is kotlin.coroutines.cancellation.CancellationException) throw e // a newer run replaced this one
                 e.printStackTrace()
                 _uiState.update { it.copy(isComputingPrintReport = false, printReportError = e.message) }
             }

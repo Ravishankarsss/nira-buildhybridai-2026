@@ -33,7 +33,16 @@ Laptop JVM, photo-like 1024 px test image (`PrintReportRegressionTest.testPhotoL
 
 How: independent work runs on all cores, Lab computed once per distinct colour, assignment once per distinct colour; sums kept in the original order. A fingerprint of Part A output on three test images (colours, pixel counts, coverage, error curve, print box, mask) was byte-identical before and after.
 
-Phone (vivo V60e): before about 30 s for one reopened analysis; after **not yet measured**.
+Phone (vivo V60e), measured 18 Nov, time from tapping a saved analysis until the measured print colours appear (includes loading the image and the colour separation, so it is more than Part A alone; screen checked every 10 s, so about ±10 s):
+
+| Analysis | Before | After |
+| :--- | ---: | ---: |
+| 1280 × 714 px artwork (3 print colours measured) | about 30 s | about 21 s |
+| 6144 × 8192 px photo (12 print colours measured) | not measured | about 47 s |
+
+The phone is still far slower than the laptop. The next step is to time each stage on the phone itself.
+
+Bug found and fixed in the same test: opening a saved analysis kept the previous artwork's Print Report on screen (its colours and count) until the new Part A finished. Opening an analysis now clears Parts A–D, and a newer Part A run cancels the older one.
 
 ## 00000. Update 17 Nov 2026, 08:20 IST — first successful cloud AI call
 
