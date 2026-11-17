@@ -160,4 +160,17 @@
     <string name="deep_report_running">लिख रहा है…</string>
     <string name="deep_report_blocked">गोपनीय मोड चालू है, इसलिए विस्तृत रिपोर्ट नहीं लिखी जा सकती। कुछ भी नहीं भेजा गया।</string>
     <string name="deep_report_disclaimer">AI द्वारा लिखी रिपोर्ट। आंकड़े NIRA इंजन से हैं; उपयोग से पहले रिपोर्ट जाँचें।</string>
+
+    <!-- Measured print colours -->
+    <string name="colour_measuring">प्रिंट रंग मापे जा रहे हैं…</string>
+    <string name="colour_measured_title">प्रिंट रंग (मापे गए)</string>
+    <string name="colour_measured_hint">गारमेंट हटाया गया। स्क्रीन और स्याही के लिए Print Report इन्हीं रंगों का उपयोग करता है।</string>
+    <string name="colour_coverage">प्रिंट का %1$s</string>
+    <string name="colour_clusters_title">छवि के सभी रंग समूह (%1$d)</string>
+    <string name="colour_clusters_hint">गारमेंट और छाया शामिल हैं। संपादन और shade मिलान के लिए उपयोग होता है।</string>
+    <string name="colour_garment_excluded">गारमेंट का रंग %1$s प्रिंट नहीं होता।</string>
+    <plurals name="measured_print_colours">
+        <item quantity="one">%1$d प्रिंट रंग मापा गया</item>
+        <item quantity="other">%1$d प्रिंट रंग मापे गए</item>
+    </plurals>
 </resources>

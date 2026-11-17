@@ -97,6 +97,15 @@ class DashboardModelTest {
     }
 
     @Test
+    fun recentAnalyses_showTheMeasuredPrintColourCount_whenSaved() {
+        val measured = record("m", timestamp = 2_000, colours = 8).copy(measuredPrintColourCount = 3)
+        val old = record("o", timestamp = 1_000, colours = 8, withGarment = true)
+        val recent = DashboardModel.recentAnalyses(listOf(measured, old)).associateBy { it.id }
+        assertEquals(3, recent.getValue("m").colourCount) // the Print Report's measured colours
+        assertEquals(8, recent.getValue("o").colourCount) // old record: earlier count, garment excluded
+    }
+
+    @Test
     fun recentAnalyses_fewerThanThree_showsAllOfThem() {
         val recent = DashboardModel.recentAnalyses(listOf(record("only", 5_000)))
         assertEquals(listOf("only"), recent.map { it.id })

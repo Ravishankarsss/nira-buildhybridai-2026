@@ -161,4 +161,17 @@
     <string name="deep_report_running">Rédaction…</string>
     <string name="deep_report_blocked">Le mode confidentiel est activé, le rapport détaillé ne peut donc pas être rédigé. Rien n\'a été envoyé.</string>
     <string name="deep_report_disclaimer">Rapport rédigé par l\'IA. Les chiffres viennent du moteur NIRA ; vérifiez le rapport avant de l\'utiliser.</string>
+
+    <!-- Measured print colours -->
+    <string name="colour_measuring">Mesure des couleurs d\'impression…</string>
+    <string name="colour_measured_title">COULEURS D\'IMPRESSION (MESURÉES)</string>
+    <string name="colour_measured_hint">Vêtement exclu. Ce sont les couleurs que le rapport d\'impression utilise pour les écrans et l\'encre.</string>
+    <string name="colour_coverage">%1$s de l\'impression</string>
+    <string name="colour_clusters_title">TOUS LES GROUPES DE COULEURS DE L\'IMAGE (%1$d)</string>
+    <string name="colour_clusters_hint">Inclut le vêtement et les ombres. Sert à la modification et à la comparaison des teintes.</string>
+    <string name="colour_garment_excluded">La couleur du vêtement %1$s n\'est pas imprimée.</string>
+    <plurals name="measured_print_colours">
+        <item quantity="one">%1$d couleur d\'impression mesurée</item>
+        <item quantity="other">%1$d couleurs d\'impression mesurées</item>
+    </plurals>
 </resources>

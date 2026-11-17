@@ -99,6 +99,7 @@ class ArtworkRepository(private val context: android.content.Context) {
         root.put("fileSizeBytes", record.fileSizeBytes)
         root.put("timestamp", record.timestamp)
         root.put("algorithmVersion", record.algorithmVersion)
+        record.measuredPrintColourCount?.let { root.put("measuredPrintColourCount", it) }
 
         val paletteArray = JSONArray()
         for (color in record.palette) {
@@ -240,7 +241,8 @@ class ArtworkRepository(private val context: android.content.Context) {
             palette = palette,
             colorGroups = groups,
             garmentColor = garmentColor,
-            algorithmVersion = algorithmVersion
+            algorithmVersion = algorithmVersion,
+            measuredPrintColourCount = if (json.has("measuredPrintColourCount")) json.getInt("measuredPrintColourCount") else null
         )
     }
 }

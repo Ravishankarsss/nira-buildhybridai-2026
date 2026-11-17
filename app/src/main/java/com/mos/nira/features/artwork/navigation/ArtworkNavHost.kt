@@ -143,6 +143,8 @@ fun ArtworkNavHost(
                 },
                 measuredPrintColourHexes = uiState.partAResult?.measuredPalette?.map { it.hex },
                 measuredGarmentHex = uiState.partAResult?.garmentProfile?.estimatedHex,
+                measuredPrintColours = uiState.partAResult?.measuredPalette,
+                isMeasuringPrintColours = uiState.isComputingPrintReport,
                 onBack = goBack
             )
         }

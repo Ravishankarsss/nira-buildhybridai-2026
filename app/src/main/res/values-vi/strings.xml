@@ -159,4 +159,17 @@
     <string name="deep_report_running">Đang viết…</string>
     <string name="deep_report_blocked">Chế độ bảo mật đang bật nên không thể viết báo cáo chi tiết. Không có gì được gửi đi.</string>
     <string name="deep_report_disclaimer">Báo cáo do AI viết. Số liệu lấy từ bộ máy NIRA; hãy kiểm tra báo cáo trước khi dùng.</string>
+
+    <!-- Measured print colours -->
+    <string name="colour_measuring">Đang đo màu in…</string>
+    <string name="colour_measured_title">MÀU IN (ĐÃ ĐO)</string>
+    <string name="colour_measured_hint">Đã loại màu áo. Đây là các màu báo cáo in dùng cho khung lưới và mực.</string>
+    <string name="colour_coverage">%1$s diện tích in</string>
+    <string name="colour_clusters_title">TẤT CẢ NHÓM MÀU TRONG ẢNH (%1$d)</string>
+    <string name="colour_clusters_hint">Gồm cả màu áo và vùng bóng. Dùng để chỉnh sửa và so màu.</string>
+    <string name="colour_garment_excluded">Màu áo %1$s không được in.</string>
+    <plurals name="measured_print_colours">
+        <item quantity="one">%1$d màu in đã đo</item>
+        <item quantity="other">%1$d màu in đã đo</item>
+    </plurals>
 </resources>

@@ -96,7 +96,7 @@ object DashboardModel {
                 id = record.id,
                 fileName = record.fileName,
                 dateText = format.format(Date(record.timestamp)),
-                colourCount = record.palette.count { !it.isGarmentBase },
+                colourCount = record.printColourCount,
                 thumbnailPath = record.thumbnailPath,
                 imageUri = record.imageUri
             )

@@ -160,4 +160,17 @@
     <string name="deep_report_running">எழுதுகிறது…</string>
     <string name="deep_report_blocked">ரகசிய முறை இயக்கத்தில் உள்ளதால் விரிவான அறிக்கை எழுத முடியாது. எதுவும் அனுப்பப்படவில்லை.</string>
     <string name="deep_report_disclaimer">AI எழுதிய அறிக்கை. எண்கள் NIRA எஞ்சினிலிருந்து வருகின்றன; பயன்படுத்தும் முன் அறிக்கையைச் சரிபார்க்கவும்.</string>
+
+    <!-- Measured print colours -->
+    <string name="colour_measuring">அச்சு நிறங்கள் அளவிடப்படுகின்றன…</string>
+    <string name="colour_measured_title">அச்சு நிறங்கள் (அளவிடப்பட்டவை)</string>
+    <string name="colour_measured_hint">ஆடை நீக்கப்பட்டது. ஸ்கிரீன்கள் மற்றும் மைக்கு Print Report பயன்படுத்தும் நிறங்கள் இவை.</string>
+    <string name="colour_coverage">அச்சின் %1$s</string>
+    <string name="colour_clusters_title">படத்திலுள்ள அனைத்து நிறக் குழுக்கள் (%1$d)</string>
+    <string name="colour_clusters_hint">ஆடை மற்றும் நிழல்களையும் உள்ளடக்கியது. திருத்தம் மற்றும் shade பொருத்தத்திற்குப் பயன்படும்.</string>
+    <string name="colour_garment_excluded">ஆடை நிறம் %1$s அச்சிடப்படாது.</string>
+    <plurals name="measured_print_colours">
+        <item quantity="one">%1$d அச்சு நிறம் அளவிடப்பட்டது</item>
+        <item quantity="other">%1$d அச்சு நிறங்கள் அளவிடப்பட்டன</item>
+    </plurals>
 </resources>

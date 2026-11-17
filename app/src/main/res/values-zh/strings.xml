@@ -159,4 +159,17 @@
     <string name="deep_report_running">正在撰写…</string>
     <string name="deep_report_blocked">机密模式已开启，无法撰写详细报告。未发送任何内容。</string>
     <string name="deep_report_disclaimer">AI 撰写的报告。数值来自 NIRA 引擎；使用前请核对报告。</string>
+
+    <!-- Measured print colours -->
+    <string name="colour_measuring">正在测量印花颜色…</string>
+    <string name="colour_measured_title">印花颜色（测得）</string>
+    <string name="colour_measured_hint">已去除成衣颜色。这些是印花报告用于网版和油墨计算的颜色。</string>
+    <string name="colour_coverage">占印花的 %1$s</string>
+    <string name="colour_clusters_title">图像中的全部颜色聚类（%1$d）</string>
+    <string name="colour_clusters_hint">包含成衣和阴影。用于编辑和色卡匹配。</string>
+    <string name="colour_garment_excluded">成衣颜色 %1$s 不印刷。</string>
+    <plurals name="measured_print_colours">
+        <item quantity="one">测得 %1$d 种印花颜色</item>
+        <item quantity="other">测得 %1$d 种印花颜色</item>
+    </plurals>
 </resources>

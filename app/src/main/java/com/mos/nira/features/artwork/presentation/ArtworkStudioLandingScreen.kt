@@ -295,7 +295,7 @@ fun RecentAnalysisRow(
                 )
                 Spacer(modifier = Modifier.height(3.dp))
                 Text(
-                    text = "${record.width} × ${record.height} px  •  ${record.palette.size} colors",
+                    text = "${record.width} × ${record.height} px  •  ${record.printColourCount} colors",
                     color = Cyan,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium

@@ -159,4 +159,17 @@
     <string name="deep_report_running">Writing…</string>
     <string name="deep_report_blocked">Confidential mode is on, so the deep report cannot be written. Nothing was sent.</string>
     <string name="deep_report_disclaimer">AI-written report. The numbers come from the NIRA engine; check the report before using it.</string>
+
+    <!-- Measured print colours -->
+    <string name="colour_measuring">Measuring print colours…</string>
+    <string name="colour_measured_title">PRINT COLOURS (MEASURED)</string>
+    <string name="colour_measured_hint">Garment removed. These are the colours the Print Report uses for screens and ink.</string>
+    <string name="colour_coverage">%1$s of the print</string>
+    <string name="colour_clusters_title">ALL COLOUR CLUSTERS IN THE IMAGE (%1$d)</string>
+    <string name="colour_clusters_hint">Includes garment and shading. Used for editing and shade matching.</string>
+    <string name="colour_garment_excluded">Garment colour %1$s is not printed.</string>
+    <plurals name="measured_print_colours">
+        <item quantity="one">%1$d print colour measured</item>
+        <item quantity="other">%1$d print colours measured</item>
+    </plurals>
 </resources>

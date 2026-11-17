@@ -381,7 +381,8 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                     timestamp = System.currentTimeMillis(),
                     palette = matchedPalette,
                     colorGroups = extractionResult.colorGroups,
-                    garmentColor = garment
+                    garmentColor = garment,
+                    measuredPrintColourCount = _uiState.value.partAResult?.measuredPalette?.size
                 )
 
                 repository.saveAnalysis(record)
@@ -552,6 +553,17 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+    /** Keeps the saved analysis in step with the latest measured print colour count. */
+    private fun saveMeasuredColourCount(count: Int) {
+        val id = _uiState.value.currentRecordId ?: return
+        viewModelScope.launch {
+            val record = repository.getAnalysisById(id) ?: return@launch
+            if (record.measuredPrintColourCount == count) return@launch
+            repository.saveAnalysis(record.copy(measuredPrintColourCount = count))
+            _uiState.update { it.copy(savedAnalyses = repository.getAllAnalyses()) }
+        }
+    }
+
     fun deleteAnalysis(id: String) {
         viewModelScope.launch {
             repository.deleteAnalysis(id)
@@ -703,6 +715,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                 }
 
                 _uiState.update { it.copy(partAResult = result, isComputingPrintReport = false) }
+                saveMeasuredColourCount(result.measuredPalette.size)
 
                 // Automatically trigger Part B strategy comparison
                 computePartBReport()

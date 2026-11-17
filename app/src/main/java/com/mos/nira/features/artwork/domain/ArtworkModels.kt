@@ -84,5 +84,10 @@ data class ArtworkAnalysisRecord(
     val palette: List<DominantColor>,
     val colorGroups: List<ColorGroup> = emptyList(),
     val garmentColor: DominantColor? = null,
-    val algorithmVersion: String = "2.0.0-ciede2000-automerge"
-)
+    val algorithmVersion: String = "2.0.0-ciede2000-automerge",
+    /** Print colours measured by the Print Report engine (garment removed), when calculated. */
+    val measuredPrintColourCount: Int? = null
+) {
+    /** The count shown to users: the measured print colours, or the older count for old records. */
+    val printColourCount: Int get() = measuredPrintColourCount ?: palette.count { !it.isGarmentBase }
+}

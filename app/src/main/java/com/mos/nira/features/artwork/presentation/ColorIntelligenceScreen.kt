@@ -50,6 +50,10 @@ import com.mos.nira.features.artwork.components.ColorSwatchCard
 import com.mos.nira.features.artwork.domain.ColorGroup
 import com.mos.nira.features.artwork.domain.DominantColor
 import com.mos.nira.features.artwork.domain.ShadeEntry
+import com.mos.nira.features.artwork.domain.MeasuredColor
+import com.mos.nira.R
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.pluralStringResource
 import com.mos.nira.features.ai.ArtworkAiReadCard
 import com.mos.nira.features.ai.ArtworkKey
 import com.mos.nira.features.advice.PrintMethodAdviceCard
@@ -81,6 +85,9 @@ fun ColorIntelligenceScreen(
     // Print colours and garment colour measured by the Print Report engine, when calculated.
     measuredPrintColourHexes: List<String>? = null,
     measuredGarmentHex: String? = null,
+    // The Print Report engine's measured print colours (garment removed), and whether it is working.
+    measuredPrintColours: List<MeasuredColor>? = null,
+    isMeasuringPrintColours: Boolean = false,
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -274,15 +281,24 @@ fun ColorIntelligenceScreen(
                                 fontWeight = FontWeight.Bold
                             )
                             Spacer(modifier = Modifier.height(2.dp))
+                            // Headline count = the colours the Print Report uses (garment removed).
                             Text(
-                                text = "${palette.size} Print Colours Auto-Detected",
+                                text = when {
+                                    measuredPrintColours != null -> pluralStringResource(
+                                        R.plurals.measured_print_colours,
+                                        measuredPrintColours.size,
+                                        measuredPrintColours.size
+                                    )
+                                    isMeasuringPrintColours -> stringResource(R.string.colour_measuring)
+                                    else -> stringResource(R.string.colour_clusters_title, palette.size)
+                                },
                                 color = TextWhite,
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold
                             )
-                            if (garmentColor != null) {
+                            (measuredGarmentHex ?: garmentColor?.hex)?.let { hex ->
                                 Text(
-                                    text = "Base garment (${garmentColor.hex}) excluded from print screens",
+                                    text = stringResource(R.string.colour_garment_excluded, hex),
                                     color = TextMuted,
                                     fontSize = 11.sp
                                 )
@@ -290,6 +306,13 @@ fun ColorIntelligenceScreen(
                         }
                     }
                 }
+            }
+        }
+
+        // Measured print colours: the ones used for screens and ink.
+        if (!measuredPrintColours.isNullOrEmpty()) {
+            item {
+                MeasuredPrintColoursCard(measuredPrintColours)
             }
         }
 
@@ -369,13 +392,21 @@ fun ColorIntelligenceScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "PRINT COLOUR PALETTE",
-                    color = Violet,
-                    fontSize = 11.sp,
-                    letterSpacing = 1.5.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = stringResource(R.string.colour_clusters_title, palette.size),
+                        color = Violet,
+                        fontSize = 11.sp,
+                        letterSpacing = 1.5.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = stringResource(R.string.colour_clusters_hint),
+                        color = TextMuted,
+                        fontSize = 11.sp,
+                        lineHeight = 15.sp
+                    )
+                }
 
                 TextButton(onClick = { showAddDialog = true }) {
                     Text("+ Add Custom HEX", color = Cyan, fontSize = 12.sp, fontWeight = FontWeight.Bold)
@@ -465,6 +496,50 @@ fun ColorIntelligenceScreen(
 
         item {
             Spacer(modifier = Modifier.height(30.dp))
+        }
+    }
+}
+
+/** The Print Report engine's measured print colours, with coverage and nearest shade. */
+@Composable
+private fun MeasuredPrintColoursCard(colours: List<MeasuredColor>) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(18.dp),
+        colors = CardDefaults.cardColors(containerColor = CardBg)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = stringResource(R.string.colour_measured_title),
+                color = Violet,
+                fontSize = 11.sp,
+                letterSpacing = 1.5.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(stringResource(R.string.colour_measured_hint), color = TextMuted, fontSize = 12.sp, lineHeight = 17.sp)
+            colours.forEach { c ->
+                Spacer(modifier = Modifier.height(10.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(
+                        modifier = Modifier
+                            .size(28.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(Color(c.rgb.r, c.rgb.g, c.rgb.b))
+                            .border(1.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(8.dp))
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Column {
+                        Text(c.hex, color = TextWhite, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                        Text(
+                            text = stringResource(R.string.colour_coverage, c.formattedCoverage) +
+                                (c.nearestShade?.let { "  •  ${it.code} ${it.name}" } ?: ""),
+                            color = TextMuted,
+                            fontSize = 12.sp
+                        )
+                    }
+                }
+            }
         }
     }
 }

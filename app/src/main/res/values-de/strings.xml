@@ -160,4 +160,17 @@
     <string name="deep_report_running">Wird geschrieben…</string>
     <string name="deep_report_blocked">Der vertrauliche Modus ist aktiv, daher kann der Bericht nicht geschrieben werden. Es wurde nichts gesendet.</string>
     <string name="deep_report_disclaimer">Von KI geschriebener Bericht. Die Werte stammen aus der NIRA-Engine; prüfen Sie den Bericht vor der Verwendung.</string>
+
+    <!-- Measured print colours -->
+    <string name="colour_measuring">Druckfarben werden gemessen…</string>
+    <string name="colour_measured_title">DRUCKFARBEN (GEMESSEN)</string>
+    <string name="colour_measured_hint">Kleidungsstück entfernt. Diese Farben nutzt der Druckbericht für Siebe und Farbe.</string>
+    <string name="colour_coverage">%1$s des Drucks</string>
+    <string name="colour_clusters_title">ALLE FARBGRUPPEN IM BILD (%1$d)</string>
+    <string name="colour_clusters_hint">Enthält Kleidungsstück und Schattierungen. Dient zum Bearbeiten und Farbtonabgleich.</string>
+    <string name="colour_garment_excluded">Die Kleidungsfarbe %1$s wird nicht gedruckt.</string>
+    <plurals name="measured_print_colours">
+        <item quantity="one">%1$d Druckfarbe gemessen</item>
+        <item quantity="other">%1$d Druckfarben gemessen</item>
+    </plurals>
 </resources>
