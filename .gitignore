@@ -25,3 +25,6 @@ user_libraries/*.csv
 
 # Temporary copies of source for code review (not part of the app)
 /review/
+
+# Web version: Firebase web config (contains the web API key)
+web/firebase-config.js

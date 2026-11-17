@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NIRA Hybrid AI</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <header>
+      <p class="brand">NIRA</p>
+      <p class="tag">TEXTILE INTELLIGENCE · WEB (CHROME)</p>
+      <h1>Hybrid AI test</h1>
+      <p class="muted">One prompt through Firebase AI Logic. The source shown is the one the SDK reports for each answer.</p>
+    </header>
+
+    <p id="setup-error" class="error" hidden></p>
+
+    <section class="card">
+      <h2>On-device model in this Chrome</h2>
+      <div class="row">
+        <span class="label">Prompt API availability (Chrome report)</span>
+        <span id="availability" class="value">checking…</span>
+      </div>
+      <div class="row">
+        <span class="label">Chrome version</span>
+        <span id="chrome-version" class="value">—</span>
+      </div>
+      <button id="prepare" type="button">Prepare on-device model</button>
+      <p id="download" class="muted"></p>
+    </section>
+
+    <section class="card">
+      <h2>Run</h2>
+      <fieldset>
+        <legend class="label">Mode</legend>
+        <label><input type="radio" name="mode" value="PREFER_ON_DEVICE" checked> PREFER_ON_DEVICE</label>
+        <label><input type="radio" name="mode" value="ONLY_ON_DEVICE"> ONLY_ON_DEVICE</label>
+        <label><input type="radio" name="mode" value="ONLY_IN_CLOUD"> ONLY_IN_CLOUD</label>
+        <label><input type="radio" name="mode" value="PREFER_IN_CLOUD"> PREFER_IN_CLOUD</label>
+      </fieldset>
+      <label class="label" for="prompt">Prompt</label>
+      <textarea id="prompt" rows="3">In one short sentence, what is a screen printing underbase?</textarea>
+      <button id="run" type="button">Run</button>
+    </section>
+
+    <section class="card" id="result" hidden>
+      <h2>Result</h2>
+      <div class="row"><span class="label">Inference source (reported by the SDK)</span><span id="r-source" class="value big"></span></div>
+      <div class="row"><span class="label">Requested mode</span><span id="r-mode" class="value"></span></div>
+      <div class="row"><span class="label">Cloud model configured</span><span id="r-model" class="value"></span></div>
+      <div class="row"><span class="label">Duration</span><span id="r-duration" class="value"></span></div>
+      <div class="row stack"><span class="label">Response</span><span id="r-text" class="value"></span></div>
+      <div class="row stack" id="r-error-row" hidden><span class="label">Error</span><span id="r-error" class="value error"></span></div>
+    </section>
+
+    <section class="card">
+      <h2>This session</h2>
+      <div class="row"><span class="label">Answers on device</span><span id="c-device" class="value">0</span></div>
+      <div class="row"><span class="label">Answers in cloud</span><span id="c-cloud" class="value">0</span></div>
+      <div class="row"><span class="label">Images uploaded</span><span class="value">0 (this page sends text only)</span></div>
+    </section>
+
+    <p class="muted small">Development page. App Check uses the debug provider on localhost only.</p>
+  </main>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
