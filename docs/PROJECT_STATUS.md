@@ -11,6 +11,11 @@ Rule for this file: only write what was actually run. Numbers below come from re
 - **Cloud call from the web page works in Ravi's Chrome 157:** `ONLY_IN_CLOUD` → inference source `IN_CLOUD`, `gemini-3.5-flash-lite`, 9,684 ms, correct answer. Screenshot: `docs/evidence/2026-11-17_web_chrome_only_in_cloud.png`.
 - On-device in Chrome: Prompt API availability `downloading` (screenshot `docs/evidence/2026-11-17_web_chrome_prompt_api_downloading.png`). **Not tested yet**; waiting for the model download to finish.
 - Fixed: the empty "Error" row was shown on success because `.row { display: flex }` overrode the `hidden` attribute.
+- On-device in Chrome, 17 Nov evening:
+  - Normal Chrome 157: model download stuck at 0%, `nano_v3_gpu_component` error "Mismatched version". All Prompt API flags at Default.
+  - Chrome Beta 159 installed. "Enabled by user setting" was false; after turning on on-device AI in Chrome settings, all criteria true and availability `downloadable`. Download stayed at 0% after "Prepare on-device model".
+  - Likely cause (not confirmed): laptop on the phone's hotspot, a metered connection; Chrome downloads the model only on unmetered networks.
+  - Next: retry on office Wi-Fi on 18 Nov. Backup: borrow a phone with Gemini Nano support.
 
 ## 00000. Update 17 Nov 2026, 08:20 IST — first successful cloud AI call
 
