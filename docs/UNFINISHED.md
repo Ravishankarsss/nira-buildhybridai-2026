@@ -63,7 +63,7 @@ None of these exist as product features. Only the test button calls AI.
 | C5 | Settings | Partial: language switch works; no Confidential mode, no report language |
 | C6 | Garment camera | Not verified on phone |
 | C7 | Hybrid AI Analysis | Missing |
-| C8 | Technique Library | Missing. `print_techniques.json` is in the app but no code reads it |
+| C8 | Technique Library | Missing as a screen. `print_techniques.json` is now read by the print method advice |
 | C9 | Ask NIRA | Missing |
 | C10 | Execution Diagnostics | Missing |
 | C11 | Report layout with the four sections A/B/C/D kept apart (measured data, AI interpretation, engineering suggestions, needs physical validation) | Missing: the report shows engine data only |
@@ -77,7 +77,7 @@ None of these exist as product features. Only the test button calls AI.
 | D3 | Re-run analysis on the cropped print box at best resolution | Missing |
 | D4 | Drag the print box edges | `setPrintBox` exists in the view model; no screen calls it |
 | D5 | Edge refinement for flat spot layers | Missing |
-| D6 | Technique suitability check from `print_techniques.json` | Missing |
+| D6 | Technique suitability check from `print_techniques.json` | Built 17 Nov: print method advice card on the Colour screen (fibre, artwork type, garment tone; rules only, tested). Not yet run on the phone; not yet in the Print Report |
 | D7 | Print fit and grading check from a size chart | Missing |
 | D8 | Garment photo correction: four-corner straighten, white reference, scale | Missing. `perspectiveWarp` exists in `ImageOps` but nothing calls it |
 | D9 | Labels "Estimated from garment photo" on photo-based values | Missing |
