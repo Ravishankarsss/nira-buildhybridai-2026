@@ -110,4 +110,46 @@
     <string name="settings_ai_answers_device">ডিভাইসে উত্তর</string>
     <string name="settings_ai_answers_cloud">ক্লাউডে উত্তর</string>
     <string name="settings_ai_images_uploaded">আপলোড করা ছবি</string>
+
+    <!-- Print method advice -->
+    <string name="advice_title">প্রিন্ট পদ্ধতির পরামর্শ</string>
+    <string name="advice_hint">প্রিন্ট কৌশলের নিয়ম ফাইল থেকে। কাপড় বেছে নিন; NIRA ফাইবার, আর্টওয়ার্ক ও পোশাকের রং যাচাই করে।</string>
+    <string name="advice_fabric">কাপড়</string>
+    <string name="fibre_cotton">সুতি</string>
+    <string name="fibre_polyester">পলিয়েস্টার</string>
+    <string name="fibre_blend">সুতি/পলি মিশ্রণ</string>
+    <string name="fibre_linen">লিনেন</string>
+    <string name="fibre_nylon">নাইলন</string>
+    <string name="advice_artwork">আর্টওয়ার্ক</string>
+    <string name="advice_artwork_flat">ফ্ল্যাট (একরঙা)</string>
+    <string name="advice_artwork_tonal">টোনাল (গ্রেডিয়েন্ট, ছবি)</string>
+    <string name="advice_from_ai">AI বিশ্লেষণ থেকে নেওয়া</string>
+    <string name="advice_garment">পোশাক</string>
+    <string name="advice_garment_light">হালকা</string>
+    <string name="advice_garment_dark">গাঢ় বা রঙিন</string>
+    <string name="advice_from_measured">মাপা পোশাকের রং থেকে নেওয়া</string>
+    <string name="advice_recommended">সুপারিশকৃত</string>
+    <string name="advice_possible">সম্ভব: নোট দেখুন</string>
+    <string name="advice_not_suitable">উপযুক্ত নয়</string>
+    <string name="reason_fibre_suitable">কাপড়: %1$s উপযুক্ত তালিকায় আছে।</string>
+    <string name="reason_fibre_not_suitable">কাপড়: %1$s অনুপযুক্ত তালিকায় আছে।</string>
+    <string name="reason_fibre_caution">কাপড় সংক্রান্ত সতর্কতা: %1$s</string>
+    <string name="reason_fibre_not_listed">কাপড়: %1$s এই পদ্ধতির উপযুক্ত তালিকায় নেই।</string>
+    <string name="reason_fibre_no_data">কাপড়: নিয়ম ফাইলে ফাইবারের তথ্য নেই।</string>
+    <string name="reason_fibre_not_chosen">কাপড় বেছে নেওয়া হয়নি, তাই ফাইবার যাচাই হয়নি।</string>
+    <string name="reason_artwork_solid_only">আর্টওয়ার্ক: একরঙা আকৃতি দরকার; গ্রেডিয়েন্ট ও ছবির অংশ প্রিন্ট করা যায় না।</string>
+    <string name="reason_artwork_solid_preferred">আর্টওয়ার্ক: একরঙা আকৃতিতে সবচেয়ে ভালো; সূক্ষ্ম বিবরণ ও টোন হারিয়ে যায়।</string>
+    <string name="reason_artwork_fits">আর্টওয়ার্ক: এই ধরনের আর্টওয়ার্কের জন্য উপযুক্ত।</string>
+    <string name="reason_artwork_not_chosen">আর্টওয়ার্কের ধরন বেছে নেওয়া হয়নি, তাই যাচাই হয়নি।</string>
+    <string name="reason_garment_light_only">পোশাক: শুধু সাদা বা হালকা পোশাক।</string>
+    <string name="reason_garment_dark_only">পোশাক: গাঢ় বা মাঝারি রঙে রাঙানো পোশাক দরকার।</string>
+    <string name="reason_garment_caution">পোশাক সংক্রান্ত সতর্কতা: %1$s</string>
+    <string name="reason_garment_note">পোশাক সংক্রান্ত নোট: %1$s</string>
+    <string name="reason_garment_not_chosen">পোশাকের রং বেছে নেওয়া হয়নি, তাই যাচাই হয়নি।</string>
+    <string name="advice_confidence">নির্ভরযোগ্যতা: %1$s</string>
+    <string name="advice_confidence_none">নির্ভরযোগ্যতা: নিয়ম ফাইলে দেওয়া নেই</string>
+    <string name="advice_not_verified">কারখানায় যাচাই হয়নি</string>
+    <string name="advice_risks">ঝুঁকি</string>
+    <string name="advice_disclaimer">সর্বজনীন বাণিজ্যিক উৎসের নিয়মভিত্তিক পরামর্শ। উৎপাদনের আগে স্ট্রাইক-অফ দিয়ে নিশ্চিত করুন।</string>
+    <string name="advice_loading">নিয়ম লোড হচ্ছে…</string>
 </resources>

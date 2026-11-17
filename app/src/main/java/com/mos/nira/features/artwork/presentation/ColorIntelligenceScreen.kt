@@ -51,6 +51,7 @@ import com.mos.nira.features.artwork.domain.ColorGroup
 import com.mos.nira.features.artwork.domain.DominantColor
 import com.mos.nira.features.artwork.domain.ShadeEntry
 import com.mos.nira.features.ai.ArtworkAiReadCard
+import com.mos.nira.features.advice.PrintMethodAdviceCard
 
 private val NavyBg = Color(0xFF0B1020)
 private val CardBg = Color(0xFF171F35)
@@ -295,6 +296,11 @@ fun ColorIntelligenceScreen(
                 printColourHexes = palette.filter { !it.isGarmentBase }.map { it.hex },
                 garmentHex = garmentColor?.hex
             )
+        }
+
+        // Print method advice from print_techniques.json (rules, not AI).
+        item {
+            PrintMethodAdviceCard(garmentColor = garmentColor)
         }
 
         // Active Selected Color Technical Inspector + Editing Toolbar + Top 3 Shade Matches

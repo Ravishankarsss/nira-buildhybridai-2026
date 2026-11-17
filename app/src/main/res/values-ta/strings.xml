@@ -110,4 +110,46 @@
     <string name="settings_ai_answers_device">சாதனத்தில் பதில்கள்</string>
     <string name="settings_ai_answers_cloud">கிளவுடில் பதில்கள்</string>
     <string name="settings_ai_images_uploaded">பதிவேற்றிய படங்கள்</string>
+
+    <!-- Print method advice -->
+    <string name="advice_title">அச்சு முறை ஆலோசனை</string>
+    <string name="advice_hint">அச்சு நுட்ப விதிகள் கோப்பிலிருந்து. துணியைத் தேர்வு செய்யவும்; NIRA நார், கலைப்படைப்பு, ஆடை நிறம் ஆகியவற்றைச் சரிபார்க்கும்.</string>
+    <string name="advice_fabric">துணி</string>
+    <string name="fibre_cotton">பருத்தி</string>
+    <string name="fibre_polyester">பாலியெஸ்டர்</string>
+    <string name="fibre_blend">பருத்தி/பாலி கலவை</string>
+    <string name="fibre_linen">லினன்</string>
+    <string name="fibre_nylon">நைலான்</string>
+    <string name="advice_artwork">கலைப்படைப்பு</string>
+    <string name="advice_artwork_flat">தட்டை (திட நிறங்கள்)</string>
+    <string name="advice_artwork_tonal">தொனி (சாய்வு, புகைப்படம்)</string>
+    <string name="advice_from_ai">AI வாசிப்பிலிருந்து அமைக்கப்பட்டது</string>
+    <string name="advice_garment">ஆடை</string>
+    <string name="advice_garment_light">வெளிர்</string>
+    <string name="advice_garment_dark">அடர் அல்லது வண்ணம்</string>
+    <string name="advice_from_measured">அளவிடப்பட்ட ஆடை நிறத்திலிருந்து அமைக்கப்பட்டது</string>
+    <string name="advice_recommended">பரிந்துரைக்கப்படுகிறது</string>
+    <string name="advice_possible">சாத்தியம்: குறிப்புகளைப் பார்க்கவும்</string>
+    <string name="advice_not_suitable">பொருத்தமில்லை</string>
+    <string name="reason_fibre_suitable">துணி: %1$s பொருத்தமானதாகப் பட்டியலில் உள்ளது.</string>
+    <string name="reason_fibre_not_suitable">துணி: %1$s பொருத்தமற்றதாகப் பட்டியலில் உள்ளது.</string>
+    <string name="reason_fibre_caution">துணி எச்சரிக்கை: %1$s</string>
+    <string name="reason_fibre_not_listed">துணி: %1$s இந்த முறையின் பொருத்தமான பட்டியலில் இல்லை.</string>
+    <string name="reason_fibre_no_data">துணி: விதிகள் கோப்பில் நார் தரவு இல்லை.</string>
+    <string name="reason_fibre_not_chosen">துணி தேர்வு செய்யப்படவில்லை, எனவே நார் சரிபார்க்கப்படவில்லை.</string>
+    <string name="reason_artwork_solid_only">கலைப்படைப்பு: திட வடிவங்கள் தேவை; சாய்வு மற்றும் புகைப்படப் பகுதிகளை அச்சிட முடியாது.</string>
+    <string name="reason_artwork_solid_preferred">கலைப்படைப்பு: திட வடிவங்களில் சிறந்தது; நுண்ணிய விவரம் மற்றும் தொனி இழக்கப்படும்.</string>
+    <string name="reason_artwork_fits">கலைப்படைப்பு: இந்த வகைக்குப் பொருந்தும்.</string>
+    <string name="reason_artwork_not_chosen">கலைப்படைப்பு வகை தேர்வு செய்யப்படவில்லை, எனவே சரிபார்க்கப்படவில்லை.</string>
+    <string name="reason_garment_light_only">ஆடை: வெள்ளை அல்லது வெளிர் ஆடைகள் மட்டும்.</string>
+    <string name="reason_garment_dark_only">ஆடை: அடர் அல்லது நடுத்தர சாயமிட்ட ஆடை தேவை.</string>
+    <string name="reason_garment_caution">ஆடை எச்சரிக்கை: %1$s</string>
+    <string name="reason_garment_note">ஆடை குறிப்பு: %1$s</string>
+    <string name="reason_garment_not_chosen">ஆடை நிறம் தேர்வு செய்யப்படவில்லை, எனவே சரிபார்க்கப்படவில்லை.</string>
+    <string name="advice_confidence">நம்பகத்தன்மை: %1$s</string>
+    <string name="advice_confidence_none">நம்பகத்தன்மை: விதிகள் கோப்பில் கொடுக்கப்படவில்லை</string>
+    <string name="advice_not_verified">தளத்தில் சரிபார்க்கப்படவில்லை</string>
+    <string name="advice_risks">அபாயங்கள்</string>
+    <string name="advice_disclaimer">பொது வர்த்தக மூலங்களின் அடிப்படையிலான விதி ஆலோசனை. உற்பத்திக்கு முன் ஸ்ட்ரைக்-ஆஃப் மூலம் உறுதிப்படுத்தவும்.</string>
+    <string name="advice_loading">விதிகள் ஏற்றப்படுகின்றன…</string>
 </resources>

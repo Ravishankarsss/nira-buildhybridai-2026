@@ -109,4 +109,46 @@
     <string name="settings_ai_answers_device">Answers on device</string>
     <string name="settings_ai_answers_cloud">Answers in cloud</string>
     <string name="settings_ai_images_uploaded">Images uploaded</string>
+
+    <!-- Print method advice -->
+    <string name="advice_title">Print method advice</string>
+    <string name="advice_hint">From the print techniques rules file. Choose the fabric; NIRA checks fibre, artwork and garment colour.</string>
+    <string name="advice_fabric">Fabric</string>
+    <string name="fibre_cotton">Cotton</string>
+    <string name="fibre_polyester">Polyester</string>
+    <string name="fibre_blend">Cotton/poly blend</string>
+    <string name="fibre_linen">Linen</string>
+    <string name="fibre_nylon">Nylon</string>
+    <string name="advice_artwork">Artwork</string>
+    <string name="advice_artwork_flat">Flat (solid colours)</string>
+    <string name="advice_artwork_tonal">Tonal (gradients, photo)</string>
+    <string name="advice_from_ai">Set from the AI read</string>
+    <string name="advice_garment">Garment</string>
+    <string name="advice_garment_light">Light</string>
+    <string name="advice_garment_dark">Dark or coloured</string>
+    <string name="advice_from_measured">Set from the measured garment colour</string>
+    <string name="advice_recommended">RECOMMENDED</string>
+    <string name="advice_possible">POSSIBLE: CHECK THE NOTES</string>
+    <string name="advice_not_suitable">NOT SUITABLE</string>
+    <string name="reason_fibre_suitable">Fabric: %1$s is listed as suitable.</string>
+    <string name="reason_fibre_not_suitable">Fabric: %1$s is listed as not suitable.</string>
+    <string name="reason_fibre_caution">Fabric caution: %1$s</string>
+    <string name="reason_fibre_not_listed">Fabric: %1$s is not in this method\'s suitable list.</string>
+    <string name="reason_fibre_no_data">Fabric: no fibre data in the rules file.</string>
+    <string name="reason_fibre_not_chosen">Fabric not chosen, so the fibre is not checked.</string>
+    <string name="reason_artwork_solid_only">Artwork: needs solid shapes; gradients and photo areas cannot be printed.</string>
+    <string name="reason_artwork_solid_preferred">Artwork: best on solid shapes; fine detail and tone are lost.</string>
+    <string name="reason_artwork_fits">Artwork: suits this artwork type.</string>
+    <string name="reason_artwork_not_chosen">Artwork type not chosen, so it is not checked.</string>
+    <string name="reason_garment_light_only">Garment: white or light garments only.</string>
+    <string name="reason_garment_dark_only">Garment: needs a dark or medium dyed garment.</string>
+    <string name="reason_garment_caution">Garment caution: %1$s</string>
+    <string name="reason_garment_note">Garment note: %1$s</string>
+    <string name="reason_garment_not_chosen">Garment colour not chosen, so it is not checked.</string>
+    <string name="advice_confidence">Confidence: %1$s</string>
+    <string name="advice_confidence_none">Confidence: not given in the rules file</string>
+    <string name="advice_not_verified">Not floor-verified</string>
+    <string name="advice_risks">Risks</string>
+    <string name="advice_disclaimer">Rule-based suggestion from public trade sources. Confirm with a strike-off before production.</string>
+    <string name="advice_loading">Loading rules…</string>
 </resources>

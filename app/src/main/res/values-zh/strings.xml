@@ -109,4 +109,46 @@
     <string name="settings_ai_answers_device">设备端回答</string>
     <string name="settings_ai_answers_cloud">云端回答</string>
     <string name="settings_ai_images_uploaded">已上传图片</string>
+
+    <!-- Print method advice -->
+    <string name="advice_title">印花方法建议</string>
+    <string name="advice_hint">依据印花工艺规则文件。请选择面料；NIRA 会检查纤维、图稿和成衣颜色。</string>
+    <string name="advice_fabric">面料</string>
+    <string name="fibre_cotton">棉</string>
+    <string name="fibre_polyester">涤纶</string>
+    <string name="fibre_blend">棉/涤混纺</string>
+    <string name="fibre_linen">亚麻</string>
+    <string name="fibre_nylon">锦纶</string>
+    <string name="advice_artwork">图稿</string>
+    <string name="advice_artwork_flat">平面（实色）</string>
+    <string name="advice_artwork_tonal">层次（渐变、照片）</string>
+    <string name="advice_from_ai">来自 AI 解读</string>
+    <string name="advice_garment">成衣</string>
+    <string name="advice_garment_light">浅色</string>
+    <string name="advice_garment_dark">深色或彩色</string>
+    <string name="advice_from_measured">来自测得的成衣颜色</string>
+    <string name="advice_recommended">推荐</string>
+    <string name="advice_possible">可行：请查看说明</string>
+    <string name="advice_not_suitable">不适合</string>
+    <string name="reason_fibre_suitable">面料：%1$s 列为适合。</string>
+    <string name="reason_fibre_not_suitable">面料：%1$s 列为不适合。</string>
+    <string name="reason_fibre_caution">面料注意：%1$s</string>
+    <string name="reason_fibre_not_listed">面料：%1$s 不在此方法的适用列表中。</string>
+    <string name="reason_fibre_no_data">面料：规则文件中没有纤维数据。</string>
+    <string name="reason_fibre_not_chosen">未选择面料，因此未检查纤维。</string>
+    <string name="reason_artwork_solid_only">图稿：需要实色图形；无法印制渐变和照片区域。</string>
+    <string name="reason_artwork_solid_preferred">图稿：最适合实色图形；细节和层次会丢失。</string>
+    <string name="reason_artwork_fits">图稿：适合此类图稿。</string>
+    <string name="reason_artwork_not_chosen">未选择图稿类型，因此未检查。</string>
+    <string name="reason_garment_light_only">成衣：仅限白色或浅色成衣。</string>
+    <string name="reason_garment_dark_only">成衣：需要深色或中等色染色成衣。</string>
+    <string name="reason_garment_caution">成衣注意：%1$s</string>
+    <string name="reason_garment_note">成衣说明：%1$s</string>
+    <string name="reason_garment_not_chosen">未选择成衣颜色，因此未检查。</string>
+    <string name="advice_confidence">可信度：%1$s</string>
+    <string name="advice_confidence_none">可信度：规则文件未给出</string>
+    <string name="advice_not_verified">未经车间验证</string>
+    <string name="advice_risks">风险</string>
+    <string name="advice_disclaimer">基于公开行业资料的规则建议。投产前请通过打样确认。</string>
+    <string name="advice_loading">正在加载规则…</string>
 </resources>

@@ -110,4 +110,46 @@
     <string name="settings_ai_answers_device">Antworten auf dem Gerät</string>
     <string name="settings_ai_answers_cloud">Antworten in der Cloud</string>
     <string name="settings_ai_images_uploaded">Hochgeladene Bilder</string>
+
+    <!-- Print method advice -->
+    <string name="advice_title">Empfehlung zur Druckmethode</string>
+    <string name="advice_hint">Aus der Regeldatei der Drucktechniken. Wählen Sie den Stoff; NIRA prüft Faser, Vorlage und Kleidungsfarbe.</string>
+    <string name="advice_fabric">Stoff</string>
+    <string name="fibre_cotton">Baumwolle</string>
+    <string name="fibre_polyester">Polyester</string>
+    <string name="fibre_blend">Baumwolle/Polyester-Mischung</string>
+    <string name="fibre_linen">Leinen</string>
+    <string name="fibre_nylon">Nylon</string>
+    <string name="advice_artwork">Vorlage</string>
+    <string name="advice_artwork_flat">Flächig (Volltonfarben)</string>
+    <string name="advice_artwork_tonal">Tonal (Verläufe, Foto)</string>
+    <string name="advice_from_ai">Aus der KI-Analyse übernommen</string>
+    <string name="advice_garment">Kleidungsstück</string>
+    <string name="advice_garment_light">Hell</string>
+    <string name="advice_garment_dark">Dunkel oder farbig</string>
+    <string name="advice_from_measured">Aus der gemessenen Kleidungsfarbe übernommen</string>
+    <string name="advice_recommended">EMPFOHLEN</string>
+    <string name="advice_possible">MÖGLICH: HINWEISE BEACHTEN</string>
+    <string name="advice_not_suitable">NICHT GEEIGNET</string>
+    <string name="reason_fibre_suitable">Stoff: %1$s ist als geeignet aufgeführt.</string>
+    <string name="reason_fibre_not_suitable">Stoff: %1$s ist als nicht geeignet aufgeführt.</string>
+    <string name="reason_fibre_caution">Stoffhinweis: %1$s</string>
+    <string name="reason_fibre_not_listed">Stoff: %1$s steht nicht in der Liste geeigneter Stoffe für diese Methode.</string>
+    <string name="reason_fibre_no_data">Stoff: keine Faserdaten in der Regeldatei.</string>
+    <string name="reason_fibre_not_chosen">Kein Stoff gewählt, daher wird die Faser nicht geprüft.</string>
+    <string name="reason_artwork_solid_only">Vorlage: braucht Vollflächen; Verläufe und Fotobereiche können nicht gedruckt werden.</string>
+    <string name="reason_artwork_solid_preferred">Vorlage: am besten auf Vollflächen; feine Details und Tonwerte gehen verloren.</string>
+    <string name="reason_artwork_fits">Vorlage: passt zu diesem Vorlagentyp.</string>
+    <string name="reason_artwork_not_chosen">Vorlagentyp nicht gewählt, daher nicht geprüft.</string>
+    <string name="reason_garment_light_only">Kleidungsstück: nur weiße oder helle Kleidung.</string>
+    <string name="reason_garment_dark_only">Kleidungsstück: braucht dunkel oder mittel gefärbte Kleidung.</string>
+    <string name="reason_garment_caution">Hinweis zum Kleidungsstück: %1$s</string>
+    <string name="reason_garment_note">Anmerkung zum Kleidungsstück: %1$s</string>
+    <string name="reason_garment_not_chosen">Kleidungsfarbe nicht gewählt, daher nicht geprüft.</string>
+    <string name="advice_confidence">Vertrauen: %1$s</string>
+    <string name="advice_confidence_none">Vertrauen: in der Regeldatei nicht angegeben</string>
+    <string name="advice_not_verified">Nicht in der Produktion geprüft</string>
+    <string name="advice_risks">Risiken</string>
+    <string name="advice_disclaimer">Regelbasierter Vorschlag aus öffentlichen Fachquellen. Vor der Produktion mit einem Andruck bestätigen.</string>
+    <string name="advice_loading">Regeln werden geladen…</string>
 </resources>

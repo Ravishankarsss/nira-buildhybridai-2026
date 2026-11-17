@@ -109,4 +109,46 @@
     <string name="settings_ai_answers_device">Câu trả lời trên thiết bị</string>
     <string name="settings_ai_answers_cloud">Câu trả lời trên đám mây</string>
     <string name="settings_ai_images_uploaded">Ảnh đã tải lên</string>
+
+    <!-- Print method advice -->
+    <string name="advice_title">Gợi ý phương pháp in</string>
+    <string name="advice_hint">Theo tệp quy tắc kỹ thuật in. Chọn loại vải; NIRA kiểm tra sợi, hình in và màu áo.</string>
+    <string name="advice_fabric">Vải</string>
+    <string name="fibre_cotton">Cotton</string>
+    <string name="fibre_polyester">Polyester</string>
+    <string name="fibre_blend">Pha cotton/poly</string>
+    <string name="fibre_linen">Lanh</string>
+    <string name="fibre_nylon">Nylon</string>
+    <string name="advice_artwork">Hình in</string>
+    <string name="advice_artwork_flat">Phẳng (màu đặc)</string>
+    <string name="advice_artwork_tonal">Chuyển tông (chuyển màu, ảnh)</string>
+    <string name="advice_from_ai">Lấy từ kết quả đọc bằng AI</string>
+    <string name="advice_garment">Áo</string>
+    <string name="advice_garment_light">Sáng</string>
+    <string name="advice_garment_dark">Tối hoặc có màu</string>
+    <string name="advice_from_measured">Lấy từ màu áo đã đo</string>
+    <string name="advice_recommended">KHUYẾN NGHỊ</string>
+    <string name="advice_possible">CÓ THỂ: XEM GHI CHÚ</string>
+    <string name="advice_not_suitable">KHÔNG PHÙ HỢP</string>
+    <string name="reason_fibre_suitable">Vải: %1$s có trong danh sách phù hợp.</string>
+    <string name="reason_fibre_not_suitable">Vải: %1$s có trong danh sách không phù hợp.</string>
+    <string name="reason_fibre_caution">Lưu ý về vải: %1$s</string>
+    <string name="reason_fibre_not_listed">Vải: %1$s không có trong danh sách phù hợp của phương pháp này.</string>
+    <string name="reason_fibre_no_data">Vải: tệp quy tắc không có dữ liệu sợi.</string>
+    <string name="reason_fibre_not_chosen">Chưa chọn vải nên không kiểm tra sợi.</string>
+    <string name="reason_artwork_solid_only">Hình in: cần mảng màu đặc; không in được vùng chuyển màu và vùng ảnh.</string>
+    <string name="reason_artwork_solid_preferred">Hình in: tốt nhất với mảng màu đặc; chi tiết nhỏ và tông màu bị mất.</string>
+    <string name="reason_artwork_fits">Hình in: phù hợp với loại hình in này.</string>
+    <string name="reason_artwork_not_chosen">Chưa chọn loại hình in nên không kiểm tra.</string>
+    <string name="reason_garment_light_only">Áo: chỉ áo trắng hoặc màu sáng.</string>
+    <string name="reason_garment_dark_only">Áo: cần áo nhuộm màu tối hoặc trung bình.</string>
+    <string name="reason_garment_caution">Lưu ý về áo: %1$s</string>
+    <string name="reason_garment_note">Ghi chú về áo: %1$s</string>
+    <string name="reason_garment_not_chosen">Chưa chọn màu áo nên không kiểm tra.</string>
+    <string name="advice_confidence">Độ tin cậy: %1$s</string>
+    <string name="advice_confidence_none">Độ tin cậy: tệp quy tắc không ghi</string>
+    <string name="advice_not_verified">Chưa kiểm chứng tại xưởng</string>
+    <string name="advice_risks">Rủi ro</string>
+    <string name="advice_disclaimer">Gợi ý theo quy tắc từ các nguồn thương mại công khai. Hãy in thử trước khi sản xuất.</string>
+    <string name="advice_loading">Đang tải quy tắc…</string>
 </resources>

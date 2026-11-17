@@ -110,4 +110,46 @@
     <string name="settings_ai_answers_device">डिवाइस पर उत्तर</string>
     <string name="settings_ai_answers_cloud">क्लाउड में उत्तर</string>
     <string name="settings_ai_images_uploaded">अपलोड की गई छवियाँ</string>
+
+    <!-- Print method advice -->
+    <string name="advice_title">प्रिंट विधि सलाह</string>
+    <string name="advice_hint">प्रिंट तकनीक नियम फ़ाइल से। कपड़ा चुनें; NIRA फ़ाइबर, आर्टवर्क और गारमेंट का रंग जाँचता है।</string>
+    <string name="advice_fabric">कपड़ा</string>
+    <string name="fibre_cotton">कॉटन</string>
+    <string name="fibre_polyester">पॉलिएस्टर</string>
+    <string name="fibre_blend">कॉटन/पॉली मिश्रण</string>
+    <string name="fibre_linen">लिनन</string>
+    <string name="fibre_nylon">नायलॉन</string>
+    <string name="advice_artwork">आर्टवर्क</string>
+    <string name="advice_artwork_flat">फ़्लैट (ठोस रंग)</string>
+    <string name="advice_artwork_tonal">टोनल (ग्रेडिएंट, फ़ोटो)</string>
+    <string name="advice_from_ai">AI विश्लेषण से सेट</string>
+    <string name="advice_garment">गारमेंट</string>
+    <string name="advice_garment_light">हल्का</string>
+    <string name="advice_garment_dark">गहरा या रंगीन</string>
+    <string name="advice_from_measured">मापे गए गारमेंट रंग से सेट</string>
+    <string name="advice_recommended">अनुशंसित</string>
+    <string name="advice_possible">संभव: नोट देखें</string>
+    <string name="advice_not_suitable">उपयुक्त नहीं</string>
+    <string name="reason_fibre_suitable">कपड़ा: %1$s उपयुक्त सूची में है।</string>
+    <string name="reason_fibre_not_suitable">कपड़ा: %1$s अनुपयुक्त सूची में है।</string>
+    <string name="reason_fibre_caution">कपड़े की चेतावनी: %1$s</string>
+    <string name="reason_fibre_not_listed">कपड़ा: %1$s इस विधि की उपयुक्त सूची में नहीं है।</string>
+    <string name="reason_fibre_no_data">कपड़ा: नियम फ़ाइल में फ़ाइबर का डेटा नहीं है।</string>
+    <string name="reason_fibre_not_chosen">कपड़ा नहीं चुना गया, इसलिए फ़ाइबर की जाँच नहीं हुई।</string>
+    <string name="reason_artwork_solid_only">आर्टवर्क: ठोस आकृतियाँ चाहिए; ग्रेडिएंट और फ़ोटो वाले हिस्से प्रिंट नहीं हो सकते।</string>
+    <string name="reason_artwork_solid_preferred">आर्टवर्क: ठोस आकृतियों पर सबसे अच्छा; बारीक विवरण और टोन खो जाते हैं।</string>
+    <string name="reason_artwork_fits">आर्टवर्क: इस प्रकार के आर्टवर्क के लिए उपयुक्त।</string>
+    <string name="reason_artwork_not_chosen">आर्टवर्क का प्रकार नहीं चुना गया, इसलिए जाँच नहीं हुई।</string>
+    <string name="reason_garment_light_only">गारमेंट: केवल सफ़ेद या हल्के गारमेंट।</string>
+    <string name="reason_garment_dark_only">गारमेंट: गहरा या मध्यम रंगा हुआ गारमेंट चाहिए।</string>
+    <string name="reason_garment_caution">गारमेंट चेतावनी: %1$s</string>
+    <string name="reason_garment_note">गारमेंट नोट: %1$s</string>
+    <string name="reason_garment_not_chosen">गारमेंट का रंग नहीं चुना गया, इसलिए जाँच नहीं हुई।</string>
+    <string name="advice_confidence">विश्वसनीयता: %1$s</string>
+    <string name="advice_confidence_none">विश्वसनीयता: नियम फ़ाइल में नहीं दी गई</string>
+    <string name="advice_not_verified">फ़्लोर पर सत्यापित नहीं</string>
+    <string name="advice_risks">जोखिम</string>
+    <string name="advice_disclaimer">सार्वजनिक व्यापार स्रोतों पर आधारित नियम-सलाह। उत्पादन से पहले स्ट्राइक-ऑफ़ से पुष्टि करें।</string>
+    <string name="advice_loading">नियम लोड हो रहे हैं…</string>
 </resources>

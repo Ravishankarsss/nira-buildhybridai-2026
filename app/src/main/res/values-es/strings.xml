@@ -111,4 +111,46 @@
     <string name="settings_ai_answers_device">Respuestas en el dispositivo</string>
     <string name="settings_ai_answers_cloud">Respuestas en la nube</string>
     <string name="settings_ai_images_uploaded">Imágenes enviadas</string>
+
+    <!-- Print method advice -->
+    <string name="advice_title">Recomendación de método de impresión</string>
+    <string name="advice_hint">Según el archivo de reglas de técnicas de impresión. Elija el tejido; NIRA comprueba la fibra, la ilustración y el color de la prenda.</string>
+    <string name="advice_fabric">Tejido</string>
+    <string name="fibre_cotton">Algodón</string>
+    <string name="fibre_polyester">Poliéster</string>
+    <string name="fibre_blend">Mezcla algodón/poliéster</string>
+    <string name="fibre_linen">Lino</string>
+    <string name="fibre_nylon">Nailon</string>
+    <string name="advice_artwork">Ilustración</string>
+    <string name="advice_artwork_flat">Plana (colores sólidos)</string>
+    <string name="advice_artwork_tonal">Tonal (degradados, foto)</string>
+    <string name="advice_from_ai">Tomado de la lectura de IA</string>
+    <string name="advice_garment">Prenda</string>
+    <string name="advice_garment_light">Clara</string>
+    <string name="advice_garment_dark">Oscura o de color</string>
+    <string name="advice_from_measured">Tomado del color medido de la prenda</string>
+    <string name="advice_recommended">RECOMENDADO</string>
+    <string name="advice_possible">POSIBLE: REVISE LAS NOTAS</string>
+    <string name="advice_not_suitable">NO ADECUADO</string>
+    <string name="reason_fibre_suitable">Tejido: %1$s figura como adecuado.</string>
+    <string name="reason_fibre_not_suitable">Tejido: %1$s figura como no adecuado.</string>
+    <string name="reason_fibre_caution">Precaución del tejido: %1$s</string>
+    <string name="reason_fibre_not_listed">Tejido: %1$s no está en la lista de tejidos adecuados de este método.</string>
+    <string name="reason_fibre_no_data">Tejido: no hay datos de fibra en el archivo de reglas.</string>
+    <string name="reason_fibre_not_chosen">No se eligió el tejido, así que no se comprueba la fibra.</string>
+    <string name="reason_artwork_solid_only">Ilustración: necesita formas sólidas; no se pueden imprimir degradados ni zonas fotográficas.</string>
+    <string name="reason_artwork_solid_preferred">Ilustración: funciona mejor con formas sólidas; se pierden el detalle fino y los tonos.</string>
+    <string name="reason_artwork_fits">Ilustración: adecuado para este tipo de ilustración.</string>
+    <string name="reason_artwork_not_chosen">No se eligió el tipo de ilustración, así que no se comprueba.</string>
+    <string name="reason_garment_light_only">Prenda: solo prendas blancas o claras.</string>
+    <string name="reason_garment_dark_only">Prenda: necesita una prenda teñida oscura o media.</string>
+    <string name="reason_garment_caution">Precaución de la prenda: %1$s</string>
+    <string name="reason_garment_note">Nota de la prenda: %1$s</string>
+    <string name="reason_garment_not_chosen">No se eligió el color de la prenda, así que no se comprueba.</string>
+    <string name="advice_confidence">Confianza: %1$s</string>
+    <string name="advice_confidence_none">Confianza: no indicada en el archivo de reglas</string>
+    <string name="advice_not_verified">No verificado en planta</string>
+    <string name="advice_risks">Riesgos</string>
+    <string name="advice_disclaimer">Sugerencia basada en reglas de fuentes comerciales públicas. Confírmela con una prueba de impresión antes de producir.</string>
+    <string name="advice_loading">Cargando reglas…</string>
 </resources>

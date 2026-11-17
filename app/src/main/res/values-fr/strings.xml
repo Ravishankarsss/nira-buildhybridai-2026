@@ -111,4 +111,46 @@
     <string name="settings_ai_answers_device">Réponses sur l\'appareil</string>
     <string name="settings_ai_answers_cloud">Réponses dans le cloud</string>
     <string name="settings_ai_images_uploaded">Images envoyées</string>
+
+    <!-- Print method advice -->
+    <string name="advice_title">Conseil de méthode d\'impression</string>
+    <string name="advice_hint">D\'après le fichier de règles des techniques d\'impression. Choisissez le tissu ; NIRA vérifie la fibre, l\'illustration et la couleur du vêtement.</string>
+    <string name="advice_fabric">Tissu</string>
+    <string name="fibre_cotton">Coton</string>
+    <string name="fibre_polyester">Polyester</string>
+    <string name="fibre_blend">Mélange coton/polyester</string>
+    <string name="fibre_linen">Lin</string>
+    <string name="fibre_nylon">Nylon</string>
+    <string name="advice_artwork">Illustration</string>
+    <string name="advice_artwork_flat">À plat (couleurs unies)</string>
+    <string name="advice_artwork_tonal">Tonale (dégradés, photo)</string>
+    <string name="advice_from_ai">Défini par la lecture IA</string>
+    <string name="advice_garment">Vêtement</string>
+    <string name="advice_garment_light">Clair</string>
+    <string name="advice_garment_dark">Foncé ou coloré</string>
+    <string name="advice_from_measured">Défini par la couleur mesurée du vêtement</string>
+    <string name="advice_recommended">RECOMMANDÉ</string>
+    <string name="advice_possible">POSSIBLE : VOIR LES NOTES</string>
+    <string name="advice_not_suitable">NON ADAPTÉ</string>
+    <string name="reason_fibre_suitable">Tissu : %1$s est indiqué comme adapté.</string>
+    <string name="reason_fibre_not_suitable">Tissu : %1$s est indiqué comme non adapté.</string>
+    <string name="reason_fibre_caution">Précaution tissu : %1$s</string>
+    <string name="reason_fibre_not_listed">Tissu : %1$s n\'est pas dans la liste des tissus adaptés de cette méthode.</string>
+    <string name="reason_fibre_no_data">Tissu : aucune donnée de fibre dans le fichier de règles.</string>
+    <string name="reason_fibre_not_chosen">Tissu non choisi, la fibre n\'est donc pas vérifiée.</string>
+    <string name="reason_artwork_solid_only">Illustration : nécessite des formes unies ; les dégradés et zones photo ne peuvent pas être imprimés.</string>
+    <string name="reason_artwork_solid_preferred">Illustration : idéale sur des formes unies ; les détails fins et les nuances sont perdus.</string>
+    <string name="reason_artwork_fits">Illustration : convient à ce type d\'illustration.</string>
+    <string name="reason_artwork_not_chosen">Type d\'illustration non choisi, il n\'est donc pas vérifié.</string>
+    <string name="reason_garment_light_only">Vêtement : vêtements blancs ou clairs uniquement.</string>
+    <string name="reason_garment_dark_only">Vêtement : nécessite un vêtement teint foncé ou moyen.</string>
+    <string name="reason_garment_caution">Précaution vêtement : %1$s</string>
+    <string name="reason_garment_note">Note vêtement : %1$s</string>
+    <string name="reason_garment_not_chosen">Couleur du vêtement non choisie, elle n\'est donc pas vérifiée.</string>
+    <string name="advice_confidence">Confiance : %1$s</string>
+    <string name="advice_confidence_none">Confiance : non indiquée dans le fichier de règles</string>
+    <string name="advice_not_verified">Non vérifié en atelier</string>
+    <string name="advice_risks">Risques</string>
+    <string name="advice_disclaimer">Suggestion basée sur des règles issues de sources professionnelles publiques. Confirmez par un essai d\'impression avant production.</string>
+    <string name="advice_loading">Chargement des règles…</string>
 </resources>
