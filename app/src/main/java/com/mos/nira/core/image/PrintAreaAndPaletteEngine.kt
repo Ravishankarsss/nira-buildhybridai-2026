@@ -29,6 +29,28 @@ import kotlin.math.roundToInt
  * - Flat-Separation Posterisation Error Curve (K = 4, 6, 8, 10, 12, 16)
  */
 object PrintAreaAndPaletteEngine {
+    /**
+     * Runs body(i) for i in 0 until n on all processor cores. Each i must write only its own
+     * output slot, so the result is exactly the same as a plain loop.
+     */
+    private inline fun parallelFor(n: Int, crossinline body: (Int) -> Unit) {
+        if (n <= 0) return
+        java.util.stream.IntStream.range(0, n).parallel().forEach { body(it) }
+    }
+
+    /** Lab of every distinct colour in the image, computed once. Read-only after it is built. */
+    private fun labByColour(pixels: IntArray): HashMap<Int, ColorConverter.Lab> {
+        val map = HashMap<Int, ColorConverter.Lab>(4096)
+        for (p in pixels) {
+            val key = p and 0xFFFFFF
+            if (!map.containsKey(key)) {
+                map[key] = ColorConverter.rgbToLab((key shr 16) and 0xFF, (key shr 8) and 0xFF, key and 0xFF)
+            }
+        }
+        return map
+    }
+
+
 
     const val DEFAULT_MERGE_THRESHOLD_DELTA_E00 = 3.2
     const val MIN_COVERAGE_PERCENT = 1.5 // 1.5%
@@ -399,15 +421,20 @@ object PrintAreaAndPaletteEngine {
 
         // Step 10: Flat-separation posterisation error curve for K = 4, 6, 8, 10, 12, 16
         val targetKs = listOf(4, 6, 8, 10, 12, 16)
-        val errorCurve = targetKs.map { k ->
+        // The six clusterings are independent, so they run at the same time. Each one is the
+        // same calculation as before, so the curve is unchanged.
+        val errorCurveSlots = arrayOfNulls<ErrorCurvePoint>(targetKs.size)
+        parallelFor(targetKs.size) { slot ->
+            val k = targetKs[slot]
             val effectiveK = min(k, trainingLabList.size)
-            if (effectiveK <= 0) {
+            errorCurveSlots[slot] = if (effectiveK <= 0) {
                 ErrorCurvePoint(k, 0.0)
             } else {
                 val kCenters = runKMeans(trainingLabList, effectiveK, seed)
                 val evalList = if (maskedLabList.size > 5000) trainingLabList else maskedLabList
-                var totalDeltaE = 0.0
-                for (pixelLab in evalList) {
+                val minDists = DoubleArray(evalList.size)
+                parallelFor(evalList.size) { i ->
+                    val pixelLab = evalList[i]
                     var minDist = Double.MAX_VALUE
                     for (center in kCenters) {
                         val d = ColorConverter.deltaE00(pixelLab, center)
@@ -415,12 +442,15 @@ object PrintAreaAndPaletteEngine {
                             minDist = d
                         }
                     }
-                    totalDeltaE += minDist
+                    minDists[i] = minDist
                 }
+                var totalDeltaE = 0.0
+                for (d in minDists) totalDeltaE += d // same order as before
                 val meanDeltaE = totalDeltaE / evalList.size.toDouble()
                 ErrorCurvePoint(k = k, meanDeltaE00 = meanDeltaE)
             }
         }
+        val errorCurve = errorCurveSlots.map { it!! }
 
         // Step 11: Render Mask Bitmap with print box overlay
         val maskBitmap = if (generateMaskBitmap) {
@@ -475,6 +505,7 @@ object PrintAreaAndPaletteEngine {
         // Border size from print_rules.json (garment_mask.border_fraction).
         val margin = max(1, (maskRules.borderFraction * min(width, height)).toInt())
         val borderLabs = ArrayList<ColorConverter.Lab>()
+        val borderLabCache = HashMap<Int, ColorConverter.Lab>(4096)
 
         for (y in 0 until height) {
             val rowOffset = y * width
@@ -484,10 +515,10 @@ object PrintAreaAndPaletteEngine {
                     val p = pixels[rowOffset + x]
                     val alpha = (p shr 24) and 0xFF
                     if (alpha >= 128) {
-                        val r = (p shr 16) and 0xFF
-                        val g = (p shr 8) and 0xFF
-                        val b = p and 0xFF
-                        borderLabs.add(ColorConverter.rgbToLab(r, g, b))
+                        val key = p and 0xFFFFFF
+                        borderLabs.add(borderLabCache.getOrPut(key) {
+                            ColorConverter.rgbToLab((key shr 16) and 0xFF, (key shr 8) and 0xFF, key and 0xFF)
+                        })
                     }
                 }
             }
@@ -517,7 +548,9 @@ object PrintAreaAndPaletteEngine {
         }
 
         // Compute spread = median deltaE00 of border pixels to median Lab
-        val deltas = borderLabs.map { ColorConverter.deltaE00(it, medLab) }.sorted()
+        val deltaArray = DoubleArray(borderLabs.size)
+        parallelFor(borderLabs.size) { i -> deltaArray[i] = ColorConverter.deltaE00(borderLabs[i], medLab) }
+        val deltas = deltaArray.sorted()
         val spread = deltas[deltas.size / 2].coerceIn(1.0, 5.0)
         // Threshold adapts to the fabric spread (garment_mask.spread_multiplier, min_threshold_de00).
         val adaptiveThreshold = max(maskRules.minThresholdDeltaE00, spread * maskRules.spreadMultiplier)
@@ -548,36 +581,33 @@ object PrintAreaAndPaletteEngine {
         val blockW = max(1, width / gridDim)
         val blockH = max(1, height / gridDim)
         val field = Array(gridDim) { DoubleArray(gridDim) { garmentLab.l } }
+        val labs = labByColour(pixels)
 
-        for (gy in 0 until gridDim) {
+        parallelFor(gridDim * gridDim) { cell ->
+            val gy = cell / gridDim
+            val gx = cell % gridDim
             val startY = gy * blockH
             val endY = min(height, startY + blockH)
-            for (gx in 0 until gridDim) {
-                val startX = gx * blockW
-                val endX = min(width, startX + blockW)
+            val startX = gx * blockW
+            val endX = min(width, startX + blockW)
 
-                val blockLs = ArrayList<Double>()
-                for (y in startY until endY) {
-                    val row = y * width
-                    for (x in startX until endX) {
-                        val p = pixels[row + x]
-                        val r = (p shr 16) and 0xFF
-                        val g = (p shr 8) and 0xFF
-                        val b = p and 0xFF
-                        val lab = ColorConverter.rgbToLab(r, g, b)
-                        if (ColorConverter.deltaE00(lab, garmentLab) <= spread * 2.5) {
-                            blockLs.add(lab.l)
-                        }
+            val blockLs = ArrayList<Double>()
+            for (y in startY until endY) {
+                val row = y * width
+                for (x in startX until endX) {
+                    val lab = labs.getValue(pixels[row + x] and 0xFFFFFF)
+                    if (ColorConverter.deltaE00(lab, garmentLab) <= spread * 2.5) {
+                        blockLs.add(lab.l)
                     }
                 }
-                if (blockLs.size >= 8) {
-                    field[gy][gx] = blockLs.sorted()[blockLs.size / 2]
-                }
+            }
+            if (blockLs.size >= 8) {
+                field[gy][gx] = blockLs.sorted()[blockLs.size / 2]
             }
         }
 
         val result = IntArray(pixels.size)
-        for (y in 0 until height) {
+        parallelFor(height) { y ->
             val gy = (y.toDouble() / height * gridDim).toInt().coerceIn(0, gridDim - 1)
             val row = y * width
             for (x in 0 until width) {
@@ -590,11 +620,7 @@ object PrintAreaAndPaletteEngine {
                 if (abs(ratio - 1.0) < 0.1) {
                     result[row + x] = pixels[row + x]
                 } else {
-                    val p = pixels[row + x]
-                    val r = (p shr 16) and 0xFF
-                    val g = (p shr 8) and 0xFF
-                    val b = p and 0xFF
-                    val lab = ColorConverter.rgbToLab(r, g, b)
+                    val lab = labs.getValue(pixels[row + x] and 0xFFFFFF)
                     val newL = (lab.l * ratio).coerceIn(0.0, 100.0)
                     val newRgb = ColorConverter.labToRgb(newL, lab.a, lab.b)
                     result[row + x] = (0xFF shl 24) or (newRgb.r shl 16) or (newRgb.g shl 8) or newRgb.b
@@ -626,7 +652,7 @@ object PrintAreaAndPaletteEngine {
         val dxs = intArrayOf(1, -1, 0, 1)
         val dys = intArrayOf(0, 1, 1, 1)
         val pairDelta = Array(4) { FloatArray(n) }
-        for (y in 0 until height) {
+        parallelFor(height) { y ->
             for (x in 0 until width) {
                 val i = y * width + x
                 for (k in 0..3) {
@@ -641,7 +667,7 @@ object PrintAreaAndPaletteEngine {
         }
 
         val result = IntArray(n)
-        for (y in 0 until height) {
+        parallelFor(height) { y ->
             val row = y * width
             for (x in 0 until width) {
                 val i = row + x
@@ -917,17 +943,18 @@ object PrintAreaAndPaletteEngine {
 
         val distances = DoubleArray(n)
         for (step in 1 until actualK) {
-            var sumDist = 0.0
-            for (i in 0 until n) {
+            val currentCenters = ArrayList(centers)
+            parallelFor(n) { i ->
                 var minD = Double.MAX_VALUE
                 val pt = points[i]
-                for (c in centers) {
+                for (c in currentCenters) {
                     val d = ColorConverter.deltaE00(pt, c)
                     if (d < minD) minD = d
                 }
                 distances[i] = minD * minD
-                sumDist += distances[i]
             }
+            var sumDist = 0.0
+            for (i in 0 until n) sumDist += distances[i] // same order as before
 
             val target = random.nextDouble() * sumDist
             var cumulative = 0.0
@@ -951,19 +978,24 @@ object PrintAreaAndPaletteEngine {
             changed = false
             iterations++
 
-            for (i in 0 until n) {
+            val iterationCenters = ArrayList(centers)
+            val newAssignments = IntArray(n)
+            parallelFor(n) { i ->
                 val pt = points[i]
                 var bestCluster = 0
                 var minDist = Double.MAX_VALUE
                 for (c in 0 until actualK) {
-                    val d = ColorConverter.deltaE00(pt, centers[c])
+                    val d = ColorConverter.deltaE00(pt, iterationCenters[c])
                     if (d < minDist) {
                         minDist = d
                         bestCluster = c
                     }
                 }
-                if (assignments[i] != bestCluster) {
-                    assignments[i] = bestCluster
+                newAssignments[i] = bestCluster
+            }
+            for (i in 0 until n) {
+                if (assignments[i] != newAssignments[i]) {
+                    assignments[i] = newAssignments[i]
                     changed = true
                 }
             }
@@ -1006,27 +1038,28 @@ object PrintAreaAndPaletteEngine {
         val k = centers.size
         if (k == 0) return result
 
-        val cache = HashMap<Int, Int>(4096)
-        for (i in 0 until n) {
-            val rgbKey = pixelsRgb[i] and 0x00FFFFFF
-            val cached = cache[rgbKey]
-            if (cached != null) {
-                result[i] = cached
-            } else {
-                val pt = pixelsLab[i]
-                var bestC = 0
-                var minDist = Double.MAX_VALUE
-                for (c in 0 until k) {
-                    val dist = ColorConverter.deltaE00(pt, centers[c])
-                    if (dist < minDist) {
-                        minDist = dist
-                        bestC = c
-                    }
+        // The nearest centre depends only on the colour, so it is found once per distinct colour.
+        val firstIndexOfColour = LinkedHashMap<Int, Int>(4096)
+        for (i in 0 until n) firstIndexOfColour.putIfAbsent(pixelsRgb[i] and 0x00FFFFFF, i)
+        val colours = firstIndexOfColour.keys.toIntArray()
+        val firstIndex = firstIndexOfColour.values.toIntArray()
+        val best = IntArray(colours.size)
+        parallelFor(colours.size) { u ->
+            val pt = pixelsLab[firstIndex[u]]
+            var bestC = 0
+            var minDist = Double.MAX_VALUE
+            for (c in 0 until k) {
+                val dist = ColorConverter.deltaE00(pt, centers[c])
+                if (dist < minDist) {
+                    minDist = dist
+                    bestC = c
                 }
-                cache[rgbKey] = bestC
-                result[i] = bestC
             }
+            best[u] = bestC
         }
+        val bestByColour = HashMap<Int, Int>(colours.size * 2)
+        for (u in colours.indices) bestByColour[colours[u]] = best[u]
+        for (i in 0 until n) result[i] = bestByColour.getValue(pixelsRgb[i] and 0x00FFFFFF)
         return result
     }
 
