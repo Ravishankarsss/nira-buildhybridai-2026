@@ -543,6 +543,13 @@
     "plateau_min_px": 2,
     "plateau_ratio_tolerance": 0.1,
     "monotonic_required": true,
+    "keyline_protection": {
+      "rule": "a thin band much darker than both neighbours (lightness below both neighbouring colours by at least keyline_min_L_drop) is a keyline, never blur, whatever its width",
+      "keyline_min_L_drop": 15,
+      "applies_to": "black and any dark line colour; also any band that fails the colour-family test",
+      "confidence": "assumption",
+      "floor_confirmation": "Ravi confirmed 18 Nov 2026 that black keylines are common and important"
+    },
     "action_photo": "reassign each blend pixel to the nearer neighbour by mixing ratio; a pixel nearer the fabric leaves the print area",
     "action_artwork": "same, only when the band is band_max_px_artwork or thinner (anti-aliasing); otherwise keep the colour",
     "if_line_but_not_thin": "keep as a colour (may be a real tint or gradient)",

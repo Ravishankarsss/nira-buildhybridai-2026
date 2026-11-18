@@ -110,6 +110,8 @@ data class EdgeBlendRules(
     val plateauMinPx: Int,
     val plateauRatioTolerance: Double,
     val monotonicRequired: Boolean,
+    /** keyline_protection: a band darker than both neighbours by at least this (L*) is a keyline, never blur. */
+    val keylineMinLDrop: Double,
     val confidence: String
 )
 
@@ -278,6 +280,7 @@ class PrintRulesRepository(private val context: Context?) {
                 plateauMinPx = r.getInt("plateau_min_px"),
                 plateauRatioTolerance = r.getDouble("plateau_ratio_tolerance"),
                 monotonicRequired = r.getBoolean("monotonic_required"),
+                keylineMinLDrop = r.getJSONObject("keyline_protection").getDouble("keyline_min_L_drop"),
                 confidence = r.getString("confidence")
             )
         } catch (e: Exception) {

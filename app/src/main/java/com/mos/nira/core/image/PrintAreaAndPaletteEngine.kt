@@ -929,6 +929,13 @@ object PrintAreaAndPaletteEngine {
             val rgbA = if (a == EDGE_FABRIC) garmentRgb else bucketRgb[a]
             val rgbB = if (b == EDGE_FABRIC) garmentRgb else bucketRgb[b]
 
+            // Keyline protection: blur is a mix of its neighbours, so it can never be darker than
+            // both. A band much darker than both is a printed keyline: never merged, never flagged.
+            val lC = ColorConverter.rgbToLab(bucketRgb[c]).l
+            val lA = ColorConverter.rgbToLab(rgbA).l
+            val lB = ColorConverter.rgbToLab(rgbB).l
+            if (lC <= minOf(lA, lB) - rules.keylineMinLDrop) continue
+
             // On the mixing line, strictly between the two neighbours.
             val fit = EdgeBlend.mixFit(bucketRgb[c], rgbA, rgbB)
             if (fit.t <= 0.0 || fit.t >= 1.0 || fit.deltaE00 > rules.onMixingLineMaxDeltaE00) continue

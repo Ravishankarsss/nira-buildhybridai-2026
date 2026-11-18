@@ -37,6 +37,7 @@ class EdgeBlendTest {
         assertEquals(e.getInt("plateau_min_px"), rules.plateauMinPx)
         assertEquals(e.getDouble("plateau_ratio_tolerance"), rules.plateauRatioTolerance, 0.0)
         assertEquals(e.getBoolean("monotonic_required"), rules.monotonicRequired)
+        assertEquals(e.getJSONObject("keyline_protection").getDouble("keyline_min_L_drop"), rules.keylineMinLDrop, 0.0)
         // The two numbers are the same as in Ravi's sentence.
         assertTrue(e.getString("plateau_keep_rule").contains("at least 2 consecutive pixels"))
         assertTrue(e.getString("plateau_keep_rule").contains("within 0.1"))
@@ -94,11 +95,18 @@ class EdgeBlendTest {
      * [keylinePx] puts a line of the exact midpoint colour between stripes; [antiAliasPx] puts the
      * midpoint colour as anti-aliasing.
      */
-    private fun stripes(keylinePx: Int = 0, antiAliasPx: Int = 0): Img {
+    private fun stripes(
+        keylinePx: Int = 0,
+        antiAliasPx: Int = 0,
+        lineColour: ColorConverter.Rgb? = null,
+        first: ColorConverter.Rgb = sky,
+        second: ColorConverter.Rgb = inkBlue,
+        fabric: ColorConverter.Rgb = garment
+    ): Img {
         val w = 600
         val h = 500
-        val px = IntArray(w * h) { argb(garment) }
-        val mid = mix(sky, inkBlue, 0.5)
+        val px = IntArray(w * h) { argb(fabric) }
+        val mid = lineColour ?: mix(first, second, 0.5)
         val period = 12 + keylinePx + antiAliasPx
         for (y in 100 until 400) for (x in 100 until 500) {
             val k = (x - 100) % (2 * period)
@@ -106,7 +114,7 @@ class EdgeBlendTest {
             val j = if (inFirst) k else k - period
             px[y * w + x] = argb(
                 when {
-                    j < 12 -> if (inFirst) sky else inkBlue
+                    j < 12 -> if (inFirst) first else second
                     else -> mid // keyline or anti-aliasing after each stripe
                 }
             )
@@ -253,5 +261,42 @@ class EdgeBlendTest {
         assertEquals(hexes(without), hexes(kept))
         assertEquals(without.measuredPalette.map { it.pixelCount }, kept.measuredPalette.map { it.pixelCount })
         assertEquals(0, kept.edgeBlendPixelsMerged)
+    }
+
+    // ---------- keyline protection (Ravi, 18 Nov: black keylines are common and important) ----------
+
+    private val black = ColorConverter.labToRgb(8.0, 0.0, 0.0)
+
+    @Test
+    fun blackKeyline_betweenTwoBlues_inABlurredPhoto_staysThreeInks() {
+        // 0.3 mm at 120 px/cm is about 4 px.
+        val photo = asPhoto(stripes(keylinePx = 4, lineColour = black))
+        val a = partA(photo, InputKind.PHOTO, pxPerCm = 120.0)
+        assertEquals("colours ${hexes(a)}", 3, a.measuredPalette.size)
+        assertTrue(a.measuredPalette.any { ColorConverter.rgbToLab(it.rgb).l < 20.0 }) // the black is there
+    }
+
+    @Test
+    fun blackKeyline_atLowResolution_staysThreeInks_andIsNotFlaggedAsBlur() {
+        val photo = asPhoto(stripes(keylinePx = 4, lineColour = black))
+        val a = partA(photo, InputKind.PHOTO, pxPerCm = 40.0)
+        // Low resolution: blur is flagged, never merged; the sure colours are the 3 inks.
+        val sure = a.measuredPalette.filter { !it.possibleEdgeBlend }
+        assertEquals("colours ${hexes(a)}", 3, sure.size)
+        assertEquals(0, a.edgeBlendPixelsMerged)
+        assertTrue(sure.any { ColorConverter.rgbToLab(it.rgb).l < 20.0 }) // the black, not flagged
+    }
+
+    @Test
+    fun darkNavyKeyline_betweenLightBlueAndWhite_stays() {
+        val navy = ColorConverter.labToRgb(20.0, 5.0, -30.0)
+        val lightBlue = ColorConverter.labToRgb(78.0, -6.0, -18.0)
+        val whiteInk = ColorConverter.labToRgb(96.0, 0.0, 0.0)
+        val charcoal = ColorConverter.labToRgb(25.0, 0.0, 0.0)
+        val photo = asPhoto(stripes(keylinePx = 4, lineColour = navy, first = lightBlue, second = whiteInk, fabric = charcoal))
+        val a = partA(photo, InputKind.PHOTO, pxPerCm = 120.0)
+        // Blur lightens a 4 px line, so the measured navy is lighter than the ink, but it stays a colour.
+        assertEquals("colours ${hexes(a)}", 3, a.measuredPalette.size)
+        assertTrue("colours ${hexes(a)}", a.measuredPalette.any { ColorConverter.rgbToLab(it.rgb).l < 50.0 })
     }
 }
