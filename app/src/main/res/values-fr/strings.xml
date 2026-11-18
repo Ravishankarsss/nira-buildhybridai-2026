@@ -192,4 +192,5 @@
         <item quantity="one">%1$d ombre de pli retirée de la zone d\'impression.</item>
         <item quantity="other">%1$d ombres de pli retirées de la zone d\'impression.</item>
     </plurals>
+    <string name="colour_confirm_all_shadows">Toutes les zones signalées sont des ombres de plis</string>
 </resources>

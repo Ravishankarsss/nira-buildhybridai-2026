@@ -192,4 +192,5 @@
         <item quantity="one">Se quitó %1$d sombra de pliegue del área de impresión.</item>
         <item quantity="other">Se quitaron %1$d sombras de pliegue del área de impresión.</item>
     </plurals>
+    <string name="colour_confirm_all_shadows">Todas las zonas marcadas son sombras de pliegues</string>
 </resources>

@@ -190,4 +190,5 @@
         <item quantity="one">已从印花区域移除 %1$d 处褶皱阴影。</item>
         <item quantity="other">已从印花区域移除 %1$d 处褶皱阴影。</item>
     </plurals>
+    <string name="colour_confirm_all_shadows">所有标记区域都是褶皱阴影</string>
 </resources>

@@ -190,4 +190,5 @@
         <item quantity="one">%1$d fold shadow removed from the print area.</item>
         <item quantity="other">%1$d fold shadows removed from the print area.</item>
     </plurals>
+    <string name="colour_confirm_all_shadows">All flagged areas are fold shadows</string>
 </resources>

@@ -102,6 +102,7 @@ fun ColorIntelligenceScreen(
     foldShadowsRemoved: Int = 0,
     shadowTestLowResolution: Boolean = false,
     onAnswerFoldShadow: (points: List<Pair<Float, Float>>, isInk: Boolean) -> Unit = { _, _ -> },
+    onAnswerAllFoldShadows: () -> Unit = {},
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -355,7 +356,7 @@ fun ColorIntelligenceScreen(
         // Measured print colours: the ones used for screens and ink.
         if (!measuredPrintColours.isNullOrEmpty()) {
             item {
-                MeasuredPrintColoursCard(measuredPrintColours, onAnswerFoldShadow)
+                MeasuredPrintColoursCard(measuredPrintColours, onAnswerFoldShadow, onAnswerAllFoldShadows)
             }
         }
 
@@ -547,14 +548,26 @@ fun ColorIntelligenceScreen(
 @Composable
 private fun MeasuredPrintColoursCard(
     colours: List<MeasuredColor>,
-    onAnswerFoldShadow: (points: List<Pair<Float, Float>>, isInk: Boolean) -> Unit
+    onAnswerFoldShadow: (points: List<Pair<Float, Float>>, isInk: Boolean) -> Unit,
+    onAnswerAllFoldShadows: () -> Unit
 ) {
     var asking by remember { mutableStateOf<MeasuredColor?>(null) }
     asking?.let { c ->
         AlertDialog(
             onDismissRequest = { asking = null },
             title = { Text(stringResource(R.string.colour_confirm_title)) },
-            text = { Text(c.hex + "\n\n" + stringResource(R.string.colour_confirm_body)) },
+            text = {
+                Column {
+                    Text(c.hex + "\n\n" + stringResource(R.string.colour_confirm_body))
+                    // One answer for every flagged area in the photo, however the colours group.
+                    if (colours.count { it.possibleFoldShadow } > 1 || c.uncertainRegionPoints.size > 1) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        TextButton(onClick = { onAnswerAllFoldShadows(); asking = null }) {
+                            Text(stringResource(R.string.colour_confirm_all_shadows))
+                        }
+                    }
+                }
+            },
             confirmButton = {
                 TextButton(onClick = { onAnswerFoldShadow(c.uncertainRegionPoints, true); asking = null }) {
                     Text(stringResource(R.string.colour_confirm_ink))

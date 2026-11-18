@@ -69,6 +69,19 @@ object ShadowInkClassifier {
         return LabelledRegions(labels, regions)
     }
 
+    /**
+     * Like [labelRegions], but pixels only connect to pixels of the same group ([group] true or
+     * false), so a grey area touching a coloured print becomes its own region.
+     */
+    fun labelRegionsByGroup(mask: BooleanArray, group: BooleanArray, width: Int, height: Int): LabelledRegions {
+        val inGroup = BooleanArray(mask.size) { mask[it] && group[it] }
+        val outGroup = BooleanArray(mask.size) { mask[it] && !group[it] }
+        val regions = regions(inGroup, width, height) + regions(outGroup, width, height)
+        val labels = IntArray(mask.size) { -1 }
+        regions.forEachIndexed { id, r -> for (p in r) labels[p] = id }
+        return LabelledRegions(labels, regions)
+    }
+
     /** True when the region touches the edge of the photo. */
     fun touchesImageEdge(region: IntArray, width: Int, height: Int): Boolean = region.any { p ->
         val x = p % width

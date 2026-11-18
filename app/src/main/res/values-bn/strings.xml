@@ -191,4 +191,5 @@
         <item quantity="one">%1$dটি ভাঁজের ছায়া প্রিন্ট এলাকা থেকে সরানো হয়েছে।</item>
         <item quantity="other">%1$dটি ভাঁজের ছায়া প্রিন্ট এলাকা থেকে সরানো হয়েছে।</item>
     </plurals>
+    <string name="colour_confirm_all_shadows">সব চিহ্নিত অংশই ভাঁজের ছায়া</string>
 </resources>

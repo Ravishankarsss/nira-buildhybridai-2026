@@ -154,6 +154,7 @@ fun ArtworkNavHost(
                 foldShadowsRemoved = uiState.partAResult?.foldShadowsRemoved ?: 0,
                 shadowTestLowResolution = uiState.partAResult?.shadowTestLowResolution ?: false,
                 onAnswerFoldShadow = { points, isInk -> viewModel.answerFoldShadow(points, isInk) },
+                onAnswerAllFoldShadows = { viewModel.answerAllFoldShadows() },
                 onBack = goBack
             )
         }

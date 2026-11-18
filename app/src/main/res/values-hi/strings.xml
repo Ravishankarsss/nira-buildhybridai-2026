@@ -191,4 +191,5 @@
         <item quantity="one">%1$d सिलवट की छाया प्रिंट क्षेत्र से हटाई गई।</item>
         <item quantity="other">%1$d सिलवट की छायाएँ प्रिंट क्षेत्र से हटाई गईं।</item>
     </plurals>
+    <string name="colour_confirm_all_shadows">सभी चिह्नित हिस्से सिलवट की छाया हैं</string>
 </resources>

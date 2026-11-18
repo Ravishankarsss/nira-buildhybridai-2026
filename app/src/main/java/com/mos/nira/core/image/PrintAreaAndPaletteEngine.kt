@@ -195,7 +195,7 @@ object PrintAreaAndPaletteEngine {
 
         // Step 4b: Fold shadows (print_rules.json shadow_vs_ink), only on photos of light garments.
         val shadowCheck = if (inputs.inputKind == InputKind.PHOTO && isLightGarment && shadowRules != null) {
-            checkFoldShadows(smoothedPixels, width, height, maskWithoutSpecks, garmentLab, inputs, shadowRules)
+            checkFoldShadows(smoothedPixels, width, height, maskWithoutSpecks, garmentLab, inputs, shadowRules, maskRules.speckMinAreaFraction)
         } else null
         val cleanedPrintMask = shadowCheck?.mask ?: maskWithoutSpecks
         val detectedBox = detectPrintBox(cleanedPrintMask, width, height)
@@ -689,9 +689,33 @@ object PrintAreaAndPaletteEngine {
         mask: BooleanArray,
         garmentLab: ColorConverter.Lab,
         inputs: PrintJobInputs,
-        rules: ShadowVsInkRules
+        rules: ShadowVsInkRules,
+        speckMinAreaFraction: Double
     ): FoldShadowCheck {
-        val labelled = ShadowInkClassifier.labelRegions(mask, width, height)
+        // On a neutral garment a shadow is neutral, so grey pixels are grouped apart from coloured
+        // ones: a fold that runs into a coloured print is judged on its own, not as part of the ink.
+        val neutralLimit = rules.hueTestOnlyIfGarmentChromaAtLeast
+        val labelled = if (hypot(garmentLab.a, garmentLab.b) < neutralLimit) {
+            val labCacheGroup = HashMap<Int, Boolean>()
+            val neutral = BooleanArray(mask.size) { i ->
+                if (!mask[i]) false else {
+                    val c = pixels[i] and 0xFFFFFF
+                    labCacheGroup.getOrPut(c) {
+                        val lab = ColorConverter.rgbToLab((c shr 16) and 0xFF, (c shr 8) and 0xFF, c and 0xFF)
+                        hypot(lab.a, lab.b) < neutralLimit
+                    }
+                }
+            }
+            // Grey pieces smaller than a speck (garment_mask.speck_min_area_fraction) are camera
+            // noise inside a coloured area: they stay with their neighbours.
+            val minArea = speckMinAreaFraction * mask.size
+            for (piece in ShadowInkClassifier.regions(neutral, width, height)) {
+                if (piece.size < minArea) for (p in piece) neutral[p] = false
+            }
+            ShadowInkClassifier.labelRegionsByGroup(mask, neutral, width, height)
+        } else {
+            ShadowInkClassifier.labelRegions(mask, width, height)
+        }
         if (labelled.regions.isEmpty()) return FoldShadowCheck(mask, 0, false, emptyList())
 
         val labCache = HashMap<Int, ColorConverter.Lab>()
@@ -734,6 +758,7 @@ object PrintAreaAndPaletteEngine {
                 }
                 verdict = when {
                     answer != null -> if (answer.isInk) RegionVerdict.INK else RegionVerdict.FOLD_SHADOW
+                    inputs.allUncertainAreFoldShadows -> RegionVerdict.FOLD_SHADOW
                     else -> RegionVerdict.UNCERTAIN
                 }
                 if (a.reason == UncertainReason.LOW_RESOLUTION) lowResolution = true

@@ -238,6 +238,46 @@ class ShadowAndPhotoRulesTest {
         assertTrue(answered.measuredPalette.none { it.possibleFoldShadow })
     }
 
+    @Test
+    fun partA_photo_allFlaggedAreShadows_removesEveryUncertainArea_butAnInkAnswerWins() {
+        val sharpGrey = Shape(100, 300, 180, 420, rampMm = 0.0, lab = greyInk)
+        val lightSoft = Shape(250, 300, 330, 420, rampMm = 3.0, lab = ColorConverter.Lab(78.0, 0.0, 0.0))
+        val darkSoft = Shape(400, 300, 480, 420, rampMm = 3.0, lab = ColorConverter.Lab(55.0, 0.0, 0.0))
+        val px = garmentImage(lightGarment, listOf(sharpGrey, lightSoft, darkSoft))
+        fun run(all: Boolean, answers: List<com.mos.nira.features.artwork.domain.RegionAnswer> = emptyList()) =
+            PrintAreaAndPaletteEngine.computePartA(
+                px, size, size,
+                PrintJobInputs(
+                    inputKind = InputKind.PHOTO, cameraExif = true, printWidthCm = 381 / pxPerCm,
+                    regionAnswers = answers, allUncertainAreFoldShadows = all
+                ),
+                generateMaskBitmap = false,
+                decisionRules = PrintRulesRepository.parseSeparationDecisionRules(root),
+                maskRules = PrintRulesRepository.parseGarmentMaskRules(root),
+                photoRules = photoRules,
+                shadowRules = shadowRules
+            )
+
+        val first = run(all = false)
+        assertEquals(0, first.foldShadowsRemoved)
+        val flaggedPoints = first.measuredPalette.flatMap { it.uncertainRegionPoints }
+        assertEquals(2, flaggedPoints.size) // both soft greys are uncertain
+
+        // One answer for all: both soft greys go, the sharp grey ink stays.
+        val all = run(all = true)
+        assertEquals(2, all.foldShadowsRemoved)
+        assertTrue(all.measuredPalette.none { it.possibleFoldShadow })
+        assertEquals(1, all.measuredPalette.size)
+
+        // "This one is ink" for the dark soft grey wins over "all are shadows".
+        val darkPoint = flaggedPoints.maxByOrNull { it.first }!!
+        val mixed = run(all = true, answers = listOf(
+            com.mos.nira.features.artwork.domain.RegionAnswer(darkPoint.first, darkPoint.second, isInk = true)
+        ))
+        assertEquals(1, mixed.foldShadowsRemoved)
+        assertTrue(mixed.measuredPalette.none { it.possibleFoldShadow })
+    }
+
     // ---------- one ink's shades in a photo ----------
 
     /** A blue area on the light garment: lightness from [l0] at the left to [l1] at the right. */

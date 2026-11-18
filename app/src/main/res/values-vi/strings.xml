@@ -190,4 +190,5 @@
         <item quantity="one">Đã loại %1$d bóng nếp gấp khỏi vùng in.</item>
         <item quantity="other">Đã loại %1$d bóng nếp gấp khỏi vùng in.</item>
     </plurals>
+    <string name="colour_confirm_all_shadows">Tất cả vùng được đánh dấu là bóng nếp gấp</string>
 </resources>

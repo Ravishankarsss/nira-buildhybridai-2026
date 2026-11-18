@@ -253,7 +253,8 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                         inputKind = kind ?: it.printJobInputs.inputKind,
                         inputKindConfirmed = false,
                         cameraExif = cameraExif,
-                        regionAnswers = emptyList()
+                        regionAnswers = emptyList(),
+                        allUncertainAreFoldShadows = false
                     ),
                     analysisState = AnalysisState.Loading("Reading image metadata..."),
                     selectedImageUri = uri,
@@ -535,7 +536,8 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                         inputKind = record.inputKind?.let { k -> InputKind.valueOf(k) } ?: InputKind.ARTWORK,
                         inputKindConfirmed = record.inputKindConfirmed,
                         cameraExif = cameraExif,
-                        regionAnswers = emptyList()
+                        regionAnswers = emptyList(),
+                        allUncertainAreFoldShadows = false
                     ),
                     analysisState = AnalysisState.Loading("Loading analysis record..."),
                     selectedColor = record.palette.firstOrNull(),
@@ -605,7 +607,8 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                 printJobInputs = it.printJobInputs.copy(
                     inputKind = kind,
                     inputKindConfirmed = true,
-                    regionAnswers = emptyList()
+                    regionAnswers = emptyList(),
+                    allUncertainAreFoldShadows = false
                 )
             )
         }
@@ -630,6 +633,14 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                     regionAnswers = it.printJobInputs.regionAnswers + points.map { (x, y) -> RegionAnswer(x, y, isInk) }
                 )
             )
+        }
+        computePartAReport()
+    }
+
+    /** "All flagged areas are fold shadows": every uncertain region is removed; Part A runs again. */
+    fun answerAllFoldShadows() {
+        _uiState.update {
+            it.copy(printJobInputs = it.printJobInputs.copy(allUncertainAreFoldShadows = true))
         }
         computePartAReport()
     }

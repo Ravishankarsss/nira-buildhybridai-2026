@@ -65,7 +65,10 @@ data class PrintJobInputs(
     val inputKindConfirmed: Boolean = false,
     val cameraExif: Boolean? = null,
     // The user's answers for regions marked "Possible fold shadow - tap to confirm".
-    val regionAnswers: List<RegionAnswer> = emptyList()
+    val regionAnswers: List<RegionAnswer> = emptyList(),
+    // "All flagged areas are fold shadows": every uncertain region in this photo is a fold shadow,
+    // except a region the user marked as ink.
+    val allUncertainAreFoldShadows: Boolean = false
 )
 
 /** The user's answer for one uncertain region: a point inside it (normalised) and ink or shadow. */
