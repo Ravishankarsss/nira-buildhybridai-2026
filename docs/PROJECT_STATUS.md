@@ -40,7 +40,26 @@ Phone (vivo V60e), measured 18 Nov, time from tapping a saved analysis until the
 | 1280 × 714 px artwork (3 print colours measured) | about 30 s | about 21 s |
 | 6144 × 8192 px photo (12 print colours measured) | not measured | about 47 s |
 
-The phone is still far slower than the laptop. The next step is to time each stage on the phone itself.
+The phone is still far slower than the laptop.
+
+Stage times on the vivo V60e (8 cores), measured 18 Nov with temporary timers that were removed afterwards:
+
+| Stage | 1280 × 714 artwork | 6144 × 8192 photo (worked at 1536 × 2048) |
+| :--- | ---: | ---: |
+| Decode the saved image | 22 ms | 402 ms |
+| Older colour separation (runs **before** Part A starts) | 11,548 ms | 15,657 ms |
+| Part A: garment profile | 560 ms | 2,368 ms |
+| Part A: lighting flatten | 1,135 ms | 0 ms (white garment) |
+| Part A: knit smoothing | 1,637 ms | 0 ms (white garment) |
+| Part A: raw mask + specks + box | 757 ms | 597 ms |
+| Part A: collect print pixels | 329 ms | 1,451 ms |
+| Part A: k-means K=16 | 2,079 ms | 2,499 ms |
+| Part A: assign + merge + prune + palette | 768 ms | 1,889 ms |
+| Part A: error curve (6 clusterings) | 6,272 ms | 7,451 ms |
+| Part A: mask preview picture | 168 ms | 230 ms |
+| **Part A total** | **13,713 ms** | **16,601 ms** |
+
+What this shows: about half the wait is the older colour separation, which runs first and makes Part A wait. Inside Part A, the error curve is the largest stage.
 
 Bug found and fixed in the same test: opening a saved analysis kept the previous artwork's Print Report on screen (its colours and count) until the new Part A finished. Opening an analysis now clears Parts A–D, and a newer Part A run cancels the older one.
 
