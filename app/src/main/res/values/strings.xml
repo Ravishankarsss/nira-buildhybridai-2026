@@ -220,4 +220,5 @@
     <string name="explain_unverified">Not shown: unverified. The answer had numbers that are not in the engine data (%1$s). Use the engine data below.</string>
     <string name="explain_data_title">Engine data</string>
     <string name="explain_blocked">Confidential mode is on and this phone has no on-device model, so nothing was sent. The engine data is below.</string>
+    <string name="ai_limit_reached">The free AI limit for NIRA is used up for now. Try again in a few minutes; the daily limit resets at midnight Pacific time. The engine results are not affected.</string>
 </resources>

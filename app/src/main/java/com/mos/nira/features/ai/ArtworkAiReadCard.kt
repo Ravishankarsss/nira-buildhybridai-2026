@@ -144,7 +144,7 @@ private fun ResultView(result: HybridInferenceResult, read: ArtworkRead?) {
     if (result.text == null) {
         // Failed request: show the real source word (ERROR / UNAVAILABLE) and the error.
         SourceBadge(result)
-        Message(stringResource(R.string.ai_read_error, result.errorMessage ?: ""), ErrorRed)
+        Message(aiErrorText(result), ErrorRed)
         return
     }
 

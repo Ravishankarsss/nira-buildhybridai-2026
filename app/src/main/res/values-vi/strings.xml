@@ -220,4 +220,5 @@
     <string name="explain_unverified">Không hiển thị: chưa xác minh. Câu trả lời có số không có trong dữ liệu của bộ máy (%1$s). Hãy dùng dữ liệu bên dưới.</string>
     <string name="explain_data_title">Dữ liệu của bộ máy</string>
     <string name="explain_blocked">Chế độ bảo mật đang bật và điện thoại này không có mô hình trên thiết bị, nên không gửi gì cả. Dữ liệu của bộ máy ở bên dưới.</string>
+    <string name="ai_limit_reached">Hạn mức AI miễn phí của NIRA tạm thời đã hết. Hãy thử lại sau vài phút; hạn mức hằng ngày được đặt lại lúc nửa đêm giờ Thái Bình Dương. Kết quả của bộ máy không bị ảnh hưởng.</string>
 </resources>

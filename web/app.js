@@ -145,7 +145,9 @@ $("run").addEventListener("click", async () => {
     if (source === "IN_CLOUD") counts.cloud++;
   } catch (e) {
     $("r-source").textContent = modeName === "ONLY_ON_DEVICE" ? "UNAVAILABLE / ERROR" : "ERROR";
-    $("r-error").textContent = e?.message ?? String(e);
+    $("r-error").textContent = isLimitReached(e)
+      ? "The free AI limit for NIRA is used up for now. Try again in a few minutes; the daily limit resets at midnight Pacific time."
+      : (e?.message ?? String(e));
     $("r-error-row").hidden = false;
   } finally {
     $("r-duration").textContent = `${Math.round(performance.now() - start)} ms`;
@@ -156,3 +158,11 @@ $("run").addEventListener("click", async () => {
     await refreshAvailability();
   }
 });
+
+/** HTTP 429 / RESOURCE_EXHAUSTED: the project's free AI limit is used up (limits are per project). */
+function isLimitReached(e) {
+  const text = String(e?.message ?? e).toLowerCase();
+  return e?.status === 429 || e?.customErrorData?.status === 429 ||
+    text.includes("resource_exhausted") || text.includes("quota") || /\b429\b/.test(text) ||
+    text.includes("rate limit") || text.includes("too many requests");
+}

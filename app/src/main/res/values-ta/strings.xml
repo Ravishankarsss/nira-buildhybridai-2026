@@ -221,4 +221,5 @@
     <string name="explain_unverified">காட்டப்படவில்லை: சரிபார்க்கப்படவில்லை. பதிலில் engine தரவில் இல்லாத எண்கள் இருந்தன (%1$s). கீழே உள்ள engine தரவைப் பயன்படுத்தவும்.</string>
     <string name="explain_data_title">Engine தரவு</string>
     <string name="explain_blocked">Confidential mode இயக்கத்தில் உள்ளது; இந்த போனில் சாதன AI மாதிரி இல்லை, எனவே எதுவும் அனுப்பப்படவில்லை. Engine தரவு கீழே உள்ளது.</string>
+    <string name="ai_limit_reached">NIRA-வின் இலவச AI வரம்பு இப்போது தீர்ந்துவிட்டது. சில நிமிடங்களில் மீண்டும் முயலவும்; தினசரி வரம்பு பசிபிக் நேரம் நள்ளிரவில் மீண்டும் தொடங்கும். Engine முடிவுகள் பாதிக்கப்படாது.</string>
 </resources>

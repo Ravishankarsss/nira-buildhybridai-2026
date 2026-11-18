@@ -141,7 +141,7 @@ fun DeepReportCard(
                         Text(stringResource(R.string.deep_report_disclaimer), color = TextMuted, fontSize = 12.sp, lineHeight = 17.sp)
                     } else {
                         Text(
-                            stringResource(R.string.ai_read_error, s.result.errorMessage ?: ""),
+                            aiErrorText(s.result),
                             color = ErrorRed,
                             fontSize = 13.sp
                         )

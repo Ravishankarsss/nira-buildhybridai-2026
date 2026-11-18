@@ -35,7 +35,9 @@ data class HybridInferenceResult(
     val durationMs: Long,
     val requestedMode: HybridMode,
     val cloudModelName: String,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
+    /** The project's free AI limit is used up (HTTP 429 / QuotaExceededException). */
+    val limitReached: Boolean = false
 )
 
 /**
@@ -127,7 +129,8 @@ class HybridInferenceRepository {
             durationMs = elapsedMs(start),
             requestedMode = mode,
             cloudModelName = CLOUD_MODEL_NAME,
-            errorMessage = e.message ?: e.javaClass.simpleName
+            errorMessage = e.message ?: e.javaClass.simpleName,
+            limitReached = AiLimit.isLimitReached(e.javaClass.name, e.message)
         )
 
     private fun elapsedMs(startNanos: Long): Long = (System.nanoTime() - startNanos) / 1_000_000

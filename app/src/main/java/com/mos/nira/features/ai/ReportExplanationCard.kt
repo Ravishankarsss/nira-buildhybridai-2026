@@ -99,7 +99,7 @@ fun ReportExplanationCard(
                     )
                     Spacer(modifier = Modifier.height(10.dp))
                     when {
-                        !ok -> Text(stringResource(R.string.ai_read_error, s.result.errorMessage ?: ""), color = ErrorRed, fontSize = 13.sp)
+                        !ok -> Text(aiErrorText(s.result), color = ErrorRed, fontSize = 13.sp)
                         s.unverified.isNotEmpty() -> Text(
                             stringResource(
                                 R.string.explain_unverified,

@@ -384,7 +384,7 @@ private fun TestAiSection() {
             SettingsRow("Cloud model configured", r.cloudModelName)
             SettingsRow("Duration", "${r.durationMs} ms")
             if (r.text != null) SettingsRow("Response", r.text)
-            if (r.errorMessage != null) SettingsRow("Error", r.errorMessage)
+            if (r.errorMessage != null) SettingsRow("Error", if (r.limitReached) stringResource(R.string.ai_limit_reached) else r.errorMessage)
         }
 
         // App Check debug token, for registering this phone in the Firebase console.

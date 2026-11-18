@@ -221,4 +221,5 @@
     <string name="explain_unverified">नहीं दिखाया गया: असत्यापित। उत्तर में ऐसी संख्याएँ थीं जो इंजन डेटा में नहीं हैं (%1$s)। नीचे दिया गया इंजन डेटा देखें।</string>
     <string name="explain_data_title">इंजन डेटा</string>
     <string name="explain_blocked">Confidential mode चालू है और इस फ़ोन में ऑन-डिवाइस मॉडल नहीं है, इसलिए कुछ नहीं भेजा गया। इंजन डेटा नीचे है।</string>
+    <string name="ai_limit_reached">NIRA की मुफ़्त AI सीमा अभी समाप्त हो गई है। कुछ मिनट बाद फिर कोशिश करें; दैनिक सीमा पैसिफ़िक समय की आधी रात को फिर शुरू होती है। इंजन के परिणामों पर असर नहीं पड़ता।</string>
 </resources>
