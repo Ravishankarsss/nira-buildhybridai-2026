@@ -23,7 +23,16 @@ Rule for this file: only write what was actually run. Numbers below come from re
 
 The on-device answer was wrong on the facts (an underbase is a white or light ink layer printed first on dark garments so colours stay bright, not an adhesion coating). This supports the design: engineering values come from print_rules.json and the engine; the AI explains them.
 
-Still to capture: PREFER_ON_DEVICE in Chrome, and ONLY_ON_DEVICE with Wi-Fi off.
+Hybrid routing captured the same day:
+
+| Mode | Network | Source reported by the SDK | Time | Evidence |
+| :--- | :--- | :--- | ---: | :--- |
+| ONLY_ON_DEVICE | online | ON_DEVICE | 3,440 ms | `2026-11-18_web_chrome_only_on_device.png` |
+| PREFER_ON_DEVICE | online | ON_DEVICE | 17,439 ms (first load) | `2026-11-18_web_chrome_prefer_on_device.png` |
+| ONLY_ON_DEVICE | **no internet** | ON_DEVICE | 3,428 ms | `2026-11-18_web_chrome_only_on_device_offline.png` |
+| ONLY_IN_CLOUD | online | IN_CLOUD | (17 Nov) | `2026-11-17_web_chrome_only_in_cloud.png` |
+
+All three on-device answers defined an underbase wrongly (a coating, a stencil); the correct answer is a white or light ink layer printed first on dark garments.
 
 ## 000000b. Update 18 Nov 2026 — photo or artwork, fold shadows, one ink's shades
 

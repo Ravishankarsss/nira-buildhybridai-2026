@@ -16,7 +16,7 @@ Status words used here:
 | A1 | Firebase AI Logic called at runtime | **Done** (17 Nov, vivo V60e) | `HybridInferenceRepository`, "Test AI" button | — |
 | A2 | Cloud inference | **Done** (17 Nov, `IN_CLOUD`, 2–10 s) | Same as A1 | No product feature uses the cloud yet |
 | A3 | Real on-device inference (Gemini Nano) | **Done 18 Nov (web)** | Chrome 159 Beta, Prompt API available, ONLY_ON_DEVICE: the SDK reported ON_DEVICE, 3,440 ms, a real answer (evidence: docs/evidence/2026-11-18_web_chrome_only_on_device.png) | The vivo V60e still has no on-device model; Android stays cloud with the honest status |
-| A4 | Actual hybrid routing | Partial | PREFER_ON_DEVICE falls back to IN_CLOUD on the vivo (17 Nov); ON_DEVICE proven in Chrome (18 Nov) | Still to capture: PREFER_ON_DEVICE in Chrome (expect ON_DEVICE), and Wi-Fi off with ONLY_ON_DEVICE |
+| A4 | Actual hybrid routing | **Done 18 Nov (web)** | Chrome 159 Beta: PREFER_ON_DEVICE gave ON_DEVICE (17,439 ms, first load); ONLY_ON_DEVICE with no internet gave ON_DEVICE (3,428 ms); ONLY_IN_CLOUD gave IN_CLOUD on 17 Nov. Evidence in docs/evidence (bookmarks bar cropped off) | On the vivo PREFER_ON_DEVICE falls back to IN_CLOUD (no on-device model on that phone) |
 | A5 | App Check | Partial | Debug provider in debug builds; vivo token registered and accepted | Release builds have no provider (Play Integrity not set up) |
 | A6 | Public repository with all source | Ready to publish, waiting for Ravi | Secret scan done 17 Nov (clean); phone serial removed from Git | Ravi approves, then push and make public |
 | A7 | Open-source licence | **Done** 17 Nov | `LICENSE` (Apache 2.0) | — |
