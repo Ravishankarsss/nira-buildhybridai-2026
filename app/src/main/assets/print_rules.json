@@ -420,7 +420,7 @@
   "display_disclaimer": "Rule-of-thumb estimate from public trade sources. Verify on the production floor and with the ink maker's technical data sheet.",
   "change_log": [
     "v2 (15 Nov 2026): added process_inks, garment_mask, white_base, recommendation, resolution and regression_cases after a device test on a real garment photo (white-to-blue gradient logo on a black T-shirt).",
-    "v3 (18 Nov 2026): added shadow_vs_ink and photo_vs_artwork (proposed starting values, Ravi to confirm) after a white T-shirt photo measured fold shadows as print colours."
+    "v3 (18 Nov 2026): added shadow_vs_ink and photo_vs_artwork (proposed starting values, Ravi to confirm) after a white T-shirt photo measured fold shadows as print colours. merge_shades_in_photo_hue_within_deg holds the 6 deg from merge_shades_in_photo as a number."
   ],
   "process_inks": {
     "cyan": "#00AEEF",
@@ -506,6 +506,8 @@
     "photo_background_L_range_min": 6,
     "ask_when_signals_disagree_with_mode": 2,
     "merge_shades_in_photo": "same hue within 6 deg and lightness change smooth across a connected region",
+    "merge_shades_in_photo_hue_within_deg": 6,
+    "merge_shades_in_photo_smooth_means": "the lightness change across the border between the two shades is wider than shadow_vs_ink.ink_edge_max_mm (not a stencil edge); neutral shades (chroma below shadow_vs_ink.hue_test_only_if_garment_chroma_at_least) have no reliable hue and are not merged",
     "merge_shades_in_artwork": "never automatic; if the lighter shade fits the garment-to-ink mixing line within 2.0 CIEDE2000, suggest 'print as tint of <ink>, saves 1 screen' for the user to accept",
     "confidence": "assumption",
     "note": "Proposed starting values; tune on real photos; Ravi to confirm"

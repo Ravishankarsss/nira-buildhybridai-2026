@@ -89,6 +89,8 @@ data class PhotoVsArtworkRules(
     val photoBackgroundLRangeMin: Double,
     val askWhenSignalsDisagreeWithMode: Int,
     val mergeShadesInPhoto: String,
+    /** Two shades in a photo can be one ink when their hues differ by at most this (degrees). */
+    val mergeShadesInPhotoHueWithinDeg: Double,
     val mergeShadesInArtwork: String,
     val confidence: String
 )
@@ -219,6 +221,7 @@ class PrintRulesRepository(private val context: Context?) {
                 photoBackgroundLRangeMin = r.getDouble("photo_background_L_range_min"),
                 askWhenSignalsDisagreeWithMode = r.getInt("ask_when_signals_disagree_with_mode"),
                 mergeShadesInPhoto = r.getString("merge_shades_in_photo"),
+                mergeShadesInPhotoHueWithinDeg = r.getDouble("merge_shades_in_photo_hue_within_deg"),
                 mergeShadesInArtwork = r.getString("merge_shades_in_artwork"),
                 confidence = r.getString("confidence")
             )

@@ -271,34 +271,38 @@ object ShadowInkClassifier {
             }
             if (outside.size < 2 || inside.isEmpty()) continue
 
-            // Profile from far outside to far inside, smoothed over 3 pixels against camera noise.
-            val raw = outside.asReversed() + inside
-            val profile = raw.indices.map { j ->
-                val lo = maxOf(0, j - 1)
-                val hi = minOf(raw.size - 1, j + 1)
-                (lo..hi).sumOf { raw[it] } / (hi - lo + 1)
-            }
-            // Fabric level: mean of the outer half of the outside samples.
-            val outerHalf = maxOf(2, outside.size / 2)
-            val lOut = profile.subList(0, outerHalf).average()
-            val lIn = profile.subList(outside.size, profile.size).maxByOrNull { abs(it - lOut) }!!
-            val delta = lIn - lOut
-            if (abs(delta) < MIN_EDGE_STEP_L) continue
-            var i10 = -1
-            var i90 = -1
-            for (j in profile.indices) {
-                val f = abs(profile[j] - lOut) / abs(delta)
-                if (i10 < 0 && f >= 0.1) i10 = j
-                if (f >= 0.9) {
-                    i90 = j
-                    break
-                }
-            }
-            if (i10 >= 0 && i90 >= i10) widths.add((i90 - i10).toDouble())
+            edgeWidth10to90Px(outside.asReversed() + inside, outside.size)?.let { widths.add(it) }
         }
         if (widths.isEmpty()) return null
         widths.sort()
         return widths[widths.size / 2]
+    }
+
+    /**
+     * 10%-90% width in pixels of the lightness step in [raw], a profile that runs from one side
+     * ([firstSideCount] samples, the far end first) across a boundary into the other side.
+     * Smoothed over 3 pixels against camera noise; the first side's level is the mean of its outer
+     * half; the second side's level is its value farthest from that. Null if there is no step.
+     */
+    fun edgeWidth10to90Px(raw: List<Double>, firstSideCount: Int): Double? {
+        if (firstSideCount < 2 || raw.size <= firstSideCount) return null
+        val profile = raw.indices.map { j ->
+            val lo = maxOf(0, j - 1)
+            val hi = minOf(raw.size - 1, j + 1)
+            (lo..hi).sumOf { raw[it] } / (hi - lo + 1)
+        }
+        val outerHalf = maxOf(2, firstSideCount / 2)
+        val lOut = profile.subList(0, outerHalf).average()
+        val lIn = profile.subList(firstSideCount, profile.size).maxByOrNull { abs(it - lOut) }!!
+        val delta = lIn - lOut
+        if (abs(delta) < MIN_EDGE_STEP_L) return null
+        var i10 = -1
+        for (j in profile.indices) {
+            val f = abs(profile[j] - lOut) / abs(delta)
+            if (i10 < 0 && f >= 0.1) i10 = j
+            if (f >= 0.9) return if (i10 >= 0) (j - i10).toDouble() else null
+        }
+        return null
     }
 
     /** +1/-1 (x) or +width/-width (y) towards an in-image neighbour outside the region; 0 if none. */

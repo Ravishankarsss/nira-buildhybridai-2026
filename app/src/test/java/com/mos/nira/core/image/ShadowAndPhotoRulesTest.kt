@@ -48,6 +48,8 @@ class ShadowAndPhotoRulesTest {
         assertEquals(p.getDouble("photo_flat_noise_L_std_min"), photoRules.photoFlatNoiseLStdMin, 0.0)
         assertEquals(p.getDouble("photo_background_L_range_min"), photoRules.photoBackgroundLRangeMin, 0.0)
         assertEquals(p.getInt("ask_when_signals_disagree_with_mode"), photoRules.askWhenSignalsDisagreeWithMode)
+        assertEquals(p.getDouble("merge_shades_in_photo_hue_within_deg"), photoRules.mergeShadesInPhotoHueWithinDeg, 0.0)
+        assertTrue(p.getString("merge_shades_in_photo").contains("within 6 deg")) // same number as the text
         assertEquals("assumption", photoRules.confidence)
     }
 
@@ -234,6 +236,35 @@ class ShadowAndPhotoRulesTest {
         )
         assertEquals(1, answered.foldShadowsRemoved)
         assertTrue(answered.measuredPalette.none { it.possibleFoldShadow })
+    }
+
+    // ---------- one ink's shades in a photo ----------
+
+    /** A blue area on the light garment: lightness from [l0] at the left to [l1] at the right. */
+    private fun blueArea(l0: Double, l1: Double, splitSharpAtMiddle: Boolean = false): IntArray {
+        val px = garmentImage(lightGarment, emptyList())
+        for (y in 200..400) for (x in 150..450) {
+            val t = (x - 150) / 300.0
+            val l = if (splitSharpAtMiddle) (if (t < 0.5) l0 else l1) else l0 + (l1 - l0) * t
+            px[y * size + x] = rgb(ColorConverter.labToRgb(l, -10.0, -25.0))
+        }
+        return px
+    }
+
+    @Test
+    fun photo_oneInkUnderUnevenLight_isOneColour_butArtworkKeepsTheShades() {
+        val px = blueArea(45.0, 65.0)
+        val photo = partA(px, InputKind.PHOTO, inkWidthPx = 301)
+        assertEquals(1, photo.measuredPalette.size)
+        val artwork = partA(px, InputKind.ARTWORK, inkWidthPx = 301)
+        assertTrue("artwork colours ${artwork.measuredPalette.map { it.hex }}", artwork.measuredPalette.size >= 2)
+    }
+
+    @Test
+    fun photo_twoShadesWithASharpBorder_areTwoInks() {
+        val px = blueArea(45.0, 70.0, splitSharpAtMiddle = true)
+        val photo = partA(px, InputKind.PHOTO, inkWidthPx = 301)
+        assertEquals(2, photo.measuredPalette.size)
     }
 
     // ---------- photo vs artwork ----------

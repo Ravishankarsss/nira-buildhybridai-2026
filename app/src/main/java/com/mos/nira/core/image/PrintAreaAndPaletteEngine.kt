@@ -73,6 +73,10 @@ object PrintAreaAndPaletteEngine {
     const val DEFAULT_MERGE_THRESHOLD_DELTA_E00 = 3.2
     const val MIN_COVERAGE_PERCENT = 1.5 // 1.5%
     const val MAX_KMEANS_ITERATIONS = 20
+
+    /** Shade merge in photos: border points measured per pair of shades, and the fewest that count as touching. */
+    private const val MAX_MERGE_BORDER_SAMPLES = 512
+    private const val MIN_MERGE_BORDER_SAMPLES = 8
     const val FIXED_SEED = 42L
 
     /**
@@ -407,6 +411,110 @@ object PrintAreaAndPaletteEngine {
             if (keep.size < finalBuckets.size) {
                 finalBuckets = keep.map { index ->
                     finalBuckets[index].also { it.inkRgb = intArrayOf(it.r, it.g, it.b) }
+                }.toMutableList()
+            }
+        }
+
+        // Step 9c: In a photo, a light and a dark shade of one ink under uneven light are one ink
+        // (print_rules.json photo_vs_artwork merge_shades_in_photo): same hue within the limit, they
+        // touch, and the lightness change across their border is wider than an ink edge.
+        if (inputs.inputKind == InputKind.PHOTO && photoRules != null && shadowRules != null && finalBuckets.size > 1) {
+            val n = finalBuckets.size
+            val neutralLimit = shadowRules.hueTestOnlyIfGarmentChromaAtLeast
+            val chromatic = BooleanArray(n) { hypot(finalBuckets[it].centerLab.a, finalBuckets[it].centerLab.b) >= neutralLimit }
+            val hue = DoubleArray(n) { Math.toDegrees(kotlin.math.atan2(finalBuckets[it].centerLab.b, finalBuckets[it].centerLab.a)) }
+            fun sameHue(a: Int, b: Int): Boolean {
+                if (!chromatic[a] || !chromatic[b]) return false // neutral shades have no reliable hue
+                val d = abs(hue[a] - hue[b]) % 360.0
+                return (if (d > 180.0) 360.0 - d else d) <= photoRules.mergeShadesInPhotoHueWithinDeg
+            }
+
+            val assign = assignPixelsToCenters(maskedRgbList, maskedLabList, finalBuckets.map { it.centerLab })
+            val labelOf = IntArray(totalPixels) { -1 }
+            for (i in 0 until printPixelCount) labelOf[maskedIndexList[i]] = assign[i]
+
+            // Border points between same-hue shades: (pixel, step) with the first shade at pixel.
+            val samples = HashMap<Long, ArrayList<Long>>()
+            for (i in 0 until printPixelCount) {
+                val p = maskedIndexList[i]
+                val a = labelOf[p]
+                for (step in intArrayOf(1, width)) {
+                    val q = p + step
+                    if (q >= totalPixels || (step == 1 && q / width != p / width)) continue
+                    val b = labelOf[q]
+                    if (b < 0 || b == a || !sameHue(a, b)) continue
+                    val key = min(a, b).toLong() * n + max(a, b)
+                    val list = samples.getOrPut(key) { ArrayList() }
+                    if (list.size < MAX_MERGE_BORDER_SAMPLES) list.add(p.toLong() * 2 + (if (step == 1) 0 else 1))
+                }
+            }
+
+            val lCache = HashMap<Int, Double>()
+            fun lAt(p: Int): Double {
+                val c = smoothedPixels[p] and 0xFFFFFF
+                return lCache.getOrPut(c) { ColorConverter.rgbToLab((c shr 16) and 0xFF, (c shr 8) and 0xFF, c and 0xFF).l }
+            }
+            // Same measuring window as the fold-shadow edge test.
+            val span = kotlin.math.ceil(2.0 * shadowRules.shadowEdgeMinMm * pixelsPerCm / 10.0).toInt().coerceAtLeast(2)
+            val parent = IntArray(n) { it }
+            fun root(x: Int): Int { var y = x; while (parent[y] != y) y = parent[y]; return y }
+            for ((_, list) in samples) {
+                if (list.size < MIN_MERGE_BORDER_SAMPLES) continue // they barely touch
+                val widths = ArrayList<Double>()
+                for (code in list) {
+                    val p = (code / 2).toInt()
+                    val step = if (code % 2 == 0L) 1 else width
+                    val a = labelOf[p]
+                    val b = labelOf[p + step]
+                    val first = ArrayList<Double>()
+                    var x = p
+                    for (k in 0 until span) {
+                        if (labelOf[x] != a) break
+                        first.add(lAt(x))
+                        val nx = x - step
+                        if (nx < 0 || (step == 1 && nx / width != x / width)) break
+                        x = nx
+                    }
+                    val second = ArrayList<Double>()
+                    x = p + step
+                    for (k in 0 until span) {
+                        if (labelOf[x] != b) break
+                        second.add(lAt(x))
+                        val nx = x + step
+                        if (nx >= totalPixels || (step == 1 && nx / width != x / width)) break
+                        x = nx
+                    }
+                    ShadowInkClassifier.edgeWidth10to90Px(first.asReversed() + second, first.size)?.let { widths.add(it) }
+                }
+                if (widths.isEmpty()) continue
+                widths.sort()
+                val edgeMm = widths[widths.size / 2] / (pixelsPerCm / 10.0)
+                if (edgeMm > shadowRules.inkEdgeMaxMm) {
+                    val first = list.first()
+                    val p = (first / 2).toInt()
+                    val step = if (first % 2 == 0L) 1 else width
+                    val ra = root(labelOf[p])
+                    val rb = root(labelOf[p + step])
+                    if (ra != rb) parent[max(ra, rb)] = min(ra, rb)
+                }
+            }
+
+            val groups = (0 until n).groupBy { root(it) }
+            if (groups.size < n) {
+                finalBuckets = groups.values.map { members ->
+                    val m = members.map { finalBuckets[it] }
+                    val merged = ClusterBucket(m.maxByOrNull { it.count }!!.centerLab)
+                    for (b in m) {
+                        merged.count += b.count
+                        merged.sumR += b.sumR
+                        merged.sumG += b.sumG
+                        merged.sumB += b.sumB
+                    }
+                    merged.inkRgb = m.maxByOrNull { it.count }!!.inkRgb
+                    if (merged.count > 0) {
+                        merged.centerLab = ColorConverter.rgbToLab(merged.r, merged.g, merged.b)
+                    }
+                    merged
                 }.toMutableList()
             }
         }
