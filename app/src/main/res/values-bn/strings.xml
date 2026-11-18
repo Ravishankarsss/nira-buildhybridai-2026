@@ -192,4 +192,14 @@
         <item quantity="other">%1$dটি ভাঁজের ছায়া প্রিন্ট এলাকা থেকে সরানো হয়েছে।</item>
     </plurals>
     <string name="colour_confirm_all_shadows">সব চিহ্নিত অংশই ভাঁজের ছায়া</string>
+    <string name="edge_blend_keep_switch">কিনারার রংগুলো আলাদা কালি হিসেবে রাখুন</string>
+    <string name="edge_blend_flag_label">সরু রেখা বা ঝাপসা হতে পারে – নিশ্চিত করতে ট্যাপ করুন</string>
+    <string name="edge_blend_confirm_title">সরু রেখা না ক্যামেরার ঝাপসা?</string>
+    <string name="edge_blend_confirm_body">এই রংটি অন্য দুটি রঙের মাঝে সরু ফালিতে আছে এবং সেগুলোর মিশ্রণ। এই রেজোলিউশনে ছাপা সরু রেখা আর ক্যামেরার ঝাপসা একই রকম দেখায়।</string>
+    <string name="edge_blend_confirm_merge">এটি ঝাপসা – মিশিয়ে দিন</string>
+    <string name="edge_blend_confirm_keep">এটি ছাপা রেখা</string>
+    <plurals name="edge_blend_merged">
+        <item quantity="one">কিনারার মিশ্রণ: %1$dটি পিক্সেল পাশের কালিতে মেশানো হয়েছে।</item>
+        <item quantity="other">কিনারার মিশ্রণ: %1$dটি পিক্সেল পাশের কালিতে মেশানো হয়েছে।</item>
+    </plurals>
 </resources>

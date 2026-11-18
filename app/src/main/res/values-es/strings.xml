@@ -193,4 +193,14 @@
         <item quantity="other">Se quitaron %1$d sombras de pliegue del área de impresión.</item>
     </plurals>
     <string name="colour_confirm_all_shadows">Todas las zonas marcadas son sombras de pliegues</string>
+    <string name="edge_blend_keep_switch">Mantener los colores de borde como tintas separadas</string>
+    <string name="edge_blend_flag_label">Posible línea fina o desenfoque – toque para confirmar</string>
+    <string name="edge_blend_confirm_title">¿Línea fina o desenfoque de cámara?</string>
+    <string name="edge_blend_confirm_body">Este color está en bandas finas entre otros dos colores y es una mezcla de ellos. A esta resolución, una línea fina impresa y el desenfoque de la cámara se ven iguales.</string>
+    <string name="edge_blend_confirm_merge">Es desenfoque – unirlo</string>
+    <string name="edge_blend_confirm_keep">Es una línea impresa</string>
+    <plurals name="edge_blend_merged">
+        <item quantity="one">Mezcla de bordes: %1$d píxel unido a las tintas vecinas.</item>
+        <item quantity="other">Mezcla de bordes: %1$d píxeles unidos a las tintas vecinas.</item>
+    </plurals>
 </resources>

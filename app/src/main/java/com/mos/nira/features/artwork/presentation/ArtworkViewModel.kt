@@ -254,7 +254,9 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                         inputKindConfirmed = false,
                         cameraExif = cameraExif,
                         regionAnswers = emptyList(),
-                        allUncertainAreFoldShadows = false
+                        allUncertainAreFoldShadows = false,
+                        keepEdgeColours = false,
+                        edgeBlendAnswer = null
                     ),
                     analysisState = AnalysisState.Loading("Reading image metadata..."),
                     selectedImageUri = uri,
@@ -537,7 +539,9 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                         inputKindConfirmed = record.inputKindConfirmed,
                         cameraExif = cameraExif,
                         regionAnswers = emptyList(),
-                        allUncertainAreFoldShadows = false
+                        allUncertainAreFoldShadows = false,
+                        keepEdgeColours = false,
+                        edgeBlendAnswer = null
                     ),
                     analysisState = AnalysisState.Loading("Loading analysis record..."),
                     selectedColor = record.palette.firstOrNull(),
@@ -608,7 +612,8 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                     inputKind = kind,
                     inputKindConfirmed = true,
                     regionAnswers = emptyList(),
-                    allUncertainAreFoldShadows = false
+                    allUncertainAreFoldShadows = false,
+                    edgeBlendAnswer = null
                 )
             )
         }
@@ -642,6 +647,18 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
         _uiState.update {
             it.copy(printJobInputs = it.printJobInputs.copy(allUncertainAreFoldShadows = true))
         }
+        computePartAReport()
+    }
+
+    /** Switch "Keep edge colours as separate inks" (undoes edge blending); Part A runs again. */
+    fun setKeepEdgeColours(keep: Boolean) {
+        _uiState.update { it.copy(printJobInputs = it.printJobInputs.copy(keepEdgeColours = keep)) }
+        computePartAReport()
+    }
+
+    /** Answer for colours flagged "Possible thin line or blur": true = blur (merge), false = printed line. */
+    fun answerEdgeBlend(isBlur: Boolean) {
+        _uiState.update { it.copy(printJobInputs = it.printJobInputs.copy(edgeBlendAnswer = isBlur)) }
         computePartAReport()
     }
 
@@ -792,6 +809,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                 val maskRules = printRulesRepository.getGarmentMaskRules()
                 val photoRules = printRulesRepository.getPhotoVsArtworkRules()
                 val shadowRules = printRulesRepository.getShadowVsInkRules()
+                val edgeBlendRules = printRulesRepository.getEdgeBlendRules()
                 val result = withContext(Dispatchers.Default) {
                     val maxDim = 2048
                     val width = bitmap.width
@@ -820,7 +838,8 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                         decisionRules = decisionRules,
                         maskRules = maskRules,
                         photoRules = photoRules,
-                        shadowRules = shadowRules
+                        shadowRules = shadowRules,
+                        edgeBlendRules = edgeBlendRules
                     )
                 }
 

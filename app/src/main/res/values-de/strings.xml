@@ -192,4 +192,14 @@
         <item quantity="other">%1$d Faltenschatten aus dem Druckbereich entfernt.</item>
     </plurals>
     <string name="colour_confirm_all_shadows">Alle markierten Bereiche sind Faltenschatten</string>
+    <string name="edge_blend_keep_switch">Kantenfarben als eigene Druckfarben behalten</string>
+    <string name="edge_blend_flag_label">Mögliche feine Linie oder Unschärfe – zum Bestätigen tippen</string>
+    <string name="edge_blend_confirm_title">Feine Linie oder Kameraunschärfe?</string>
+    <string name="edge_blend_confirm_body">Diese Farbe liegt in schmalen Streifen zwischen zwei anderen Farben und ist eine Mischung aus ihnen. Bei dieser Auflösung sehen eine gedruckte feine Linie und Kameraunschärfe gleich aus.</string>
+    <string name="edge_blend_confirm_merge">Es ist Unschärfe – zusammenführen</string>
+    <string name="edge_blend_confirm_keep">Es ist eine gedruckte Linie</string>
+    <plurals name="edge_blend_merged">
+        <item quantity="one">Kantenmischung: %1$d Pixel den benachbarten Farben zugeordnet.</item>
+        <item quantity="other">Kantenmischung: %1$d Pixel den benachbarten Farben zugeordnet.</item>
+    </plurals>
 </resources>

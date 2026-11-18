@@ -192,4 +192,14 @@
         <item quantity="other">%1$d सिलवट की छायाएँ प्रिंट क्षेत्र से हटाई गईं।</item>
     </plurals>
     <string name="colour_confirm_all_shadows">सभी चिह्नित हिस्से सिलवट की छाया हैं</string>
+    <string name="edge_blend_keep_switch">किनारे के रंगों को अलग स्याही रखें</string>
+    <string name="edge_blend_flag_label">पतली रेखा या धुंधलापन हो सकता है – पुष्टि के लिए टैप करें</string>
+    <string name="edge_blend_confirm_title">पतली रेखा या कैमरे का धुंधलापन?</string>
+    <string name="edge_blend_confirm_body">यह रंग दो दूसरे रंगों के बीच पतली पट्टियों में है और उनका मिश्रण है। इस रिज़ॉल्यूशन पर छपी पतली रेखा और कैमरे का धुंधलापन एक जैसे दिखते हैं।</string>
+    <string name="edge_blend_confirm_merge">यह धुंधलापन है – मिला दें</string>
+    <string name="edge_blend_confirm_keep">यह छपी हुई रेखा है</string>
+    <plurals name="edge_blend_merged">
+        <item quantity="one">किनारे का मिश्रण: %1$d पिक्सेल पास की स्याहियों में मिलाया गया।</item>
+        <item quantity="other">किनारे का मिश्रण: %1$d पिक्सेल पास की स्याहियों में मिलाए गए।</item>
+    </plurals>
 </resources>

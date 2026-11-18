@@ -155,6 +155,10 @@ fun ArtworkNavHost(
                 shadowTestLowResolution = uiState.partAResult?.shadowTestLowResolution ?: false,
                 onAnswerFoldShadow = { points, isInk -> viewModel.answerFoldShadow(points, isInk) },
                 onAnswerAllFoldShadows = { viewModel.answerAllFoldShadows() },
+                edgeBlendPixelsMerged = uiState.partAResult?.edgeBlendPixelsMerged ?: 0,
+                keepEdgeColours = uiState.printJobInputs.keepEdgeColours,
+                onKeepEdgeColours = { keep -> viewModel.setKeepEdgeColours(keep) },
+                onAnswerEdgeBlend = { isBlur -> viewModel.answerEdgeBlend(isBlur) },
                 onBack = goBack
             )
         }

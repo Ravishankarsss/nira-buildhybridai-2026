@@ -27,6 +27,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
@@ -103,6 +104,11 @@ fun ColorIntelligenceScreen(
     shadowTestLowResolution: Boolean = false,
     onAnswerFoldShadow: (points: List<Pair<Float, Float>>, isInk: Boolean) -> Unit = { _, _ -> },
     onAnswerAllFoldShadows: () -> Unit = {},
+    // Edge blending (print_rules.json edge_blend): pixels merged, the undo switch, and the answer.
+    edgeBlendPixelsMerged: Int = 0,
+    keepEdgeColours: Boolean = false,
+    onKeepEdgeColours: (Boolean) -> Unit = {},
+    onAnswerEdgeBlend: (isBlur: Boolean) -> Unit = {},
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -301,7 +307,7 @@ fun ColorIntelligenceScreen(
                                 text = when {
                                     measuredPrintColours != null -> {
                                         // Colours that may be fold shadows are shown as "+N if ink".
-                                        val flagged = measuredPrintColours.count { it.possibleFoldShadow }
+                                        val flagged = measuredPrintColours.count { it.possibleFoldShadow || it.possibleEdgeBlend }
                                         val sure = measuredPrintColours.size - flagged
                                         pluralStringResource(R.plurals.measured_print_colours, sure, sure) +
                                             (if (flagged > 0) " " + stringResource(R.string.colour_possible_shadow_extra, flagged) else "")
@@ -353,10 +359,31 @@ fun ColorIntelligenceScreen(
             }
         }
 
+        // Edge blending report and the undo switch.
+        if (edgeBlendPixelsMerged > 0 || keepEdgeColours) {
+            item {
+                Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp)) {
+                    if (edgeBlendPixelsMerged > 0) {
+                        Text(
+                            pluralStringResource(R.plurals.edge_blend_merged, edgeBlendPixelsMerged, edgeBlendPixelsMerged),
+                            color = TextMuted, fontSize = 12.sp, lineHeight = 17.sp
+                        )
+                    }
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            stringResource(R.string.edge_blend_keep_switch),
+                            color = TextWhite, fontSize = 13.sp, modifier = Modifier.weight(1f)
+                        )
+                        Switch(checked = keepEdgeColours, onCheckedChange = onKeepEdgeColours)
+                    }
+                }
+            }
+        }
+
         // Measured print colours: the ones used for screens and ink.
         if (!measuredPrintColours.isNullOrEmpty()) {
             item {
-                MeasuredPrintColoursCard(measuredPrintColours, onAnswerFoldShadow, onAnswerAllFoldShadows)
+                MeasuredPrintColoursCard(measuredPrintColours, onAnswerFoldShadow, onAnswerAllFoldShadows, onAnswerEdgeBlend)
             }
         }
 
@@ -549,10 +576,28 @@ fun ColorIntelligenceScreen(
 private fun MeasuredPrintColoursCard(
     colours: List<MeasuredColor>,
     onAnswerFoldShadow: (points: List<Pair<Float, Float>>, isInk: Boolean) -> Unit,
-    onAnswerAllFoldShadows: () -> Unit
+    onAnswerAllFoldShadows: () -> Unit,
+    onAnswerEdgeBlend: (isBlur: Boolean) -> Unit
 ) {
     var asking by remember { mutableStateOf<MeasuredColor?>(null) }
-    asking?.let { c ->
+    asking?.takeIf { it.possibleEdgeBlend && !it.possibleFoldShadow }?.let { c ->
+        AlertDialog(
+            onDismissRequest = { asking = null },
+            title = { Text(stringResource(R.string.edge_blend_confirm_title)) },
+            text = { Text(c.hex + "\n\n" + stringResource(R.string.edge_blend_confirm_body)) },
+            confirmButton = {
+                TextButton(onClick = { onAnswerEdgeBlend(true); asking = null }) {
+                    Text(stringResource(R.string.edge_blend_confirm_merge))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { onAnswerEdgeBlend(false); asking = null }) {
+                    Text(stringResource(R.string.edge_blend_confirm_keep))
+                }
+            }
+        )
+    }
+    asking?.takeIf { it.possibleFoldShadow }?.let { c ->
         AlertDialog(
             onDismissRequest = { asking = null },
             title = { Text(stringResource(R.string.colour_confirm_title)) },
@@ -599,7 +644,7 @@ private fun MeasuredPrintColoursCard(
                 Spacer(modifier = Modifier.height(10.dp))
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = if (c.possibleFoldShadow) Modifier.clickable { asking = c } else Modifier
+                    modifier = if (c.possibleFoldShadow || c.possibleEdgeBlend) Modifier.clickable { asking = c } else Modifier
                 ) {
                     Box(
                         modifier = Modifier
@@ -617,6 +662,14 @@ private fun MeasuredPrintColoursCard(
                             color = TextMuted,
                             fontSize = 12.sp
                         )
+                        if (c.possibleEdgeBlend && !c.possibleFoldShadow) {
+                            Text(
+                                stringResource(R.string.edge_blend_flag_label),
+                                color = Amber,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
                         if (c.possibleFoldShadow) {
                             Text(
                                 stringResource(R.string.colour_possible_shadow_label),

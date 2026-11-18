@@ -96,6 +96,24 @@ data class PhotoVsArtworkRules(
 )
 
 /**
+ * print_rules.json "edge_blend": thin bands of mixed colour between two inks (or ink and fabric)
+ * from camera blur or anti-aliasing. No default values; null if the section is incomplete.
+ */
+data class EdgeBlendRules(
+    val onMixingLineMaxDeltaE00: Double,
+    val bandMaxPxFromMeasuredBlurFactor: Double,
+    val bandMaxPxMin: Double,
+    val bandMaxPxCap: Double,
+    val bandMaxPxFallback: Double,
+    val bandMaxPxArtwork: Double,
+    val sandwichedMinFraction: Double,
+    val plateauMinPx: Int,
+    val plateauRatioTolerance: Double,
+    val monotonicRequired: Boolean,
+    val confidence: String
+)
+
+/**
  * Ink deposit rule for a given screen mesh count.
  */
 data class MeshDepositRule(
@@ -176,6 +194,11 @@ class PrintRulesRepository(private val context: Context?) {
         loadJson()?.let { parsePhotoVsArtworkRules(it) }
     }
 
+    /** "edge_blend" from print_rules.json, or null if it is missing or incomplete. */
+    suspend fun getEdgeBlendRules(): EdgeBlendRules? = withContext(Dispatchers.IO) {
+        loadJson()?.let { parseEdgeBlendRules(it) }
+    }
+
     suspend fun getMinLineWidthMmByMesh(): Map<Int, Double> = withContext(Dispatchers.IO) {
         val root = loadJson() ?: return@withContext emptyMap()
         parseMinLineWidthMmByMesh(root)
@@ -206,6 +229,26 @@ class PrintRulesRepository(private val context: Context?) {
                 shadowKeepsGarmentHueWithinDeg = r.getDouble("shadow_keeps_garment_hue_within_deg"),
                 minPxPerCmForEdgeTest = numberOrReference(root, r, "min_px_per_cm_for_edge_test"),
                 uncertainAction = r.getString("uncertain_action"),
+                confidence = r.getString("confidence")
+            )
+        } catch (e: Exception) {
+            null
+        }
+
+        /** Reads "edge_blend". Null if the section or any value is missing. */
+        fun parseEdgeBlendRules(root: JSONObject): EdgeBlendRules? = try {
+            val r = root.getJSONObject("edge_blend")
+            EdgeBlendRules(
+                onMixingLineMaxDeltaE00 = r.getDouble("on_mixing_line_max_de00"),
+                bandMaxPxFromMeasuredBlurFactor = r.getDouble("band_max_px_from_measured_blur_factor"),
+                bandMaxPxMin = r.getDouble("band_max_px_min"),
+                bandMaxPxCap = r.getDouble("band_max_px_cap"),
+                bandMaxPxFallback = r.getDouble("band_max_px_fallback"),
+                bandMaxPxArtwork = r.getDouble("band_max_px_artwork"),
+                sandwichedMinFraction = r.getDouble("sandwiched_min_fraction"),
+                plateauMinPx = r.getInt("plateau_min_px"),
+                plateauRatioTolerance = r.getDouble("plateau_ratio_tolerance"),
+                monotonicRequired = r.getBoolean("monotonic_required"),
                 confidence = r.getString("confidence")
             )
         } catch (e: Exception) {

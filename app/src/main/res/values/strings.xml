@@ -191,4 +191,14 @@
         <item quantity="other">%1$d fold shadows removed from the print area.</item>
     </plurals>
     <string name="colour_confirm_all_shadows">All flagged areas are fold shadows</string>
+    <string name="edge_blend_keep_switch">Keep edge colours as separate inks</string>
+    <string name="edge_blend_flag_label">Possible thin line or blur – tap to confirm</string>
+    <string name="edge_blend_confirm_title">Thin line or camera blur?</string>
+    <string name="edge_blend_confirm_body">This colour lies in thin bands between two other colours and is a mix of them. At this resolution a printed thin line and camera blur look the same.</string>
+    <string name="edge_blend_confirm_merge">It is blur – merge it</string>
+    <string name="edge_blend_confirm_keep">It is a printed line</string>
+    <plurals name="edge_blend_merged">
+        <item quantity="one">Edge blending: %1$d pixel merged into neighbouring inks.</item>
+        <item quantity="other">Edge blending: %1$d pixels merged into neighbouring inks.</item>
+    </plurals>
 </resources>

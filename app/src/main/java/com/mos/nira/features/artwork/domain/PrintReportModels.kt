@@ -68,7 +68,11 @@ data class PrintJobInputs(
     val regionAnswers: List<RegionAnswer> = emptyList(),
     // "All flagged areas are fold shadows": every uncertain region in this photo is a fold shadow,
     // except a region the user marked as ink.
-    val allUncertainAreFoldShadows: Boolean = false
+    val allUncertainAreFoldShadows: Boolean = false,
+    // Switch "Keep edge colours as separate inks": undoes the edge blending (print_rules.json edge_blend).
+    val keepEdgeColours: Boolean = false,
+    // Answer for colours flagged "Possible thin line or blur": true = blur, merge; false = printed line; null = not answered.
+    val edgeBlendAnswer: Boolean? = null
 )
 
 /** The user's answer for one uncertain region: a point inside it (normalised) and ink or shadow. */
@@ -92,7 +96,9 @@ data class MeasuredColor(
     /** Some pixels of this colour come from regions that may be fold shadows (not confirmed). */
     val possibleFoldShadow: Boolean = false,
     /** A point inside each of those regions (normalised), used to record the user's answer. */
-    val uncertainRegionPoints: List<Pair<Float, Float>> = emptyList()
+    val uncertainRegionPoints: List<Pair<Float, Float>> = emptyList(),
+    /** Looks like blur between two colours, but the resolution is too low to be sure (edge_blend). */
+    val possibleEdgeBlend: Boolean = false
 ) {
     val formattedRgb: String get() = "RGB(${rgb.r}, ${rgb.g}, ${rgb.b})"
     val formattedLab: String get() = String.format("L* %.1f  a* %.1f  b* %.1f", lab.l, lab.a, lab.b)
@@ -133,7 +139,11 @@ data class PartAResult(
     /** Regions removed as fold shadows (print_rules.json shadow_vs_ink). */
     val foldShadowsRemoved: Int = 0,
     /** True when the fold-shadow edge test could not run because the resolution is too low. */
-    val shadowTestLowResolution: Boolean = false
+    val shadowTestLowResolution: Boolean = false,
+    /** Pixels moved from thin blur bands into their neighbouring inks or the fabric (edge_blend). */
+    val edgeBlendPixelsMerged: Int = 0,
+    /** Band width limit used for edge blending, in pixels of the analysed image; null if not run. */
+    val edgeBlendBandMaxPx: Double? = null
 )
 
 // ==========================================

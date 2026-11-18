@@ -193,4 +193,14 @@
         <item quantity="other">%1$d ombres de pli retirées de la zone d\'impression.</item>
     </plurals>
     <string name="colour_confirm_all_shadows">Toutes les zones signalées sont des ombres de plis</string>
+    <string name="edge_blend_keep_switch">Garder les couleurs de bord comme encres séparées</string>
+    <string name="edge_blend_flag_label">Ligne fine ou flou possible – touchez pour confirmer</string>
+    <string name="edge_blend_confirm_title">Ligne fine ou flou de l\'appareil ?</string>
+    <string name="edge_blend_confirm_body">Cette couleur forme de fines bandes entre deux autres couleurs et en est un mélange. À cette résolution, une ligne fine imprimée et le flou de l\'appareil se ressemblent.</string>
+    <string name="edge_blend_confirm_merge">C\'est du flou – fusionner</string>
+    <string name="edge_blend_confirm_keep">C\'est une ligne imprimée</string>
+    <plurals name="edge_blend_merged">
+        <item quantity="one">Mélange de bords : %1$d pixel rattaché aux encres voisines.</item>
+        <item quantity="other">Mélange de bords : %1$d pixels rattachés aux encres voisines.</item>
+    </plurals>
 </resources>

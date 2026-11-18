@@ -1,6 +1,7 @@
 package com.mos.nira.core.image
 
 import android.graphics.Bitmap
+import com.mos.nira.features.artwork.data.EdgeBlendRules
 import com.mos.nira.features.artwork.data.GarmentMaskRules
 import com.mos.nira.features.artwork.data.PhotoVsArtworkRules
 import com.mos.nira.features.artwork.data.ShadowVsInkRules
@@ -74,6 +75,14 @@ object PrintAreaAndPaletteEngine {
     const val MIN_COVERAGE_PERCENT = 1.5 // 1.5%
     const val MAX_KMEANS_ITERATIONS = 20
 
+    /** Edge blending: label for fabric and for print outside the print box, and sample limits. */
+    private const val EDGE_FABRIC = -2
+    private const val EDGE_NONE = -3
+    private const val EDGE_MAX_BLUR_SAMPLES = 512
+    private const val EDGE_MAX_CANDIDATE_SAMPLES = 3_000
+    private const val EDGE_KEY_SHIFT = 8
+    private const val EDGE_KEY_BASE = 1_000_003L
+
     /** Shade merge in photos: border points measured per pair of shades, and the fewest that count as touching. */
     private const val MAX_MERGE_BORDER_SAMPLES = 512
     private const val MIN_MERGE_BORDER_SAMPLES = 8
@@ -94,7 +103,8 @@ object PrintAreaAndPaletteEngine {
         maskRules: GarmentMaskRules = GarmentMaskRules(),
         // From print_rules.json; null when the section is missing, and then the check is skipped.
         photoRules: PhotoVsArtworkRules? = null,
-        shadowRules: ShadowVsInkRules? = null
+        shadowRules: ShadowVsInkRules? = null,
+        edgeBlendRules: EdgeBlendRules? = null
     ): PartAResult {
         if (width <= 0 || height <= 0 || pixels.isEmpty() || pixels.size != width * height) {
             return PartAResult(
@@ -523,6 +533,59 @@ object PrintAreaAndPaletteEngine {
         val finalCenters = finalBuckets.map { it.centerLab }
         val finalAssignments = assignPixelsToCenters(maskedRgbList, maskedLabList, finalCenters)
 
+        // Step 9d: Edge blending (print_rules.json edge_blend). Thin bands of mixed colour between two
+        // inks (or ink and fabric) from camera blur or anti-aliasing go to the nearer neighbour; a
+        // pixel nearer the fabric leaves the print area. Undone by "Keep edge colours as separate inks".
+        // Repeated: once a band is merged, a band next to it (blur often makes two in-between
+        // colours) is judged again between its new neighbours.
+        var edgeBlendPixelsMerged = 0
+        var edgeBandMaxPx: Double? = null
+        val edgeFlagged = HashSet<Int>()
+        if (edgeBlendRules != null && !inputs.keepEdgeColours && finalBuckets.size >= 2) {
+            val garmentRgb = ColorConverter.labToRgb(garmentLab.l, garmentLab.a, garmentLab.b)
+            for (round in 0 until finalBuckets.size) {
+                // Each colour as it is now: the mean of the pixels assigned to it (ink colour if set).
+                val sumR = LongArray(finalBuckets.size)
+                val sumG = LongArray(finalBuckets.size)
+                val sumB = LongArray(finalBuckets.size)
+                val cnt = IntArray(finalBuckets.size)
+                for (i in 0 until printPixelCount) {
+                    val c = finalAssignments[i]
+                    if (c < 0) continue
+                    val p = maskedRgbList[i]
+                    sumR[c] += (p shr 16) and 0xFF; sumG[c] += (p shr 8) and 0xFF; sumB[c] += p and 0xFF; cnt[c]++
+                }
+                val bucketRgb = finalBuckets.mapIndexed { k, b ->
+                    val ink = b.inkRgb
+                    when {
+                        ink != null -> ColorConverter.Rgb(ink[0], ink[1], ink[2])
+                        cnt[k] > 0 -> ColorConverter.Rgb((sumR[k] / cnt[k]).toInt(), (sumG[k] / cnt[k]).toInt(), (sumB[k] / cnt[k]).toInt())
+                        else -> ColorConverter.Rgb(b.r, b.g, b.b)
+                    }
+                }
+                val plan = planEdgeBlends(
+                    smoothedPixels, width, height, cleanedPrintMask, maskedIndexList, finalAssignments,
+                    bucketRgb, garmentRgb, inputs, pixelsPerCm, decisionRules.minResolutionPxPerCm, edgeBlendRules
+                )
+                edgeBandMaxPx = edgeBandMaxPx ?: plan.bandMaxPx
+                edgeFlagged.addAll(plan.flagged)
+                if (plan.targets.isEmpty()) break
+                for (i in 0 until printPixelCount) {
+                    val c0 = finalAssignments[i]
+                    if (c0 < 0) continue
+                    val (a, b) = plan.targets[c0] ?: continue
+                    val px = smoothedPixels[maskedIndexList[i]]
+                    val c = ColorConverter.Rgb((px shr 16) and 0xFF, (px shr 8) and 0xFF, px and 0xFF)
+                    val ra = if (a == EDGE_FABRIC) garmentRgb else bucketRgb[a]
+                    val rb = if (b == EDGE_FABRIC) garmentRgb else bucketRgb[b]
+                    val target = if (EdgeBlend.mixRatio(c, ra, rb) < 0.5) a else b
+                    finalAssignments[i] = if (target == EDGE_FABRIC) -1 else target
+                    if (target == EDGE_FABRIC) finalPrintMask[maskedIndexList[i]] = false
+                    edgeBlendPixelsMerged++
+                }
+            }
+        }
+
         finalBuckets.forEach {
             it.count = 0
             it.sumR = 0L
@@ -530,8 +593,11 @@ object PrintAreaAndPaletteEngine {
             it.sumB = 0L
         }
 
+        var keptPrintPixelCount = 0
         for (i in 0 until printPixelCount) {
             val c = finalAssignments[i]
+            if (c < 0) continue // a blur pixel nearer the fabric: no longer print
+            keptPrintPixelCount++
             val p = maskedRgbList[i]
             val b = finalBuckets[c]
             b.count++
@@ -539,6 +605,8 @@ object PrintAreaAndPaletteEngine {
             b.sumG += (p shr 8) and 0xFF
             b.sumB += p and 0xFF
         }
+        val finalCoveragePercent = if (totalBoxPixels > 0) keptPrintPixelCount * 100.0 / totalBoxPixels else 0.0
+        val finalEffectiveAreaCm2 = totalBoxAreaCm2 * (keptPrintPixelCount.toDouble() / totalBoxPixels.toDouble())
 
         // A colour is flagged "possible fold shadow" when it is the main colour of an uncertain region.
         val flaggedPoints = HashMap<Int, MutableList<Pair<Float, Float>>>()
@@ -548,7 +616,7 @@ object PrintAreaAndPaletteEngine {
             val counts = Array(uncertain.size) { IntArray(finalBuckets.size) }
             for (i in 0 until printPixelCount) {
                 val u = regionOfPixel[maskedIndexList[i]]
-                if (u >= 0) counts[u][finalAssignments[i]]++
+                if (u >= 0 && finalAssignments[i] >= 0) counts[u][finalAssignments[i]]++
             }
             // On a neutral garment a shadow is neutral, so a clearly coloured palette colour is
             // never labelled "possible fold shadow" (limit: shadow_vs_ink hue-test chroma).
@@ -574,7 +642,7 @@ object PrintAreaAndPaletteEngine {
                 val hex = ColorConverter.rgbToHex(inkR, inkG, inkB)
                 val rgb = ColorConverter.Rgb(inkR, inkG, inkB)
                 val lab = ColorConverter.rgbToLab(inkR, inkG, inkB)
-                val covPercent = (b.count.toDouble() / printPixelCount.toDouble()) * 100.0
+                val covPercent = (b.count.toDouble() / maxOf(1, keptPrintPixelCount).toDouble()) * 100.0
                 val totalBoxCovPercent = (b.count.toDouble() / totalBoxPixels.toDouble()) * 100.0
                 val area = totalBoxAreaCm2 * (b.count.toDouble() / totalBoxPixels.toDouble())
 
@@ -594,7 +662,8 @@ object PrintAreaAndPaletteEngine {
                     nearestShadeDeltaE00 = nearestShadeMatch?.second,
                     matchGrade = nearestShadeMatch?.second?.let { ColorConverter.matchGrade(it) },
                     possibleFoldShadow = flaggedPoints.containsKey(bucketIndex),
-                    uncertainRegionPoints = flaggedPoints[bucketIndex] ?: emptyList()
+                    uncertainRegionPoints = flaggedPoints[bucketIndex] ?: emptyList(),
+                    possibleEdgeBlend = bucketIndex in edgeFlagged
                 )
             }
 
@@ -643,10 +712,10 @@ object PrintAreaAndPaletteEngine {
             printWidthCm = printWidthCm,
             printHeightCm = printHeightCm,
             totalBoxAreaCm2 = totalBoxAreaCm2,
-            effectivePrintAreaCm2 = effectivePrintAreaCm2,
-            printPixelCount = printPixelCount,
+            effectivePrintAreaCm2 = finalEffectiveAreaCm2,
+            printPixelCount = keptPrintPixelCount,
             totalPixelCount = totalBoxPixels,
-            printMaskCoveragePercent = printMaskCoveragePercent,
+            printMaskCoveragePercent = finalCoveragePercent,
             measuredPalette = measuredPalette,
             errorCurve = errorCurve,
             maskBitmap = maskBitmap,
@@ -656,8 +725,181 @@ object PrintAreaAndPaletteEngine {
             lowResolutionWarning = lowResolutionWarning,
             inputKindAssessment = inputKindAssessment,
             foldShadowsRemoved = shadowCheck?.removed ?: 0,
-            shadowTestLowResolution = shadowCheck?.lowResolution ?: false
+            shadowTestLowResolution = shadowCheck?.lowResolution ?: false,
+            edgeBlendPixelsMerged = edgeBlendPixelsMerged,
+            edgeBlendBandMaxPx = edgeBandMaxPx
         )
+    }
+
+    /** Edge blending plan: blur colour -> its two neighbours (bucket index or EDGE_FABRIC), and colours only flagged. */
+    private class EdgeBlendPlan(val targets: Map<Int, Pair<Int, Int>>, val flagged: Set<Int>, val bandMaxPx: Double)
+
+    /**
+     * print_rules.json edge_blend. A palette colour is camera blur or anti-aliasing when, for most of
+     * its pixels, the band across it (between two other colours, or a colour and the fabric) is no
+     * wider than the band limit; its colour lies on the mixing line between those two; and across the
+     * band the mixing ratio changes step by step with no flat middle (a printed line has one).
+     * The band limit comes from blur measured on clean ink-to-fabric edges in this image (photos), or
+     * band_max_px_artwork. Below the minimum px/cm such colours are flagged unless the user answered.
+     */
+    private fun planEdgeBlends(
+        pixels: IntArray,
+        width: Int,
+        height: Int,
+        printMask: BooleanArray,
+        maskedIndexList: List<Int>,
+        assignments: IntArray,
+        bucketRgb: List<ColorConverter.Rgb>,
+        garmentRgb: ColorConverter.Rgb,
+        inputs: PrintJobInputs,
+        pixelsPerCm: Double,
+        minPxPerCm: Double,
+        rules: EdgeBlendRules
+    ): EdgeBlendPlan {
+        val total = width * height
+        val n = bucketRgb.size
+        val isPhoto = inputs.inputKind == InputKind.PHOTO
+        // Labels: palette index, EDGE_FABRIC for fabric, EDGE_NONE for print outside the print box.
+        val labelOf = IntArray(total) { if (printMask[it]) EDGE_NONE else EDGE_FABRIC }
+        // A pixel an earlier round sent back to the fabric (-1) counts as fabric.
+        for (i in maskedIndexList.indices) labelOf[maskedIndexList[i]] = if (assignments[i] >= 0) assignments[i] else EDGE_FABRIC
+        fun rgbAt(p: Int): ColorConverter.Rgb {
+            val c = pixels[p]
+            return ColorConverter.Rgb((c shr 16) and 0xFF, (c shr 8) and 0xFF, c and 0xFF)
+        }
+        val lCache = HashMap<Int, Double>()
+        fun lAt(p: Int): Double {
+            val c = pixels[p] and 0xFFFFFF
+            return lCache.getOrPut(c) { ColorConverter.rgbToLab((c shr 16) and 0xFF, (c shr 8) and 0xFF, c and 0xFF).l }
+        }
+        fun step(p: Int, d: Int): Int? {
+            val q = p + d
+            if (q < 0 || q >= total) return null
+            if ((d == 1 || d == -1) && q / width != p / width) return null
+            return q
+        }
+
+        // Blur of this image: 10-90% width of clean ink-to-fabric edges (photos only).
+        val measuredBlur = if (!isPhoto) null else {
+            val reach = kotlin.math.ceil(2 * rules.bandMaxPxCap).toInt()
+            val need = kotlin.math.ceil(rules.bandMaxPxCap).toInt()
+            val widths = ArrayList<Double>()
+            val stride = maxOf(1, maskedIndexList.size / 20_000)
+            var i = 0
+            while (i < maskedIndexList.size && widths.size < EDGE_MAX_BLUR_SAMPLES) {
+                val p = maskedIndexList[i]
+                i += stride
+                for (d in intArrayOf(1, -1, width, -width)) {
+                    val q = step(p, d) ?: continue
+                    if (labelOf[q] != EDGE_FABRIC) continue
+                    val fabric = ArrayList<Double>()
+                    var x: Int? = q
+                    while (x != null && fabric.size < reach && labelOf[x] == EDGE_FABRIC) { fabric.add(lAt(x)); x = step(x, d) }
+                    val print = ArrayList<Double>()
+                    x = p
+                    while (x != null && print.size < reach && labelOf[x] >= 0) { print.add(lAt(x)); x = step(x, -d) }
+                    if (fabric.size < need || print.size < need) continue
+                    ShadowInkClassifier.edgeWidth10to90Px(fabric.asReversed() + print, fabric.size)?.let { widths.add(it) }
+                    break
+                }
+            }
+            EdgeBlend.median(widths)
+        }
+        val bandMax = EdgeBlend.bandMaxPx(isPhoto, measuredBlur, rules)
+        val reachBand = kotlin.math.floor(bandMax).toInt() + 1
+
+        // Pixels of each palette colour.
+        val pixelsOf = Array(n) { ArrayList<Int>() }
+        for (i in maskedIndexList.indices) if (assignments[i] >= 0) pixelsOf[assignments[i]].add(maskedIndexList[i])
+
+        class Crossing(val from: Int, val dir: Int, val len: Int)
+        val targets = HashMap<Int, Pair<Int, Int>>()
+        val flagged = HashSet<Int>()
+        val protected = HashSet<Int>()
+        val lowResolution = pixelsPerCm < minPxPerCm
+        for (c in (0 until n).sortedBy { pixelsOf[it].size }) {
+            val own = pixelsOf[c]
+            if (own.isEmpty() || c in protected) continue
+            val stride = maxOf(1, own.size / EDGE_MAX_CANDIDATE_SAMPLES)
+            var sampled = 0
+            val pairCount = HashMap<Long, Int>()
+            val crossings = HashMap<Long, ArrayList<Crossing>>()
+            var k = 0
+            while (k < own.size) {
+                val p = own[k]
+                k += stride
+                sampled++
+                var best: Triple<Long, Crossing, Int>? = null
+                for (d in intArrayOf(1, width)) {
+                    var back = p
+                    var d1 = 0
+                    var l1 = EDGE_NONE
+                    while (true) {
+                        val q = step(back, -d)
+                        d1++
+                        if (q == null) { l1 = EDGE_NONE; break }
+                        if (labelOf[q] != c) { l1 = labelOf[q]; back = q; break }
+                        back = q
+                        if (d1 > reachBand) { l1 = EDGE_NONE; break }
+                    }
+                    var fwd = p
+                    var d2 = 0
+                    var l2 = EDGE_NONE
+                    while (true) {
+                        val q = step(fwd, d)
+                        d2++
+                        if (q == null) { l2 = EDGE_NONE; break }
+                        if (labelOf[q] != c) { l2 = labelOf[q]; break }
+                        fwd = q
+                        if (d2 > reachBand) { l2 = EDGE_NONE; break }
+                    }
+                    val bandWidth = d1 + d2 - 1
+                    if (l1 == EDGE_NONE || l2 == EDGE_NONE || l1 == l2 || bandWidth > bandMax) continue
+                    if (best == null || bandWidth < best.third) {
+                        // Pair key; labels are shifted so fabric (negative) still decodes correctly.
+                        val key = (minOf(l1, l2) + EDGE_KEY_SHIFT).toLong() * EDGE_KEY_BASE + (maxOf(l1, l2) + EDGE_KEY_SHIFT)
+                        // The crossing starts at the first band pixel after the neighbour "back".
+                        best = Triple(key, Crossing(back + d, d, bandWidth), bandWidth)
+                    }
+                }
+                best?.let { (key, crossing, _) ->
+                    pairCount[key] = (pairCount[key] ?: 0) + 1
+                    crossings.getOrPut(key) { ArrayList() }.add(crossing)
+                }
+            }
+            if (sampled == 0) continue
+            val (pairKey, pairHits) = pairCount.maxByOrNull { it.value } ?: continue
+            if (pairCount.values.sum().toDouble() / sampled < rules.sandwichedMinFraction) continue
+            val a = (pairKey / EDGE_KEY_BASE).toInt() - EDGE_KEY_SHIFT
+            val b = (pairKey % EDGE_KEY_BASE).toInt() - EDGE_KEY_SHIFT
+            if (a in targets || b in targets) continue
+            val rgbA = if (a == EDGE_FABRIC) garmentRgb else bucketRgb[a]
+            val rgbB = if (b == EDGE_FABRIC) garmentRgb else bucketRgb[b]
+
+            // On the mixing line, strictly between the two neighbours.
+            val fit = EdgeBlend.mixFit(bucketRgb[c], rgbA, rgbB)
+            if (fit.t <= 0.0 || fit.t >= 1.0 || fit.deltaE00 > rules.onMixingLineMaxDeltaE00) continue
+
+            // Across the band: step-by-step change, no flat middle (in at least half the crossings).
+            val list = crossings[pairKey] ?: continue
+            val blurVotes = list.count { cr ->
+                val ratios = (0 until cr.len).mapNotNull { j ->
+                    val q = cr.from + j * cr.dir
+                    if (q in 0 until total) EdgeBlend.mixRatio(rgbAt(q), rgbA, rgbB) else null
+                }
+                EdgeBlend.crossingLooksLikeBlur(ratios, rules)
+            }
+            if (blurVotes * 2 < list.size || pairHits == 0) continue
+
+            if (lowResolution && inputs.edgeBlendAnswer != true) {
+                if (inputs.edgeBlendAnswer == null) flagged.add(c) // a printed thin line looks like blur here
+                continue
+            }
+            targets[c] = Pair(a, b)
+            if (a >= 0) protected.add(a)
+            if (b >= 0) protected.add(b)
+        }
+        return EdgeBlendPlan(targets, flagged, bandMax)
     }
 
     /** One region left as "possible fold shadow": its pixels and a point inside it (normalised). */

@@ -192,4 +192,14 @@
         <item quantity="other">%1$d மடிப்பு நிழல்கள் அச்சுப் பகுதியிலிருந்து நீக்கப்பட்டன.</item>
     </plurals>
     <string name="colour_confirm_all_shadows">குறிக்கப்பட்ட எல்லாப் பகுதிகளும் மடிப்பு நிழல்கள்</string>
+    <string name="edge_blend_keep_switch">ஓர நிறங்களைத் தனி மைகளாக வை</string>
+    <string name="edge_blend_flag_label">மெல்லிய கோடா மங்கலா என உறுதியில்லை – உறுதிசெய்ய தொடவும்</string>
+    <string name="edge_blend_confirm_title">மெல்லிய கோடா, கேமரா மங்கலா?</string>
+    <string name="edge_blend_confirm_body">இந்த நிறம் இரண்டு நிறங்களுக்கு இடையே மெல்லிய பட்டைகளாக உள்ளது; அவற்றின் கலவையாகவும் உள்ளது. இந்தத் தெளிவுத்திறனில் அச்சிட்ட மெல்லிய கோடும் கேமரா மங்கலும் ஒன்றுபோல் தெரியும்.</string>
+    <string name="edge_blend_confirm_merge">இது மங்கல் – சேர்த்துவிடு</string>
+    <string name="edge_blend_confirm_keep">இது அச்சிட்ட கோடு</string>
+    <plurals name="edge_blend_merged">
+        <item quantity="one">ஓர விளிம்புக் கலப்பு: %1$d பிக்சல் அருகிலுள்ள மைகளில் சேர்க்கப்பட்டது.</item>
+        <item quantity="other">ஓர விளிம்புக் கலப்பு: %1$d பிக்சல்கள் அருகிலுள்ள மைகளில் சேர்க்கப்பட்டன.</item>
+    </plurals>
 </resources>

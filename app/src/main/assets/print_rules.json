@@ -420,7 +420,7 @@
   "display_disclaimer": "Rule-of-thumb estimate from public trade sources. Verify on the production floor and with the ink maker's technical data sheet.",
   "change_log": [
     "v2 (15 Nov 2026): added process_inks, garment_mask, white_base, recommendation, resolution and regression_cases after a device test on a real garment photo (white-to-blue gradient logo on a black T-shirt).",
-    "v3 (18 Nov 2026): added shadow_vs_ink and photo_vs_artwork (proposed starting values, Ravi to confirm) after a white T-shirt photo measured fold shadows as print colours. merge_shades_in_photo_hue_within_deg holds the 6 deg from merge_shades_in_photo as a number."
+    "v3 (18 Nov 2026): added shadow_vs_ink and photo_vs_artwork (proposed starting values, Ravi to confirm) after a white T-shirt photo measured fold shadows as print colours. merge_shades_in_photo_hue_within_deg holds the 6 deg from merge_shades_in_photo as a number. Added edge_blend (camera blur and anti-aliasing bands between two inks; proposed starting values, Ravi to confirm)."
   ],
   "process_inks": {
     "cyan": "#00AEEF",
@@ -511,6 +511,31 @@
     "merge_shades_in_artwork": "never automatic; if the lighter shade fits the garment-to-ink mixing line within 2.0 CIEDE2000, suggest 'print as tint of <ink>, saves 1 screen' for the user to accept",
     "confidence": "assumption",
     "note": "Proposed starting values; tune on real photos; Ravi to confirm"
+  },
+  "edge_blend": {
+    "what": "thin bands of mixed colour along the border between two inks (or ink and fabric), from camera blur or artwork anti-aliasing; not an ink",
+    "on_mixing_line_max_de00": 3.0,
+    "mixing_line_space": "linear RGB (light mixes linearly)",
+    "band_width": "measured in the analysed image, not the source",
+    "band_max_px_from_measured_blur_factor": 1.5,
+    "band_max_px_min": 2,
+    "band_max_px_cap": 6,
+    "band_max_px_fallback": 4,
+    "blur_measured_from": "10-90% width of clean ink-to-fabric edges in the same image",
+    "band_max_px_artwork": 2,
+    "sandwiched_min_fraction": 0.8,
+    "sandwiched_means": "both neighbouring colours within the band width of the pixel",
+    "plateau_keep_rule": "keep as a colour if, across the band, at least 2 consecutive pixels have the same mixing ratio within 0.1 (a printed line has a flat middle; blur does not)",
+    "plateau_min_px": 2,
+    "plateau_ratio_tolerance": 0.1,
+    "monotonic_required": true,
+    "action_photo": "reassign each blend pixel to the nearer neighbour by mixing ratio; a pixel nearer the fabric leaves the print area",
+    "action_artwork": "same, only when the band is band_max_px_artwork or thinner (anti-aliasing); otherwise keep the colour",
+    "if_line_but_not_thin": "keep as a colour (may be a real tint or gradient)",
+    "below_min_px_per_cm": "flag 'possible thin line or blur - confirm' instead of merging",
+    "report": "show count of reassigned pixels; switch 'Keep edge colours as separate inks' undoes it",
+    "confidence": "assumption",
+    "note": "Proposed starting values; tune on real photos; Ravi to confirm. plateau_min_px and plateau_ratio_tolerance hold the 2 and 0.1 from plateau_keep_rule as numbers."
   },
   "regression_cases": [
     {
