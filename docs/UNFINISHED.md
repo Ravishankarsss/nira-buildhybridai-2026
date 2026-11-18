@@ -23,7 +23,7 @@ Status words used here:
 | A8 | README and instructions | **Done** 17 Nov | `README.md` | Update screenshots and status before submission |
 | A9 | Demo video, 3 minutes or less, public on YouTube | **Missing** | — | Record after the hybrid flow works |
 | A10 | Devpost text and submission | **Missing** | — | Write and submit |
-| A11 | Working project for judges, free of charge | Partial | Debug APK builds | Decide how judges get it (APK and/or web). Not tested on any phone other than the vivo |
+| A11 | Working project for judges, free of charge | Plan written 18 Nov: docs/JUDGE_ACCESS_PLAN.md | Today no judge can use the AI: App Check is enforced and a judge's debug token is not registered; the web page runs only on localhost | Ravi decides the App Check route (A: judge debug token, B: monitor mode), web hosting with reCAPTCHA Enterprise, and the Firebase plan; then build, host and test on a second device |
 | A12 | Disclosure of work done before and during the contest | Partial | Section in `README.md` | Copy into the Devpost text |
 
 ## B. AI features (Layer B and C in the master context)
