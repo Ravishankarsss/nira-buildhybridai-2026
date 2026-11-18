@@ -70,6 +70,16 @@ Change made 18 Nov: when a saved analysis is opened, Part A now starts as soon a
 
 The small artwork did not get faster in this test, though Part A alone took 13.7 s. The next speed step is the error curve inside Part A.
 
+Error curve speed-up, 18 Nov (commit 5e5255a): the K=16 point reuses the Step 7 clustering (same points, K and seed), and k-means and the error measure compute CIEDE2000 once per distinct colour. A fingerprint of Part A on three test images is identical before and after, and the phone shows the same colours (3 and 12) as before. Measured on the vivo with temporary timers (removed afterwards):
+
+| Stage | 1280 × 714 artwork, before → after | 6144 × 8192 photo, before → after |
+| :--- | ---: | ---: |
+| Error curve | 6,272 → 889 ms | 7,451 → 2,041 ms |
+| K-means K=16 | 2,079 → 506 ms | 2,499 → 961 ms |
+| **Part A total** | **13.7 s → 7.4 s** | **16.6 s → 9.9 s** |
+
+The largest remaining Part A stages are knit smoothing and lighting flatten on dark garments (1.8 s and 1.2 s) and the garment profile on the photo (2.4 s).
+
 Bug found and fixed in the same test: opening a saved analysis kept the previous artwork's Print Report on screen (its colours and count) until the new Part A finished. Opening an analysis now clears Parts A–D, and a newer Part A run cancels the older one.
 
 ## 00000. Update 17 Nov 2026, 08:20 IST — first successful cloud AI call
