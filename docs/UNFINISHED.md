@@ -73,7 +73,7 @@ None of these exist as product features. Only the test button calls AI.
 | # | Item | Status |
 | :-- | :--- | :--- |
 | D1 | Dark-garment fixes (2 colours, tight box, 2 screens) | Done in tests. **Not verified on the real garment photo on the phone** |
-| D2 | Speed of Part A | Improved 18 Nov: laptop, photo-like 1024 px image, 7.8 s → 2.1 s, results byte-identical (parallel cores, Lab once per colour). Phone, open-to-colours time: 1280 × 714 artwork about 30 s → about 21 s; 6144 × 8192 photo about 47 s. Phone stage times (PROJECT_STATUS, 18 Nov): the older colour separation takes 11.5–15.7 s and runs before Part A; Part A itself takes 13.7–16.6 s, with the error curve (6.3–7.5 s) the largest stage. Next: start Part A without waiting for the separation, then make the error curve cheaper |
+| D2 | Speed of Part A | Improved 18 Nov: laptop, photo-like 1024 px image, 7.8 s → 2.1 s, results byte-identical (parallel cores, Lab once per colour). Phone, open-to-colours time: 1280 × 714 artwork about 30 s → about 21 s; 6144 × 8192 photo about 47 s. Phone stage times (PROJECT_STATUS, 18 Nov): the older colour separation takes 11.5–15.7 s and runs before Part A; Part A itself takes 13.7–16.6 s, with the error curve (6.3–7.5 s) the largest stage. Done 18 Nov: Part A now starts before the separation; photo about 47 s → 20 s, small artwork unchanged at about 21 s. Next: make the error curve cheaper |
 | D3 | Re-run analysis on the cropped print box at best resolution | Missing |
 | D4 | Drag the print box edges | `setPrintBox` exists in the view model; no screen calls it |
 | D5 | Edge refinement for flat spot layers | Missing |

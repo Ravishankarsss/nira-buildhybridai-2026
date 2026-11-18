@@ -61,6 +61,15 @@ Stage times on the vivo V60e (8 cores), measured 18 Nov with temporary timers th
 
 What this shows: about half the wait is the older colour separation, which runs first and makes Part A wait. Inside Part A, the error curve is the largest stage.
 
+Change made 18 Nov: when a saved analysis is opened, Part A now starts as soon as the image is loaded, and the older colour separation runs after Part A (so the two do not compete for the cores). Results are unchanged; the Separation screen still fills in. Open-to-colours time on the vivo (screen checked every 5 s, so about ±5 s):
+
+| Analysis | Before this change | After |
+| :--- | ---: | ---: |
+| 1280 × 714 artwork | about 21 s | about 21 s |
+| 6144 × 8192 photo | about 47 s | about 20 s |
+
+The small artwork did not get faster in this test, though Part A alone took 13.7 s. The next speed step is the error curve inside Part A.
+
 Bug found and fixed in the same test: opening a saved analysis kept the previous artwork's Print Report on screen (its colours and count) until the new Part A finished. Opening an analysis now clears Parts A–D, and a newer Part A run cancels the older one.
 
 ## 00000. Update 17 Nov 2026, 08:20 IST — first successful cloud AI call

@@ -525,6 +525,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                     partBResult = null,
                     partCResult = null,
                     partDResult = null,
+                    separationResult = null,
                     userPickedStrategy = false
                 )
             }
@@ -541,23 +542,32 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                 mimeType = "image/*"
             )
 
-            val separation = if (bitmap != null) {
-                withContext(Dispatchers.Default) {
-                    ColorSeparator.separateColors(bitmap, record.palette, record.garmentColor, 1024)
-                }
-            } else null
-
             _uiState.update {
                 it.copy(
                     selectedImageUri = uri,
                     selectedBitmap = bitmap,
                     metadata = meta,
-                    separationResult = separation,
                     analysisState = AnalysisState.Success
                 )
             }
             refreshPaletteShadeMatches()
+            // Start the Print Report measurement at once; it does not need the separation layers.
             computePartAReport()
+
+            // The colour separation layers (Separation screen) are made after Part A, so the
+            // two do not compete for the phone's cores and the measured colours come first.
+            if (bitmap != null) {
+                partAJob?.join()
+                val separation = withContext(Dispatchers.Default) {
+                    ColorSeparator.separateColors(bitmap, record.palette, record.garmentColor, 1024)
+                }
+                _uiState.update {
+                    // Only if the same analysis is still open and nothing newer has set the layers.
+                    if (it.currentRecordId == record.id && it.separationResult == null) {
+                        it.copy(separationResult = separation)
+                    } else it
+                }
+            }
         }
     }
 
