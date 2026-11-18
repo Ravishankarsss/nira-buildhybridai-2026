@@ -169,6 +169,7 @@ Dashboard redesign, garment camera, Settings, language switch inside the workflo
 | L10 | Two colour engines give different colour counts (Colour screen 8, Print Report 3 for the same artwork) | **Fixed** 18 Nov: Colour screen leads with the measured print colours; the older list is labelled "All colour clusters in the image"; lists show the measured count. Not yet checked on the phone |
 | L11 | Part A took about 30 s on the vivo for a reopened analysis | Now about 21 s; see D2 |
 | L12 | Opening a saved analysis showed the previous artwork's colours until Part A finished | Fixed 18 Nov: report cleared on open, older Part A run cancelled |
+| L13 | Photo of a white T-shirt (2-colour print: muted sky, ink blue) measured 12 print colours | Cause found 18 Nov: on light garments (L* > 80, chroma < 9, written in the code, not in print_rules.json) the engine counts only near-white pixels as fabric and skips lighting flattening, texture smoothing and the merge of one ink's shades, so fold shadows and light/dark versions of each blue become separate colours. Test on the real photo (laptop, not committed): treating light garments like others gives exactly 2 colours (#98BFD2, #0E1D48), but fold shadows still enter the print area (36% instead of about 25%) and one test (8 solid stripes on white) drops a real orange ink. Needs Ravi's decisions and print_rules.json values: (a) how a fold shadow is told from a grey ink, (b) how a photo is told from flat artwork, so ink shades merge only in photos. Needs a brand-free regression photo |
 
 ## K. Other loose ends
 
