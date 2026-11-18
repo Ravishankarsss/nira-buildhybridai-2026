@@ -111,17 +111,17 @@ object PrintAreaAndPaletteEngine {
         // Step 1: Measure Garment Background (Median Lab + Spread)
         val garmentProfile = estimateGarmentProfile(pixels, width, height, inputs.userGarmentHex, inputs.garmentColorHex, maskRules)
         val garmentLab = garmentProfile.medianLab
-        val isWhiteGarment = garmentLab.l > 80.0 && hypot(garmentLab.a, garmentLab.b) < 9.0
+        // Light garment = one that needs no white base, by the white_base limits in print_rules.json.
+        // Light garments use the same fabric rules as every other garment (ΔE00 to the measured
+        // fabric, lighting flattened, texture smoothed); only the automatic halftone reduction differs.
+        val isLightGarment = garmentLab.l >= decisionRules.darkGarmentThresholdL &&
+            hypot(garmentLab.a, garmentLab.b) <= decisionRules.garmentChromaThreshold
         val effectiveGarmentThreshold = max(inputs.garmentThresholdDeltaE00, garmentProfile.adaptiveThresholdDeltaE00)
 
         // Step 2: Illumination Flattening on fabric & knit smoothing
-        val illuminationCorrectedPixels = if (!isWhiteGarment) {
-            flattenUnevenLighting(pixels, width, height, garmentLab, garmentProfile.spreadDeltaE00)
-        } else pixels
-
-        val smoothedPixels = if (!isWhiteGarment) {
-            smoothKnitTexture(illuminationCorrectedPixels, width, height)
-        } else illuminationCorrectedPixels
+        // print_rules.json garment_mask: flatten_lighting and smooth_texture apply to every garment.
+        val illuminationCorrectedPixels = flattenUnevenLighting(pixels, width, height, garmentLab, garmentProfile.spreadDeltaE00)
+        val smoothedPixels = smoothKnitTexture(illuminationCorrectedPixels, width, height)
 
         // Step 3: Raw Print Masking
         val rawPrintMask = BooleanArray(totalPixels)
@@ -156,11 +156,7 @@ object PrintAreaAndPaletteEngine {
                     val g = (p shr 8) and 0xFF
                     val b = p and 0xFF
                     val computedLab = ColorConverter.rgbToLab(r, g, b)
-                    val garmentFlag = if (isWhiteGarment) {
-                        computedLab.l > 80.0 && hypot(computedLab.a, computedLab.b) < 9.0
-                    } else {
-                        ColorConverter.deltaE00(computedLab, garmentLab) <= effectiveGarmentThreshold
-                    }
+                    val garmentFlag = ColorConverter.deltaE00(computedLab, garmentLab) <= effectiveGarmentThreshold
                     val entry = Pair(computedLab, garmentFlag)
                     labCache[p] = entry
                     entry
@@ -365,10 +361,10 @@ object PrintAreaAndPaletteEngine {
         val prunedBuckets = activeBuckets.filter { it.count >= thresholdCount }.toMutableList()
         var finalBuckets = if (prunedBuckets.isNotEmpty()) prunedBuckets else activeBuckets.take(1).toMutableList()
 
-        // Step 9b: On a non-white garment, a colour that is a halftone of one ink over the garment,
+        // Step 9b: On a garment that needs a white base (not light), a colour that is a halftone of one ink over the garment,
         // or a smooth transition between two inks, is not a separate ink. Keep the fewest inks
         // that reproduce every colour within the quality tolerance from print_rules.json.
-        if (!isWhiteGarment && finalBuckets.size > 1) {
+        if (!isLightGarment && finalBuckets.size > 1) {
             val garmentRgb = ColorConverter.labToRgb(garmentLab.l, garmentLab.a, garmentLab.b)
             val keep = selectInksByHalftoneReduction(
                 colours = finalBuckets.map { intArrayOf(it.r, it.g, it.b) },
@@ -1131,7 +1127,6 @@ object PrintAreaAndPaletteEngine {
 
         val profile = estimateGarmentProfile(pixels, width, height, inputs.userGarmentHex, inputs.garmentColorHex, maskRules)
         val garmentLab = profile.medianLab
-        val isWhiteGarment = garmentLab.l > 80.0 && hypot(garmentLab.a, garmentLab.b) < 9.0
         val effectiveThreshold = max(inputs.garmentThresholdDeltaE00, profile.adaptiveThresholdDeltaE00)
 
         val labCache = HashMap<Int, Boolean>(8192)
@@ -1164,11 +1159,7 @@ object PrintAreaAndPaletteEngine {
                     val g = (p shr 8) and 0xFF
                     val b = p and 0xFF
                     val computedLab = ColorConverter.rgbToLab(r, g, b)
-                    val garmentFlag = if (isWhiteGarment) {
-                        computedLab.l > 80.0 && hypot(computedLab.a, computedLab.b) < 9.0
-                    } else {
-                        ColorConverter.deltaE00(computedLab, garmentLab) <= effectiveThreshold
-                    }
+                    val garmentFlag = ColorConverter.deltaE00(computedLab, garmentLab) <= effectiveThreshold
                     labCache[p] = garmentFlag
                     garmentFlag
                 }
