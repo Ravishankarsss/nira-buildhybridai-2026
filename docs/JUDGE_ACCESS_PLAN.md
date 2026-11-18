@@ -77,12 +77,16 @@ Web (Chrome):
 1. Open the hosted link in Chrome (version and flags as listed on the page).
 2. Click "Prepare on-device model", choose a mode, click Run. The result shows the source reported by the SDK.
 
-## 5. Decisions for Ravi
+## 5. Decisions (Ravi, 18 Nov 2026)
 
-1. App Check route for Android: A (judge debug token, enforcement on) or B (monitor mode during judging).
-2. Web hosting on Firebase Hosting with reCAPTCHA Enterprise: yes or no.
-3. Firebase plan (Spark or Blaze) and the daily cap.
-4. The four sample photos and notes (also needed for the regression tests).
+1. **Android: route A**, with two safeguards. The judge token comes from a git-ignored local file at build time, never from the repository. The judge APK is shared only through a link in the Devpost testing instructions, not on the public Releases page. The public Releases build has the engine working and an AI screen saying "Use the judge build or the web link for AI". The token is revoked after judging.
+   - Found 18 Nov: Firebase documents a fixed debug token only for instrumented tests in CI (`DebugAppCheckTestHelper`, `firebaseAppCheckDebugSecret`), not for an app given to users, and says debug tokens and debug builds must not be shipped to production. Route A therefore relies on undocumented behaviour: storing the registered token where the debug provider keeps its secret before App Check starts. It must be tested on a phone with app data cleared before we rely on it. A documented production alternative (a custom provider) needs a server, which the Spark plan cannot run. If route A fails the test, the fallback is route B, stated openly.
+2. **Web: yes**, Firebase Hosting with reCAPTCHA Enterprise; the debug provider stays for `localhost` only. Firebase docs: on the Spark plan reCAPTCHA Enterprise works with four score levels (0.1, 0.3, 0.7, 0.9).
+3. **Plan: Spark (no billing).** No charge is possible; when a limit is reached requests fail with HTTP 429.
+   - Cloud model confirmed 18 Nov: `gemini-3.5-flash-lite` on Android (`CLOUD_MODEL_NAME`) and web (`web/app.js`). `gemini-3.8-flash` appears only in history notes (replaced on 17 Nov after two 180 s time-outs).
+   - Limits (Firebase AI Logic quotas page and Gemini API rate-limits page, read 18 Nov): limits are per project, not per key or user, so all judges share them; measured as requests per minute, requests per day and tokens per minute/day; the daily count resets at midnight Pacific time; Firebase AI Logic adds 100 requests per minute per user. The free-tier numbers for `gemini-3.5-flash-lite` are not published on the page; they are shown for the project in Google AI Studio → Rate limits (aistudio.google.com/rate-limit). Ravi to read them there and note them here.
+   - Done 18 Nov: a clear message when the limit is reached, on Android (QuotaExceededException or HTTP 429) and on the web page.
+4. **Photos:** Ravi, by 20 November.
 
 ## 6. Order of work
 

@@ -182,7 +182,7 @@ Dashboard redesign, garment camera, Settings, language switch inside the workflo
 - Debug builds start slowly unless pre-compiled (see `PROJECT_STATUS.md`, section 000). A release build was never made or tested.
 - No release signing set up.
 - The "Test AI" card and the debug-token display are temporary and must be removed or moved to Diagnostics.
-- Cloud model name `gemini-3.8-flash` must be re-checked on the Firebase models page before submission.
+- Cloud model: `gemini-3.5-flash-lite` on Android and web (confirmed 18 Nov). Re-check it on the Firebase models page before submission, and note its free-tier limits from Google AI Studio (see docs/JUDGE_ACCESS_PLAN.md).
 - Photos taken with the in-app camera are kept in app storage and are never cleaned up.
 
 ## Work order agreed on 17 Nov
