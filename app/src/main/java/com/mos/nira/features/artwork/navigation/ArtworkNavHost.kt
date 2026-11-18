@@ -188,6 +188,32 @@ fun ArtworkNavHost(
                         onTapGarment = { x, y -> viewModel.pickGarmentAt(x, y) }
                     )
                 },
+                decisionContent = {
+                    val isPhotoD = uiState.printJobInputs.inputKind == com.mos.nira.core.image.InputKind.PHOTO
+                    val measuredD = uiState.partAResult?.garmentProfile?.estimatedHex
+                    com.mos.nira.features.advice.PrintDecisionCard(
+                        artworkKey = ArtworkKey.of(uiState.selectedBitmap, uiState.palette.filter { !it.isGarmentBase }.map { it.hex }),
+                        garmentHex = uiState.previewGarmentHex ?: if (isPhotoD) measuredD else null,
+                        garmentChips = uiState.previewRules,
+                        measuredFabricHex = measuredD,
+                        isPhoto = isPhotoD,
+                        fabric = uiState.briefFabric,
+                        quantity = uiState.briefQuantity,
+                        feel = uiState.briefFeel,
+                        briefRules = uiState.briefRules,
+                        quantityRules = uiState.quantityRules,
+                        partB = uiState.partBResult,
+                        partC = uiState.partCResult,
+                        partD = uiState.partDResult,
+                        isComputing = uiState.isComputingPartB || uiState.isComputingPartC || uiState.isComputingPartD,
+                        contrastWarnings = uiState.previewWarnings,
+                        onGarment = { hex -> viewModel.setPreviewGarment(hex) },
+                        onFabric = { viewModel.setBriefFabric(it) },
+                        onQuantity = { viewModel.setBriefQuantity(it) },
+                        onFeel = { viewModel.setBriefFeel(it) },
+                        onLoadRules = { viewModel.loadBriefRules() }
+                    )
+                },
                 includePhotoEdgeArea = uiState.printJobInputs.includePhotoEdgeArea,
                 onIncludePhotoEdgeArea = { include -> viewModel.setIncludePhotoEdgeArea(include) },
                 onAnswerSmallColour = { point, isInk -> viewModel.answerSmallColour(point, isInk) },
@@ -251,6 +277,32 @@ fun ArtworkNavHost(
                 onClearExportMessage = { viewModel.clearExportMessage() },
                 onRecalculate = { viewModel.computePartAReport() },
                 onBack = goBack,
+                header = {
+                    val isPhotoD = uiState.printJobInputs.inputKind == com.mos.nira.core.image.InputKind.PHOTO
+                    val measuredD = uiState.partAResult?.garmentProfile?.estimatedHex
+                    com.mos.nira.features.advice.PrintDecisionCard(
+                        artworkKey = ArtworkKey.of(uiState.selectedBitmap, uiState.palette.filter { !it.isGarmentBase }.map { it.hex }),
+                        garmentHex = uiState.previewGarmentHex ?: if (isPhotoD) measuredD else null,
+                        garmentChips = uiState.previewRules,
+                        measuredFabricHex = measuredD,
+                        isPhoto = isPhotoD,
+                        fabric = uiState.briefFabric,
+                        quantity = uiState.briefQuantity,
+                        feel = uiState.briefFeel,
+                        briefRules = uiState.briefRules,
+                        quantityRules = uiState.quantityRules,
+                        partB = uiState.partBResult,
+                        partC = uiState.partCResult,
+                        partD = uiState.partDResult,
+                        isComputing = uiState.isComputingPartB || uiState.isComputingPartC || uiState.isComputingPartD,
+                        contrastWarnings = uiState.previewWarnings,
+                        onGarment = { hex -> viewModel.setPreviewGarment(hex) },
+                        onFabric = { viewModel.setBriefFabric(it) },
+                        onQuantity = { viewModel.setBriefQuantity(it) },
+                        onFeel = { viewModel.setBriefFeel(it) },
+                        onLoadRules = { viewModel.loadBriefRules() }
+                    )
+                },
                 footer = { Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     // Deep report: text and numbers only, from what this screen shows.
                     val key = ArtworkKey.of(uiState.selectedBitmap, uiState.palette.filter { !it.isGarmentBase }.map { it.hex })

@@ -574,6 +574,31 @@
       "verified_by_ravi": false
     },
     {
+      "id": "discharge_digital",
+      "name": "Discharge + digital print",
+      "group": "digital",
+      "what_it_is": "The garment's dye is discharged in the print area, then the design is printed digitally on the discharged area. Soft print on dark cotton with no white base.",
+      "artwork_fit": "ANY",
+      "garment_colour": "dark or medium, dyed with dischargeable reactive dyes",
+      "screens": null,
+      "screens_note": "How the discharge is applied (a discharge screen or a digital discharge step) is not in this file yet. Ravi to give.",
+      "suitable_fibres": [
+        "cotton (100%, reactive-dyed, dischargeable)"
+      ],
+      "not_suitable_fibres": [
+        "polyester",
+        "cotton_polyester_blend",
+        "pigment-dyed or vat-dyed cotton"
+      ],
+      "risks": [
+        "Reactive-dyed cotton only; discharge test first",
+        "Test every dye lot: some dyes do not discharge fully",
+        "Discharge activator releases formaldehyde on curing: check buyer chemical limits"
+      ],
+      "source": "Ravi, floor knowledge (18 Nov 2026); risks as for the discharge entry",
+      "verified_by_ravi": true
+    },
+    {
       "id": "dtg",
       "name": "DTG (direct-to-garment) digital print",
       "group": "digital",
@@ -887,7 +912,8 @@
     "FADE": "spot_halftone_gradient"
   },
   "change_log": [
-    "v2 (15 Nov 2026): added spot_halftone_gradient, garment_colour_principles and floor notes after a device test on a real garment photo."
+    "v2 (15 Nov 2026): added spot_halftone_gradient, garment_colour_principles and floor notes after a device test on a real garment photo.",
+    "v3 (18 Nov 2026): added discharge_digital (discharge plus digital print; Ravi floor knowledge, verified_by_ravi true)."
   ],
   "garment_colour_principles": {
     "rules": [

@@ -117,6 +117,8 @@ fun PrintReportScreen(
     onRecalculate: () -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
+    // The decision card comes first; the sections below are its details.
+    header: @Composable () -> Unit = {},
     footer: @Composable () -> Unit = {}
 ) {
     var eraseModeEnabled by remember { mutableStateOf(false) }
@@ -233,6 +235,8 @@ fun PrintReportScreen(
                     }
                 }
             }
+
+            item { header() }
 
             // SECTION 1: PRINT MASK & RECTANGLE ERASE TOOL
             item {

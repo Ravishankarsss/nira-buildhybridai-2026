@@ -124,6 +124,8 @@ fun ColorIntelligenceScreen(
     onAnswerArtworkBackground: (print: Boolean) -> Unit = {},
     // "See it on your garment" (print_rules.json garment_preview).
     previewContent: @Composable () -> Unit = {},
+    // Print brief and decision card (print_rules.json print_brief).
+    decisionContent: @Composable () -> Unit = {},
     includePhotoEdgeArea: Boolean = false,
     onIncludePhotoEdgeArea: (Boolean) -> Unit = {},
     onBack: () -> Unit,
@@ -455,6 +457,9 @@ fun ColorIntelligenceScreen(
 
         // "See it on your garment": drawn on the phone with the rules' ink model.
         item { previewContent() }
+
+        // "Ask like a master": four tap questions, then one decision card.
+        item { decisionContent() }
 
         // AI read of the artwork (Firebase AI Logic). Engine numbers are passed in as facts.
         item {

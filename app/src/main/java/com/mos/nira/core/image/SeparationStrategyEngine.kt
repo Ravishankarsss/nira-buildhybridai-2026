@@ -321,6 +321,11 @@ object SeparationStrategyEngine {
      * colour). Falls back to the chosen preset only when Part A has no garment profile.
      */
     fun measuredGarmentLab(partA: PartAResult, inputs: PrintJobInputs): ColorConverter.Lab {
+        // The garment the user chose to print on comes first (brief question 1).
+        inputs.targetGarmentHex?.let { hex ->
+            val t = ColorConverter.hexToRgb(hex)
+            return ColorConverter.rgbToLab(t.r, t.g, t.b)
+        }
         partA.garmentProfile?.let { return it.medianLab }
         val rgb = ColorConverter.hexToRgb(inputs.userGarmentHex ?: inputs.garmentColorHex)
         return ColorConverter.rgbToLab(rgb.r, rgb.g, rgb.b)
@@ -1006,7 +1011,8 @@ object SeparationStrategyEngine {
                 meshTpiMin = meshRule?.tpiMin,
                 meshTpiMax = meshRule?.tpiMax,
                 meshRuleId = meshRule?.id,
-                meshConfidence = meshRule?.confidence
+                meshConfidence = meshRule?.confidence,
+                isBaseWhite = spec.isBaseWhite
             )
         }
 

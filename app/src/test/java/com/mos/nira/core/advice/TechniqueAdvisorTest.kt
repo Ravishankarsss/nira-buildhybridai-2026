@@ -23,7 +23,7 @@ class TechniqueAdvisorTest {
 
     @Test
     fun rulesFile_isRead_andOnlyBaseMethodsAreOffered() {
-        assertEquals(28, rules.size)
+        assertEquals(29, rules.size) // 28 + discharge_digital (18 Nov 2026)
         val offered = TechniqueAdvisor.advise(rules, null, null, null)
         assertTrue(offered.isNotEmpty())
         assertTrue(offered.all { it.group in TechniqueAdvisor.METHOD_GROUPS })

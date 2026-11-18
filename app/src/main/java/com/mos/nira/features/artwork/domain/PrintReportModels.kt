@@ -78,7 +78,9 @@ data class PrintJobInputs(
     // Switch "Include the photo edge area": undoes the table/floor exclusion (print_rules.json photo_background).
     val includePhotoEdgeArea: Boolean = false,
     // Artwork background answer: true = print it, false = drop it (not ink), null = not answered (left out).
-    val artworkBackgroundAnswer: Boolean? = null
+    val artworkBackgroundAnswer: Boolean? = null,
+    /** The garment the print goes on, chosen by the user (brief question 1 / preview chip). Overrides the measured fabric. */
+    val targetGarmentHex: String? = null
 )
 
 /** The plain background found in an artwork file (print_rules.json artwork_background). */
@@ -251,7 +253,9 @@ data class FilmPositiveChannel(
     val meshTpiMax: Int? = null,
     /** The mesh_rules id used, and the confidence label of that rule. */
     val meshRuleId: String? = null,
-    val meshConfidence: String? = null
+    val meshConfidence: String? = null,
+    /** The white underbase screen (white_base), not a print colour. */
+    val isBaseWhite: Boolean = false
 ) {
     val formattedCoverage: String get() = String.format("%.1f%%", averageCoveragePercent)
     val formattedBoxCoverage: String get() = String.format("%.1f%%", boxCoveragePercent)

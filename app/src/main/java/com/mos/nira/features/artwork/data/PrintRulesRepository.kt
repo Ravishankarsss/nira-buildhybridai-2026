@@ -254,6 +254,16 @@ class PrintRulesRepository(private val context: Context?) {
         loadJson()?.let { parseSmallColourRules(it) }
     }
 
+    /** "print_brief" from print_rules.json, or null if it is missing or incomplete. */
+    suspend fun getBriefRules(): com.mos.nira.core.advice.BriefRules? = withContext(Dispatchers.IO) {
+        loadJson()?.let { com.mos.nira.core.advice.PrintDecision.parseBriefRules(it) }
+    }
+
+    /** "quantity_thresholds" from print_rules.json, or null if the section is missing. */
+    suspend fun getQuantityRules(): com.mos.nira.core.advice.QuantityRules? = withContext(Dispatchers.IO) {
+        loadJson()?.let { com.mos.nira.core.advice.PrintDecision.parseQuantityRules(it) }
+    }
+
     /** "garment_preview" from print_rules.json, or null if it is missing or incomplete. */
     suspend fun getGarmentPreviewRules(): GarmentPreviewRules? = withContext(Dispatchers.IO) {
         loadJson()?.let { parseGarmentPreviewRules(it) }

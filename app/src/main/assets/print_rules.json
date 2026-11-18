@@ -432,7 +432,7 @@
   "display_disclaimer": "Rule-of-thumb estimate from public trade sources. Verify on the production floor and with the ink maker's technical data sheet.",
   "change_log": [
     "v2 (15 Nov 2026): added process_inks, garment_mask, white_base, recommendation, resolution and regression_cases after a device test on a real garment photo (white-to-blue gradient logo on a black T-shirt).",
-    "v3 (18 Nov 2026): added shadow_vs_ink and photo_vs_artwork (proposed starting values, Ravi to confirm) after a white T-shirt photo measured fold shadows as print colours. merge_shades_in_photo_hue_within_deg holds the 6 deg from merge_shades_in_photo as a number. Added edge_blend (camera blur and anti-aliasing bands between two inks; proposed starting values, Ravi to confirm). Added small_colours: a colour under the minimum coverage is flagged, not dropped (the magenta eye on the skull print). Added screen_type_mesh_rule (mesh per screen type from mesh_rules; ink figures only where ink_consumption has an entry). Ravi: flat spot 137-156 tpi; mapping verified except highlight white. Added artwork_background. Added edge_blend.keyline_protection (Ravi: black keylines are important) and photo_background (table or floor at the photo edge). Added garment_preview (contrast check and preview chips)."
+    "v3 (18 Nov 2026): added shadow_vs_ink and photo_vs_artwork (proposed starting values, Ravi to confirm) after a white T-shirt photo measured fold shadows as print colours. merge_shades_in_photo_hue_within_deg holds the 6 deg from merge_shades_in_photo as a number. Added edge_blend (camera blur and anti-aliasing bands between two inks; proposed starting values, Ravi to confirm). Added small_colours: a colour under the minimum coverage is flagged, not dropped (the magenta eye on the skull print). Added screen_type_mesh_rule (mesh per screen type from mesh_rules; ink figures only where ink_consumption has an entry). Ravi: flat spot 137-156 tpi; mapping verified except highlight white. Added artwork_background. Added edge_blend.keyline_protection (Ravi: black keylines are important) and photo_background (table or floor at the photo edge). Added garment_preview (contrast check and preview chips). Added print_brief (feel tags from the technique texts, method order) and quantity_thresholds (values empty until Ravi gives them)."
   ],
   "process_inks": {
     "cyan": "#00AEEF",
@@ -535,6 +535,31 @@
     "capture_guidance": "Fill the frame with the garment. Nothing else in the photo.",
     "confidence": "assumption",
     "note": "Proposed starting values; Ravi to confirm. The centre-box condition keeps a large print that runs off one edge."
+  },
+  "print_brief": {
+    "what": "Four tap questions (garment colour, fibre and fabric, quantity, feel) and one decision card",
+    "fabrics": ["single_jersey", "pique", "fleece", "interlock", "other"],
+    "fabric_note": "The fabric is shown on the card and passed to the AI explanation. No rule in this file uses it yet.",
+    "feel_of_technique": {
+      "water_based_pigment": "soft",
+      "discharge": "soft",
+      "discharge_digital": "soft",
+      "plastisol": "raised"
+    },
+    "feel_source": "Taken from each technique's own text in print_techniques.json (water-based: soft, breathable feel; discharge: very soft print; plastisol: slightly raised plastic feel). Techniques not listed have no feel tag and are neutral.",
+    "method_order": "A method ruled out by fibre, artwork or garment is never offered. The rest are ordered by: matches the quantity band, then matches the feel, then the chosen fibre is listed as suitable (listed, then no fibre data, then not listed), then verified by Ravi, then advice level (recommended before possible), then fewer cautions (a caution warns of a weakness; a note only states a condition), then file order.",
+    "confidence": "assumption",
+    "verified_by_ravi": false,
+    "note": "Proposed 18 Nov 2026; Ravi to confirm the feel tags and the method order."
+  },
+  "quantity_thresholds": {
+    "what": "Order quantity bands that move the method between digital and screen printing",
+    "digital_below_pieces": null,
+    "screen_from_pieces": null,
+    "rule": "below digital_below_pieces: digital (DTG, DTF) first; from screen_from_pieces: screen printing first; in between: both are offered. While a value is null, quantity does not change the method and the card says the limit is not set.",
+    "confidence": "assumption",
+    "verified_by_ravi": false,
+    "note": "Values to be given by Ravi. Never filled in by the app."
   },
   "garment_preview": {
     "what": "'See it on your garment': the print drawn on a chosen garment colour, on the phone",

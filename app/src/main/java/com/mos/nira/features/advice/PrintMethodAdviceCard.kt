@@ -294,7 +294,7 @@ private fun reasonText(reason: AdviceReason): String = when (reason) {
 }
 
 @Composable
-private fun fibreLabel(f: Fibre): String = stringResource(
+internal fun fibreLabel(f: Fibre): String = stringResource(
     when (f) {
         Fibre.COTTON -> R.string.fibre_cotton
         Fibre.POLYESTER -> R.string.fibre_polyester

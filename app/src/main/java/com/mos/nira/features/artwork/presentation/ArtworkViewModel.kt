@@ -9,6 +9,9 @@ import com.mos.nira.core.image.ArtworkImageProcessor
 import com.mos.nira.core.image.ColorConverter
 import com.mos.nira.core.image.ColorExtractor
 import com.mos.nira.core.image.ColorSeparator
+import com.mos.nira.core.advice.BriefRules
+import com.mos.nira.core.advice.Feel
+import com.mos.nira.core.advice.QuantityRules
 import com.mos.nira.features.artwork.data.GarmentPreviewRules
 import com.mos.nira.core.image.GarmentPreview
 import com.mos.nira.core.image.InputKind
@@ -102,7 +105,13 @@ data class ArtworkStudioUiState(
     val inkSwaps: Map<String, String> = emptyMap(),
     val previewWithoutBase: Bitmap? = null,
     val previewWithBase: Bitmap? = null,
-    val previewWarnings: List<GarmentPreview.ContrastWarning> = emptyList()
+    val previewWarnings: List<GarmentPreview.ContrastWarning> = emptyList(),
+    // Print brief (fibre is kept with the method advice choices).
+    val briefFabric: String? = null,
+    val briefQuantity: Int? = null,
+    val briefFeel: Feel? = null,
+    val briefRules: BriefRules? = null,
+    val quantityRules: QuantityRules? = null
 )
 
 class ArtworkViewModel(application: Application) : AndroidViewModel(application) {
@@ -268,9 +277,13 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                         edgeBlendAnswer = null,
                         smallColourAnswers = emptyList(),
                         includePhotoEdgeArea = false,
-                        artworkBackgroundAnswer = null
+                        artworkBackgroundAnswer = null,
+                        targetGarmentHex = null
                     ),
                     previewGarmentHex = null,
+                    briefFabric = null,
+                    briefQuantity = null,
+                    briefFeel = null,
                     inkSwaps = emptyMap(),
                     previewWithoutBase = null,
                     previewWithBase = null,
@@ -561,9 +574,13 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                         edgeBlendAnswer = null,
                         smallColourAnswers = emptyList(),
                         includePhotoEdgeArea = false,
-                        artworkBackgroundAnswer = null
+                        artworkBackgroundAnswer = null,
+                        targetGarmentHex = null
                     ),
                     previewGarmentHex = null,
+                    briefFabric = null,
+                    briefQuantity = null,
+                    briefFeel = null,
                     inkSwaps = emptyMap(),
                     previewWithoutBase = null,
                     previewWithBase = null,
@@ -715,10 +732,42 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
 
     private var previewJob: Job? = null
 
-    /** The garment colour for the preview (a chip or a custom colour). Part A is not changed. */
+    /**
+     * The garment the print goes on (a chip or a custom colour): the preview, and the screens,
+     * base and ink (Parts B to D) for that garment. Part A (the print mask) is not changed.
+     */
     fun setPreviewGarment(hex: String) {
-        _uiState.update { it.copy(previewGarmentHex = hex) }
+        _uiState.update {
+            it.copy(previewGarmentHex = hex, printJobInputs = it.printJobInputs.copy(targetGarmentHex = hex))
+        }
         computeGarmentPreview()
+        computePartBReport()
+    }
+
+    // ---------- Print brief ----------
+
+    fun loadBriefRules() {
+        if (_uiState.value.briefRules != null && _uiState.value.quantityRules != null) return
+        viewModelScope.launch {
+            val brief = printRulesRepository.getBriefRules()
+            val quantity = printRulesRepository.getQuantityRules()
+            _uiState.update { it.copy(briefRules = brief, quantityRules = quantity) }
+        }
+    }
+
+    fun setBriefFabric(fabric: String?) = _uiState.update { it.copy(briefFabric = fabric) }
+
+    fun setBriefFeel(feel: Feel?) = _uiState.update { it.copy(briefFeel = feel) }
+
+    /** Order quantity; also used for the ink totals (Part D). */
+    fun setBriefQuantity(pieces: Int?) {
+        _uiState.update {
+            it.copy(
+                briefQuantity = pieces,
+                printJobInputs = if (pieces != null) it.printJobInputs.copy(orderPieces = pieces.coerceAtLeast(1)) else it.printJobInputs
+            )
+        }
+        if (pieces != null) computePartDReport()
     }
 
     /** Shows ink [fromHex] as [toHex] in the preview (a contrast fix); null undoes it. */
@@ -742,7 +791,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
         }
         if (n == 0) return
         val hex = ColorConverter.rgbToHex((r / n).toInt(), (g / n).toInt(), (b / n).toInt())
-        _uiState.update { it.copy(previewGarmentHex = null) }
+        _uiState.update { it.copy(previewGarmentHex = null, printJobInputs = it.printJobInputs.copy(targetGarmentHex = null)) }
         setUserGarmentColor(hex)
     }
 
