@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -47,6 +48,11 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -79,10 +85,10 @@ import java.util.Calendar
 
 private val Navy = Color(0xFF0B1020)
 private val CardColor = Color(0xFF171F35)
-private val Violet = Color(0xFF8B7CFF)
+private val Violet = Color(0xFFB3A8FF)
 private val Cyan = Color(0xFF55D6E8)
 private val White = Color(0xFFF5F6FF)
-private val Muted = Color(0xFF9BA6C0)
+private val Muted = Color(0xFFA8B4CE)
 
 class MainActivity : ComponentActivity() {
     override fun attachBaseContext(newBase: android.content.Context) {
@@ -274,6 +280,7 @@ fun NIRADashboard(
         modifier = modifier
             .fillMaxSize()
             .background(Navy)
+            .safeDrawingPadding()
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 20.dp),
     ) {
@@ -374,6 +381,7 @@ fun NIRADashboard(
                 if (rowIndex > 0) Spacer(modifier = Modifier.height(12.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.Top,
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     rowCards.forEach { card ->
@@ -404,9 +412,8 @@ fun NIRADashboard(
                                 WorkspaceCard.ASK_NIRA -> stringResource(R.string.card_ask_nira_hint)
                             },
                             accent = if (card.ordinal % 2 == 0) Violet else Cyan,
-                            modifier = Modifier
-                                .weight(1f)
-                                .clickable { onOpenCard(card) },
+                            onClick = { onOpenCard(card) },
+                            modifier = Modifier.weight(1f),
                         )
                     }
                     if (rowCards.size == 1) Spacer(modifier = Modifier.weight(1f))
@@ -488,7 +495,7 @@ private fun PrimaryAction(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick),
-        shape = RoundedCornerShape(22.dp),
+        shape = RoundedCornerShape(18.dp),
         colors = CardDefaults.cardColors(containerColor = CardColor),
     ) {
         Row(
@@ -501,17 +508,42 @@ private fun PrimaryAction(
                         Brush.linearGradient(listOf(CardColor, CardColor))
                     },
                 )
-                .padding(horizontal = 20.dp, vertical = 20.dp),
+                .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(text = symbol, color = accent, fontSize = 28.sp, fontWeight = FontWeight.Bold)
-            Spacer(modifier = Modifier.width(16.dp))
-            Column(modifier = Modifier.weight(1f)) {
-                Text(text = title, color = White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(text = hint, color = Muted, fontSize = 13.sp)
+            Text(
+                text = symbol,
+                color = accent,
+                fontSize = 24.sp,
+                lineHeight = 24.sp,
+                fontWeight = FontWeight.Bold,
+            )
+            Spacer(modifier = Modifier.width(14.dp))
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.Center,
+            ) {
+                Text(
+                    text = title,
+                    color = White,
+                    fontSize = 15.sp,
+                    lineHeight = 19.sp,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = hint,
+                    color = Muted,
+                    fontSize = 12.sp,
+                    lineHeight = 15.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
             }
-            Text(text = "→", color = accent, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.width(10.dp))
+            Text(text = "→", color = accent, fontSize = 18.sp, lineHeight = 18.sp, fontWeight = FontWeight.Bold)
         }
     }
 }
@@ -581,13 +613,13 @@ private fun ComingSoonChip(title: String, modifier: Modifier = Modifier) {
     ) {
         Text(
             text = title,
-            color = Muted.copy(alpha = 0.6f),
+            color = Muted.copy(alpha = 0.85f),
             fontSize = 13.sp,
             fontWeight = FontWeight.Medium,
         )
         Text(
             text = stringResource(R.string.soon_tag),
-            color = Muted.copy(alpha = 0.8f),
+            color = White,
             fontSize = 10.sp,
             modifier = Modifier
                 .clip(RoundedCornerShape(8.dp))
@@ -604,24 +636,36 @@ fun WorkspaceTile(
     subtitle: String,
     accent: Color,
     modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
 ) {
     Card(
-        modifier = modifier.height(145.dp),
-        shape = RoundedCornerShape(20.dp),
+        modifier = modifier
+            .clearAndSetSemantics {
+                contentDescription = "$title, $subtitle"
+                role = Role.Button
+                // clearAndSetSemantics removes the tap action of .clickable, so it is set here.
+                onClick(label = title) { onClick(); true }
+            }
+            .clickable(
+                onClick = onClick,
+                onClickLabel = title,
+            ),
+        shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = CardColor,
         ),
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(15.dp),
-            verticalArrangement = Arrangement.SpaceBetween,
+                .fillMaxWidth()
+                .padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Text(
                 text = symbol,
                 color = accent,
-                fontSize = 27.sp,
+                fontSize = 24.sp,
+                lineHeight = 24.sp,
                 fontWeight = FontWeight.Bold,
             )
 
@@ -629,15 +673,19 @@ fun WorkspaceTile(
                 Text(
                     text = title,
                     color = White,
-                    fontSize = 15.sp,
+                    fontSize = 13.sp,
+                    lineHeight = 16.sp,
                     fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = subtitle,
                     color = Muted,
                     fontSize = 11.sp,
-                    maxLines = 2,
+                    lineHeight = 14.sp,
+                    maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
             }
