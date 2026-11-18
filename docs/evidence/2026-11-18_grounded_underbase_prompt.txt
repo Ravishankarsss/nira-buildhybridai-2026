@@ -1,0 +1,10 @@
+Explain this rule in two plain sentences for a print supervisor. Use only the facts given.
+
+Facts from print_rules.json (white_base, underbase_rules, print_order_rules, mesh_rules):
+- A white underbase is used on dark garments (plastisol).
+- It is needed when light or bright colours are printed on a dark base fabric: garment L* below 70, or garment chroma above 15, and the print has colours lighter or brighter than the garment.
+- Print order: 1. underbase white (if needed), 2. flash, then the top colours.
+- The white base goes only under print pixels, never under bare fabric.
+- It is choked (made smaller than the top colours) by 0.5 mm by default, between 0.2 and 0.5 mm; never so far that thin text loses its white base.
+- A white print colour in the design can act as the base.
+- Mesh for the underbase: 110 to 156 threads per inch; lower mesh gives more opacity but a heavier hand feel.
