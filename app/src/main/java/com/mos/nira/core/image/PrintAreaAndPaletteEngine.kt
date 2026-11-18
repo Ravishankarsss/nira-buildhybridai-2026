@@ -38,6 +38,22 @@ object PrintAreaAndPaletteEngine {
         java.util.stream.IntStream.range(0, n).parallel().forEach { body(it) }
     }
 
+    /** The distinct Lab colours in a list of points, and which distinct colour each point is. */
+    private class DistinctLab(val colours: List<ColorConverter.Lab>, val indexOfPoint: IntArray) {
+        companion object {
+            fun of(points: List<ColorConverter.Lab>): DistinctLab {
+                val indexOf = HashMap<ColorConverter.Lab, Int>(points.size * 2)
+                val colours = ArrayList<ColorConverter.Lab>()
+                val idx = IntArray(points.size)
+                for (i in points.indices) {
+                    val p = points[i]
+                    idx[i] = indexOf.getOrPut(p) { colours.add(p); colours.size - 1 }
+                }
+                return DistinctLab(colours, idx)
+            }
+        }
+    }
+
     /** Lab of every distinct colour in the image, computed once. Read-only after it is built. */
     private fun labByColour(pixels: IntArray): HashMap<Int, ColorConverter.Lab> {
         val map = HashMap<Int, ColorConverter.Lab>(4096)
@@ -249,6 +265,9 @@ object PrintAreaAndPaletteEngine {
         // Step 7: Overcluster in Lab (K = 16, fixed seed)
         val kInitial = min(16, trainingLabList.size)
         val clusterCenters = runKMeans(trainingLabList, kInitial, seed)
+        // Same points, same K and same seed as the K=16 point of the error curve (Step 10), so
+        // that point reuses these centres instead of clustering again.
+        val initialCentersSnapshot: List<ColorConverter.Lab> = ArrayList(clusterCenters)
 
         // Assign all masked pixels to these initial clusters
         val initialAssignments = assignPixelsToCenters(maskedRgbList, maskedLabList, clusterCenters)
@@ -424,17 +443,20 @@ object PrintAreaAndPaletteEngine {
         // The six clusterings are independent, so they run at the same time. Each one is the
         // same calculation as before, so the curve is unchanged.
         val errorCurveSlots = arrayOfNulls<ErrorCurvePoint>(targetKs.size)
+        val evalList = if (maskedLabList.size > 5000) trainingLabList else maskedLabList
+        val evalDistinct = DistinctLab.of(evalList)
         parallelFor(targetKs.size) { slot ->
             val k = targetKs[slot]
             val effectiveK = min(k, trainingLabList.size)
             errorCurveSlots[slot] = if (effectiveK <= 0) {
                 ErrorCurvePoint(k, 0.0)
             } else {
-                val kCenters = runKMeans(trainingLabList, effectiveK, seed)
-                val evalList = if (maskedLabList.size > 5000) trainingLabList else maskedLabList
-                val minDists = DoubleArray(evalList.size)
-                parallelFor(evalList.size) { i ->
-                    val pixelLab = evalList[i]
+                val kCenters = if (effectiveK == kInitial) initialCentersSnapshot
+                    else runKMeans(trainingLabList, effectiveK, seed)
+                // Nearest-centre distance once per distinct colour, then copied to each point.
+                val uniqMin = DoubleArray(evalDistinct.colours.size)
+                parallelFor(uniqMin.size) { u ->
+                    val pixelLab = evalDistinct.colours[u]
                     var minDist = Double.MAX_VALUE
                     for (center in kCenters) {
                         val d = ColorConverter.deltaE00(pixelLab, center)
@@ -442,10 +464,10 @@ object PrintAreaAndPaletteEngine {
                             minDist = d
                         }
                     }
-                    minDists[i] = minDist
+                    uniqMin[u] = minDist
                 }
                 var totalDeltaE = 0.0
-                for (d in minDists) totalDeltaE += d // same order as before
+                for (i in evalList.indices) totalDeltaE += uniqMin[evalDistinct.indexOfPoint[i]] // same order as before
                 val meanDeltaE = totalDeltaE / evalList.size.toDouble()
                 ErrorCurvePoint(k = k, meanDeltaE00 = meanDeltaE)
             }
@@ -938,21 +960,29 @@ object PrintAreaAndPaletteEngine {
         val random = Random(seed)
         val centers = ArrayList<ColorConverter.Lab>(actualK)
 
+        // Distances depend only on the colour, so each one is computed once per distinct colour
+        // and copied to every point of that colour. The values and their order are unchanged.
+        val distinct = DistinctLab.of(points)
+        val uniq = distinct.colours
+        val uniqIndex = distinct.indexOfPoint
+
         // K-Means++ Initialization
         centers.add(points[random.nextInt(n)])
 
         val distances = DoubleArray(n)
+        val uniqDistances = DoubleArray(uniq.size)
         for (step in 1 until actualK) {
             val currentCenters = ArrayList(centers)
-            parallelFor(n) { i ->
+            parallelFor(uniq.size) { u ->
                 var minD = Double.MAX_VALUE
-                val pt = points[i]
+                val pt = uniq[u]
                 for (c in currentCenters) {
                     val d = ColorConverter.deltaE00(pt, c)
                     if (d < minD) minD = d
                 }
-                distances[i] = minD * minD
+                uniqDistances[u] = minD * minD
             }
+            for (i in 0 until n) distances[i] = uniqDistances[uniqIndex[i]]
             var sumDist = 0.0
             for (i in 0 until n) sumDist += distances[i] // same order as before
 
@@ -980,8 +1010,9 @@ object PrintAreaAndPaletteEngine {
 
             val iterationCenters = ArrayList(centers)
             val newAssignments = IntArray(n)
-            parallelFor(n) { i ->
-                val pt = points[i]
+            val uniqBest = IntArray(uniq.size)
+            parallelFor(uniq.size) { u ->
+                val pt = uniq[u]
                 var bestCluster = 0
                 var minDist = Double.MAX_VALUE
                 for (c in 0 until actualK) {
@@ -991,8 +1022,9 @@ object PrintAreaAndPaletteEngine {
                         bestCluster = c
                     }
                 }
-                newAssignments[i] = bestCluster
+                uniqBest[u] = bestCluster
             }
+            for (i in 0 until n) newAssignments[i] = uniqBest[uniqIndex[i]]
             for (i in 0 until n) {
                 if (assignments[i] != newAssignments[i]) {
                     assignments[i] = newAssignments[i]
