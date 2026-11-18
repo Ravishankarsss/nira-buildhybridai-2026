@@ -102,8 +102,8 @@ None of these exist as product features. Only the test button calls AI.
 
 | # | Value | Where |
 | :-- | :--- | :--- |
-| F1 | Ink deposit fallback 36 / 30 / 48 g/m2 when a mesh has no rule (should say "not available") | `SeparationStrategyEngine.calculatePartD` |
-| F2 | Mesh per screen type: 110, 156, 200, 230, 305 tpi | `SeparationStrategyEngine.generatePartC` (the rules file has `mesh_rules`, not read) |
+| F1 | Ink deposit fallback 36 / 30 / 48 g/m2 | Done 18 Nov: removed (the hidden table and the loader's gap-fillers). A screen whose mesh has no entry in ink_consumption shows "not available" and is left out of the totals, which say so. The litre figure (density 1.25 written in the code) is also removed: grams and kg only |
+| F2 | Mesh per screen type | Done 18 Nov: from mesh_rules through the new print_rules.json section screen_type_mesh_rule (proposed mapping, Ravi to confirm); the report shows the rule's tpi range, and ink uses ink_consumption at both ends of it |
 | F3 | Highlight white limits: lightness 80, chroma 10, ramp 20 | No value in the rules file. Ravi must add them |
 | F4 | White garment test: lightness above 80, chroma below 9 | `PrintAreaAndPaletteEngine` |
 | F5 | "Same as garment" limit 3.8 | Both engines |

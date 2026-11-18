@@ -998,6 +998,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                 val inputs = _uiState.value.printJobInputs
                 val processInks = printRulesRepository.getProcessInks()
                 val decisionRules = printRulesRepository.getSeparationDecisionRules()
+                val meshRules = printRulesRepository.getScreenMeshRules()
 
                 val result = withContext(Dispatchers.Default) {
                     val maxDim = 800
@@ -1023,7 +1024,8 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                         chosenStrategyType = chosenStrategy,
                         inputs = inputs,
                         processInks = processInks,
-                        decisionRules = decisionRules
+                        decisionRules = decisionRules,
+                        meshRules = meshRules
                     )
 
                     if (scaled != bitmap && partC.originalBitmap != scaled) {

@@ -221,7 +221,7 @@ class AdjustmentEngineTest {
         initial = initial,
         imageOps = ops,
         inputs = PrintJobInputs(printWidthCm = initial.width / initial.pixelsPerCm),
-        depositRules = PrintRulesRepository.defaultDepositRules()
+        depositRules = com.mos.nira.TestRules.deposits
     )
 
     // 8 x 4 px at 0.5 px/cm = a 16 cm x 8 cm print, so ink quantities are realistic.

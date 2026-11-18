@@ -137,6 +137,21 @@ data class PhotoBackgroundRules(
     val confidence: String
 )
 
+/** One entry of print_rules.json "mesh_rules": a mesh range for a kind of screen. */
+data class MeshRule(val id: String, val appliesTo: String, val tpiMin: Int, val tpiMax: Int, val confidence: String)
+
+/** Screen types of the Print Report, as named in print_rules.json "screen_type_mesh_rule". */
+enum class ScreenType(val key: String) {
+    UNDERBASE_WHITE("underbase_white"),
+    HIGHLIGHT_WHITE("highlight_white"),
+    CMYK_PROCESS("cmyk_process"),
+    SPOT_HALFTONE("spot_halftone"),
+    FLAT_SPOT("flat_spot")
+}
+
+/** The mesh rule for each screen type, from "screen_type_mesh_rule" and "mesh_rules". No defaults. */
+data class ScreenMeshRules(val byScreenType: Map<ScreenType, MeshRule>, val mappingConfidence: String)
+
 /**
  * Ink deposit rule for a given screen mesh count.
  */
@@ -192,9 +207,9 @@ class PrintRulesRepository(private val context: Context?) {
      */
     suspend fun getMeshDepositRules(): Map<Int, MeshDepositRule> = withContext(Dispatchers.IO) {
         cachedDeposits?.let { return@withContext it }
-        val root = loadJson() ?: return@withContext defaultDepositRules()
+        val root = loadJson() ?: return@withContext emptyMap()
         val map = parseMeshDepositRules(root)
-        (if (map.isEmpty()) defaultDepositRules() else map).also { cachedDeposits = it }
+        map.also { cachedDeposits = it }
     }
 
     /**
@@ -226,6 +241,11 @@ class PrintRulesRepository(private val context: Context?) {
     /** "small_colours" from print_rules.json, or null if it is missing or incomplete. */
     suspend fun getSmallColourRules(): SmallColourRules? = withContext(Dispatchers.IO) {
         loadJson()?.let { parseSmallColourRules(it) }
+    }
+
+    /** Mesh rule per screen type, or null if the sections are missing. */
+    suspend fun getScreenMeshRules(): ScreenMeshRules? = withContext(Dispatchers.IO) {
+        loadJson()?.let { parseScreenMeshRules(it) }
     }
 
     /** "edge_blend" from print_rules.json, or null if it is missing or incomplete. */
@@ -291,6 +311,24 @@ class PrintRulesRepository(private val context: Context?) {
                 mergeThresholdDeltaE00 = r.getDouble("merge_threshold_de00"),
                 confidence = r.getString("confidence")
             )
+        } catch (e: Exception) {
+            null
+        }
+
+        /**
+         * Reads "screen_type_mesh_rule" and "mesh_rules". A screen type whose rule id is not in
+         * mesh_rules is left out (the report then shows "not available"). Null if either is missing.
+         */
+        fun parseScreenMeshRules(root: JSONObject): ScreenMeshRules? = try {
+            val mapping = root.getJSONObject("screen_type_mesh_rule")
+            val list = root.getJSONArray("mesh_rules")
+            val rules = (0 until list.length()).map { list.getJSONObject(it) }.associateBy { it.getString("id") }
+            val byType = ScreenType.values().mapNotNull { type ->
+                val id = mapping.optString(type.key).takeIf { it.isNotBlank() } ?: return@mapNotNull null
+                val r = rules[id] ?: return@mapNotNull null
+                type to MeshRule(id, r.optString("applies_to"), r.getInt("tpi_min"), r.getInt("tpi_max"), r.optString("confidence"))
+            }.toMap()
+            ScreenMeshRules(byType, mapping.getString("confidence"))
         } catch (e: Exception) {
             null
         }
@@ -405,13 +443,17 @@ class PrintRulesRepository(private val context: Context?) {
                 ?.optJSONArray("plastisol_deposit_g_m2_by_mesh") ?: return map
             for (i in 0 until arr.length()) {
                 val item = arr.getJSONObject(i)
+                // An entry missing any of the three values is left out: no number is made up.
+                if (!item.has("tpi") || !item.has("deposit_g_m2_default") ||
+                    !item.has("deposit_g_m2_min") || !item.has("deposit_g_m2_max")
+                ) continue
                 val tpi = item.getInt("tpi")
                 map[tpi] = MeshDepositRule(
                     tpi = tpi,
-                    depositGPerM2Default = item.optDouble("deposit_g_m2_default", 36.0),
-                    depositGPerM2Min = item.optDouble("deposit_g_m2_min", 30.0),
-                    depositGPerM2Max = item.optDouble("deposit_g_m2_max", 48.0),
-                    confidence = item.optString("confidence", "interpolated")
+                    depositGPerM2Default = item.getDouble("deposit_g_m2_default"),
+                    depositGPerM2Min = item.getDouble("deposit_g_m2_min"),
+                    depositGPerM2Max = item.getDouble("deposit_g_m2_max"),
+                    confidence = item.optString("confidence", "assumption")
                 )
             }
             return map
@@ -434,15 +476,5 @@ class PrintRulesRepository(private val context: Context?) {
             return map
         }
 
-        fun defaultDepositRules(): Map<Int, MeshDepositRule> {
-            return mapOf(
-                110 to MeshDepositRule(110, 45.0, 38.0, 63.0, "sourced"),
-                137 to MeshDepositRule(137, 40.0, 33.0, 54.0, "interpolated"),
-                156 to MeshDepositRule(156, 36.0, 30.0, 48.0, "interpolated"),
-                200 to MeshDepositRule(200, 28.0, 23.0, 38.0, "interpolated"),
-                230 to MeshDepositRule(230, 24.0, 19.0, 33.0, "interpolated"),
-                305 to MeshDepositRule(305, 18.0, 13.0, 25.0, "sourced")
-            )
-        }
     }
 }

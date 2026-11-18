@@ -192,6 +192,15 @@
     "note": "Warn the user when a colour layer has lines thinner than the limit for its mesh.",
     "source": "https://photo2vector.com/blog/screen-printing-artwork-from-photo"
   },
+  "screen_type_mesh_rule": {
+    "underbase_white": "underbase_white_dark_garment",
+    "highlight_white": "halftone_simulated_process",
+    "cmyk_process": "halftone_simulated_process",
+    "spot_halftone": "halftone_simulated_process",
+    "flat_spot": "plastisol_general_spot",
+    "confidence": "assumption",
+    "note": "Which mesh_rules entry each screen type in the Print Report uses; the report shows that entry's tpi range. Proposed 18 Nov 2026 to replace mesh numbers that were written in the Kotlin code (underbase 110, highlight white 230, CMYK 305, spot halftone 200, flat spot 156); Ravi to confirm. Ink per screen uses ink_consumption at the two ends of the range; an end with no entry there gives no figure."
+  },
   "underbase_rules": {
     "needed_when": "Light or bright colours printed on a dark base fabric",
     "choke_mm_default": 0.5,
@@ -420,7 +429,7 @@
   "display_disclaimer": "Rule-of-thumb estimate from public trade sources. Verify on the production floor and with the ink maker's technical data sheet.",
   "change_log": [
     "v2 (15 Nov 2026): added process_inks, garment_mask, white_base, recommendation, resolution and regression_cases after a device test on a real garment photo (white-to-blue gradient logo on a black T-shirt).",
-    "v3 (18 Nov 2026): added shadow_vs_ink and photo_vs_artwork (proposed starting values, Ravi to confirm) after a white T-shirt photo measured fold shadows as print colours. merge_shades_in_photo_hue_within_deg holds the 6 deg from merge_shades_in_photo as a number. Added edge_blend (camera blur and anti-aliasing bands between two inks; proposed starting values, Ravi to confirm). Added small_colours: a colour under the minimum coverage is flagged, not dropped (the magenta eye on the skull print). Added edge_blend.keyline_protection (Ravi: black keylines are important) and photo_background (table or floor at the photo edge)."
+    "v3 (18 Nov 2026): added shadow_vs_ink and photo_vs_artwork (proposed starting values, Ravi to confirm) after a white T-shirt photo measured fold shadows as print colours. merge_shades_in_photo_hue_within_deg holds the 6 deg from merge_shades_in_photo as a number. Added edge_blend (camera blur and anti-aliasing bands between two inks; proposed starting values, Ravi to confirm). Added small_colours: a colour under the minimum coverage is flagged, not dropped (the magenta eye on the skull print). Added screen_type_mesh_rule (mesh per screen type from mesh_rules; ink figures only where ink_consumption has an entry). Added edge_blend.keyline_protection (Ravi: black keylines are important) and photo_background (table or floor at the photo edge)."
   ],
   "process_inks": {
     "cyan": "#00AEEF",

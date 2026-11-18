@@ -124,7 +124,7 @@ class SeparationState(
                     hex = ch.inkHex,
                     // Film positive: grey 0 = 100% ink, grey 255 = 0% ink.
                     coverage = FloatArray(grey.size) { 1f - (grey[it] and 0xFF) / 255f },
-                    meshTpi = ch.recommendedMesh.filter { it.isDigit() }.toIntOrNull() ?: inputs.meshTpi,
+                    meshTpi = ch.meshTpiMin ?: Regex("^(\\d+) tpi$").find(ch.recommendedMesh.trim())?.groupValues?.get(1)?.toInt() ?: inputs.meshTpi,
                     role = when {
                         ch.inkName.contains("Base White") -> ChannelRole.BASE_WHITE
                         ch.inkName.contains("Highlight White") -> ChannelRole.HIGHLIGHT_WHITE

@@ -1224,7 +1224,6 @@ fun PrintReportScreen(
                                     val orderScale = partDResult.orderPieces / 100.0
                                     val orderGrams = partDResult.totalGramsPer100Pieces * orderScale
                                     val orderKg = orderGrams / 1000.0
-                                    val orderLitres = orderKg / 1.25
                                     val orderMinKg = (partDResult.totalGramsPer100PiecesMin * orderScale) / 1000.0
                                     val orderMaxKg = (partDResult.totalGramsPer100PiecesMax * orderScale) / 1000.0
 
@@ -1238,7 +1237,7 @@ fun PrintReportScreen(
                                             fontWeight = FontWeight.SemiBold
                                         )
                                         Text(
-                                            String.format("%.1f g (%.3f kg / ~%.2f L)", orderGrams, orderKg, orderLitres),
+                                            String.format("%.1f g (%.3f kg)", orderGrams, orderKg),
                                             style = MaterialTheme.typography.bodySmall,
                                             fontWeight = FontWeight.Bold,
                                             color = MaterialTheme.colorScheme.primary
@@ -1258,6 +1257,14 @@ fun PrintReportScreen(
                                             String.format("%.3f kg – %.3f kg", orderMinKg, orderMaxKg),
                                             style = MaterialTheme.typography.labelSmall,
                                             fontFamily = FontFamily.Monospace
+                                        )
+                                    }
+                                    if (partDResult.unavailableInks.isNotEmpty()) {
+                                        Text(
+                                            "Not included (no ink rule in print_rules.json for its mesh): " +
+                                                partDResult.unavailableInks.joinToString(", "),
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = MaterialTheme.colorScheme.error
                                         )
                                     }
                                 }
@@ -1343,7 +1350,8 @@ fun InkConsumptionChannelRow(channel: InkChannelConsumption, orderPieces: Int) {
                     color = MaterialTheme.colorScheme.surfaceVariant
                 ) {
                     Text(
-                        text = "${channel.meshTpi} tpi • ${channel.depositGPerM2Default.toInt()} g/m²",
+                        text = (if (channel.meshTpiMax != channel.meshTpi) "${channel.meshTpi}–${channel.meshTpiMax} tpi" else "${channel.meshTpi} tpi") +
+                            (if (channel.inkAvailable) " • ${channel.depositGPerM2Default.toInt()} g/m²" else " • no ink rule"),
                         modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
                         style = MaterialTheme.typography.labelSmall,
                         fontFamily = FontFamily.Monospace,
@@ -1381,7 +1389,7 @@ fun InkConsumptionChannelRow(channel: InkChannelConsumption, orderPieces: Int) {
                         fontSize = 10.sp
                     )
                     Text(
-                        text = String.format("%.2f g", channel.inkGramsPerGarment),
+                        text = if (channel.inkAvailable) String.format("%.2f g", channel.inkGramsPerGarment) else "not available",
                         style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
@@ -1392,7 +1400,6 @@ fun InkConsumptionChannelRow(channel: InkChannelConsumption, orderPieces: Int) {
                     val scale = orderPieces / 100.0
                     val chOrderGrams = channel.inkGramsPer100Pieces * scale
                     val chOrderKg = chOrderGrams / 1000.0
-                    val chOrderLitres = chOrderKg / 1.25
 
                     Text(
                         text = "For $orderPieces Pieces:",
@@ -1401,7 +1408,7 @@ fun InkConsumptionChannelRow(channel: InkChannelConsumption, orderPieces: Int) {
                         fontSize = 10.sp
                     )
                     Text(
-                        text = String.format("%.1f g (%.3f kg / ~%.2f L)", chOrderGrams, chOrderKg, chOrderLitres),
+                        text = if (channel.inkAvailable) String.format("%.1f g (%.3f kg)", chOrderGrams, chOrderKg) else "not available",
                         style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
@@ -1410,7 +1417,8 @@ fun InkConsumptionChannelRow(channel: InkChannelConsumption, orderPieces: Int) {
             }
 
             Text(
-                text = "Deposit range: ${channel.depositGPerM2Min.toInt()}–${channel.depositGPerM2Max.toInt()} g/m² (${channel.depositConfidence})",
+                text = if (channel.inkAvailable) "Deposit range: ${channel.depositGPerM2Min.toInt()}–${channel.depositGPerM2Max.toInt()} g/m² (${channel.depositConfidence})"
+                    else "Ink: not available. print_rules.json has no ink deposit for this mesh.",
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 9.sp

@@ -232,7 +232,8 @@ class PrintReportRegressionTest {
             partB = partB,
             chosenStrategyType = SeparationStrategyType.BEST_N_SPOT_HALFTONE,
             inputs = inputs,
-            processInks = processInks
+            processInks = processInks,
+            meshRules = com.mos.nira.TestRules.meshRules
         )
 
         // Two screens: the white and the blue. No base, no highlight, no garment-colour screen.
@@ -264,18 +265,19 @@ class PrintReportRegressionTest {
         )
         assertTrue("there must be ink on the logo", summedCoverage > logoShareOfBox * 0.5)
 
-        val depositRules = PrintRulesRepository.defaultDepositRules()
+        val depositRules = com.mos.nira.TestRules.deposits
         val partD = SeparationStrategyEngine.calculatePartD(partA, partC, inputs, depositRules)
         val boxAreaM2 = partA.totalBoxAreaCm2 / 10000.0
         var expected = 0.0
         for (channel in partC.channels) {
-            val mesh = channel.recommendedMesh.filter { it.isDigit() }.toInt()
+            // The mesh range from the rules; the middle deposit is the mean of the two ends' defaults.
+            val ends = listOfNotNull(depositRules[channel.meshTpiMin!!], depositRules[channel.meshTpiMax!!]).distinct()
             expected += channel.boxCoveragePercent / 100.0 * boxAreaM2 *
-                depositRules[mesh]!!.depositGPerM2Default * inputs.strokes * (1 + inputs.wastagePercent / 100.0)
+                ends.map { it.depositGPerM2Default }.average() * inputs.strokes * (1 + inputs.wastagePercent / 100.0)
         }
         assertEquals(expected, partD.totalGramsPerGarment, 1e-9)
         // If the fabric were inked too, the box would be 100% covered. It must be far less.
-        val fullBox = boxAreaM2 * depositRules[200]!!.depositGPerM2Default * (1 + inputs.wastagePercent / 100.0)
+        val fullBox = boxAreaM2 * depositRules.values.maxOf { it.depositGPerM2Default } * (1 + inputs.wastagePercent / 100.0)
         assertTrue(partD.totalGramsPerGarment < fullBox)
     }
 
@@ -296,14 +298,18 @@ class PrintReportRegressionTest {
             partB = partB,
             chosenStrategyType = SeparationStrategyType.BEST_N_SPOT_HALFTONE,
             inputs = inputs,
-            processInks = processInks
+            processInks = processInks,
+            meshRules = com.mos.nira.TestRules.meshRules
         )
-        val partD = SeparationStrategyEngine.calculatePartD(partA, partC, inputs, PrintRulesRepository.defaultDepositRules())
+        val partD = SeparationStrategyEngine.calculatePartD(partA, partC, inputs, com.mos.nira.TestRules.deposits)
 
         val base = partD.channels.firstOrNull { it.inkName.contains("Base White") }
         assertNotNull("Base white must be in the ink quantity on a dark garment", base)
         assertTrue("Base white must use ink", base!!.inkGramsPerGarment > 0.0)
-        assertEquals(110, base.meshTpi)
+        // The underbase mesh range comes from print_rules.json mesh_rules.
+        val underbase = com.mos.nira.TestRules.meshRules.byScreenType.getValue(com.mos.nira.features.artwork.data.ScreenType.UNDERBASE_WHITE)
+        assertEquals(underbase.tpiMin, base.meshTpi)
+        assertEquals(underbase.tpiMax, base.meshTpiMax)
         assertNotNull(partD.channels.firstOrNull { it.inkName.contains("Highlight White") })
         assertEquals(partD.channels.sumOf { it.inkGramsPerGarment }, partD.totalGramsPerGarment, 1e-9)
     }
@@ -539,5 +545,57 @@ class PrintReportRegressionTest {
 
         // When width doubles (30 -> 60 cm), area quadruples (600 -> 2400 cm²), so ink must be exactly 4x
         assertEquals(4.0, ink60cm / ink30cm, 0.0001)
+    }
+
+    // ---------- no invented values (F1, F2) ----------
+
+    @Test
+    fun partC_withoutMeshRules_saysNotAvailable_andPartDGivesNoInkFigure() {
+        val size = 50
+        val pixels = IntArray(size * size) { 0xFFFF0000.toInt() }
+        val inputs = PrintJobInputs(printWidthCm = 20.0, garmentColorHex = "#FFFFFF")
+        val processInks = ProcessInksConfig()
+        val partA = PrintAreaAndPaletteEngine.computePartA(pixels, size, size, inputs, generateMaskBitmap = false)
+        val partB = SeparationStrategyEngine.evaluateStrategies(pixels, partA, inputs, processInks)
+        val partC = SeparationStrategyEngine.generatePartC(
+            pixels = pixels, width = size, height = size, originalBitmap = null,
+            partA = partA, partB = partB, chosenStrategyType = SeparationStrategyType.FLAT_SPOT_SOLID,
+            inputs = inputs, processInks = processInks
+        )
+        assertTrue(partC.channels.all { it.recommendedMesh == "not available" && it.meshTpiMin == null })
+        val partD = SeparationStrategyEngine.calculatePartD(partA, partC, inputs, com.mos.nira.TestRules.deposits)
+        assertTrue(partD.channels.none { it.inkAvailable })
+        assertEquals(0.0, partD.totalGramsPerGarment, 0.0)
+        assertEquals(partC.channels.map { it.inkName }, partD.unavailableInks)
+        assertTrue(partD.note.contains("No ink figure"))
+    }
+
+    @Test
+    fun partD_meshWithNoDepositRule_isNotAvailable_andLeftOutOfTheTotals() {
+        val partA = PartAResult(
+            printWidthCm = 10.0, printHeightCm = 10.0, totalBoxAreaCm2 = 100.0, effectivePrintAreaCm2 = 50.0,
+            printPixelCount = 1, totalPixelCount = 2, printMaskCoveragePercent = 50.0,
+            measuredPalette = emptyList(), errorCurve = emptyList()
+        )
+        val partC = PartCResult(
+            channels = listOf(
+                FilmPositiveChannel(1, "Known", "#000000", ColorConverter.Rgb(0, 0, 0), 50.0, 50.0, recommendedMesh = "110 tpi"),
+                // 999 tpi is not in ink_consumption: no deposit may be made up for it.
+                FilmPositiveChannel(2, "Unknown", "#FF0000", ColorConverter.Rgb(255, 0, 0), 50.0, 50.0,
+                    recommendedMesh = "999 tpi", meshTpiMin = 999, meshTpiMax = 999)
+            ),
+            strategyType = SeparationStrategyType.FLAT_SPOT_SOLID,
+            strategyName = "test",
+            executionTimeMs = 0L
+        )
+        val inputs = PrintJobInputs(strokes = 1, wastagePercent = 0.0)
+        val partD = SeparationStrategyEngine.calculatePartD(partA, partC, inputs, com.mos.nira.TestRules.deposits)
+        val known = partD.channels.first { it.inkName == "Known" }
+        val unknown = partD.channels.first { it.inkName == "Unknown" }
+        assertTrue(known.inkAvailable)
+        assertFalse(unknown.inkAvailable)
+        assertEquals(0.0, unknown.inkGramsPerGarment, 0.0)
+        assertEquals(known.inkGramsPerGarment, partD.totalGramsPerGarment, 1e-12)
+        assertEquals(listOf("Unknown"), partD.unavailableInks)
     }
 }

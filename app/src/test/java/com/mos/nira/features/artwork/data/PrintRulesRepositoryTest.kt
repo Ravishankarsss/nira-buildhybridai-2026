@@ -1,5 +1,6 @@
 package com.mos.nira.features.artwork.data
 
+import org.junit.Assert.assertNull
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -103,7 +104,34 @@ class PrintRulesRepositoryTest {
             PrintRulesRepository.parseProcessInks(root).copy(note = ""),
             ProcessInksConfig().copy(note = "")
         )
-        assertEquals(PrintRulesRepository.parseMeshDepositRules(root), PrintRulesRepository.defaultDepositRules())
+        // No hidden table in the code: without the file there are no ink deposits at all.
+        assertTrue(PrintRulesRepository.parseMeshDepositRules(JSONObject("{}")).isEmpty())
+    }
+
+    @Test
+    fun meshDepositRules_entryWithAMissingValue_isLeftOut_notFilledIn() {
+        val json = JSONObject("""{"ink_consumption":{"plastisol_deposit_g_m2_by_mesh":[
+            {"tpi":110,"deposit_g_m2_min":38,"deposit_g_m2_max":63,"deposit_g_m2_default":45},
+            {"tpi":160,"deposit_g_m2_min":30}]}}""")
+        val map = PrintRulesRepository.parseMeshDepositRules(json)
+        assertEquals(setOf(110), map.keys)
+    }
+
+    @Test
+    fun screenMeshRules_comeFromTheFile() {
+        val root = loadRules()
+        val rules = PrintRulesRepository.parseScreenMeshRules(root)!!
+        val mapping = root.getJSONObject("screen_type_mesh_rule")
+        val list = root.getJSONArray("mesh_rules")
+        val byId = (0 until list.length()).map { list.getJSONObject(it) }.associateBy { it.getString("id") }
+        assertEquals(ScreenType.values().size, rules.byScreenType.size)
+        for ((type, rule) in rules.byScreenType) {
+            val entry = byId.getValue(mapping.getString(type.key))
+            assertEquals(entry.getInt("tpi_min"), rule.tpiMin)
+            assertEquals(entry.getInt("tpi_max"), rule.tpiMax)
+        }
+        assertEquals("assumption", rules.mappingConfidence)
+        assertNull(PrintRulesRepository.parseScreenMeshRules(JSONObject("{}")))
     }
 
     @Test

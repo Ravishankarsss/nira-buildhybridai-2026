@@ -225,7 +225,14 @@ data class FilmPositiveChannel(
     val boxCoveragePercent: Double,     // Over entire print bounding box
     val filmPositiveBitmap: Bitmap? = null,
     val rawGreyscalePixels: IntArray? = null,
-    val recommendedMesh: String = "156 tpi"
+    /** "230–305 tpi" from print_rules.json mesh_rules, or "not available". */
+    val recommendedMesh: String = "not available",
+    /** The mesh range from the rules file; null when no rule applies. */
+    val meshTpiMin: Int? = null,
+    val meshTpiMax: Int? = null,
+    /** The mesh_rules id used, and the confidence label of that rule. */
+    val meshRuleId: String? = null,
+    val meshConfidence: String? = null
 ) {
     val formattedCoverage: String get() = String.format("%.1f%%", averageCoveragePercent)
     val formattedBoxCoverage: String get() = String.format("%.1f%%", boxCoveragePercent)
@@ -270,7 +277,11 @@ data class InkChannelConsumption(
     val inkGramsPerGarmentMax: Double,
     val inkGramsPer100Pieces: Double,
     val inkGramsPer100PiecesMin: Double,
-    val inkGramsPer100PiecesMax: Double
+    val inkGramsPer100PiecesMax: Double,
+    /** Upper end of the mesh range (meshTpi is the lower end); equal for a single mesh. */
+    val meshTpiMax: Int = meshTpi,
+    /** False when print_rules.json has no ink deposit for this screen's mesh: no figure is shown. */
+    val inkAvailable: Boolean = true
 ) {
     val formattedPerGarment: String get() = String.format("%.2f g (min %.2f, max %.2f)", inkGramsPerGarment, inkGramsPerGarmentMin, inkGramsPerGarmentMax)
     val formattedPer100: String get() = String.format("%.1f g (min %.1f, max %.1f)", inkGramsPer100Pieces, inkGramsPer100PiecesMin, inkGramsPer100PiecesMax)
@@ -289,6 +300,8 @@ data class PartDResult(
     val totalGramsPer100PiecesMax: Double,
     val printBoxAreaM2: Double,
     val orderPieces: Int = 100,
-    val note: String = "Screen residue and set-up loss are not included."
+    val note: String = "Screen residue and set-up loss are not included.",
+    /** Screens with no ink figure (no rule); the totals leave them out. */
+    val unavailableInks: List<String> = emptyList()
 )
 

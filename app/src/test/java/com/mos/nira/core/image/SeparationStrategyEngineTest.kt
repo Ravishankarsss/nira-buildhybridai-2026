@@ -355,7 +355,8 @@ class SeparationStrategyEngineTest {
             partB = partB,
             chosenStrategyType = SeparationStrategyType.CMYK_PROCESS,
             inputs = darkInputs,
-            processInks = processInks
+            processInks = processInks,
+            meshRules = com.mos.nira.TestRules.meshRules
         )
 
         // On dark garment, CMYK has 4 inks + Base White + Highlight White = 6 screens
@@ -363,12 +364,17 @@ class SeparationStrategyEngineTest {
 
         val baseWhite = partC.channels.find { it.inkName.contains("Base White") }
         assertNotNull("Base white underbase must be included on dark garment", baseWhite)
-        assertEquals("110 tpi", baseWhite?.recommendedMesh)
+        // Mesh ranges come from print_rules.json (screen_type_mesh_rule -> mesh_rules).
+        val types = com.mos.nira.TestRules.meshRules.byScreenType
+        val ub = types.getValue(com.mos.nira.features.artwork.data.ScreenType.UNDERBASE_WHITE)
+        assertEquals("${ub.tpiMin}–${ub.tpiMax} tpi", baseWhite?.recommendedMesh)
+        assertEquals(ub.id, baseWhite?.meshRuleId)
         assertTrue("Base white coverage should be > 90%", (baseWhite?.averageCoveragePercent ?: 0.0) > 90.0)
 
         val hiWhite = partC.channels.find { it.inkName.contains("Highlight White") }
         assertNotNull("Highlight white must be included on dark garment", hiWhite)
-        assertEquals("230 tpi", hiWhite?.recommendedMesh)
+        val hw = types.getValue(com.mos.nira.features.artwork.data.ScreenType.HIGHLIGHT_WHITE)
+        assertEquals("${hw.tpiMin}–${hw.tpiMax} tpi", hiWhite?.recommendedMesh)
     }
 
     @Test

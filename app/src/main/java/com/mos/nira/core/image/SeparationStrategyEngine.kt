@@ -1,5 +1,7 @@
 package com.mos.nira.core.image
 
+import com.mos.nira.features.artwork.data.ScreenType
+import com.mos.nira.features.artwork.data.ScreenMeshRules
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -646,7 +648,9 @@ object SeparationStrategyEngine {
         chosenStrategyType: SeparationStrategyType,
         inputs: PrintJobInputs,
         processInks: ProcessInksConfig,
-        decisionRules: SeparationDecisionRules = SeparationDecisionRules()
+        decisionRules: SeparationDecisionRules = SeparationDecisionRules(),
+        // Mesh per screen type from print_rules.json; without it the mesh is "not available".
+        meshRules: ScreenMeshRules? = null
     ): PartCResult {
         val startTime = System.currentTimeMillis()
         val totalPixels = width * height
@@ -711,7 +715,7 @@ object SeparationStrategyEngine {
             val name: String,
             val hex: String,
             val rgb: ColorConverter.Rgb,
-            val mesh: String,
+            val screenType: ScreenType,
             val isBaseWhite: Boolean = false,
             val isHighlightWhite: Boolean = false
         )
@@ -725,7 +729,7 @@ object SeparationStrategyEngine {
                     name = "Base White (Underbase)",
                     hex = "#FFFFFF",
                     rgb = ColorConverter.Rgb(255, 255, 255),
-                    mesh = "110 tpi",
+                    screenType = ScreenType.UNDERBASE_WHITE,
                     isBaseWhite = true
                 )
             )
@@ -734,24 +738,24 @@ object SeparationStrategyEngine {
         // 2. Color Inks
         when (chosenStrategyType) {
             SeparationStrategyType.CMYK_PROCESS -> {
-                inkSpecs.add(InkSpec("Cyan", processInks.cyanHex, ColorConverter.hexToRgb(processInks.cyanHex), "305 tpi"))
-                inkSpecs.add(InkSpec("Magenta", processInks.magentaHex, ColorConverter.hexToRgb(processInks.magentaHex), "305 tpi"))
-                inkSpecs.add(InkSpec("Yellow", processInks.yellowHex, ColorConverter.hexToRgb(processInks.yellowHex), "305 tpi"))
-                inkSpecs.add(InkSpec("Black", processInks.blackHex, ColorConverter.hexToRgb(processInks.blackHex), "305 tpi"))
+                inkSpecs.add(InkSpec("Cyan", processInks.cyanHex, ColorConverter.hexToRgb(processInks.cyanHex), ScreenType.CMYK_PROCESS))
+                inkSpecs.add(InkSpec("Magenta", processInks.magentaHex, ColorConverter.hexToRgb(processInks.magentaHex), ScreenType.CMYK_PROCESS))
+                inkSpecs.add(InkSpec("Yellow", processInks.yellowHex, ColorConverter.hexToRgb(processInks.yellowHex), ScreenType.CMYK_PROCESS))
+                inkSpecs.add(InkSpec("Black", processInks.blackHex, ColorConverter.hexToRgb(processInks.blackHex), ScreenType.CMYK_PROCESS))
             }
             SeparationStrategyType.BEST_N_SPOT_HALFTONE,
             SeparationStrategyType.EXTENDED_SPOT -> {
                 for (i in strategy.inkHexes.indices) {
                     val hex = strategy.inkHexes[i]
                     val name = if (i < strategy.inkNames.size) strategy.inkNames[i] else hex
-                    inkSpecs.add(InkSpec(name, hex, ColorConverter.hexToRgb(hex), "200 tpi"))
+                    inkSpecs.add(InkSpec(name, hex, ColorConverter.hexToRgb(hex), ScreenType.SPOT_HALFTONE))
                 }
             }
             SeparationStrategyType.FLAT_SPOT_SOLID -> {
                 for (i in strategy.inkHexes.indices) {
                     val hex = strategy.inkHexes[i]
                     val name = if (i < strategy.inkNames.size) strategy.inkNames[i] else hex
-                    inkSpecs.add(InkSpec(name, hex, ColorConverter.hexToRgb(hex), "156 tpi"))
+                    inkSpecs.add(InkSpec(name, hex, ColorConverter.hexToRgb(hex), ScreenType.FLAT_SPOT))
                 }
             }
         }
@@ -763,7 +767,7 @@ object SeparationStrategyEngine {
                     name = "Highlight White",
                     hex = "#FFFFFF",
                     rgb = ColorConverter.Rgb(255, 255, 255),
-                    mesh = "230 tpi",
+                    screenType = ScreenType.HIGHLIGHT_WHITE,
                     isHighlightWhite = true
                 )
             )
@@ -987,6 +991,7 @@ object SeparationStrategyEngine {
                 null
             }
 
+            val meshRule = meshRules?.byScreenType?.get(spec.screenType)
             FilmPositiveChannel(
                 channelIndex = index + 1,
                 inkName = spec.name,
@@ -996,7 +1001,12 @@ object SeparationStrategyEngine {
                 boxCoveragePercent = boxCov,
                 filmPositiveBitmap = filmBitmap,
                 rawGreyscalePixels = channelPixelArrays[index],
-                recommendedMesh = spec.mesh
+                recommendedMesh = meshRule?.let { if (it.tpiMin == it.tpiMax) "${it.tpiMin} tpi" else "${it.tpiMin}–${it.tpiMax} tpi" }
+                    ?: "not available",
+                meshTpiMin = meshRule?.tpiMin,
+                meshTpiMax = meshRule?.tpiMax,
+                meshRuleId = meshRule?.id,
+                meshConfidence = meshRule?.confidence
             )
         }
 
@@ -1193,16 +1203,40 @@ object SeparationStrategyEngine {
         var totalGarmentMin = 0.0
         var totalGarmentMax = 0.0
 
+        val unavailable = mutableListOf<String>()
         for (ch in partC.channels) {
-            // Extract mesh count integer (e.g. "156 tpi" -> 156)
-            val meshTpi = ch.recommendedMesh.filter { it.isDigit() }.toIntOrNull() ?: inputs.meshTpi
-            val depositRule = depositRules[meshTpi] ?: MeshDepositRule(
-                tpi = meshTpi,
-                depositGPerM2Default = 36.0,
-                depositGPerM2Min = 30.0,
-                depositGPerM2Max = 48.0,
-                confidence = "interpolated"
+            // The mesh range from the rules (a single "156 tpi" counts as a range of one).
+            val single = Regex("^(\\d+) tpi$").find(ch.recommendedMesh.trim())?.groupValues?.get(1)?.toInt()
+            val tpiLow = ch.meshTpiMin ?: single
+            val tpiHigh = ch.meshTpiMax ?: single
+            // Ink deposits at the two ends of the range, from print_rules.json ink_consumption only.
+            val ends = listOfNotNull(tpiLow?.let { depositRules[it] }, tpiHigh?.let { depositRules[it] }).distinct()
+            if (tpiLow == null || tpiHigh == null || ends.isEmpty()) {
+                unavailable.add(ch.inkName)
+                channelConsumptions.add(
+                    InkChannelConsumption(
+                        channelIndex = ch.channelIndex, inkName = ch.inkName, inkHex = ch.inkHex,
+                        meshTpi = tpiLow ?: 0, meshTpiMax = tpiHigh ?: 0,
+                        boxCoveragePercent = ch.boxCoveragePercent,
+                        depositGPerM2Default = 0.0, depositGPerM2Min = 0.0, depositGPerM2Max = 0.0,
+                        depositConfidence = "not available", strokes = strokes, wastagePercent = inputs.wastagePercent,
+                        inkGramsPerGarment = 0.0, inkGramsPerGarmentMin = 0.0, inkGramsPerGarmentMax = 0.0,
+                        inkGramsPer100Pieces = 0.0, inkGramsPer100PiecesMin = 0.0, inkGramsPer100PiecesMax = 0.0,
+                        inkAvailable = false
+                    )
+                )
+                continue
+            }
+            // Finer mesh lays less ink: the range runs from the smallest minimum to the largest
+            // maximum of the two ends; the middle figure is the mean of their defaults.
+            val depositRule = MeshDepositRule(
+                tpi = tpiLow,
+                depositGPerM2Default = ends.map { it.depositGPerM2Default }.average(),
+                depositGPerM2Min = ends.minOf { it.depositGPerM2Min },
+                depositGPerM2Max = ends.maxOf { it.depositGPerM2Max },
+                confidence = if (ends.size == 1 && tpiLow == tpiHigh) ends.single().confidence else "interpolated"
             )
+            val meshTpi = tpiLow
 
             val coverageFraction = ch.boxCoveragePercent / 100.0 // Coverage over print box
 
@@ -1224,6 +1258,7 @@ object SeparationStrategyEngine {
                     inkName = ch.inkName,
                     inkHex = ch.inkHex,
                     meshTpi = meshTpi,
+                    meshTpiMax = tpiHigh,
                     boxCoveragePercent = ch.boxCoveragePercent,
                     depositGPerM2Default = depositRule.depositGPerM2Default,
                     depositGPerM2Min = depositRule.depositGPerM2Min,
@@ -1251,7 +1286,9 @@ object SeparationStrategyEngine {
             totalGramsPer100PiecesMax = totalGarmentMax * 100.0,
             printBoxAreaM2 = boxAreaM2,
             orderPieces = inputs.orderPieces,
-            note = "Screen residue and set-up loss are not included."
+            note = "Screen residue and set-up loss are not included." +
+                (if (unavailable.isEmpty()) "" else " No ink figure for ${unavailable.joinToString(", ")}: print_rules.json has no ink deposit for its mesh, so the totals leave it out."),
+            unavailableInks = unavailable
         )
     }
 }
