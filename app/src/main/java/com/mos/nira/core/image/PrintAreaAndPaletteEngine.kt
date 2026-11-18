@@ -724,8 +724,10 @@ object PrintAreaAndPaletteEngine {
                     possibleFoldShadow = flaggedPoints.containsKey(bucketIndex),
                     uncertainRegionPoints = flaggedPoints[bucketIndex] ?: emptyList(),
                     possibleEdgeBlend = bucketIndex in edgeFlagged,
-                    possibleSmallColour = b.smallColourPoint != null,
-                    smallColourPoint = b.smallColourPoint
+                    // Flagged only while it is still under the minimum: if more pixels joined it in the
+                    // final assignment it is an ordinary colour.
+                    possibleSmallColour = b.smallColourPoint != null && covPercent < minCoverage,
+                    smallColourPoint = b.smallColourPoint.takeIf { covPercent < minCoverage }
                 )
             }
 
