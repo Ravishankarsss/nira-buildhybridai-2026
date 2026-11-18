@@ -76,7 +76,20 @@ data class PrintJobInputs(
     // Answers for colours flagged "Small colour, about N%: confirm it is an ink" (a point in the colour's area).
     val smallColourAnswers: List<RegionAnswer> = emptyList(),
     // Switch "Include the photo edge area": undoes the table/floor exclusion (print_rules.json photo_background).
-    val includePhotoEdgeArea: Boolean = false
+    val includePhotoEdgeArea: Boolean = false,
+    // Artwork background answer: true = print it, false = drop it (not ink), null = not answered (left out).
+    val artworkBackgroundAnswer: Boolean? = null
+)
+
+/** The plain background found in an artwork file (print_rules.json artwork_background). */
+data class ArtworkBackground(
+    val hex: String,
+    /** Share of the border pixels that are this colour, %. */
+    val borderSharePercent: Double,
+    /** Share of the image that is this colour, %. */
+    val imageCoveragePercent: Double,
+    /** True when the user chose to print it: it is then a measured print colour. */
+    val printed: Boolean
 )
 
 /** The user's answer for one uncertain region: a point inside it (normalised) and ink or shadow. */
@@ -155,7 +168,9 @@ data class PartAResult(
     /** Pixels of scattered speck colours removed as colours (added to the nearest ink). */
     val speckPixelsRemoved: Int = 0,
     /** Share of the photo (%) left out as table, floor or wall at the photo edge (photo_background). */
-    val photoEdgeExcludedPercent: Double = 0.0
+    val photoEdgeExcludedPercent: Double = 0.0,
+    /** The plain background of an artwork file, when found (artwork_background). */
+    val artworkBackground: ArtworkBackground? = null
 )
 
 // ==========================================

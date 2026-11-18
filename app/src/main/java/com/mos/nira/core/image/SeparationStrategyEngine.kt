@@ -694,7 +694,7 @@ object SeparationStrategyEngine {
         val boxMaxY = (box.maxY * height).toInt().coerceIn(boxMinY + 1, height)
         val boxPixelCount = (boxMaxX - boxMinX) * (boxMaxY - boxMinY)
 
-        val isPrintMask = PrintAreaAndPaletteEngine.computePrintMask(pixels, width, height, inputs)
+        val isPrintMask = PrintAreaAndPaletteEngine.computePrintMask(pixels, width, height, inputs, garmentProfile = partA.garmentProfile)
         for (i in 0 until totalPixels) {
             if (!isPrintMask[i]) continue
             val x = i % width

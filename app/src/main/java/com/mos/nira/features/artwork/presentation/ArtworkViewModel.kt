@@ -258,7 +258,8 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                         keepEdgeColours = false,
                         edgeBlendAnswer = null,
                         smallColourAnswers = emptyList(),
-                        includePhotoEdgeArea = false
+                        includePhotoEdgeArea = false,
+                        artworkBackgroundAnswer = null
                     ),
                     analysisState = AnalysisState.Loading("Reading image metadata..."),
                     selectedImageUri = uri,
@@ -545,7 +546,8 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                         keepEdgeColours = false,
                         edgeBlendAnswer = null,
                         smallColourAnswers = emptyList(),
-                        includePhotoEdgeArea = false
+                        includePhotoEdgeArea = false,
+                        artworkBackgroundAnswer = null
                     ),
                     analysisState = AnalysisState.Loading("Loading analysis record..."),
                     selectedColor = record.palette.firstOrNull(),
@@ -681,6 +683,12 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
     /** Switch "Include the photo edge area" (undoes the table/floor exclusion); Part A runs again. */
     fun setIncludePhotoEdgeArea(include: Boolean) {
         _uiState.update { it.copy(printJobInputs = it.printJobInputs.copy(includePhotoEdgeArea = include)) }
+        computePartAReport()
+    }
+
+    /** "This looks like background, not ink": true = print it, false = drop it. Part A runs again. */
+    fun answerArtworkBackground(print: Boolean) {
+        _uiState.update { it.copy(printJobInputs = it.printJobInputs.copy(artworkBackgroundAnswer = print)) }
         computePartAReport()
     }
 
@@ -834,6 +842,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                 val edgeBlendRules = printRulesRepository.getEdgeBlendRules()
                 val smallColourRules = printRulesRepository.getSmallColourRules()
                 val backgroundRules = printRulesRepository.getPhotoBackgroundRules()
+                val artworkBackgroundRules = printRulesRepository.getArtworkBackgroundRules()
                 val result = withContext(Dispatchers.Default) {
                     val maxDim = 2048
                     val width = bitmap.width
@@ -865,7 +874,8 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                         shadowRules = shadowRules,
                         edgeBlendRules = edgeBlendRules,
                         smallColourRules = smallColourRules,
-                        backgroundRules = backgroundRules
+                        backgroundRules = backgroundRules,
+                        artworkBackgroundRules = artworkBackgroundRules
                     )
                 }
 
@@ -935,7 +945,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                     val minYPx = (box.minY * sH).toInt().coerceIn(0, sH - 1)
                     val maxYPx = (box.maxY * sH).toInt().coerceIn(minYPx + 1, sH)
 
-                    val isMask = PrintAreaAndPaletteEngine.computePrintMask(pixels, sW, sH, inputs)
+                    val isMask = PrintAreaAndPaletteEngine.computePrintMask(pixels, sW, sH, inputs, garmentProfile = partA.garmentProfile)
                     val maskedList = ArrayList<Int>((maxXPx - minXPx) * (maxYPx - minYPx))
 
                     for (y in minYPx until maxYPx) {

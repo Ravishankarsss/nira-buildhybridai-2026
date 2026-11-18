@@ -223,4 +223,12 @@
     <string name="explain_data_title">Datos del motor</string>
     <string name="explain_blocked">El modo confidencial está activado y este teléfono no tiene modelo en el dispositivo, así que no se envió nada. Los datos del motor están abajo.</string>
     <string name="ai_limit_reached">El límite gratuito de IA de NIRA se ha agotado por ahora. Inténtelo de nuevo en unos minutos; el límite diario se reinicia a medianoche, hora del Pacífico. Los resultados del motor no se ven afectados.</string>
+    <string name="artbg_title">Parece fondo, no tinta</string>
+    <string name="artbg_body">%1$s cubre el %2$s de la imagen y el %3$s de su borde. ¿Imprimirlo o quitarlo?</string>
+    <string name="artbg_drop">Quitar (no es tinta)</string>
+    <string name="artbg_print">Imprimirlo</string>
+    <string name="artbg_dropped_note">Fondo %1$s excluido: no cuenta como tinta.</string>
+    <string name="artbg_printed_note">El fondo %1$s se imprime: cuenta como color de impresión.</string>
+    <string name="artbg_print_instead">Imprimirlo en su lugar</string>
+    <string name="artbg_drop_instead">Quitarlo en su lugar</string>
 </resources>

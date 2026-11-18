@@ -51,6 +51,8 @@ import com.mos.nira.features.artwork.components.ColorSwatchCard
 import com.mos.nira.features.artwork.domain.ColorGroup
 import com.mos.nira.features.artwork.domain.DominantColor
 import com.mos.nira.core.image.ColourLabel
+import com.mos.nira.core.image.ColorConverter
+import com.mos.nira.features.artwork.domain.ArtworkBackground
 import com.mos.nira.core.image.InputKindAssessment
 import com.mos.nira.core.image.InputKind
 import com.mos.nira.features.artwork.domain.ShadeEntry
@@ -114,11 +116,27 @@ fun ColorIntelligenceScreen(
     onAnswerSmallColour: (point: Pair<Float, Float>, isInk: Boolean) -> Unit = { _, _ -> },
     // Table, floor or wall at the photo edge (print_rules.json photo_background) and the undo switch.
     photoEdgeExcludedPercent: Double = 0.0,
+    // Photo or artwork, and the plain background of an artwork file (print_rules.json artwork_background).
+    inputKind: InputKind = InputKind.ARTWORK,
+    artworkBackground: ArtworkBackground? = null,
+    artworkBackgroundAnswer: Boolean? = null,
+    backgroundThresholdDeltaE00: Double? = null,
+    onAnswerArtworkBackground: (print: Boolean) -> Unit = {},
     includePhotoEdgeArea: Boolean = false,
     onIncludePhotoEdgeArea: (Boolean) -> Unit = {},
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // The artwork background, when left out (not ink), is hidden from the colour list and families.
+    val hiddenBackgroundLab = artworkBackground?.takeIf { !it.printed }?.let {
+        val rgb = ColorConverter.hexToRgb(it.hex)
+        ColorConverter.rgbToLab(rgb.r, rgb.g, rgb.b)
+    }
+    fun isHiddenBackground(c: DominantColor): Boolean {
+        val lab = hiddenBackgroundLab ?: return false
+        val limit = backgroundThresholdDeltaE00 ?: return false
+        return ColorConverter.deltaE00(ColorConverter.Lab(c.labL, c.labA, c.labB), lab) <= limit
+    }
     var showAddDialog by remember { mutableStateOf(false) }
     var showMergeDialog by remember { mutableStateOf(false) }
     var mergeTargetId by remember { mutableStateOf<Int?>(null) }
@@ -342,6 +360,13 @@ fun ColorIntelligenceScreen(
             }
         }
 
+        // "This looks like background, not ink. Print it or drop it?" (artwork files).
+        if (artworkBackground != null) {
+            item {
+                ArtworkBackgroundCard(artworkBackground, artworkBackgroundAnswer, onAnswerArtworkBackground)
+            }
+        }
+
         // "This looks like a photo. Treat it as a photo?" when the signals disagree with the mode.
         if (inputKindAssessment != null && inputKindAssessment.askUser && !inputKindConfirmed) {
             item {
@@ -441,6 +466,8 @@ fun ColorIntelligenceScreen(
         item {
             PrintMethodAdviceCard(
                 garmentColor = garmentColor,
+                // An artwork file's border is paper, not fabric: the user chooses the garment.
+                garmentFromMeasureAllowed = inputKind == InputKind.PHOTO,
                 artworkKey = ArtworkKey.of(bitmap, palette.filter { !it.isGarmentBase }.map { it.hex })
             )
         }
@@ -524,8 +551,8 @@ fun ColorIntelligenceScreen(
             }
         }
 
-        // Palette Swatches List
-        items(palette) { color ->
+        // Palette Swatches List (an artwork background that was left out is not listed)
+        items(palette.filter { !isHiddenBackground(it) }) { color ->
             ColorSwatchCard(
                 color = color,
                 isSelected = selectedColor?.id == color.id,
@@ -534,7 +561,11 @@ fun ColorIntelligenceScreen(
         }
 
         // Perceptual Color Families / Grouping Section
-        if (colorGroups.isNotEmpty()) {
+        // Families with only one shade add nothing: hidden. The left-out background is not a family.
+        val shownGroups = colorGroups
+            .map { g -> g.copy(members = g.members.filter { !isHiddenBackground(it) }) }
+            .filter { it.members.size > 1 }
+        if (shownGroups.isNotEmpty()) {
             item {
                 Spacer(modifier = Modifier.height(6.dp))
                 Text(
@@ -546,7 +577,7 @@ fun ColorIntelligenceScreen(
                 )
             }
 
-            items(colorGroups) { group ->
+            items(shownGroups) { group ->
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
@@ -774,6 +805,53 @@ private fun InputKindQuestionCard(assessment: InputKindAssessment, onAnswer: (In
                 }
                 OutlinedButton(onClick = { onAnswer(assessment.chosen) }) {
                     Text(stringResource(if (suggestPhoto) R.string.input_kind_keep_artwork else R.string.input_kind_keep_photo))
+                }
+            }
+        }
+    }
+}
+
+/** "This looks like background, not ink": print it or drop it (print_rules.json artwork_background). */
+@Composable
+private fun ArtworkBackgroundCard(bg: ArtworkBackground, answer: Boolean?, onAnswer: (print: Boolean) -> Unit) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(18.dp),
+        colors = CardDefaults.cardColors(containerColor = CardBg)
+    ) {
+        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+            Box(
+                modifier = Modifier
+                    .size(36.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(Color(android.graphics.Color.parseColor(bg.hex)))
+                    .border(1.dp, Color.White.copy(alpha = 0.25f), RoundedCornerShape(10.dp))
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                if (answer == null) {
+                    Text(stringResource(R.string.artbg_title), color = TextWhite, fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        stringResource(
+                            R.string.artbg_body, bg.hex,
+                            String.format("%.0f%%", bg.imageCoveragePercent), String.format("%.0f%%", bg.borderSharePercent)
+                        ),
+                        color = TextMuted, fontSize = 12.sp, lineHeight = 17.sp
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Button(onClick = { onAnswer(false) }) { Text(stringResource(R.string.artbg_drop)) }
+                        OutlinedButton(onClick = { onAnswer(true) }) { Text(stringResource(R.string.artbg_print)) }
+                    }
+                } else {
+                    Text(
+                        stringResource(if (bg.printed) R.string.artbg_printed_note else R.string.artbg_dropped_note, bg.hex),
+                        color = TextMuted, fontSize = 12.sp, lineHeight = 17.sp
+                    )
+                    TextButton(onClick = { onAnswer(!bg.printed) }) {
+                        Text(stringResource(if (bg.printed) R.string.artbg_drop_instead else R.string.artbg_print_instead), color = Cyan, fontSize = 12.sp)
+                    }
                 }
             }
         }

@@ -76,12 +76,13 @@
       "id": "plastisol_general_spot",
       "applies_to": "General plastisol spot colours, average detail",
       "tpi_min": 137,
-      "tpi_max": 160,
+      "tpi_max": 156,
       "t_cm_min": 54,
-      "t_cm_max": 63,
+      "t_cm_max": 62,
       "confidence": "sourced",
       "note": "156 tpi (62T) is the common all-purpose choice.",
-      "source": "https://printunite.com/tools/screen-mesh-guide ; https://daxshow.com/page/screen-printing-mesh-count-chart/"
+      "source": "https://printunite.com/tools/screen-mesh-guide ; https://daxshow.com/page/screen-printing-mesh-count-chart/",
+      "changed_by_ravi": "18 Nov 2026: range 137-156 tpi (was 137-160), so every end has an ink_consumption entry"
     },
     {
       "id": "water_based_and_discharge",
@@ -199,6 +200,8 @@
     "spot_halftone": "halftone_simulated_process",
     "flat_spot": "plastisol_general_spot",
     "confidence": "assumption",
+    "verified_by_ravi": {"underbase_white": true, "cmyk_process": true, "spot_halftone": true, "flat_spot": true, "highlight_white": false},
+    "pending": "highlight_white: Ravi to give the tpi range; until then it uses halftone_simulated_process",
     "note": "Which mesh_rules entry each screen type in the Print Report uses; the report shows that entry's tpi range. Proposed 18 Nov 2026 to replace mesh numbers that were written in the Kotlin code (underbase 110, highlight white 230, CMYK 305, spot halftone 200, flat spot 156); Ravi to confirm. Ink per screen uses ink_consumption at the two ends of the range; an end with no entry there gives no figure."
   },
   "underbase_rules": {
@@ -429,7 +432,7 @@
   "display_disclaimer": "Rule-of-thumb estimate from public trade sources. Verify on the production floor and with the ink maker's technical data sheet.",
   "change_log": [
     "v2 (15 Nov 2026): added process_inks, garment_mask, white_base, recommendation, resolution and regression_cases after a device test on a real garment photo (white-to-blue gradient logo on a black T-shirt).",
-    "v3 (18 Nov 2026): added shadow_vs_ink and photo_vs_artwork (proposed starting values, Ravi to confirm) after a white T-shirt photo measured fold shadows as print colours. merge_shades_in_photo_hue_within_deg holds the 6 deg from merge_shades_in_photo as a number. Added edge_blend (camera blur and anti-aliasing bands between two inks; proposed starting values, Ravi to confirm). Added small_colours: a colour under the minimum coverage is flagged, not dropped (the magenta eye on the skull print). Added screen_type_mesh_rule (mesh per screen type from mesh_rules; ink figures only where ink_consumption has an entry). Added edge_blend.keyline_protection (Ravi: black keylines are important) and photo_background (table or floor at the photo edge)."
+    "v3 (18 Nov 2026): added shadow_vs_ink and photo_vs_artwork (proposed starting values, Ravi to confirm) after a white T-shirt photo measured fold shadows as print colours. merge_shades_in_photo_hue_within_deg holds the 6 deg from merge_shades_in_photo as a number. Added edge_blend (camera blur and anti-aliasing bands between two inks; proposed starting values, Ravi to confirm). Added small_colours: a colour under the minimum coverage is flagged, not dropped (the magenta eye on the skull print). Added screen_type_mesh_rule (mesh per screen type from mesh_rules; ink figures only where ink_consumption has an entry). Ravi: flat spot 137-156 tpi; mapping verified except highlight white. Added artwork_background. Added edge_blend.keyline_protection (Ravi: black keylines are important) and photo_background (table or floor at the photo edge)."
   ],
   "process_inks": {
     "cyan": "#00AEEF",
@@ -532,6 +535,18 @@
     "capture_guidance": "Fill the frame with the garment. Nothing else in the photo.",
     "confidence": "assumption",
     "note": "Proposed starting values; Ravi to confirm. The centre-box condition keeps a large print that runs off one edge."
+  },
+  "artwork_background": {
+    "what": "the plain background of an artwork file (paper, canvas colour): not ink unless the user says to print it",
+    "applies_to": "artwork files (not garment photos)",
+    "border_share_min": 0.6,
+    "flat_spread_max_de00": 3.0,
+    "rule": "a colour is background when at least border_share_min of the border pixels are within the fabric threshold of it and the border is flat (spread at most flat_spread_max_de00)",
+    "action": "ask 'This looks like background, not ink. Print it or drop it?'; until answered it is left out (not ink); if printed it counts in colours, screens, ink and coverage",
+    "garment": "the garment colour of an artwork file is never taken from the background or the AI read; the user chooses it",
+    "also_for_photos": "when one colour holds at least border_share_min of the border of a garment photo, that colour is the fabric even if it differs from the garment preset (a pink jersey is not white)",
+    "confidence": "assumption",
+    "note": "Proposed starting values 18 Nov 2026; Ravi to confirm."
   },
   "small_colours": {
     "min_coverage_percent": 1.5,

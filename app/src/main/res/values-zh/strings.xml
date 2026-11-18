@@ -221,4 +221,12 @@
     <string name="explain_data_title">引擎数据</string>
     <string name="explain_blocked">保密模式已开启，且本手机没有设备端模型，因此未发送任何内容。引擎数据见下方。</string>
     <string name="ai_limit_reached">NIRA 的免费 AI 额度暂时已用完。请几分钟后再试；每日额度在太平洋时间午夜重置。引擎结果不受影响。</string>
+    <string name="artbg_title">这看起来是背景，不是油墨</string>
+    <string name="artbg_body">%1$s 占图像的 %2$s，占边缘的 %3$s。要印刷还是去掉？</string>
+    <string name="artbg_drop">去掉（不是油墨）</string>
+    <string name="artbg_print">印刷</string>
+    <string name="artbg_dropped_note">已去掉背景 %1$s：不计为油墨。</string>
+    <string name="artbg_printed_note">背景 %1$s 将印刷：计为印花颜色。</string>
+    <string name="artbg_print_instead">改为印刷</string>
+    <string name="artbg_drop_instead">改为去掉</string>
 </resources>

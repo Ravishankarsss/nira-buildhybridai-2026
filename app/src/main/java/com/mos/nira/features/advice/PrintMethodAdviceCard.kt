@@ -89,6 +89,9 @@ fun PrintMethodAdviceCard(
     garmentColor: DominantColor?,
     artworkKey: ArtworkKey?,
     modifier: Modifier = Modifier,
+    // Only a garment photo's measured fabric may pre-select Light / Dark; never the AI read, and
+    // never an artwork file's background.
+    garmentFromMeasureAllowed: Boolean = true,
     aiReadViewModel: ArtworkAiReadViewModel = viewModel(viewModelStoreOwner = activityViewModelStoreOwner()),
     choicesViewModel: PrintMethodChoicesViewModel = viewModel(viewModelStoreOwner = activityViewModelStoreOwner())
 ) {
@@ -110,8 +113,13 @@ fun PrintMethodAdviceCard(
         update { c -> if (c.artwork == null || c.artworkFromAi) c.copy(artwork = kind, artworkFromAi = true) else c }
     }
 
-    // Garment tone from the measured garment colour, unless the user already chose one.
-    LaunchedEffect(rules, garmentColor, artworkKey) {
+    // Garment tone from the measured garment colour (photos only), unless the user already chose one.
+    LaunchedEffect(rules, garmentColor, artworkKey, garmentFromMeasureAllowed) {
+        if (!garmentFromMeasureAllowed) {
+            // An artwork file: clear a tone that was set automatically; the user chooses with the chips.
+            update { c -> if (c.garmentFromMeasure) c.copy(garment = null, garmentFromMeasure = false) else c }
+            return@LaunchedEffect
+        }
         val r = rules ?: return@LaunchedEffect
         val g = garmentColor ?: return@LaunchedEffect
         val tone = TechniqueAdvisor.garmentTone(g.labL, g.labA, g.labB, r.lightnessLimit, r.chromaLimit)

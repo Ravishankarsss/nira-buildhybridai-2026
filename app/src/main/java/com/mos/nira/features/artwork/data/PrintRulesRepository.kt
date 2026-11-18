@@ -137,6 +137,9 @@ data class PhotoBackgroundRules(
     val confidence: String
 )
 
+/** print_rules.json "artwork_background": the plain background of an artwork file. No defaults. */
+data class ArtworkBackgroundRules(val borderShareMin: Double, val flatSpreadMaxDeltaE00: Double, val confidence: String)
+
 /** One entry of print_rules.json "mesh_rules": a mesh range for a kind of screen. */
 data class MeshRule(val id: String, val appliesTo: String, val tpiMin: Int, val tpiMax: Int, val confidence: String)
 
@@ -243,6 +246,11 @@ class PrintRulesRepository(private val context: Context?) {
         loadJson()?.let { parseSmallColourRules(it) }
     }
 
+    /** "artwork_background" from print_rules.json, or null if it is missing or incomplete. */
+    suspend fun getArtworkBackgroundRules(): ArtworkBackgroundRules? = withContext(Dispatchers.IO) {
+        loadJson()?.let { parseArtworkBackgroundRules(it) }
+    }
+
     /** Mesh rule per screen type, or null if the sections are missing. */
     suspend fun getScreenMeshRules(): ScreenMeshRules? = withContext(Dispatchers.IO) {
         loadJson()?.let { parseScreenMeshRules(it) }
@@ -329,6 +337,14 @@ class PrintRulesRepository(private val context: Context?) {
                 type to MeshRule(id, r.optString("applies_to"), r.getInt("tpi_min"), r.getInt("tpi_max"), r.optString("confidence"))
             }.toMap()
             ScreenMeshRules(byType, mapping.getString("confidence"))
+        } catch (e: Exception) {
+            null
+        }
+
+        /** Reads "artwork_background". Null if the section or any value is missing. */
+        fun parseArtworkBackgroundRules(root: JSONObject): ArtworkBackgroundRules? = try {
+            val r = root.getJSONObject("artwork_background")
+            ArtworkBackgroundRules(r.getDouble("border_share_min"), r.getDouble("flat_spread_max_de00"), r.getString("confidence"))
         } catch (e: Exception) {
             null
         }

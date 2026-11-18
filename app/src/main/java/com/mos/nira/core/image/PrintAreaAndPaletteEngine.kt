@@ -1,6 +1,7 @@
 package com.mos.nira.core.image
 
 import android.graphics.Bitmap
+import com.mos.nira.features.artwork.data.ArtworkBackgroundRules
 import com.mos.nira.features.artwork.data.EdgeBlendRules
 import com.mos.nira.features.artwork.data.GarmentMaskRules
 import com.mos.nira.features.artwork.data.PhotoBackgroundRules
@@ -8,6 +9,7 @@ import com.mos.nira.features.artwork.data.PhotoVsArtworkRules
 import com.mos.nira.features.artwork.data.ShadowVsInkRules
 import com.mos.nira.features.artwork.data.SmallColourRules
 import com.mos.nira.features.artwork.data.SeparationDecisionRules
+import com.mos.nira.features.artwork.domain.ArtworkBackground
 import com.mos.nira.features.artwork.domain.ErrorCurvePoint
 import com.mos.nira.features.artwork.domain.GarmentProfile
 import com.mos.nira.features.artwork.domain.MeasuredColor
@@ -108,7 +110,8 @@ object PrintAreaAndPaletteEngine {
         shadowRules: ShadowVsInkRules? = null,
         edgeBlendRules: EdgeBlendRules? = null,
         smallColourRules: SmallColourRules? = null,
-        backgroundRules: PhotoBackgroundRules? = null
+        backgroundRules: PhotoBackgroundRules? = null,
+        artworkBackgroundRules: ArtworkBackgroundRules? = null
     ): PartAResult {
         if (width <= 0 || height <= 0 || pixels.isEmpty() || pixels.size != width * height) {
             return PartAResult(
@@ -132,7 +135,10 @@ object PrintAreaAndPaletteEngine {
         val totalPixels = width * height
 
         // Step 1: Measure Garment Background (Median Lab + Spread)
-        val garmentProfile = estimateGarmentProfile(pixels, width, height, inputs.userGarmentHex, inputs.garmentColorHex, maskRules)
+        val garmentProfile = estimateGarmentProfile(
+            pixels, width, height, inputs.userGarmentHex, inputs.garmentColorHex, maskRules,
+            uniformBorderShareMin = artworkBackgroundRules?.borderShareMin
+        )
         val garmentLab = garmentProfile.medianLab
         // Light garment = one that needs no white base, by the white_base limits in print_rules.json.
         // Light garments use the same fabric rules as every other garment (ΔE00 to the measured
@@ -186,6 +192,58 @@ object PrintAreaAndPaletteEngine {
                 }
 
                 rawPrintMask[index] = !isGarment
+            }
+        }
+
+        // Step 3a: The plain background of an artwork file (print_rules.json artwork_background).
+        // It is left out (not ink) unless the user chose to print it.
+        val artworkBackground = if (inputs.inputKind == InputKind.ARTWORK && artworkBackgroundRules != null &&
+            !garmentProfile.isUserOverridden && garmentProfile.spreadDeltaE00 <= artworkBackgroundRules.flatSpreadMaxDeltaE00
+        ) {
+            val margin = max(1, (maskRules.borderFraction * min(width, height)).toInt())
+            var border = 0
+            var matching = 0
+            val near = HashMap<Int, Boolean>()
+            for (y in 0 until height) {
+                val yBorder = y < margin || y >= height - margin
+                for (x in 0 until width) {
+                    if (!yBorder && x >= margin && x < width - margin) continue
+                    val p = pixels[y * width + x]
+                    if ((p ushr 24) < 128) continue
+                    border++
+                    val key = p and 0xFFFFFF
+                    val isNear = near.getOrPut(key) {
+                        ColorConverter.deltaE00(
+                            ColorConverter.rgbToLab((key shr 16) and 0xFF, (key shr 8) and 0xFF, key and 0xFF), garmentLab
+                        ) <= effectiveGarmentThreshold
+                    }
+                    if (isNear) matching++
+                }
+            }
+            val share = if (border > 0) matching.toDouble() / border else 0.0
+            if (share >= artworkBackgroundRules.borderShareMin) {
+                var opaque = 0
+                var background = 0
+                for (i in 0 until totalPixels) {
+                    if ((pixels[i] ushr 24) < 128) continue
+                    opaque++
+                    if (!rawPrintMask[i]) background++
+                }
+                ArtworkBackground(
+                    hex = garmentProfile.estimatedHex,
+                    borderSharePercent = share * 100.0,
+                    imageCoveragePercent = if (opaque > 0) background * 100.0 / opaque else 0.0,
+                    printed = inputs.artworkBackgroundAnswer == true
+                )
+            } else null
+        } else null
+        if (artworkBackground?.printed == true) {
+            // "Print it": the background is ink, so every opaque pixel outside erased areas is print.
+            for (i in 0 until totalPixels) {
+                if ((pixels[i] ushr 24) < 128) continue
+                val nx = (i % width + 0.5f) / width
+                val ny = (i / width + 0.5f) / height
+                if (inputs.erasedRectangles.none { it.contains(nx, ny) }) rawPrintMask[i] = true
             }
         }
 
@@ -301,14 +359,17 @@ object PrintAreaAndPaletteEngine {
                 lowResolutionWarning = lowResolutionWarning,
                 inputKindAssessment = inputKindAssessment,
                 foldShadowsRemoved = shadowCheck?.removed ?: 0,
-                shadowTestLowResolution = shadowCheck?.lowResolution ?: false
+                shadowTestLowResolution = shadowCheck?.lowResolution ?: false,
+                artworkBackground = artworkBackground
             )
         }
 
         // Subsample for fast clustering if pixel count > 10,000
+        // Evenly spread over the whole print. (Before 18 Nov 2026 the step was rounded down and the
+        // list cut at 10,000, so the last rows of the print were never sampled and a colour that
+        // appears only near the bottom could be lost.)
         val trainingIndices: List<Int> = if (printPixelCount > 10000) {
-            val step = printPixelCount / 10000
-            (0 until printPixelCount step step).take(10000)
+            List(10000) { i -> (i.toLong() * printPixelCount / 10000).toInt() }
         } else {
             (0 until printPixelCount).toList()
         }
@@ -360,8 +421,12 @@ object PrintAreaAndPaletteEngine {
         }
 
         // Filter out empty buckets AND clusters close to garment colour
+        // When an artwork's background is printed, no fabric is visible in the file, so no colour is
+        // dropped for being close to the "fabric" (that would drop the printed background itself).
+        val backgroundPrinted = artworkBackground?.printed == true
         var activeBuckets = buckets.filter { b ->
             if (b.count <= 0) false
+            else if (backgroundPrinted) true
             else {
                 val dToGarment = ColorConverter.deltaE00(b.centerLab, garmentLab)
                 dToGarment > 3.8 // Never create print ink in the garment colour!
@@ -793,7 +858,8 @@ object PrintAreaAndPaletteEngine {
             edgeBlendPixelsMerged = edgeBlendPixelsMerged,
             edgeBlendBandMaxPx = edgeBandMaxPx,
             speckPixelsRemoved = speckPixelsRemoved,
-            photoEdgeExcludedPercent = photoEdgeExcludedPercent
+            photoEdgeExcludedPercent = photoEdgeExcludedPercent,
+            artworkBackground = artworkBackground
         )
     }
 
@@ -1147,7 +1213,10 @@ object PrintAreaAndPaletteEngine {
         height: Int,
         userGarmentHex: String?,
         presetHex: String? = null,
-        maskRules: GarmentMaskRules = GarmentMaskRules()
+        maskRules: GarmentMaskRules = GarmentMaskRules(),
+        // print_rules.json artwork_background.border_share_min: when one colour holds at least this
+        // share of the border, that colour is the fabric (or background), whatever the preset says.
+        uniformBorderShareMin: Double? = null
     ): GarmentProfile {
         val preferredHex = userGarmentHex ?: presetHex
         if (userGarmentHex != null && userGarmentHex != "#FFFFFF") {
@@ -1199,14 +1268,6 @@ object PrintAreaAndPaletteEngine {
         // If the border's colour cast (a, b) is far from the chosen garment colour, the artwork
         // extends to the image border and the border is NOT garment fabric: keep the chosen colour.
         // (For a white garment this is the same check as before: border chroma >= 12.)
-        if (preferredHex != null) {
-            val guessRgb = ColorConverter.hexToRgb(preferredHex)
-            val guessLab = ColorConverter.rgbToLab(guessRgb.r, guessRgb.g, guessRgb.b)
-            if (hypot(medA - guessLab.a, medB - guessLab.b) >= 12.0) {
-                return GarmentProfile(preferredHex, guessLab, 2.0, 5.0, false)
-            }
-        }
-
         // Compute spread = median deltaE00 of border pixels to median Lab
         val deltaArray = DoubleArray(borderLabs.size)
         parallelFor(borderLabs.size) { i -> deltaArray[i] = ColorConverter.deltaE00(borderLabs[i], medLab) }
@@ -1214,6 +1275,18 @@ object PrintAreaAndPaletteEngine {
         val spread = deltas[deltas.size / 2].coerceIn(1.0, 5.0)
         // Threshold adapts to the fabric spread (garment_mask.spread_multiplier, min_threshold_de00).
         val adaptiveThreshold = max(maskRules.minThresholdDeltaE00, spread * maskRules.spreadMultiplier)
+
+        // A border held by one colour (a pink jersey, a paper background) is the fabric, even when it
+        // differs from the preset; the preset is only an initial guess (garment_mask.estimate_from).
+        val borderIsOneColour = uniformBorderShareMin != null &&
+            deltaArray.count { it <= adaptiveThreshold }.toDouble() / deltaArray.size >= uniformBorderShareMin
+        if (preferredHex != null && !borderIsOneColour) {
+            val guessRgb = ColorConverter.hexToRgb(preferredHex)
+            val guessLab = ColorConverter.rgbToLab(guessRgb.r, guessRgb.g, guessRgb.b)
+            if (hypot(medA - guessLab.a, medB - guessLab.b) >= 12.0) {
+                return GarmentProfile(preferredHex, guessLab, 2.0, 5.0, false)
+            }
+        }
 
         val estRgb = ColorConverter.labToRgb(medLab.l, medLab.a, medLab.b)
         val estHex = ColorConverter.rgbToHex(estRgb.r, estRgb.g, estRgb.b)
@@ -1761,13 +1834,16 @@ object PrintAreaAndPaletteEngine {
         width: Int,
         height: Int,
         inputs: PrintJobInputs,
-        maskRules: GarmentMaskRules = GarmentMaskRules()
+        maskRules: GarmentMaskRules = GarmentMaskRules(),
+        // Part A's measured fabric: Parts B and C use the same fabric as Part A.
+        garmentProfile: GarmentProfile? = null
     ): BooleanArray {
         val totalPixels = width * height
         val isPrintMask = BooleanArray(totalPixels)
         if (totalPixels == 0 || pixels.size != totalPixels) return isPrintMask
 
-        val profile = estimateGarmentProfile(pixels, width, height, inputs.userGarmentHex, inputs.garmentColorHex, maskRules)
+        val profile = garmentProfile
+            ?: estimateGarmentProfile(pixels, width, height, inputs.userGarmentHex, inputs.garmentColorHex, maskRules)
         val garmentLab = profile.medianLab
         val effectiveThreshold = max(inputs.garmentThresholdDeltaE00, profile.adaptiveThresholdDeltaE00)
 
