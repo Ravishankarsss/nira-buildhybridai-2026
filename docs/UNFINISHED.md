@@ -35,7 +35,7 @@ None of these exist as product features. Only the test button calls AI.
 | B1 | Classify artwork as FLAT or TONAL, describe motifs | Built 17 Nov (AI read card, Colour screen). Not run on the phone yet |
 | B2 | Name likely print technique from a garment photo, with evidence | Missing |
 | B3 | Flag print risks (thin lines, small text, gradients) | Built 17 Nov (same card). Not run on the phone yet |
-| B4 | Explain the engine's numbers in plain language | Missing |
+| B4 | Explain the engine's numbers in plain language | Done 18 Nov: "Why this recommendation" in the Print Report (see L18) |
 | B5 | Answer one question about the job (Ask NIRA) | Missing (no screen) |
 | B6 | Read tech pack text into fields | Missing |
 | B7 | Deep report from the cloud, text and numbers only | **Done** 17 Nov, tested on the vivo in English and Tamil (IN_CLOUD). Four sections, never the image, blocked by Confidential mode |
@@ -47,7 +47,7 @@ None of these exist as product features. Only the test button calls AI.
 | B13 | Confidential mode switch that blocks cloud calls | Built 17 Nov (Settings; tested rule `AiPrivacyPolicy`) |
 | B14 | Confirm dialog before any image goes to the cloud | Built 17 Nov (AI read card) |
 | B15 | Diagnostics screen (mode, source, model, device status, errors) | Missing |
-| B16 | On-device availability check with the real SDK status call | Missing |
+| B16 | On-device availability check with the real SDK status call | Done: `FirebaseAIOnDevice.checkStatus()` shown in Settings; the vivo V60e reports "unavailable" (checked 18 Nov) |
 | B17 | Remote Config for model name and prompt versions | Missing (model name is a constant) |
 | B18 | Firestore history and Authentication | Missing (optional in the master context) |
 | B19 | Unused AI data classes `ArtworkAnalysisInput`, `ArtworkAIAnalysis` | **Done** 17 Nov: removed |
@@ -60,7 +60,7 @@ None of these exist as product features. Only the test button calls AI.
 | C2 | Artwork Studio (landing, preview, colours, separation, history) | Built |
 | C3 | Shade Library | Built |
 | C4 | Print Report | Built (see section D) |
-| C5 | Settings | Partial: language switch works; no Confidential mode, no report language |
+| C5 | Settings | Done for the hackathon: language switch, Confidential mode, on-device status, AI counters, debug-only Test AI. No report-language setting |
 | C6 | Garment camera | Not verified on phone |
 | C7 | Hybrid AI Analysis | Missing |
 | C8 | Technique Library | Missing as a screen. `print_techniques.json` is now read by the print method advice |
