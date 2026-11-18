@@ -173,4 +173,22 @@
         <item quantity="one">%1$d प्रिंट रंग मापा गया</item>
         <item quantity="other">%1$d प्रिंट रंग मापे गए</item>
     </plurals>
+    <string name="input_kind_ask_photo">यह किसी गारमेंट की फ़ोटो जैसी लगती है। क्या इसे फ़ोटो माना जाए?</string>
+    <string name="input_kind_ask_artwork">यह फ़ोटो नहीं, आर्टवर्क फ़ाइल जैसी लगती है। क्या इसे आर्टवर्क माना जाए?</string>
+    <string name="input_kind_yes_photo">हाँ, फ़ोटो</string>
+    <string name="input_kind_yes_artwork">हाँ, आर्टवर्क</string>
+    <string name="input_kind_keep_artwork">नहीं, आर्टवर्क ही रखें</string>
+    <string name="input_kind_keep_photo">नहीं, फ़ोटो ही रखें</string>
+    <string name="input_kind_hint">फ़ोटो में रोशनी और सिलवट की छाया जाँची जाती है; आर्टवर्क फ़ाइलों में नहीं।</string>
+    <string name="colour_possible_shadow_extra">(+%1$d, अगर चिह्नित रंग स्याही हैं)</string>
+    <string name="colour_possible_shadow_label">सिलवट की छाया हो सकती है – पुष्टि के लिए टैप करें</string>
+    <string name="colour_confirm_title">स्याही या सिलवट की छाया?</string>
+    <string name="colour_confirm_body">इस रंग का कुछ हिस्सा नरम किनारे वाले क्षेत्र से आता है, जो कपड़े की सिलवट हो सकती है। अगर यह छपी हुई स्याही है, तो इसके लिए अलग स्क्रीन चाहिए।</string>
+    <string name="colour_confirm_ink">यह स्याही है</string>
+    <string name="colour_confirm_shadow">यह सिलवट की छाया है</string>
+    <string name="colour_shadow_low_res">सिलवट की छाया और स्याही में फ़र्क करने के लिए रिज़ॉल्यूशन कम है। गारमेंट को सपाट बिछाएँ, सिलवटें हटाएँ और पास से दोबारा फ़ोटो लें।</string>
+    <plurals name="fold_shadows_removed">
+        <item quantity="one">%1$d सिलवट की छाया प्रिंट क्षेत्र से हटाई गई।</item>
+        <item quantity="other">%1$d सिलवट की छायाएँ प्रिंट क्षेत्र से हटाई गईं।</item>
+    </plurals>
 </resources>

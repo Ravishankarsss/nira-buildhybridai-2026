@@ -2,6 +2,8 @@ package com.mos.nira.core.image
 
 import android.graphics.Bitmap
 import com.mos.nira.features.artwork.data.GarmentMaskRules
+import com.mos.nira.features.artwork.data.PhotoVsArtworkRules
+import com.mos.nira.features.artwork.data.ShadowVsInkRules
 import com.mos.nira.features.artwork.data.SeparationDecisionRules
 import com.mos.nira.features.artwork.domain.ErrorCurvePoint
 import com.mos.nira.features.artwork.domain.GarmentProfile
@@ -85,7 +87,10 @@ object PrintAreaAndPaletteEngine {
         seed: Long = FIXED_SEED,
         generateMaskBitmap: Boolean = true,
         decisionRules: SeparationDecisionRules = SeparationDecisionRules(),
-        maskRules: GarmentMaskRules = GarmentMaskRules()
+        maskRules: GarmentMaskRules = GarmentMaskRules(),
+        // From print_rules.json; null when the section is missing, and then the check is skipped.
+        photoRules: PhotoVsArtworkRules? = null,
+        shadowRules: ShadowVsInkRules? = null
     ): PartAResult {
         if (width <= 0 || height <= 0 || pixels.isEmpty() || pixels.size != width * height) {
             return PartAResult(
@@ -166,8 +171,29 @@ object PrintAreaAndPaletteEngine {
             }
         }
 
+        // Step 3b: Photo or artwork? The user's mode is used; the signals only decide whether to ask.
+        val inputKindAssessment = photoRules?.let { rules ->
+            val background = BooleanArray(totalPixels) { !rawPrintMask[it] && ((pixels[it] ushr 24) >= 128) }
+            InputKindClassifier.assess(
+                chosen = inputs.inputKind,
+                pixels = pixels,
+                width = width,
+                height = height,
+                backgroundMask = background,
+                cameraExif = inputs.cameraExif,
+                hasTransparency = pixels.any { (it ushr 24) < 255 },
+                rules = rules
+            )
+        }
+
         // Step 4: Speck Removal & Print Box Isolation
-        val cleanedPrintMask = removeSpecks(rawPrintMask, width, height, maskRules.speckMinAreaFraction)
+        val maskWithoutSpecks = removeSpecks(rawPrintMask, width, height, maskRules.speckMinAreaFraction)
+
+        // Step 4b: Fold shadows (print_rules.json shadow_vs_ink), only on photos of light garments.
+        val shadowCheck = if (inputs.inputKind == InputKind.PHOTO && isLightGarment && shadowRules != null) {
+            checkFoldShadows(smoothedPixels, width, height, maskWithoutSpecks, garmentLab, inputs, shadowRules)
+        } else null
+        val cleanedPrintMask = shadowCheck?.mask ?: maskWithoutSpecks
         val detectedBox = detectPrintBox(cleanedPrintMask, width, height)
         val activePrintBox = inputs.printBox ?: detectedBox
 
@@ -199,6 +225,7 @@ object PrintAreaAndPaletteEngine {
         // Step 6: Collect Active Print Pixels INSIDE the Print Box
         val maskedRgbList = ArrayList<Int>(totalBoxPixels)
         val maskedLabList = ArrayList<ColorConverter.Lab>(totalBoxPixels)
+        val maskedIndexList = ArrayList<Int>(totalBoxPixels)
         val finalPrintMask = BooleanArray(totalPixels)
 
         for (y in boxMinYPx until boxMaxYPx) {
@@ -209,6 +236,7 @@ object PrintAreaAndPaletteEngine {
                     finalPrintMask[index] = true
                     val p = smoothedPixels[index]
                     maskedRgbList.add(p)
+                    maskedIndexList.add(index)
                     val r = (p shr 16) and 0xFF
                     val g = (p shr 8) and 0xFF
                     val b = p and 0xFF
@@ -244,7 +272,10 @@ object PrintAreaAndPaletteEngine {
                 garmentProfile = garmentProfile,
                 printBox = activePrintBox,
                 pixelsPerCm = pixelsPerCm,
-                lowResolutionWarning = lowResolutionWarning
+                lowResolutionWarning = lowResolutionWarning,
+                inputKindAssessment = inputKindAssessment,
+                foldShadowsRemoved = shadowCheck?.removed ?: 0,
+                shadowTestLowResolution = shadowCheck?.lowResolution ?: false
             )
         }
 
@@ -401,11 +432,34 @@ object PrintAreaAndPaletteEngine {
             b.sumB += p and 0xFF
         }
 
+        // A colour is flagged "possible fold shadow" when it is the main colour of an uncertain region.
+        val flaggedPoints = HashMap<Int, MutableList<Pair<Float, Float>>>()
+        shadowCheck?.uncertain?.takeIf { it.isNotEmpty() }?.let { uncertain ->
+            val regionOfPixel = IntArray(totalPixels) { -1 }
+            uncertain.forEachIndexed { u, r -> for (px in r.pixels) regionOfPixel[px] = u }
+            val counts = Array(uncertain.size) { IntArray(finalBuckets.size) }
+            for (i in 0 until printPixelCount) {
+                val u = regionOfPixel[maskedIndexList[i]]
+                if (u >= 0) counts[u][finalAssignments[i]]++
+            }
+            // On a neutral garment a shadow is neutral, so a clearly coloured palette colour is
+            // never labelled "possible fold shadow" (limit: shadow_vs_ink hue-test chroma).
+            val neutralLimit = shadowRules!!.hueTestOnlyIfGarmentChromaAtLeast
+            val garmentNeutral = hypot(garmentLab.a, garmentLab.b) < neutralLimit
+            uncertain.forEachIndexed { u, r ->
+                val main = counts[u].indices.maxByOrNull { counts[u][it] } ?: return@forEachIndexed
+                val c = finalBuckets[main].centerLab
+                if (garmentNeutral && hypot(c.a, c.b) >= neutralLimit) return@forEachIndexed
+                if (counts[u][main] > 0) flaggedPoints.getOrPut(main) { ArrayList() }.add(r.point)
+            }
+        }
+
         // Build MeasuredColor palette
         val measuredPalette = finalBuckets
-            .filter { it.count > 0 }
-            .sortedByDescending { it.count }
-            .mapIndexed { index, b ->
+            .withIndex()
+            .filter { it.value.count > 0 }
+            .sortedByDescending { it.value.count }
+            .mapIndexed { index, (bucketIndex, b) ->
                 val inkR = b.inkRgb?.get(0) ?: b.r
                 val inkG = b.inkRgb?.get(1) ?: b.g
                 val inkB = b.inkRgb?.get(2) ?: b.b
@@ -430,7 +484,9 @@ object PrintAreaAndPaletteEngine {
                     areaCm2 = area,
                     nearestShade = nearestShadeMatch?.first,
                     nearestShadeDeltaE00 = nearestShadeMatch?.second,
-                    matchGrade = nearestShadeMatch?.second?.let { ColorConverter.matchGrade(it) }
+                    matchGrade = nearestShadeMatch?.second?.let { ColorConverter.matchGrade(it) },
+                    possibleFoldShadow = flaggedPoints.containsKey(bucketIndex),
+                    uncertainRegionPoints = flaggedPoints[bucketIndex] ?: emptyList()
                 )
             }
 
@@ -489,8 +545,106 @@ object PrintAreaAndPaletteEngine {
             garmentProfile = garmentProfile,
             printBox = activePrintBox,
             pixelsPerCm = pixelsPerCm,
-            lowResolutionWarning = lowResolutionWarning
+            lowResolutionWarning = lowResolutionWarning,
+            inputKindAssessment = inputKindAssessment,
+            foldShadowsRemoved = shadowCheck?.removed ?: 0,
+            shadowTestLowResolution = shadowCheck?.lowResolution ?: false
         )
+    }
+
+    /** One region left as "possible fold shadow": its pixels and a point inside it (normalised). */
+    private class UncertainRegion(val pixels: IntArray, val point: Pair<Float, Float>)
+
+    private class FoldShadowCheck(
+        val mask: BooleanArray,
+        val removed: Int,
+        val lowResolution: Boolean,
+        val uncertain: List<UncertainRegion>
+    )
+
+    /**
+     * print_rules.json shadow_vs_ink on the print mask of a light-garment photo: fold shadows are
+     * removed, ink is kept, and uncertain regions are kept and reported so the user can answer.
+     *
+     * The print box is the user's box, or else the box around the regions that do not touch the
+     * photo edge (a fold usually runs across the photo; a print sits inside it). It is used for the
+     * location test, and with the print width it gives the pixels per cm.
+     *
+     * Below the minimum resolution the edge cannot be measured, so every region that is not already
+     * settled (a clearly coloured region on a neutral garment is ink) is uncertain, and the screen
+     * suggests a retake.
+     */
+    private fun checkFoldShadows(
+        pixels: IntArray,
+        width: Int,
+        height: Int,
+        mask: BooleanArray,
+        garmentLab: ColorConverter.Lab,
+        inputs: PrintJobInputs,
+        rules: ShadowVsInkRules
+    ): FoldShadowCheck {
+        val labelled = ShadowInkClassifier.labelRegions(mask, width, height)
+        if (labelled.regions.isEmpty()) return FoldShadowCheck(mask, 0, false, emptyList())
+
+        val labCache = HashMap<Int, ColorConverter.Lab>()
+        fun pxPerCmFor(box: NormalizedRect) = (box.maxX - box.minX) * width / inputs.printWidthCm
+
+        // The whole print: the user's box, or the regions that do not touch the photo edge.
+        // Pixels per cm come from this box and the print width.
+        val wholePrintBox = inputs.printBox ?: run {
+            val inner = BooleanArray(mask.size)
+            var any = false
+            for (r in labelled.regions) {
+                if (!ShadowInkClassifier.touchesImageEdge(r, width, height)) {
+                    for (p in r) inner[p] = true
+                    any = true
+                }
+            }
+            detectPrintBox(if (any) inner else mask, width, height)
+        }
+        val pixelsPerCm = pxPerCmFor(wholePrintBox)
+
+        // The location test uses the same box. A fold that reaches inside it is kept as uncertain
+        // (the user is asked) rather than removed: missing a real ink under-quotes the job.
+        val printBox = wholePrintBox
+
+        val result = mask.copyOf()
+        var removed = 0
+        var lowResolution = false
+        val uncertain = ArrayList<UncertainRegion>()
+        labelled.regions.forEachIndexed { id, region ->
+            val a = ShadowInkClassifier.classify(
+                pixels, width, height, mask, labelled.labels, id, region, garmentLab, printBox, pixelsPerCm, rules, labCache
+            )
+            var verdict = a.verdict
+            if (verdict == RegionVerdict.UNCERTAIN) {
+                // The user's answer for this region, if they gave one.
+                val answer = inputs.regionAnswers.firstOrNull { ans ->
+                    val x = (ans.normX * width).toInt().coerceIn(0, width - 1)
+                    val y = (ans.normY * height).toInt().coerceIn(0, height - 1)
+                    labelled.labels[y * width + x] == id
+                }
+                verdict = when {
+                    answer != null -> if (answer.isInk) RegionVerdict.INK else RegionVerdict.FOLD_SHADOW
+                    else -> RegionVerdict.UNCERTAIN
+                }
+                if (a.reason == UncertainReason.LOW_RESOLUTION) lowResolution = true
+            }
+            when (verdict) {
+                RegionVerdict.FOLD_SHADOW -> {
+                    for (p in region) result[p] = false
+                    removed++
+                }
+                RegionVerdict.UNCERTAIN -> {
+                    val first = region.minOrNull()!!
+                    uncertain.add(
+                        UncertainRegion(region, Pair((first % width + 0.5f) / width, (first / width + 0.5f) / height))
+                    )
+                }
+                RegionVerdict.INK -> Unit
+            }
+        }
+        return FoldShadowCheck(result, removed, lowResolution, uncertain)
     }
 
     /**

@@ -173,4 +173,22 @@
         <item quantity="one">%1$d Druckfarbe gemessen</item>
         <item quantity="other">%1$d Druckfarben gemessen</item>
     </plurals>
+    <string name="input_kind_ask_photo">Das sieht wie ein Foto eines Kleidungsstücks aus. Als Foto behandeln?</string>
+    <string name="input_kind_ask_artwork">Das sieht wie eine Grafikdatei aus, nicht wie ein Foto. Als Grafik behandeln?</string>
+    <string name="input_kind_yes_photo">Ja, Foto</string>
+    <string name="input_kind_yes_artwork">Ja, Grafik</string>
+    <string name="input_kind_keep_artwork">Nein, als Grafik lassen</string>
+    <string name="input_kind_keep_photo">Nein, als Foto lassen</string>
+    <string name="input_kind_hint">Bei Fotos werden Licht und Faltenschatten geprüft, bei Grafikdateien nicht.</string>
+    <string name="colour_possible_shadow_extra">(+%1$d, falls die markierten Farben Druckfarbe sind)</string>
+    <string name="colour_possible_shadow_label">Möglicher Faltenschatten – zum Bestätigen tippen</string>
+    <string name="colour_confirm_title">Druckfarbe oder Faltenschatten?</string>
+    <string name="colour_confirm_body">Ein Teil dieser Farbe stammt aus einem weich begrenzten Bereich, der eine Stofffalte sein kann. Ist es gedruckte Farbe, braucht sie ein eigenes Sieb.</string>
+    <string name="colour_confirm_ink">Es ist Druckfarbe</string>
+    <string name="colour_confirm_shadow">Es ist ein Faltenschatten</string>
+    <string name="colour_shadow_low_res">Auflösung zu gering, um Faltenschatten von Druckfarbe zu unterscheiden. Kleidungsstück flach hinlegen, Falten glätten und näher neu aufnehmen.</string>
+    <plurals name="fold_shadows_removed">
+        <item quantity="one">%1$d Faltenschatten aus dem Druckbereich entfernt.</item>
+        <item quantity="other">%1$d Faltenschatten aus dem Druckbereich entfernt.</item>
+    </plurals>
 </resources>

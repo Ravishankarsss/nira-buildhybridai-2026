@@ -173,4 +173,22 @@
         <item quantity="one">%1$d அச்சு நிறம் அளவிடப்பட்டது</item>
         <item quantity="other">%1$d அச்சு நிறங்கள் அளவிடப்பட்டன</item>
     </plurals>
+    <string name="input_kind_ask_photo">இது ஒரு ஆடையின் புகைப்படம் போல் தெரிகிறது. புகைப்படமாகக் கருதலாமா?</string>
+    <string name="input_kind_ask_artwork">இது புகைப்படம் அல்ல, Artwork கோப்பு போல் தெரிகிறது. Artwork ஆகக் கருதலாமா?</string>
+    <string name="input_kind_yes_photo">ஆம், புகைப்படம்</string>
+    <string name="input_kind_yes_artwork">ஆம், Artwork</string>
+    <string name="input_kind_keep_artwork">இல்லை, Artwork ஆகவே வை</string>
+    <string name="input_kind_keep_photo">இல்லை, புகைப்படமாகவே வை</string>
+    <string name="input_kind_hint">புகைப்படங்களில் ஒளி மற்றும் மடிப்பு நிழல் சரிபார்க்கப்படும்; Artwork கோப்புகளில் இல்லை.</string>
+    <string name="colour_possible_shadow_extra">(குறிக்கப்பட்ட நிறங்கள் மை என்றால் +%1$d)</string>
+    <string name="colour_possible_shadow_label">மடிப்பு நிழலாக இருக்கலாம் – உறுதிசெய்ய தொடவும்</string>
+    <string name="colour_confirm_title">மையா, மடிப்பு நிழலா?</string>
+    <string name="colour_confirm_body">இந்த நிறத்தின் ஒரு பகுதி மென்மையான ஓரம் கொண்ட பகுதியிலிருந்து வருகிறது; அது துணியின் மடிப்பாக இருக்கலாம். அது அச்சிட்ட மை என்றால், அதற்குத் தனி ஸ்கிரீன் தேவை.</string>
+    <string name="colour_confirm_ink">இது மை</string>
+    <string name="colour_confirm_shadow">இது மடிப்பு நிழல்</string>
+    <string name="colour_shadow_low_res">மடிப்பு நிழலையும் மையையும் பிரித்தறிய தெளிவுத்திறன் போதாது. ஆடையைச் சமமாக விரித்து, மடிப்புகளை நீக்கி, அருகில் மீண்டும் எடுக்கவும்.</string>
+    <plurals name="fold_shadows_removed">
+        <item quantity="one">%1$d மடிப்பு நிழல் அச்சுப் பகுதியிலிருந்து நீக்கப்பட்டது.</item>
+        <item quantity="other">%1$d மடிப்பு நிழல்கள் அச்சுப் பகுதியிலிருந்து நீக்கப்பட்டன.</item>
+    </plurals>
 </resources>

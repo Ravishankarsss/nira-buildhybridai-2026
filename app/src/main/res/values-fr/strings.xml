@@ -174,4 +174,22 @@
         <item quantity="one">%1$d couleur d\'impression mesurée</item>
         <item quantity="other">%1$d couleurs d\'impression mesurées</item>
     </plurals>
+    <string name="input_kind_ask_photo">Cela ressemble à une photo de vêtement. La traiter comme une photo ?</string>
+    <string name="input_kind_ask_artwork">Cela ressemble à un fichier graphique, pas à une photo. Le traiter comme un graphique ?</string>
+    <string name="input_kind_yes_photo">Oui, photo</string>
+    <string name="input_kind_yes_artwork">Oui, graphique</string>
+    <string name="input_kind_keep_artwork">Non, garder comme graphique</string>
+    <string name="input_kind_keep_photo">Non, garder comme photo</string>
+    <string name="input_kind_hint">Les photos sont vérifiées pour l\'éclairage et les ombres de plis ; les fichiers graphiques non.</string>
+    <string name="colour_possible_shadow_extra">(+%1$d si les couleurs signalées sont de l\'encre)</string>
+    <string name="colour_possible_shadow_label">Ombre de pli possible – touchez pour confirmer</string>
+    <string name="colour_confirm_title">Encre ou ombre de pli ?</string>
+    <string name="colour_confirm_body">Une partie de cette couleur vient d\'une zone aux bords doux qui peut être un pli du tissu. Si c\'est de l\'encre imprimée, il lui faut son propre écran.</string>
+    <string name="colour_confirm_ink">C\'est de l\'encre</string>
+    <string name="colour_confirm_shadow">C\'est une ombre de pli</string>
+    <string name="colour_shadow_low_res">Résolution trop faible pour distinguer les ombres de plis de l\'encre. Posez le vêtement à plat, lissez les plis et reprenez la photo de plus près.</string>
+    <plurals name="fold_shadows_removed">
+        <item quantity="one">%1$d ombre de pli retirée de la zone d\'impression.</item>
+        <item quantity="other">%1$d ombres de pli retirées de la zone d\'impression.</item>
+    </plurals>
 </resources>

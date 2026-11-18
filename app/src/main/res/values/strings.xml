@@ -172,4 +172,22 @@
         <item quantity="one">%1$d print colour measured</item>
         <item quantity="other">%1$d print colours measured</item>
     </plurals>
+    <string name="input_kind_ask_photo">This looks like a photo of a garment. Treat it as a photo?</string>
+    <string name="input_kind_ask_artwork">This looks like an artwork file, not a photo. Treat it as artwork?</string>
+    <string name="input_kind_yes_photo">Yes, photo</string>
+    <string name="input_kind_yes_artwork">Yes, artwork</string>
+    <string name="input_kind_keep_artwork">No, keep as artwork</string>
+    <string name="input_kind_keep_photo">No, keep as photo</string>
+    <string name="input_kind_hint">Photos are checked for lighting and fold shadows; artwork files are not.</string>
+    <string name="colour_possible_shadow_extra">(+%1$d if the flagged colours are ink)</string>
+    <string name="colour_possible_shadow_label">Possible fold shadow – tap to confirm</string>
+    <string name="colour_confirm_title">Ink or fold shadow?</string>
+    <string name="colour_confirm_body">Part of this colour comes from a soft-edged area that may be a fold in the fabric. If it is printed ink, it needs its own screen.</string>
+    <string name="colour_confirm_ink">It is ink</string>
+    <string name="colour_confirm_shadow">It is a fold shadow</string>
+    <string name="colour_shadow_low_res">Resolution too low to tell fold shadows from ink. Lay the garment flat, smooth out the folds and retake closer.</string>
+    <plurals name="fold_shadows_removed">
+        <item quantity="one">%1$d fold shadow removed from the print area.</item>
+        <item quantity="other">%1$d fold shadows removed from the print area.</item>
+    </plurals>
 </resources>

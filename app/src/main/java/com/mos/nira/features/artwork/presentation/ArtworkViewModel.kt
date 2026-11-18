@@ -9,6 +9,7 @@ import com.mos.nira.core.image.ArtworkImageProcessor
 import com.mos.nira.core.image.ColorConverter
 import com.mos.nira.core.image.ColorExtractor
 import com.mos.nira.core.image.ColorSeparator
+import com.mos.nira.core.image.InputKind
 import com.mos.nira.core.image.PrintAreaAndPaletteEngine
 import com.mos.nira.core.image.SeparationStrategyEngine
 import com.mos.nira.features.artwork.data.ArtworkRepository
@@ -25,6 +26,7 @@ import com.mos.nira.features.artwork.domain.PartCResult
 import com.mos.nira.features.artwork.domain.PartDResult
 import com.mos.nira.features.artwork.domain.PrintColorConfig
 import com.mos.nira.features.artwork.domain.PrintJobInputs
+import com.mos.nira.features.artwork.domain.RegionAnswer
 import com.mos.nira.features.artwork.domain.SeparationStrategyType
 import com.mos.nira.features.artwork.domain.ShadeEntry
 import com.mos.nira.features.artwork.domain.ShadeLibrary
@@ -238,10 +240,21 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
         _uiState.update { it.copy(palette = refreshed) }
     }
 
-    fun onImageSelected(uri: Uri) {
+    /**
+     * A new image. [kind] is how the user loaded it: PHOTO from "Photograph a garment" (camera or
+     * gallery), ARTWORK from "Analyse artwork"; null keeps the current mode (replace image).
+     */
+    fun onImageSelected(uri: Uri, kind: InputKind? = null) {
         viewModelScope.launch {
+            val cameraExif = readCameraExif(uri)
             _uiState.update {
                 it.copy(
+                    printJobInputs = it.printJobInputs.copy(
+                        inputKind = kind ?: it.printJobInputs.inputKind,
+                        inputKindConfirmed = false,
+                        cameraExif = cameraExif,
+                        regionAnswers = emptyList()
+                    ),
                     analysisState = AnalysisState.Loading("Reading image metadata..."),
                     selectedImageUri = uri,
                     palette = emptyList(),
@@ -385,7 +398,9 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                     palette = matchedPalette,
                     colorGroups = extractionResult.colorGroups,
                     garmentColor = garment,
-                    measuredPrintColourCount = _uiState.value.partAResult?.measuredPalette?.size
+                    measuredPrintColourCount = _uiState.value.partAResult?.measuredPalette?.size,
+                    inputKind = _uiState.value.printJobInputs.inputKind.name,
+                    inputKindConfirmed = _uiState.value.printJobInputs.inputKindConfirmed
                 )
 
                 repository.saveAnalysis(record)
@@ -511,8 +526,17 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
 
     fun openAnalysisRecord(record: ArtworkAnalysisRecord) {
         viewModelScope.launch {
+            val cameraExif = readCameraExif(Uri.parse(record.imageUri))
             _uiState.update {
                 it.copy(
+                    printJobInputs = it.printJobInputs.copy(
+                        // Records saved before 18 Nov 2026 have no mode: treated as artwork, and the
+                        // app asks if the photo signals disagree.
+                        inputKind = record.inputKind?.let { k -> InputKind.valueOf(k) } ?: InputKind.ARTWORK,
+                        inputKindConfirmed = record.inputKindConfirmed,
+                        cameraExif = cameraExif,
+                        regionAnswers = emptyList()
+                    ),
                     analysisState = AnalysisState.Loading("Loading analysis record..."),
                     selectedColor = record.palette.firstOrNull(),
                     palette = record.palette,
@@ -568,6 +592,58 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                     } else it
                 }
             }
+        }
+    }
+
+    /**
+     * The user's answer to "This looks like a photo. Treat it as a photo?" (or the reverse).
+     * Saved with the analysis, and Part A runs again with the chosen mode.
+     */
+    fun answerInputKind(kind: InputKind) {
+        _uiState.update {
+            it.copy(
+                printJobInputs = it.printJobInputs.copy(
+                    inputKind = kind,
+                    inputKindConfirmed = true,
+                    regionAnswers = emptyList()
+                )
+            )
+        }
+        _uiState.value.currentRecordId?.let { id ->
+            viewModelScope.launch {
+                val record = repository.getAnalysisById(id) ?: return@launch
+                repository.saveAnalysis(record.copy(inputKind = kind.name, inputKindConfirmed = true))
+            }
+        }
+        computePartAReport()
+    }
+
+    /**
+     * The user's answer for a colour marked "Possible fold shadow - tap to confirm": a point inside
+     * each uncertain region and whether it is ink. Part A runs again with the answers.
+     */
+    fun answerFoldShadow(points: List<Pair<Float, Float>>, isInk: Boolean) {
+        if (points.isEmpty()) return
+        _uiState.update {
+            it.copy(
+                printJobInputs = it.printJobInputs.copy(
+                    regionAnswers = it.printJobInputs.regionAnswers + points.map { (x, y) -> RegionAnswer(x, y, isInk) }
+                )
+            )
+        }
+        computePartAReport()
+    }
+
+    /** True when the file has camera make or exposure information; null when it cannot be read. */
+    private suspend fun readCameraExif(uri: Uri): Boolean? = withContext(Dispatchers.IO) {
+        try {
+            getApplication<Application>().contentResolver.openInputStream(uri)?.use { stream ->
+                val exif = android.media.ExifInterface(stream)
+                exif.getAttribute(android.media.ExifInterface.TAG_MAKE) != null ||
+                    exif.getAttribute(android.media.ExifInterface.TAG_EXPOSURE_TIME) != null
+            }
+        } catch (e: Exception) {
+            null
         }
     }
 
@@ -703,6 +779,8 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                 val shades = _uiState.value.activeShades
                 val decisionRules = printRulesRepository.getSeparationDecisionRules()
                 val maskRules = printRulesRepository.getGarmentMaskRules()
+                val photoRules = printRulesRepository.getPhotoVsArtworkRules()
+                val shadowRules = printRulesRepository.getShadowVsInkRules()
                 val result = withContext(Dispatchers.Default) {
                     val maxDim = 2048
                     val width = bitmap.width
@@ -729,7 +807,9 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                         seed = 42L,
                         generateMaskBitmap = true,
                         decisionRules = decisionRules,
-                        maskRules = maskRules
+                        maskRules = maskRules,
+                        photoRules = photoRules,
+                        shadowRules = shadowRules
                     )
                 }
 

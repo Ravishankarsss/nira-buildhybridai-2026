@@ -172,4 +172,22 @@
         <item quantity="one">%1$d màu in đã đo</item>
         <item quantity="other">%1$d màu in đã đo</item>
     </plurals>
+    <string name="input_kind_ask_photo">Đây có vẻ là ảnh chụp một chiếc áo. Xử lý như ảnh chụp?</string>
+    <string name="input_kind_ask_artwork">Đây có vẻ là tệp thiết kế, không phải ảnh chụp. Xử lý như tệp thiết kế?</string>
+    <string name="input_kind_yes_photo">Có, ảnh chụp</string>
+    <string name="input_kind_yes_artwork">Có, tệp thiết kế</string>
+    <string name="input_kind_keep_artwork">Không, giữ là tệp thiết kế</string>
+    <string name="input_kind_keep_photo">Không, giữ là ảnh chụp</string>
+    <string name="input_kind_hint">Ảnh chụp được kiểm tra ánh sáng và bóng nếp gấp; tệp thiết kế thì không.</string>
+    <string name="colour_possible_shadow_extra">(+%1$d nếu các màu được đánh dấu là mực)</string>
+    <string name="colour_possible_shadow_label">Có thể là bóng nếp gấp – chạm để xác nhận</string>
+    <string name="colour_confirm_title">Mực hay bóng nếp gấp?</string>
+    <string name="colour_confirm_body">Một phần màu này đến từ vùng có viền mềm, có thể là nếp gấp của vải. Nếu là mực in, nó cần một khung riêng.</string>
+    <string name="colour_confirm_ink">Đó là mực</string>
+    <string name="colour_confirm_shadow">Đó là bóng nếp gấp</string>
+    <string name="colour_shadow_low_res">Độ phân giải quá thấp để phân biệt bóng nếp gấp với mực. Hãy trải phẳng áo, vuốt hết nếp gấp và chụp lại gần hơn.</string>
+    <plurals name="fold_shadows_removed">
+        <item quantity="one">Đã loại %1$d bóng nếp gấp khỏi vùng in.</item>
+        <item quantity="other">Đã loại %1$d bóng nếp gấp khỏi vùng in.</item>
+    </plurals>
 </resources>

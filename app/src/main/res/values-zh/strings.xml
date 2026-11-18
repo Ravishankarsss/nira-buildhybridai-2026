@@ -172,4 +172,22 @@
         <item quantity="one">测得 %1$d 种印花颜色</item>
         <item quantity="other">测得 %1$d 种印花颜色</item>
     </plurals>
+    <string name="input_kind_ask_photo">这看起来像是成衣照片。按照片处理吗？</string>
+    <string name="input_kind_ask_artwork">这看起来像是图稿文件，而不是照片。按图稿处理吗？</string>
+    <string name="input_kind_yes_photo">是，照片</string>
+    <string name="input_kind_yes_artwork">是，图稿</string>
+    <string name="input_kind_keep_artwork">否，保持图稿</string>
+    <string name="input_kind_keep_photo">否，保持照片</string>
+    <string name="input_kind_hint">照片会检查光照和褶皱阴影；图稿文件不会。</string>
+    <string name="colour_possible_shadow_extra">（若标记的颜色是油墨则 +%1$d）</string>
+    <string name="colour_possible_shadow_label">可能是褶皱阴影 – 点按确认</string>
+    <string name="colour_confirm_title">油墨还是褶皱阴影？</string>
+    <string name="colour_confirm_body">此颜色部分来自边缘柔和的区域，可能是面料褶皱。如果是印刷油墨，需要单独一个网版。</string>
+    <string name="colour_confirm_ink">是油墨</string>
+    <string name="colour_confirm_shadow">是褶皱阴影</string>
+    <string name="colour_shadow_low_res">分辨率太低，无法区分褶皱阴影和油墨。请将衣物平铺、抚平褶皱，并靠近重拍。</string>
+    <plurals name="fold_shadows_removed">
+        <item quantity="one">已从印花区域移除 %1$d 处褶皱阴影。</item>
+        <item quantity="other">已从印花区域移除 %1$d 处褶皱阴影。</item>
+    </plurals>
 </resources>

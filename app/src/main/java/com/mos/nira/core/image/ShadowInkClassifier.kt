@@ -58,6 +58,24 @@ object ShadowInkClassifier {
     /** Lightness steps smaller than this (L* units) are not an edge and are skipped. */
     private const val MIN_EDGE_STEP_L = 1.0
 
+    /** Connected regions of a mask, and for every pixel the index of its region (-1 = not in the mask). */
+    class LabelledRegions(val labels: IntArray, val regions: List<IntArray>)
+
+    /** Labels the connected regions (4-neighbour) of [mask] once, for classifying many regions. */
+    fun labelRegions(mask: BooleanArray, width: Int, height: Int): LabelledRegions {
+        val regions = regions(mask, width, height)
+        val labels = IntArray(mask.size) { -1 }
+        regions.forEachIndexed { id, r -> for (p in r) labels[p] = id }
+        return LabelledRegions(labels, regions)
+    }
+
+    /** True when the region touches the edge of the photo. */
+    fun touchesImageEdge(region: IntArray, width: Int, height: Int): Boolean = region.any { p ->
+        val x = p % width
+        val y = p / width
+        x == 0 || y == 0 || x == width - 1 || y == height - 1
+    }
+
     /** Connected regions (4-neighbour) of the true pixels of [mask]; each is a list of pixel indices. */
     fun regions(mask: BooleanArray, width: Int, height: Int): List<IntArray> {
         val seen = BooleanArray(mask.size)
@@ -106,8 +124,30 @@ object ShadowInkClassifier {
         pixelsPerCm: Double,
         rules: ShadowVsInkRules
     ): RegionAssessment {
-        val inRegion = BooleanArray(width * height)
-        for (p in region) inRegion[p] = true
+        val labels = IntArray(width * height) { -1 }
+        for (p in region) labels[p] = 0
+        return classify(pixels, width, height, printMask, labels, 0, region, garmentLab, printBox, pixelsPerCm, rules, HashMap())
+    }
+
+    /**
+     * Same as above for region [regionId] of [labels] (from [labelRegions]); [labCache] may be
+     * shared between calls on the same pixels.
+     */
+    fun classify(
+        pixels: IntArray,
+        width: Int,
+        height: Int,
+        printMask: BooleanArray,
+        labels: IntArray,
+        regionId: Int,
+        region: IntArray,
+        garmentLab: ColorConverter.Lab,
+        printBox: NormalizedRect,
+        pixelsPerCm: Double,
+        rules: ShadowVsInkRules,
+        labCache: HashMap<Int, ColorConverter.Lab>
+    ): RegionAssessment {
+        val inRegion = RegionTest(labels, regionId)
 
         // Location: does the region leave the print box or reach the edge of the photo?
         var leavesPrintBox = false
@@ -123,22 +163,30 @@ object ShadowInkClassifier {
         }
 
         // Hue: only on a garment with enough colour.
-        val labCache = HashMap<Int, ColorConverter.Lab>()
         fun labOf(p: Int): ColorConverter.Lab {
             val c = pixels[p] and 0xFFFFFF
             return labCache.getOrPut(c) { ColorConverter.rgbToLab((c shr 16) and 0xFF, (c shr 8) and 0xFF, c and 0xFF) }
         }
         val garmentChroma = hypot(garmentLab.a, garmentLab.b)
-        val hueDifference = if (garmentChroma >= rules.hueTestOnlyIfGarmentChromaAtLeast) {
-            var sumA = 0.0
-            var sumB = 0.0
-            for (p in region) {
-                val lab = labOf(p)
-                sumA += lab.a
-                sumB += lab.b
-            }
+        var sumA = 0.0
+        var sumB = 0.0
+        for (p in region) {
+            val lab = labOf(p)
+            sumA += lab.a
+            sumB += lab.b
+        }
+        val regionChroma = hypot(sumA / region.size, sumB / region.size)
+        val neutralLimit = rules.hueTestOnlyIfGarmentChromaAtLeast
+        val hueDifference = if (garmentChroma >= neutralLimit) {
             hueDifferenceDeg(Math.toDegrees(atan2(garmentLab.b, garmentLab.a)), Math.toDegrees(atan2(sumB, sumA)))
         } else null
+
+        // A shadow is the same fabric with less light. On a neutral garment (chroma below the
+        // hue-test limit) a shadow is therefore neutral too, so a clearly coloured region is ink
+        // whatever its edges look like (for example a light blue print on a white T-shirt).
+        if (garmentChroma < neutralLimit && regionChroma >= neutralLimit) {
+            return RegionAssessment(RegionVerdict.INK, null, leavesPrintBox, null, null)
+        }
 
         if (pixelsPerCm < rules.minPxPerCmForEdgeTest) {
             return RegionAssessment(RegionVerdict.UNCERTAIN, null, leavesPrintBox, hueDifference, UncertainReason.LOW_RESOLUTION)
@@ -183,7 +231,7 @@ object ShadowInkClassifier {
         width: Int,
         height: Int,
         printMask: BooleanArray,
-        inRegion: BooleanArray,
+        inRegion: RegionTest,
         region: IntArray,
         labOf: (Int) -> ColorConverter.Lab,
         pixelsPerCm: Double,
@@ -223,13 +271,19 @@ object ShadowInkClassifier {
             }
             if (outside.size < 2 || inside.isEmpty()) continue
 
-            val lOut = (outside[outside.size - 1] + outside[outside.size - 2]) / 2.0
-            val lIn = inside.maxByOrNull { abs(it - lOut) }!!
+            // Profile from far outside to far inside, smoothed over 3 pixels against camera noise.
+            val raw = outside.asReversed() + inside
+            val profile = raw.indices.map { j ->
+                val lo = maxOf(0, j - 1)
+                val hi = minOf(raw.size - 1, j + 1)
+                (lo..hi).sumOf { raw[it] } / (hi - lo + 1)
+            }
+            // Fabric level: mean of the outer half of the outside samples.
+            val outerHalf = maxOf(2, outside.size / 2)
+            val lOut = profile.subList(0, outerHalf).average()
+            val lIn = profile.subList(outside.size, profile.size).maxByOrNull { abs(it - lOut) }!!
             val delta = lIn - lOut
             if (abs(delta) < MIN_EDGE_STEP_L) continue
-
-            // Profile from far outside to far inside.
-            val profile = outside.asReversed() + inside
             var i10 = -1
             var i90 = -1
             for (j in profile.indices) {
@@ -248,7 +302,7 @@ object ShadowInkClassifier {
     }
 
     /** +1/-1 (x) or +width/-width (y) towards an in-image neighbour outside the region; 0 if none. */
-    private fun outwardStep(p: Int, width: Int, height: Int, inRegion: BooleanArray): Int {
+    private fun outwardStep(p: Int, width: Int, height: Int, inRegion: RegionTest): Int {
         val x = p % width
         val y = p / width
         if (x > 0 && !inRegion[p - 1]) return -1
@@ -264,5 +318,10 @@ object ShadowInkClassifier {
             if (q / width != p / width || q < 0 || q >= width * height) return null
         } else if (q < 0 || q >= width * height) return null
         return q
+    }
+
+    /** "Is pixel p in the region?" from shared labels, without a full-size copy per region. */
+    class RegionTest(private val labels: IntArray, private val id: Int) {
+        operator fun get(p: Int): Boolean = labels[p] == id
     }
 }

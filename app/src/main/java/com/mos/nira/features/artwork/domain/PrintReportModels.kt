@@ -1,5 +1,7 @@
 package com.mos.nira.features.artwork.domain
 
+import com.mos.nira.core.image.InputKind
+import com.mos.nira.core.image.InputKindAssessment
 import android.graphics.Bitmap
 import com.mos.nira.core.image.ColorConverter
 import com.mos.nira.features.artwork.data.ProcessInksConfig
@@ -55,8 +57,19 @@ data class PrintJobInputs(
     // (print_rules.json, white_base.white_print_colour_can_act_as_base). Switch off for a separate base.
     val whitePrintActsAsBase: Boolean = true,
     val orderPieces: Int = 100, // Order quantity for ink consumption
-    val highlightWhiteThreshold: Double = 80.0
+    val highlightWhiteThreshold: Double = 80.0,
+    // What the user loaded (print_rules.json photo_vs_artwork "primary": the user's chosen mode),
+    // whether they confirmed it after the app asked, and whether the file has camera information
+    // (null = not known).
+    val inputKind: InputKind = InputKind.ARTWORK,
+    val inputKindConfirmed: Boolean = false,
+    val cameraExif: Boolean? = null,
+    // The user's answers for regions marked "Possible fold shadow - tap to confirm".
+    val regionAnswers: List<RegionAnswer> = emptyList()
 )
+
+/** The user's answer for one uncertain region: a point inside it (normalised) and ink or shadow. */
+data class RegionAnswer(val normX: Float, val normY: Float, val isInk: Boolean)
 
 /**
  * Measured colour layer in the analyzed artwork print area.
@@ -72,7 +85,11 @@ data class MeasuredColor(
     val areaCm2: Double, // Physical print area in cm²
     val nearestShade: ShadeEntry? = null,
     val nearestShadeDeltaE00: Double? = null,
-    val matchGrade: String? = null
+    val matchGrade: String? = null,
+    /** Some pixels of this colour come from regions that may be fold shadows (not confirmed). */
+    val possibleFoldShadow: Boolean = false,
+    /** A point inside each of those regions (normalised), used to record the user's answer. */
+    val uncertainRegionPoints: List<Pair<Float, Float>> = emptyList()
 ) {
     val formattedRgb: String get() = "RGB(${rgb.r}, ${rgb.g}, ${rgb.b})"
     val formattedLab: String get() = String.format("L* %.1f  a* %.1f  b* %.1f", lab.l, lab.a, lab.b)
@@ -107,7 +124,13 @@ data class PartAResult(
     val garmentProfile: GarmentProfile? = null,
     val printBox: NormalizedRect = NormalizedRect(0f, 0f, 1f, 1f),
     val pixelsPerCm: Double = 0.0,
-    val lowResolutionWarning: String? = null
+    val lowResolutionWarning: String? = null,
+    /** Photo or artwork signals against the user's chosen mode (print_rules.json photo_vs_artwork). */
+    val inputKindAssessment: InputKindAssessment? = null,
+    /** Regions removed as fold shadows (print_rules.json shadow_vs_ink). */
+    val foldShadowsRemoved: Int = 0,
+    /** True when the fold-shadow edge test could not run because the resolution is too low. */
+    val shadowTestLowResolution: Boolean = false
 )
 
 // ==========================================

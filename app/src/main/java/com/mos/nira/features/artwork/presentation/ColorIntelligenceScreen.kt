@@ -50,6 +50,8 @@ import com.mos.nira.features.artwork.components.ColorSwatchCard
 import com.mos.nira.features.artwork.domain.ColorGroup
 import com.mos.nira.features.artwork.domain.DominantColor
 import com.mos.nira.core.image.ColourLabel
+import com.mos.nira.core.image.InputKindAssessment
+import com.mos.nira.core.image.InputKind
 import com.mos.nira.features.artwork.domain.ShadeEntry
 import com.mos.nira.features.artwork.domain.MeasuredColor
 import com.mos.nira.R
@@ -65,6 +67,7 @@ private val Violet = Color(0xFF8B7CFF)
 private val Cyan = Color(0xFF55D6E8)
 private val TextWhite = Color(0xFFF5F6FF)
 private val TextMuted = Color(0xFF9BA6C0)
+private val Amber = Color(0xFFFFC566) // "needs your answer" text
 
 @Composable
 fun ColorIntelligenceScreen(
@@ -91,6 +94,14 @@ fun ColorIntelligenceScreen(
     // The Print Report engine's measured print colours (garment removed), and whether it is working.
     measuredPrintColours: List<MeasuredColor>? = null,
     isMeasuringPrintColours: Boolean = false,
+    // Photo or artwork check (print_rules.json photo_vs_artwork) and the user's answer.
+    inputKindAssessment: InputKindAssessment? = null,
+    inputKindConfirmed: Boolean = false,
+    onAnswerInputKind: (InputKind) -> Unit = {},
+    // Fold shadow check (print_rules.json shadow_vs_ink) and the user's answer for a flagged colour.
+    foldShadowsRemoved: Int = 0,
+    shadowTestLowResolution: Boolean = false,
+    onAnswerFoldShadow: (points: List<Pair<Float, Float>>, isInk: Boolean) -> Unit = { _, _ -> },
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -287,11 +298,13 @@ fun ColorIntelligenceScreen(
                             // Headline count = the colours the Print Report uses (garment removed).
                             Text(
                                 text = when {
-                                    measuredPrintColours != null -> pluralStringResource(
-                                        R.plurals.measured_print_colours,
-                                        measuredPrintColours.size,
-                                        measuredPrintColours.size
-                                    )
+                                    measuredPrintColours != null -> {
+                                        // Colours that may be fold shadows are shown as "+N if ink".
+                                        val flagged = measuredPrintColours.count { it.possibleFoldShadow }
+                                        val sure = measuredPrintColours.size - flagged
+                                        pluralStringResource(R.plurals.measured_print_colours, sure, sure) +
+                                            (if (flagged > 0) " " + stringResource(R.string.colour_possible_shadow_extra, flagged) else "")
+                                    }
                                     isMeasuringPrintColours -> stringResource(R.string.colour_measuring)
                                     else -> stringResource(R.string.colour_clusters_title, palette.size)
                                 },
@@ -315,10 +328,34 @@ fun ColorIntelligenceScreen(
             }
         }
 
+        // "This looks like a photo. Treat it as a photo?" when the signals disagree with the mode.
+        if (inputKindAssessment != null && inputKindAssessment.askUser && !inputKindConfirmed) {
+            item {
+                InputKindQuestionCard(inputKindAssessment, onAnswerInputKind)
+            }
+        }
+
+        // Fold shadow notes (photos of light garments).
+        if (foldShadowsRemoved > 0 || shadowTestLowResolution) {
+            item {
+                Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp)) {
+                    if (foldShadowsRemoved > 0) {
+                        Text(
+                            pluralStringResource(R.plurals.fold_shadows_removed, foldShadowsRemoved, foldShadowsRemoved),
+                            color = TextMuted, fontSize = 12.sp, lineHeight = 17.sp
+                        )
+                    }
+                    if (shadowTestLowResolution) {
+                        Text(stringResource(R.string.colour_shadow_low_res), color = Amber, fontSize = 12.sp, lineHeight = 17.sp)
+                    }
+                }
+            }
+        }
+
         // Measured print colours: the ones used for screens and ink.
         if (!measuredPrintColours.isNullOrEmpty()) {
             item {
-                MeasuredPrintColoursCard(measuredPrintColours)
+                MeasuredPrintColoursCard(measuredPrintColours, onAnswerFoldShadow)
             }
         }
 
@@ -508,7 +545,28 @@ fun ColorIntelligenceScreen(
 
 /** The Print Report engine's measured print colours, with coverage and nearest shade. */
 @Composable
-private fun MeasuredPrintColoursCard(colours: List<MeasuredColor>) {
+private fun MeasuredPrintColoursCard(
+    colours: List<MeasuredColor>,
+    onAnswerFoldShadow: (points: List<Pair<Float, Float>>, isInk: Boolean) -> Unit
+) {
+    var asking by remember { mutableStateOf<MeasuredColor?>(null) }
+    asking?.let { c ->
+        AlertDialog(
+            onDismissRequest = { asking = null },
+            title = { Text(stringResource(R.string.colour_confirm_title)) },
+            text = { Text(c.hex + "\n\n" + stringResource(R.string.colour_confirm_body)) },
+            confirmButton = {
+                TextButton(onClick = { onAnswerFoldShadow(c.uncertainRegionPoints, true); asking = null }) {
+                    Text(stringResource(R.string.colour_confirm_ink))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { onAnswerFoldShadow(c.uncertainRegionPoints, false); asking = null }) {
+                    Text(stringResource(R.string.colour_confirm_shadow))
+                }
+            }
+        )
+    }
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(18.dp),
@@ -526,7 +584,10 @@ private fun MeasuredPrintColoursCard(colours: List<MeasuredColor>) {
             Text(stringResource(R.string.colour_measured_hint), color = TextMuted, fontSize = 12.sp, lineHeight = 17.sp)
             colours.forEach { c ->
                 Spacer(modifier = Modifier.height(10.dp))
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = if (c.possibleFoldShadow) Modifier.clickable { asking = c } else Modifier
+                ) {
                     Box(
                         modifier = Modifier
                             .size(28.dp)
@@ -543,7 +604,44 @@ private fun MeasuredPrintColoursCard(colours: List<MeasuredColor>) {
                             color = TextMuted,
                             fontSize = 12.sp
                         )
+                        if (c.possibleFoldShadow) {
+                            Text(
+                                stringResource(R.string.colour_possible_shadow_label),
+                                color = Amber,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
                     }
+                }
+            }
+        }
+    }
+}
+
+/** Asks the user to confirm photo or artwork when the file signals disagree with their choice. */
+@Composable
+private fun InputKindQuestionCard(assessment: InputKindAssessment, onAnswer: (InputKind) -> Unit) {
+    val suggestPhoto = assessment.chosen == InputKind.ARTWORK
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(18.dp),
+        colors = CardDefaults.cardColors(containerColor = CardBg)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                stringResource(if (suggestPhoto) R.string.input_kind_ask_photo else R.string.input_kind_ask_artwork),
+                color = TextWhite, fontSize = 15.sp, fontWeight = FontWeight.Bold, lineHeight = 20.sp
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(stringResource(R.string.input_kind_hint), color = TextMuted, fontSize = 12.sp, lineHeight = 17.sp)
+            Spacer(modifier = Modifier.height(12.dp))
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Button(onClick = { onAnswer(if (suggestPhoto) InputKind.PHOTO else InputKind.ARTWORK) }) {
+                    Text(stringResource(if (suggestPhoto) R.string.input_kind_yes_photo else R.string.input_kind_yes_artwork))
+                }
+                OutlinedButton(onClick = { onAnswer(assessment.chosen) }) {
+                    Text(stringResource(if (suggestPhoto) R.string.input_kind_keep_artwork else R.string.input_kind_keep_photo))
                 }
             }
         }

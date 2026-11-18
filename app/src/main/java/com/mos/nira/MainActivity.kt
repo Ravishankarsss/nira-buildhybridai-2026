@@ -1,5 +1,6 @@
 package com.mos.nira
 
+import com.mos.nira.core.image.InputKind
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -129,7 +130,8 @@ fun NIRAAppRoot() {
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         if (uri != null) {
-            artworkViewModel.onImageSelected(uri)
+            // "Photograph a garment" -> camera or gallery: a garment photo.
+            artworkViewModel.onImageSelected(uri, InputKind.PHOTO)
             rootNavController.navigate(RootDestinations.artworkFlowAt(ArtworkStart.PREVIEW))
         }
     }
@@ -224,7 +226,7 @@ fun NIRAAppRoot() {
             composable(RootDestinations.GARMENT_CAMERA) {
                 GarmentCameraScreen(
                     onPhotoCaptured = { uri ->
-                        artworkViewModel.onImageSelected(uri)
+                        artworkViewModel.onImageSelected(uri, InputKind.PHOTO)
                         rootNavController.navigate(RootDestinations.artworkFlowAt(ArtworkStart.PREVIEW)) {
                             popUpTo(RootDestinations.GARMENT_CAMERA) { inclusive = true }
                         }

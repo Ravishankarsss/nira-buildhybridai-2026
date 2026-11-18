@@ -170,6 +170,72 @@ class ShadowAndPhotoRulesTest {
         assertEquals(UncertainReason.HUE_CHANGED, otherHue.reason)
     }
 
+    @Test
+    fun neutralGarment_clearlyColouredRegion_isInk_evenWithSoftEdges() {
+        // A shadow of white fabric is neutral, so a soft-edged light blue area cannot be a shadow.
+        val softBlue = Shape(220, 300, 380, 420, rampMm = 3.0, lab = ColorConverter.Lab(75.0, -8.0, -14.0))
+        val (blue) = classifyAt(garmentImage(lightGarment, listOf(softBlue)), lightGarment, 300 to 360)
+        assertEquals(RegionVerdict.INK, blue.verdict)
+    }
+
+    // ---------- Part A with both checks ----------
+
+    /** Pixels per cm in Part A come from the print box (the ink) and the print width. */
+    private fun partA(px: IntArray, kind: InputKind, inkWidthPx: Int) = PrintAreaAndPaletteEngine.computePartA(
+        px, size, size,
+        PrintJobInputs(inputKind = kind, cameraExif = kind == InputKind.PHOTO, printWidthCm = inkWidthPx / pxPerCm),
+        generateMaskBitmap = false,
+        decisionRules = PrintRulesRepository.parseSeparationDecisionRules(root),
+        maskRules = PrintRulesRepository.parseGarmentMaskRules(root),
+        photoRules = photoRules,
+        shadowRules = shadowRules
+    )
+
+    @Test
+    fun partA_photo_removesTheFoldShadow_andKeepsTheGreyInk() {
+        val sharpGrey = Shape(220, 300, 380, 420, rampMm = 0.0, lab = greyInk)
+        val px = garmentImage(lightGarment, listOf(shadowBand, sharpGrey))
+
+        val photo = partA(px, InputKind.PHOTO, inkWidthPx = 161)
+        assertEquals(1, photo.foldShadowsRemoved)
+        assertFalse(photo.shadowTestLowResolution)
+        assertEquals(1, photo.measuredPalette.size) // only the grey ink
+        assertFalse(photo.measuredPalette.single().possibleFoldShadow)
+        assertTrue("print box ${photo.printBox}", photo.printBox.minY > 0.4f) // the band above is gone
+
+        // As artwork the shadow check does not run: the band stays a colour.
+        val artwork = partA(px, InputKind.ARTWORK, inkWidthPx = 161)
+        assertEquals(0, artwork.foldShadowsRemoved)
+        assertTrue(artwork.measuredPalette.size >= 2)
+    }
+
+    @Test
+    fun partA_photo_softGreyInsideThePrint_isKeptAndFlagged_andAnAnswerSettlesIt() {
+        val sharpGrey = Shape(150, 300, 250, 420, rampMm = 0.0, lab = greyInk)
+        val softGrey = Shape(350, 300, 450, 420, rampMm = 3.0, lab = ColorConverter.Lab(72.0, 0.0, 0.0))
+        val px = garmentImage(lightGarment, listOf(sharpGrey, softGrey))
+        val first = partA(px, InputKind.PHOTO, inkWidthPx = 301)
+        val flagged = first.measuredPalette.filter { it.possibleFoldShadow }
+        assertEquals(1, flagged.size)
+        val point = flagged.single().uncertainRegionPoints.single()
+
+        // "It is a fold shadow": the soft grey is removed and only the sharp grey remains.
+        val answered = PrintAreaAndPaletteEngine.computePartA(
+            px, size, size,
+            PrintJobInputs(
+                inputKind = InputKind.PHOTO, cameraExif = true, printWidthCm = 301 / pxPerCm,
+                regionAnswers = listOf(com.mos.nira.features.artwork.domain.RegionAnswer(point.first, point.second, isInk = false))
+            ),
+            generateMaskBitmap = false,
+            decisionRules = PrintRulesRepository.parseSeparationDecisionRules(root),
+            maskRules = PrintRulesRepository.parseGarmentMaskRules(root),
+            photoRules = photoRules,
+            shadowRules = shadowRules
+        )
+        assertEquals(1, answered.foldShadowsRemoved)
+        assertTrue(answered.measuredPalette.none { it.possibleFoldShadow })
+    }
+
     // ---------- photo vs artwork ----------
 
     private val artSize = 400

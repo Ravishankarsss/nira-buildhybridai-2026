@@ -40,6 +40,10 @@ object InputKindClassifier {
     private const val MIN_NOISE_PAIRS = 100
     private const val MIN_CELL_PIXELS = 16
 
+    /** At most this many neighbour pairs / pixels per cell are measured (evenly spread), for speed. */
+    private const val MAX_NOISE_PAIRS = 200_000
+    private const val MAX_CELL_SAMPLES = 4_000
+
     /**
      * [backgroundMask] marks plain fabric or artwork background (true = background).
      * [cameraExif] is true when the file has camera make or exposure information, false when it
@@ -72,14 +76,17 @@ object InputKindClassifier {
         // Signal 3: noise in plain areas, from differences between horizontal neighbours.
         // The robust spread (median absolute deviation) ignores the few pairs that cross an
         // edge, and a smooth lighting change barely affects neighbour differences.
-        val diffs = ArrayList<Double>()
-        for (y in 0 until height) {
-            val row = y * width
-            for (x in 0 until width - 1) {
-                val p = row + x
-                if (backgroundMask[p] && backgroundMask[p + 1]) diffs.add(lOf(p + 1) - lOf(p))
+        val pairStride = maxOf(1, (width.toLong() * height / MAX_NOISE_PAIRS).toInt())
+        val diffBuffer = DoubleArray(minOf(width.toLong() * height, MAX_NOISE_PAIRS.toLong() * 2).toInt())
+        var nDiffs = 0
+        var p = 0
+        while (p < width * height && nDiffs < diffBuffer.size) {
+            if (p % width != width - 1 && backgroundMask[p] && backgroundMask[p + 1]) {
+                diffBuffer[nDiffs++] = lOf(p + 1) - lOf(p)
             }
+            p += pairStride
         }
+        val diffs = diffBuffer.copyOf(nDiffs).asList()
         val flatNoise = if (diffs.size >= MIN_NOISE_PAIRS) {
             val med = median(diffs)
             // 1.4826 turns a median absolute deviation into a standard deviation (normal noise);
@@ -97,12 +104,21 @@ object InputKindClassifier {
         val cellMedians = ArrayList<Double>()
         for (gy in 0 until LIGHTING_GRID) {
             for (gx in 0 until LIGHTING_GRID) {
+                val y0 = gy * height / LIGHTING_GRID
+                val y1 = (gy + 1) * height / LIGHTING_GRID
+                val x0 = gx * width / LIGHTING_GRID
+                val x1 = (gx + 1) * width / LIGHTING_GRID
+                if (x1 <= x0 || y1 <= y0) continue // image smaller than the grid
+                val cellPixels = (y1 - y0).toLong() * (x1 - x0)
+                val step = maxOf(1, (cellPixels / MAX_CELL_SAMPLES).toInt())
                 val values = ArrayList<Double>()
-                for (y in gy * height / LIGHTING_GRID until (gy + 1) * height / LIGHTING_GRID) {
-                    for (x in gx * width / LIGHTING_GRID until (gx + 1) * width / LIGHTING_GRID) {
-                        val p = y * width + x
-                        if (backgroundMask[p]) values.add(lOf(p))
-                    }
+                var k = 0L
+                while (k < cellPixels) {
+                    val y = y0 + (k / (x1 - x0)).toInt()
+                    val x = x0 + (k % (x1 - x0)).toInt()
+                    val q = y * width + x
+                    if (backgroundMask[q]) values.add(lOf(q))
+                    k += step
                 }
                 if (values.size >= MIN_CELL_PIXELS) cellMedians.add(median(values))
             }

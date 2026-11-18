@@ -100,6 +100,8 @@ class ArtworkRepository(private val context: android.content.Context) {
         root.put("timestamp", record.timestamp)
         root.put("algorithmVersion", record.algorithmVersion)
         record.measuredPrintColourCount?.let { root.put("measuredPrintColourCount", it) }
+        record.inputKind?.let { root.put("inputKind", it) }
+        root.put("inputKindConfirmed", record.inputKindConfirmed)
 
         val paletteArray = JSONArray()
         for (color in record.palette) {
@@ -242,7 +244,9 @@ class ArtworkRepository(private val context: android.content.Context) {
             colorGroups = groups,
             garmentColor = garmentColor,
             algorithmVersion = algorithmVersion,
-            measuredPrintColourCount = if (json.has("measuredPrintColourCount")) json.getInt("measuredPrintColourCount") else null
+            measuredPrintColourCount = if (json.has("measuredPrintColourCount")) json.getInt("measuredPrintColourCount") else null,
+            inputKind = json.optString("inputKind").takeIf { it == "PHOTO" || it == "ARTWORK" },
+            inputKindConfirmed = json.optBoolean("inputKindConfirmed", false)
         )
     }
 }

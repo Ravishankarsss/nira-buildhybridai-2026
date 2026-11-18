@@ -86,7 +86,11 @@ data class ArtworkAnalysisRecord(
     val garmentColor: DominantColor? = null,
     val algorithmVersion: String = "2.0.0-ciede2000-automerge",
     /** Print colours measured by the Print Report engine (garment removed), when calculated. */
-    val measuredPrintColourCount: Int? = null
+    val measuredPrintColourCount: Int? = null,
+    /** "PHOTO" or "ARTWORK": what the user loaded; null for records saved before 18 Nov 2026. */
+    val inputKind: String? = null,
+    /** True once the user answered "Treat it as a photo?" (or the reverse). */
+    val inputKindConfirmed: Boolean = false
 ) {
     /** The count shown to users: the measured print colours, or the older count for old records. */
     val printColourCount: Int get() = measuredPrintColourCount ?: palette.count { !it.isGarmentBase }

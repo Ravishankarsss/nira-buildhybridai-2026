@@ -173,4 +173,22 @@
         <item quantity="one">%1$dটি প্রিন্টের রং মাপা হয়েছে</item>
         <item quantity="other">%1$dটি প্রিন্টের রং মাপা হয়েছে</item>
     </plurals>
+    <string name="input_kind_ask_photo">এটি একটি পোশাকের ছবি বলে মনে হচ্ছে। ছবি হিসেবে ধরা হবে?</string>
+    <string name="input_kind_ask_artwork">এটি ছবি নয়, আর্টওয়ার্ক ফাইল বলে মনে হচ্ছে। আর্টওয়ার্ক হিসেবে ধরা হবে?</string>
+    <string name="input_kind_yes_photo">হ্যাঁ, ছবি</string>
+    <string name="input_kind_yes_artwork">হ্যাঁ, আর্টওয়ার্ক</string>
+    <string name="input_kind_keep_artwork">না, আর্টওয়ার্ক হিসেবেই রাখুন</string>
+    <string name="input_kind_keep_photo">না, ছবি হিসেবেই রাখুন</string>
+    <string name="input_kind_hint">ছবিতে আলো ও ভাঁজের ছায়া পরীক্ষা করা হয়; আর্টওয়ার্ক ফাইলে নয়।</string>
+    <string name="colour_possible_shadow_extra">(+%1$d, যদি চিহ্নিত রংগুলো কালি হয়)</string>
+    <string name="colour_possible_shadow_label">ভাঁজের ছায়া হতে পারে – নিশ্চিত করতে ট্যাপ করুন</string>
+    <string name="colour_confirm_title">কালি না ভাঁজের ছায়া?</string>
+    <string name="colour_confirm_body">এই রঙের কিছু অংশ নরম কিনারার একটি জায়গা থেকে আসে, যা কাপড়ের ভাঁজ হতে পারে। এটি ছাপা কালি হলে এর জন্য আলাদা স্ক্রিন লাগবে।</string>
+    <string name="colour_confirm_ink">এটি কালি</string>
+    <string name="colour_confirm_shadow">এটি ভাঁজের ছায়া</string>
+    <string name="colour_shadow_low_res">ভাঁজের ছায়া ও কালি আলাদা করতে রেজোলিউশন খুব কম। পোশাকটি সমান করে বিছিয়ে ভাঁজ মসৃণ করুন এবং কাছ থেকে আবার ছবি তুলুন।</string>
+    <plurals name="fold_shadows_removed">
+        <item quantity="one">%1$dটি ভাঁজের ছায়া প্রিন্ট এলাকা থেকে সরানো হয়েছে।</item>
+        <item quantity="other">%1$dটি ভাঁজের ছায়া প্রিন্ট এলাকা থেকে সরানো হয়েছে।</item>
+    </plurals>
 </resources>

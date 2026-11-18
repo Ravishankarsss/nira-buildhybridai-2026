@@ -1,5 +1,6 @@
 package com.mos.nira.features.artwork.navigation
 
+import com.mos.nira.core.image.InputKind
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -67,7 +68,8 @@ fun ArtworkNavHost(
             ArtworkStudioLandingScreen(
                 recentAnalyses = uiState.savedAnalyses,
                 onImageSelected = { uri ->
-                    viewModel.onImageSelected(uri)
+                    // "Analyse artwork": an artwork file.
+                    viewModel.onImageSelected(uri, InputKind.ARTWORK)
                     navController.navigate(ArtworkDestinations.PREVIEW)
                 },
                 onOpenRecord = { record ->
@@ -146,6 +148,12 @@ fun ArtworkNavHost(
                 garmentNameShades = uiState.activeShades,
                 measuredPrintColours = uiState.partAResult?.measuredPalette,
                 isMeasuringPrintColours = uiState.isComputingPrintReport,
+                inputKindAssessment = uiState.partAResult?.inputKindAssessment,
+                inputKindConfirmed = uiState.printJobInputs.inputKindConfirmed,
+                onAnswerInputKind = { kind -> viewModel.answerInputKind(kind) },
+                foldShadowsRemoved = uiState.partAResult?.foldShadowsRemoved ?: 0,
+                shadowTestLowResolution = uiState.partAResult?.shadowTestLowResolution ?: false,
+                onAnswerFoldShadow = { points, isInk -> viewModel.answerFoldShadow(points, isInk) },
                 onBack = goBack
             )
         }

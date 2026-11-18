@@ -174,4 +174,22 @@
         <item quantity="one">%1$d color de impresión medido</item>
         <item quantity="other">%1$d colores de impresión medidos</item>
     </plurals>
+    <string name="input_kind_ask_photo">Parece una foto de una prenda. ¿Tratarla como foto?</string>
+    <string name="input_kind_ask_artwork">Parece un archivo de arte, no una foto. ¿Tratarlo como arte?</string>
+    <string name="input_kind_yes_photo">Sí, foto</string>
+    <string name="input_kind_yes_artwork">Sí, arte</string>
+    <string name="input_kind_keep_artwork">No, mantener como arte</string>
+    <string name="input_kind_keep_photo">No, mantener como foto</string>
+    <string name="input_kind_hint">En las fotos se revisan la iluminación y las sombras de pliegues; en los archivos de arte, no.</string>
+    <string name="colour_possible_shadow_extra">(+%1$d si los colores marcados son tinta)</string>
+    <string name="colour_possible_shadow_label">Posible sombra de pliegue – toque para confirmar</string>
+    <string name="colour_confirm_title">¿Tinta o sombra de pliegue?</string>
+    <string name="colour_confirm_body">Parte de este color viene de una zona de borde suave que puede ser un pliegue de la tela. Si es tinta impresa, necesita su propia pantalla.</string>
+    <string name="colour_confirm_ink">Es tinta</string>
+    <string name="colour_confirm_shadow">Es una sombra de pliegue</string>
+    <string name="colour_shadow_low_res">Resolución demasiado baja para distinguir sombras de pliegues de la tinta. Extienda la prenda, alise los pliegues y vuelva a fotografiar más cerca.</string>
+    <plurals name="fold_shadows_removed">
+        <item quantity="one">Se quitó %1$d sombra de pliegue del área de impresión.</item>
+        <item quantity="other">Se quitaron %1$d sombras de pliegue del área de impresión.</item>
+    </plurals>
 </resources>
