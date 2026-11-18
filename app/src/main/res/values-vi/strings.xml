@@ -210,4 +210,8 @@
         <item quantity="one">Đã loại %1$d điểm ảnh lốm đốm (gộp vào mực gần nhất).</item>
         <item quantity="other">Đã loại %1$d điểm ảnh lốm đốm (gộp vào mực gần nhất).</item>
     </plurals>
+    <string name="photo_edge_excluded">Bàn, sàn hoặc tường ở mép ảnh đã được loại khỏi hình in: %1$s ảnh.</string>
+    <string name="photo_edge_include_switch">Gồm cả vùng mép ảnh</string>
+    <string name="camera_hint_background">Trải phẳng áo. Không có gì khác trong ảnh: không bàn, không sàn.</string>
+    <string name="camera_hint_settings">Tắt HDR, cảnh AI và chế độ làm đẹp. Không gửi ảnh qua WhatsApp: nó làm hỏng các mép.</string>
 </resources>

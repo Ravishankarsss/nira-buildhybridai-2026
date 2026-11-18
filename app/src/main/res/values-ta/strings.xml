@@ -211,4 +211,8 @@
         <item quantity="one">%1$d புள்ளிப் பிக்சல் நீக்கப்பட்டது (அருகிலுள்ள மையுடன் சேர்க்கப்பட்டது).</item>
         <item quantity="other">%1$d புள்ளிப் பிக்சல்கள் நீக்கப்பட்டன (அருகிலுள்ள மையுடன் சேர்க்கப்பட்டன).</item>
     </plurals>
+    <string name="photo_edge_excluded">புகைப்பட ஓரத்தில் உள்ள மேசை, தரை அல்லது சுவர் அச்சிலிருந்து நீக்கப்பட்டது: புகைப்படத்தின் %1$s.</string>
+    <string name="photo_edge_include_switch">புகைப்பட ஓரப் பகுதியையும் சேர்</string>
+    <string name="camera_hint_background">ஆடையைச் சமமாக விரிக்கவும். புகைப்படத்தில் வேறு எதுவும் வேண்டாம்: மேசையோ தரையோ வேண்டாம்.</string>
+    <string name="camera_hint_settings">HDR, AI scene, beauty முறைகளை அணைக்கவும். புகைப்படங்களை WhatsApp வழியாக அனுப்ப வேண்டாம்: அது ஓரங்களைச் சேதப்படுத்தும்.</string>
 </resources>

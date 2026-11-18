@@ -211,4 +211,8 @@
         <item quantity="one">%1$d धब्बा पिक्सेल हटाया गया (सबसे पास की स्याही में जोड़ा गया)।</item>
         <item quantity="other">%1$d धब्बा पिक्सेल हटाए गए (सबसे पास की स्याही में जोड़े गए)।</item>
     </plurals>
+    <string name="photo_edge_excluded">फ़ोटो के किनारे की मेज़, फ़र्श या दीवार प्रिंट से बाहर रखी गई: फ़ोटो का %1$s।</string>
+    <string name="photo_edge_include_switch">फ़ोटो के किनारे का हिस्सा शामिल करें</string>
+    <string name="camera_hint_background">गारमेंट को सपाट बिछाएँ। फ़ोटो में और कुछ न हो: न मेज़, न फ़र्श।</string>
+    <string name="camera_hint_settings">HDR, AI scene और beauty मोड बंद करें। फ़ोटो WhatsApp से न भेजें: इससे किनारे खराब होते हैं।</string>
 </resources>

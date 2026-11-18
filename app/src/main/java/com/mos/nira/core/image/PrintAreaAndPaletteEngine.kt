@@ -3,6 +3,7 @@ package com.mos.nira.core.image
 import android.graphics.Bitmap
 import com.mos.nira.features.artwork.data.EdgeBlendRules
 import com.mos.nira.features.artwork.data.GarmentMaskRules
+import com.mos.nira.features.artwork.data.PhotoBackgroundRules
 import com.mos.nira.features.artwork.data.PhotoVsArtworkRules
 import com.mos.nira.features.artwork.data.ShadowVsInkRules
 import com.mos.nira.features.artwork.data.SmallColourRules
@@ -106,7 +107,8 @@ object PrintAreaAndPaletteEngine {
         photoRules: PhotoVsArtworkRules? = null,
         shadowRules: ShadowVsInkRules? = null,
         edgeBlendRules: EdgeBlendRules? = null,
-        smallColourRules: SmallColourRules? = null
+        smallColourRules: SmallColourRules? = null,
+        backgroundRules: PhotoBackgroundRules? = null
     ): PartAResult {
         if (width <= 0 || height <= 0 || pixels.isEmpty() || pixels.size != width * height) {
             return PartAResult(
@@ -203,7 +205,15 @@ object PrintAreaAndPaletteEngine {
         }
 
         // Step 4: Speck Removal & Print Box Isolation
-        val maskWithoutSpecks = removeSpecks(rawPrintMask, width, height, maskRules.speckMinAreaFraction)
+        val maskWithSpecksRemoved = removeSpecks(rawPrintMask, width, height, maskRules.speckMinAreaFraction)
+
+        // Step 4a: Table, floor or wall at the photo edge (print_rules.json photo_background).
+        val photoEdgeExcluded = if (inputs.inputKind == InputKind.PHOTO && backgroundRules != null && !inputs.includePhotoEdgeArea) {
+            findPhotoEdgeBackground(maskWithSpecksRemoved, width, height, backgroundRules)
+        } else null
+        val maskWithoutSpecks = if (photoEdgeExcluded == null) maskWithSpecksRemoved
+            else BooleanArray(totalPixels) { maskWithSpecksRemoved[it] && !photoEdgeExcluded[it] }
+        val photoEdgeExcludedPercent = photoEdgeExcluded?.let { m -> m.count { it } * 100.0 / totalPixels } ?: 0.0
 
         // Step 4b: Fold shadows (print_rules.json shadow_vs_ink), only on photos of light garments.
         val shadowCheck = if (inputs.inputKind == InputKind.PHOTO && isLightGarment && shadowRules != null) {
@@ -271,7 +281,7 @@ object PrintAreaAndPaletteEngine {
         // If no print pixels found
         if (printPixelCount == 0) {
             val maskBitmap = if (generateMaskBitmap) {
-                createMaskPreviewBitmap(pixels, finalPrintMask, width, height, inputs.erasedRectangles, activePrintBox)
+                createMaskPreviewBitmap(pixels, finalPrintMask, width, height, inputs.erasedRectangles, activePrintBox, photoEdgeExcluded)
             } else null
 
             return PartAResult(
@@ -757,7 +767,7 @@ object PrintAreaAndPaletteEngine {
 
         // Step 11: Render Mask Bitmap with print box overlay
         val maskBitmap = if (generateMaskBitmap) {
-            createMaskPreviewBitmap(pixels, finalPrintMask, width, height, inputs.erasedRectangles, activePrintBox)
+            createMaskPreviewBitmap(pixels, finalPrintMask, width, height, inputs.erasedRectangles, activePrintBox, photoEdgeExcluded)
         } else null
 
         return PartAResult(
@@ -780,8 +790,49 @@ object PrintAreaAndPaletteEngine {
             shadowTestLowResolution = shadowCheck?.lowResolution ?: false,
             edgeBlendPixelsMerged = edgeBlendPixelsMerged,
             edgeBlendBandMaxPx = edgeBandMaxPx,
-            speckPixelsRemoved = speckPixelsRemoved
+            speckPixelsRemoved = speckPixelsRemoved,
+            photoEdgeExcludedPercent = photoEdgeExcludedPercent
         )
+    }
+
+    /**
+     * print_rules.json photo_background: a non-fabric region that touches the photo border along at
+     * least min_border_touch_fraction of one side, covers at least min_area_percent of the photo and
+     * does not reach the centre box is a table, floor or wall. Returns those pixels, or null if none.
+     */
+    private fun findPhotoEdgeBackground(
+        mask: BooleanArray,
+        width: Int,
+        height: Int,
+        rules: PhotoBackgroundRules
+    ): BooleanArray? {
+        val total = width * height
+        val margin = (1.0 - rules.centreBoxFraction) / 2.0
+        val cx0 = (width * margin).toInt()
+        val cx1 = (width * (1.0 - margin)).toInt()
+        val cy0 = (height * margin).toInt()
+        val cy1 = (height * (1.0 - margin)).toInt()
+        var result: BooleanArray? = null
+        for (region in ShadowInkClassifier.regions(mask, width, height)) {
+            if (region.size * 100.0 / total < rules.minAreaPercent) continue
+            var top = 0; var bottom = 0; var left = 0; var right = 0
+            var reachesCentre = false
+            for (p in region) {
+                val x = p % width
+                val y = p / width
+                if (y == 0) top++
+                if (y == height - 1) bottom++
+                if (x == 0) left++
+                if (x == width - 1) right++
+                if (x in cx0 until cx1 && y in cy0 until cy1) reachesCentre = true
+            }
+            if (reachesCentre) continue
+            val touch = maxOf(top.toDouble() / width, bottom.toDouble() / width, left.toDouble() / height, right.toDouble() / height)
+            if (touch < rules.minBorderTouchFraction) continue
+            val r = result ?: BooleanArray(total).also { result = it }
+            for (p in region) r[p] = true
+        }
+        return result
     }
 
     /** Edge blending plan: blur colour -> its two neighbours (bucket index or EDGE_FABRIC), and colours only flagged. */
@@ -1765,7 +1816,8 @@ object PrintAreaAndPaletteEngine {
         width: Int,
         height: Int,
         erasedRectangles: List<NormalizedRect>,
-        printBox: NormalizedRect? = null
+        printBox: NormalizedRect? = null,
+        photoEdgeExcluded: BooleanArray? = null
     ): Bitmap? {
         return try {
             val outputPixels = IntArray(width * height)
@@ -1780,6 +1832,9 @@ object PrintAreaAndPaletteEngine {
 
                     if (isInsideErased) {
                         outputPixels[index] = 0x88FF3B30.toInt()
+                    } else if (photoEdgeExcluded?.get(index) == true) {
+                        // Table, floor or wall left out of the print: shaded with diagonal stripes.
+                        outputPixels[index] = if (((x + y) / 8) % 2 == 0) 0xFF5A5F6B.toInt() else 0xFF3E424C.toInt()
                     } else if (isPrintMask[index]) {
                         val p = originalPixels[index]
                         outputPixels[index] = (0xFF shl 24) or (p and 0x00FFFFFF)

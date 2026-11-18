@@ -420,7 +420,7 @@
   "display_disclaimer": "Rule-of-thumb estimate from public trade sources. Verify on the production floor and with the ink maker's technical data sheet.",
   "change_log": [
     "v2 (15 Nov 2026): added process_inks, garment_mask, white_base, recommendation, resolution and regression_cases after a device test on a real garment photo (white-to-blue gradient logo on a black T-shirt).",
-    "v3 (18 Nov 2026): added shadow_vs_ink and photo_vs_artwork (proposed starting values, Ravi to confirm) after a white T-shirt photo measured fold shadows as print colours. merge_shades_in_photo_hue_within_deg holds the 6 deg from merge_shades_in_photo as a number. Added edge_blend (camera blur and anti-aliasing bands between two inks; proposed starting values, Ravi to confirm). Added small_colours: a colour under the minimum coverage is flagged, not dropped (the magenta eye on the skull print)."
+    "v3 (18 Nov 2026): added shadow_vs_ink and photo_vs_artwork (proposed starting values, Ravi to confirm) after a white T-shirt photo measured fold shadows as print colours. merge_shades_in_photo_hue_within_deg holds the 6 deg from merge_shades_in_photo as a number. Added edge_blend (camera blur and anti-aliasing bands between two inks; proposed starting values, Ravi to confirm). Added small_colours: a colour under the minimum coverage is flagged, not dropped (the magenta eye on the skull print). Added edge_blend.keyline_protection (Ravi: black keylines are important) and photo_background (table or floor at the photo edge)."
   ],
   "process_inks": {
     "cyan": "#00AEEF",
@@ -511,6 +511,18 @@
     "merge_shades_in_artwork": "never automatic; if the lighter shade fits the garment-to-ink mixing line within 2.0 CIEDE2000, suggest 'print as tint of <ink>, saves 1 screen' for the user to accept",
     "confidence": "assumption",
     "note": "Proposed starting values; tune on real photos; Ravi to confirm"
+  },
+  "photo_background": {
+    "what": "table, floor or wall at the edge of a garment photo: not fabric and not print",
+    "applies_to": "photos only",
+    "region_is_background_if": "a non-fabric region touches the photo border along at least min_border_touch_fraction of one side, covers at least min_area_percent of the photo, and does not reach the centre box (the middle centre_box_fraction of the width and of the height)",
+    "min_border_touch_fraction": 0.25,
+    "min_area_percent": 2,
+    "centre_box_fraction": 0.5,
+    "action": "exclude from the print; show it shaded in the mask picture; the switch 'Include the photo edge area' undoes it",
+    "capture_guidance": "Fill the frame with the garment. Nothing else in the photo.",
+    "confidence": "assumption",
+    "note": "Proposed starting values; Ravi to confirm. The centre-box condition keeps a large print that runs off one edge."
   },
   "small_colours": {
     "min_coverage_percent": 1.5,

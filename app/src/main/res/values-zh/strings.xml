@@ -210,4 +210,8 @@
         <item quantity="one">已移除 %1$d 个斑点像素（并入最接近的油墨）。</item>
         <item quantity="other">已移除 %1$d 个斑点像素（并入最接近的油墨）。</item>
     </plurals>
+    <string name="photo_edge_excluded">照片边缘的桌子、地面或墙面已从印花中排除：占照片 %1$s。</string>
+    <string name="photo_edge_include_switch">包含照片边缘区域</string>
+    <string name="camera_hint_background">将衣物平铺。照片中不要有其他东西：不要桌子或地面。</string>
+    <string name="camera_hint_settings">关闭 HDR、AI 场景和美颜模式。不要通过 WhatsApp 发送照片：它会损坏边缘。</string>
 </resources>

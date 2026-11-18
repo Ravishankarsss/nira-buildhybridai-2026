@@ -211,4 +211,8 @@
         <item quantity="one">%1$dটি দাগ-পিক্সেল সরানো হয়েছে (নিকটতম কালিতে যোগ করা হয়েছে)।</item>
         <item quantity="other">%1$dটি দাগ-পিক্সেল সরানো হয়েছে (নিকটতম কালিতে যোগ করা হয়েছে)।</item>
     </plurals>
+    <string name="photo_edge_excluded">ছবির কিনারায় থাকা টেবিল, মেঝে বা দেয়াল প্রিন্ট থেকে বাদ দেওয়া হয়েছে: ছবির %1$s।</string>
+    <string name="photo_edge_include_switch">ছবির কিনারার অংশও ধরুন</string>
+    <string name="camera_hint_background">পোশাকটি সমান করে বিছান। ছবিতে আর কিছু নয়: টেবিল বা মেঝে নয়।</string>
+    <string name="camera_hint_settings">HDR, AI scene ও beauty মোড বন্ধ করুন। ছবি WhatsApp দিয়ে পাঠাবেন না: এতে কিনারা নষ্ট হয়।</string>
 </resources>

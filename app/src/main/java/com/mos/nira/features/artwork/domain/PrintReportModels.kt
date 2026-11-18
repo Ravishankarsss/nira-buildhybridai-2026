@@ -74,7 +74,9 @@ data class PrintJobInputs(
     // Answer for colours flagged "Possible thin line or blur": true = blur, merge; false = printed line; null = not answered.
     val edgeBlendAnswer: Boolean? = null,
     // Answers for colours flagged "Small colour, about N%: confirm it is an ink" (a point in the colour's area).
-    val smallColourAnswers: List<RegionAnswer> = emptyList()
+    val smallColourAnswers: List<RegionAnswer> = emptyList(),
+    // Switch "Include the photo edge area": undoes the table/floor exclusion (print_rules.json photo_background).
+    val includePhotoEdgeArea: Boolean = false
 )
 
 /** The user's answer for one uncertain region: a point inside it (normalised) and ink or shadow. */
@@ -151,7 +153,9 @@ data class PartAResult(
     /** Band width limit used for edge blending, in pixels of the analysed image; null if not run. */
     val edgeBlendBandMaxPx: Double? = null,
     /** Pixels of scattered speck colours removed as colours (added to the nearest ink). */
-    val speckPixelsRemoved: Int = 0
+    val speckPixelsRemoved: Int = 0,
+    /** Share of the photo (%) left out as table, floor or wall at the photo edge (photo_background). */
+    val photoEdgeExcludedPercent: Double = 0.0
 )
 
 // ==========================================

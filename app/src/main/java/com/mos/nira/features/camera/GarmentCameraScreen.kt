@@ -139,6 +139,17 @@ fun GarmentCameraScreen(
             color = Muted,
             fontSize = 12.sp
         )
+        // print_rules.json photo_background capture guidance, and the photo advice from the device tests.
+        Text(
+            text = stringResource(R.string.camera_hint_background),
+            color = Muted,
+            fontSize = 12.sp
+        )
+        Text(
+            text = stringResource(R.string.camera_hint_settings),
+            color = Muted,
+            fontSize = 12.sp
+        )
 
         Spacer(modifier = Modifier.height(10.dp))
 

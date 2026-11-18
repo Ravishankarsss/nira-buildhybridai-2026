@@ -127,6 +127,17 @@ data class SmallColourRules(
 )
 
 /**
+ * print_rules.json "photo_background": table, floor or wall at the edge of a garment photo.
+ * No default values; null if the section is incomplete.
+ */
+data class PhotoBackgroundRules(
+    val minBorderTouchFraction: Double,
+    val minAreaPercent: Double,
+    val centreBoxFraction: Double,
+    val confidence: String
+)
+
+/**
  * Ink deposit rule for a given screen mesh count.
  */
 data class MeshDepositRule(
@@ -207,6 +218,11 @@ class PrintRulesRepository(private val context: Context?) {
         loadJson()?.let { parsePhotoVsArtworkRules(it) }
     }
 
+    /** "photo_background" from print_rules.json, or null if it is missing or incomplete. */
+    suspend fun getPhotoBackgroundRules(): PhotoBackgroundRules? = withContext(Dispatchers.IO) {
+        loadJson()?.let { parsePhotoBackgroundRules(it) }
+    }
+
     /** "small_colours" from print_rules.json, or null if it is missing or incomplete. */
     suspend fun getSmallColourRules(): SmallColourRules? = withContext(Dispatchers.IO) {
         loadJson()?.let { parseSmallColourRules(it) }
@@ -247,6 +263,19 @@ class PrintRulesRepository(private val context: Context?) {
                 shadowKeepsGarmentHueWithinDeg = r.getDouble("shadow_keeps_garment_hue_within_deg"),
                 minPxPerCmForEdgeTest = numberOrReference(root, r, "min_px_per_cm_for_edge_test"),
                 uncertainAction = r.getString("uncertain_action"),
+                confidence = r.getString("confidence")
+            )
+        } catch (e: Exception) {
+            null
+        }
+
+        /** Reads "photo_background". Null if the section or any value is missing. */
+        fun parsePhotoBackgroundRules(root: JSONObject): PhotoBackgroundRules? = try {
+            val r = root.getJSONObject("photo_background")
+            PhotoBackgroundRules(
+                minBorderTouchFraction = r.getDouble("min_border_touch_fraction"),
+                minAreaPercent = r.getDouble("min_area_percent"),
+                centreBoxFraction = r.getDouble("centre_box_fraction"),
                 confidence = r.getString("confidence")
             )
         } catch (e: Exception) {

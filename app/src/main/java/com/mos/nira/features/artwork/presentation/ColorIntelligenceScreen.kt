@@ -112,6 +112,10 @@ fun ColorIntelligenceScreen(
     // Small colours (print_rules.json small_colours): speck pixels removed, and the answer for a flagged one.
     speckPixelsRemoved: Int = 0,
     onAnswerSmallColour: (point: Pair<Float, Float>, isInk: Boolean) -> Unit = { _, _ -> },
+    // Table, floor or wall at the photo edge (print_rules.json photo_background) and the undo switch.
+    photoEdgeExcludedPercent: Double = 0.0,
+    includePhotoEdgeArea: Boolean = false,
+    onIncludePhotoEdgeArea: (Boolean) -> Unit = {},
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -357,6 +361,27 @@ fun ColorIntelligenceScreen(
                     }
                     if (shadowTestLowResolution) {
                         Text(stringResource(R.string.colour_shadow_low_res), color = Amber, fontSize = 12.sp, lineHeight = 17.sp)
+                    }
+                }
+            }
+        }
+
+        // Photo edge area left out of the print, and the switch to include it.
+        if (photoEdgeExcludedPercent > 0.0 || includePhotoEdgeArea) {
+            item {
+                Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp)) {
+                    if (photoEdgeExcludedPercent > 0.0) {
+                        Text(
+                            stringResource(R.string.photo_edge_excluded, String.format("%.1f%%", photoEdgeExcludedPercent)),
+                            color = TextMuted, fontSize = 12.sp, lineHeight = 17.sp
+                        )
+                    }
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            stringResource(R.string.photo_edge_include_switch),
+                            color = TextWhite, fontSize = 13.sp, modifier = Modifier.weight(1f)
+                        )
+                        Switch(checked = includePhotoEdgeArea, onCheckedChange = onIncludePhotoEdgeArea)
                     }
                 }
             }

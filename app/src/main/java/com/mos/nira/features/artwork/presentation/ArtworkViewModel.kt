@@ -257,7 +257,8 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                         allUncertainAreFoldShadows = false,
                         keepEdgeColours = false,
                         edgeBlendAnswer = null,
-                        smallColourAnswers = emptyList()
+                        smallColourAnswers = emptyList(),
+                        includePhotoEdgeArea = false
                     ),
                     analysisState = AnalysisState.Loading("Reading image metadata..."),
                     selectedImageUri = uri,
@@ -543,7 +544,8 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                         allUncertainAreFoldShadows = false,
                         keepEdgeColours = false,
                         edgeBlendAnswer = null,
-                        smallColourAnswers = emptyList()
+                        smallColourAnswers = emptyList(),
+                        includePhotoEdgeArea = false
                     ),
                     analysisState = AnalysisState.Loading("Loading analysis record..."),
                     selectedColor = record.palette.firstOrNull(),
@@ -673,6 +675,12 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                 )
             )
         }
+        computePartAReport()
+    }
+
+    /** Switch "Include the photo edge area" (undoes the table/floor exclusion); Part A runs again. */
+    fun setIncludePhotoEdgeArea(include: Boolean) {
+        _uiState.update { it.copy(printJobInputs = it.printJobInputs.copy(includePhotoEdgeArea = include)) }
         computePartAReport()
     }
 
@@ -825,6 +833,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                 val shadowRules = printRulesRepository.getShadowVsInkRules()
                 val edgeBlendRules = printRulesRepository.getEdgeBlendRules()
                 val smallColourRules = printRulesRepository.getSmallColourRules()
+                val backgroundRules = printRulesRepository.getPhotoBackgroundRules()
                 val result = withContext(Dispatchers.Default) {
                     val maxDim = 2048
                     val width = bitmap.width
@@ -855,7 +864,8 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                         photoRules = photoRules,
                         shadowRules = shadowRules,
                         edgeBlendRules = edgeBlendRules,
-                        smallColourRules = smallColourRules
+                        smallColourRules = smallColourRules,
+                        backgroundRules = backgroundRules
                     )
                 }
 

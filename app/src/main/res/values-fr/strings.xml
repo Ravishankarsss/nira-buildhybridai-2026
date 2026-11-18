@@ -212,4 +212,8 @@
         <item quantity="one">%1$d pixel de tache retiré (ajouté à l\'encre la plus proche).</item>
         <item quantity="other">%1$d pixels de taches retirés (ajoutés à l\'encre la plus proche).</item>
     </plurals>
+    <string name="photo_edge_excluded">Table, sol ou mur au bord de la photo exclus de l\'impression : %1$s de la photo.</string>
+    <string name="photo_edge_include_switch">Inclure la zone au bord de la photo</string>
+    <string name="camera_hint_background">Posez le vêtement à plat. Rien d\'autre dans la photo : ni table ni sol.</string>
+    <string name="camera_hint_settings">Désactivez HDR, scène IA et mode beauté. N\'envoyez pas les photos par WhatsApp : cela abîme les bords.</string>
 </resources>

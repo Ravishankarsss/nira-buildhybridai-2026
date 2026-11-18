@@ -211,4 +211,8 @@
         <item quantity="one">%1$d Sprenkel-Pixel entfernt (der nächsten Druckfarbe zugeordnet).</item>
         <item quantity="other">%1$d Sprenkel-Pixel entfernt (der nächsten Druckfarbe zugeordnet).</item>
     </plurals>
+    <string name="photo_edge_excluded">Tisch, Boden oder Wand am Fotorand aus dem Druck ausgeschlossen: %1$s des Fotos.</string>
+    <string name="photo_edge_include_switch">Fotorandbereich einbeziehen</string>
+    <string name="camera_hint_background">Kleidungsstück flach hinlegen. Nichts anderes im Foto: kein Tisch, kein Boden.</string>
+    <string name="camera_hint_settings">HDR, KI-Szene und Beauty-Modus ausschalten. Fotos nicht über WhatsApp senden: das beschädigt die Kanten.</string>
 </resources>

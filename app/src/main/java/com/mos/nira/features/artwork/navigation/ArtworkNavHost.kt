@@ -160,6 +160,9 @@ fun ArtworkNavHost(
                 onKeepEdgeColours = { keep -> viewModel.setKeepEdgeColours(keep) },
                 onAnswerEdgeBlend = { isBlur -> viewModel.answerEdgeBlend(isBlur) },
                 speckPixelsRemoved = uiState.partAResult?.speckPixelsRemoved ?: 0,
+                photoEdgeExcludedPercent = uiState.partAResult?.photoEdgeExcludedPercent ?: 0.0,
+                includePhotoEdgeArea = uiState.printJobInputs.includePhotoEdgeArea,
+                onIncludePhotoEdgeArea = { include -> viewModel.setIncludePhotoEdgeArea(include) },
                 onAnswerSmallColour = { point, isInk -> viewModel.answerSmallColour(point, isInk) },
                 onBack = goBack
             )

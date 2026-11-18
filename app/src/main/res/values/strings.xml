@@ -210,4 +210,8 @@
         <item quantity="one">%1$d speck pixel removed (added to the nearest ink).</item>
         <item quantity="other">%1$d speck pixels removed (added to the nearest ink).</item>
     </plurals>
+    <string name="photo_edge_excluded">Table, floor or wall at the photo edge left out of the print: %1$s of the photo.</string>
+    <string name="photo_edge_include_switch">Include the photo edge area</string>
+    <string name="camera_hint_background">Lay the garment flat. Nothing else in the photo: no table or floor.</string>
+    <string name="camera_hint_settings">Turn off HDR, AI scene and beauty modes. Do not send photos through WhatsApp: it damages the edges.</string>
 </resources>

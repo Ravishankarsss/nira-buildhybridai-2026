@@ -212,4 +212,8 @@
         <item quantity="one">Se quitó %1$d píxel de mota (añadido a la tinta más cercana).</item>
         <item quantity="other">Se quitaron %1$d píxeles de motas (añadidos a la tinta más cercana).</item>
     </plurals>
+    <string name="photo_edge_excluded">Mesa, suelo o pared en el borde de la foto excluidos de la impresión: %1$s de la foto.</string>
+    <string name="photo_edge_include_switch">Incluir el área del borde de la foto</string>
+    <string name="camera_hint_background">Extienda la prenda. Nada más en la foto: ni mesa ni suelo.</string>
+    <string name="camera_hint_settings">Desactive HDR, escena IA y modo belleza. No envíe fotos por WhatsApp: daña los bordes.</string>
 </resources>
