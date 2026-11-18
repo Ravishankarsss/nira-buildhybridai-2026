@@ -201,4 +201,13 @@
         <item quantity="one">Edge blending: %1$d pixel merged into neighbouring inks.</item>
         <item quantity="other">Edge blending: %1$d pixels merged into neighbouring inks.</item>
     </plurals>
+    <string name="small_colour_flag">Small colour, about %1$s: confirm it is an ink</string>
+    <string name="small_colour_title">Is this small colour an ink?</string>
+    <string name="small_colour_body">A small accent, such as an eye, a dot or a small logo, still needs its own screen unless you drop it.</string>
+    <string name="small_colour_yes">Yes, it is an ink</string>
+    <string name="small_colour_no">No, merge into the nearest ink</string>
+    <plurals name="speck_pixels_removed">
+        <item quantity="one">%1$d speck pixel removed (added to the nearest ink).</item>
+        <item quantity="other">%1$d speck pixels removed (added to the nearest ink).</item>
+    </plurals>
 </resources>

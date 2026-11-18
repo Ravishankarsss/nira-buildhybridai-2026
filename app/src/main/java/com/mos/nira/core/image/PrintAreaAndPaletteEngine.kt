@@ -5,6 +5,7 @@ import com.mos.nira.features.artwork.data.EdgeBlendRules
 import com.mos.nira.features.artwork.data.GarmentMaskRules
 import com.mos.nira.features.artwork.data.PhotoVsArtworkRules
 import com.mos.nira.features.artwork.data.ShadowVsInkRules
+import com.mos.nira.features.artwork.data.SmallColourRules
 import com.mos.nira.features.artwork.data.SeparationDecisionRules
 import com.mos.nira.features.artwork.domain.ErrorCurvePoint
 import com.mos.nira.features.artwork.domain.GarmentProfile
@@ -104,7 +105,8 @@ object PrintAreaAndPaletteEngine {
         // From print_rules.json; null when the section is missing, and then the check is skipped.
         photoRules: PhotoVsArtworkRules? = null,
         shadowRules: ShadowVsInkRules? = null,
-        edgeBlendRules: EdgeBlendRules? = null
+        edgeBlendRules: EdgeBlendRules? = null,
+        smallColourRules: SmallColourRules? = null
     ): PartAResult {
         if (width <= 0 || height <= 0 || pixels.isEmpty() || pixels.size != width * height) {
             return PartAResult(
@@ -323,6 +325,10 @@ object PrintAreaAndPaletteEngine {
         ) {
             /** Set when this bucket was chosen as an ink: its colour stays the ink colour. */
             var inkRgb: IntArray? = null
+            /** Small colour kept for the user to confirm: a point in its largest area. */
+            var smallColourPoint: Pair<Float, Float>? = null
+            /** Kept by the small-colour rule (flagged or confirmed): never dropped by later steps. */
+            var keptSmallColour: Boolean = false
             val r: Int get() = if (count > 0) (sumR / count).toInt().coerceIn(0, 255) else 0
             val g: Int get() = if (count > 0) (sumG / count).toInt().coerceIn(0, 255) else 0
             val b: Int get() = if (count > 0) (sumB / count).toInt().coerceIn(0, 255) else 0
@@ -401,27 +407,71 @@ object PrintAreaAndPaletteEngine {
             }
         }
 
-        // Step 9: Drop clusters under 1.5% coverage
-        val thresholdCount = (printPixelCount * (MIN_COVERAGE_PERCENT / 100.0)).toInt()
+        // Step 9: Colours under the minimum coverage (print_rules.json small_colours). A compact real
+        // area, distinct from every other colour, is kept and flagged for the user to confirm; only
+        // scattered specks are removed (their pixels go to the nearest ink) and counted. Without the
+        // section the old behaviour remains: drop under MIN_COVERAGE_PERCENT.
+        val minCoverage = smallColourRules?.minCoveragePercent ?: MIN_COVERAGE_PERCENT
+        val thresholdCount = (printPixelCount * (minCoverage / 100.0)).toInt()
         val prunedBuckets = activeBuckets.filter { it.count >= thresholdCount }.toMutableList()
+        var speckPixelsRemoved = 0
+        if (smallColourRules != null && prunedBuckets.isNotEmpty()) {
+            val smallOnes = activeBuckets.filter { it.count in 1 until thresholdCount }
+            if (smallOnes.isNotEmpty()) {
+                val assign = assignPixelsToCenters(maskedRgbList, maskedLabList, activeBuckets.map { it.centerLab })
+                val labelOf = IntArray(totalPixels) { -1 }
+                for (i in 0 until printPixelCount) labelOf[maskedIndexList[i]] = assign[i]
+                val minRegionPx = smallColourRules.minRegionMm2 * (pixelsPerCm / 10.0) * (pixelsPerCm / 10.0)
+                for (s in smallOnes) {
+                    val idx = activeBuckets.indexOf(s)
+                    // A shade of a colour already kept is not a new ink: it joins the nearest one.
+                    val distinct = prunedBuckets.all {
+                        ColorConverter.deltaE00(it.centerLab, s.centerLab) >= smallColourRules.mergeThresholdDeltaE00
+                    }
+                    if (!distinct) continue
+                    val areas = ShadowInkClassifier.regions(BooleanArray(totalPixels) { labelOf[it] == idx }, width, height)
+                    val largest = areas.maxByOrNull { it.size }
+                    if (largest == null || largest.size < minRegionPx) {
+                        speckPixelsRemoved += s.count // scattered specks: noise
+                        continue
+                    }
+                    val first = largest.minOrNull()!!
+                    val point = Pair((first % width + 0.5f) / width, (first / width + 0.5f) / height)
+                    val answer = inputs.smallColourAnswers.firstOrNull { ans ->
+                        val x = (ans.normX * width).toInt().coerceIn(0, width - 1)
+                        val y = (ans.normY * height).toInt().coerceIn(0, height - 1)
+                        labelOf[y * width + x] == idx
+                    }
+                    when {
+                        answer == null -> { s.smallColourPoint = point; s.keptSmallColour = true; prunedBuckets.add(s) }
+                        answer.isInk -> { s.keptSmallColour = true; prunedBuckets.add(s) } // confirmed: a screen, no flag
+                        else -> Unit // "merge into the nearest ink"
+                    }
+                }
+            }
+        }
         var finalBuckets = if (prunedBuckets.isNotEmpty()) prunedBuckets else activeBuckets.take(1).toMutableList()
 
         // Step 9b: On a garment that needs a white base (not light), a colour that is a halftone of one ink over the garment,
         // or a smooth transition between two inks, is not a separate ink. Keep the fewest inks
         // that reproduce every colour within the quality tolerance from print_rules.json.
-        if (!isLightGarment && finalBuckets.size > 1) {
+        // Small colours kept by the small-colour rule are left out: their few pixels barely move the
+        // mean or p95 error, so the reduction would drop a real accent ink (the magenta eye).
+        val smallKept = finalBuckets.filter { it.keptSmallColour }
+        val reducible = finalBuckets.filter { !it.keptSmallColour }
+        if (!isLightGarment && reducible.size > 1) {
             val garmentRgb = ColorConverter.labToRgb(garmentLab.l, garmentLab.a, garmentLab.b)
             val keep = selectInksByHalftoneReduction(
-                colours = finalBuckets.map { intArrayOf(it.r, it.g, it.b) },
-                counts = finalBuckets.map { it.count },
+                colours = reducible.map { intArrayOf(it.r, it.g, it.b) },
+                counts = reducible.map { it.count },
                 garment = intArrayOf(garmentRgb.r, garmentRgb.g, garmentRgb.b),
                 toleranceMean = decisionRules.qualityToleranceDeltaE00,
                 toleranceP95 = decisionRules.qualityToleranceP95DeltaE00
             )
-            if (keep.size < finalBuckets.size) {
-                finalBuckets = keep.map { index ->
-                    finalBuckets[index].also { it.inkRgb = intArrayOf(it.r, it.g, it.b) }
-                }.toMutableList()
+            if (keep.size < reducible.size) {
+                finalBuckets = (keep.map { index ->
+                    reducible[index].also { it.inkRgb = intArrayOf(it.r, it.g, it.b) }
+                } + smallKept).toMutableList()
             }
         }
 
@@ -663,7 +713,9 @@ object PrintAreaAndPaletteEngine {
                     matchGrade = nearestShadeMatch?.second?.let { ColorConverter.matchGrade(it) },
                     possibleFoldShadow = flaggedPoints.containsKey(bucketIndex),
                     uncertainRegionPoints = flaggedPoints[bucketIndex] ?: emptyList(),
-                    possibleEdgeBlend = bucketIndex in edgeFlagged
+                    possibleEdgeBlend = bucketIndex in edgeFlagged,
+                    possibleSmallColour = b.smallColourPoint != null,
+                    smallColourPoint = b.smallColourPoint
                 )
             }
 
@@ -727,7 +779,8 @@ object PrintAreaAndPaletteEngine {
             foldShadowsRemoved = shadowCheck?.removed ?: 0,
             shadowTestLowResolution = shadowCheck?.lowResolution ?: false,
             edgeBlendPixelsMerged = edgeBlendPixelsMerged,
-            edgeBlendBandMaxPx = edgeBandMaxPx
+            edgeBlendBandMaxPx = edgeBandMaxPx,
+            speckPixelsRemoved = speckPixelsRemoved
         )
     }
 

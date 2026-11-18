@@ -201,4 +201,13 @@
         <item quantity="one">边缘混色：已将 %1$d 个像素并入相邻油墨。</item>
         <item quantity="other">边缘混色：已将 %1$d 个像素并入相邻油墨。</item>
     </plurals>
+    <string name="small_colour_flag">小面积颜色，约 %1$s：请确认是否为油墨</string>
+    <string name="small_colour_title">这个小面积颜色是油墨吗？</string>
+    <string name="small_colour_body">眼睛、圆点或小标志等小面积点缀色，除非您删除，否则仍需要单独的网版。</string>
+    <string name="small_colour_yes">是，是油墨</string>
+    <string name="small_colour_no">否，并入最接近的油墨</string>
+    <plurals name="speck_pixels_removed">
+        <item quantity="one">已移除 %1$d 个斑点像素（并入最接近的油墨）。</item>
+        <item quantity="other">已移除 %1$d 个斑点像素（并入最接近的油墨）。</item>
+    </plurals>
 </resources>

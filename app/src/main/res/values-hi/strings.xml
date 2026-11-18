@@ -202,4 +202,13 @@
         <item quantity="one">किनारे का मिश्रण: %1$d पिक्सेल पास की स्याहियों में मिलाया गया।</item>
         <item quantity="other">किनारे का मिश्रण: %1$d पिक्सेल पास की स्याहियों में मिलाए गए।</item>
     </plurals>
+    <string name="small_colour_flag">छोटा रंग, लगभग %1$s: पुष्टि करें कि यह स्याही है</string>
+    <string name="small_colour_title">क्या यह छोटा रंग स्याही है?</string>
+    <string name="small_colour_body">आँख, बिंदु या छोटे लोगो जैसे छोटे रंग को भी अलग स्क्रीन चाहिए, जब तक आप उसे हटाते नहीं।</string>
+    <string name="small_colour_yes">हाँ, यह स्याही है</string>
+    <string name="small_colour_no">नहीं, सबसे पास की स्याही में मिलाएँ</string>
+    <plurals name="speck_pixels_removed">
+        <item quantity="one">%1$d धब्बा पिक्सेल हटाया गया (सबसे पास की स्याही में जोड़ा गया)।</item>
+        <item quantity="other">%1$d धब्बा पिक्सेल हटाए गए (सबसे पास की स्याही में जोड़े गए)।</item>
+    </plurals>
 </resources>

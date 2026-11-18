@@ -109,6 +109,9 @@ fun ColorIntelligenceScreen(
     keepEdgeColours: Boolean = false,
     onKeepEdgeColours: (Boolean) -> Unit = {},
     onAnswerEdgeBlend: (isBlur: Boolean) -> Unit = {},
+    // Small colours (print_rules.json small_colours): speck pixels removed, and the answer for a flagged one.
+    speckPixelsRemoved: Int = 0,
+    onAnswerSmallColour: (point: Pair<Float, Float>, isInk: Boolean) -> Unit = { _, _ -> },
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -307,7 +310,7 @@ fun ColorIntelligenceScreen(
                                 text = when {
                                     measuredPrintColours != null -> {
                                         // Colours that may be fold shadows are shown as "+N if ink".
-                                        val flagged = measuredPrintColours.count { it.possibleFoldShadow || it.possibleEdgeBlend }
+                                        val flagged = measuredPrintColours.count { it.possibleFoldShadow || it.possibleEdgeBlend || it.possibleSmallColour }
                                         val sure = measuredPrintColours.size - flagged
                                         pluralStringResource(R.plurals.measured_print_colours, sure, sure) +
                                             (if (flagged > 0) " " + stringResource(R.string.colour_possible_shadow_extra, flagged) else "")
@@ -359,6 +362,17 @@ fun ColorIntelligenceScreen(
             }
         }
 
+        // Specks removed as colours.
+        if (speckPixelsRemoved > 0) {
+            item {
+                Text(
+                    pluralStringResource(R.plurals.speck_pixels_removed, speckPixelsRemoved, speckPixelsRemoved),
+                    color = TextMuted, fontSize = 12.sp, lineHeight = 17.sp,
+                    modifier = Modifier.padding(horizontal = 4.dp)
+                )
+            }
+        }
+
         // Edge blending report and the undo switch.
         if (edgeBlendPixelsMerged > 0 || keepEdgeColours) {
             item {
@@ -383,7 +397,7 @@ fun ColorIntelligenceScreen(
         // Measured print colours: the ones used for screens and ink.
         if (!measuredPrintColours.isNullOrEmpty()) {
             item {
-                MeasuredPrintColoursCard(measuredPrintColours, onAnswerFoldShadow, onAnswerAllFoldShadows, onAnswerEdgeBlend)
+                MeasuredPrintColoursCard(measuredPrintColours, onAnswerFoldShadow, onAnswerAllFoldShadows, onAnswerEdgeBlend, onAnswerSmallColour)
             }
         }
 
@@ -577,9 +591,28 @@ private fun MeasuredPrintColoursCard(
     colours: List<MeasuredColor>,
     onAnswerFoldShadow: (points: List<Pair<Float, Float>>, isInk: Boolean) -> Unit,
     onAnswerAllFoldShadows: () -> Unit,
-    onAnswerEdgeBlend: (isBlur: Boolean) -> Unit
+    onAnswerEdgeBlend: (isBlur: Boolean) -> Unit,
+    onAnswerSmallColour: (point: Pair<Float, Float>, isInk: Boolean) -> Unit
 ) {
     var asking by remember { mutableStateOf<MeasuredColor?>(null) }
+    asking?.takeIf { it.possibleSmallColour && !it.possibleFoldShadow && !it.possibleEdgeBlend }?.let { c ->
+        val point = c.smallColourPoint
+        AlertDialog(
+            onDismissRequest = { asking = null },
+            title = { Text(stringResource(R.string.small_colour_title)) },
+            text = { Text(c.hex + "  •  " + c.formattedCoverage + "\n\n" + stringResource(R.string.small_colour_body)) },
+            confirmButton = {
+                TextButton(onClick = { if (point != null) onAnswerSmallColour(point, true); asking = null }) {
+                    Text(stringResource(R.string.small_colour_yes))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { if (point != null) onAnswerSmallColour(point, false); asking = null }) {
+                    Text(stringResource(R.string.small_colour_no))
+                }
+            }
+        )
+    }
     asking?.takeIf { it.possibleEdgeBlend && !it.possibleFoldShadow }?.let { c ->
         AlertDialog(
             onDismissRequest = { asking = null },
@@ -644,7 +677,7 @@ private fun MeasuredPrintColoursCard(
                 Spacer(modifier = Modifier.height(10.dp))
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = if (c.possibleFoldShadow || c.possibleEdgeBlend) Modifier.clickable { asking = c } else Modifier
+                    modifier = if (c.possibleFoldShadow || c.possibleEdgeBlend || c.possibleSmallColour) Modifier.clickable { asking = c } else Modifier
                 ) {
                     Box(
                         modifier = Modifier
@@ -662,6 +695,14 @@ private fun MeasuredPrintColoursCard(
                             color = TextMuted,
                             fontSize = 12.sp
                         )
+                        if (c.possibleSmallColour && !c.possibleEdgeBlend && !c.possibleFoldShadow) {
+                            Text(
+                                stringResource(R.string.small_colour_flag, c.formattedCoverage),
+                                color = Amber,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
                         if (c.possibleEdgeBlend && !c.possibleFoldShadow) {
                             Text(
                                 stringResource(R.string.edge_blend_flag_label),

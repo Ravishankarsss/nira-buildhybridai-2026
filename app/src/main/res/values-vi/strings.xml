@@ -201,4 +201,13 @@
         <item quantity="one">Trộn mép: đã gộp %1$d điểm ảnh vào các màu mực bên cạnh.</item>
         <item quantity="other">Trộn mép: đã gộp %1$d điểm ảnh vào các màu mực bên cạnh.</item>
     </plurals>
+    <string name="small_colour_flag">Màu nhỏ, khoảng %1$s: xác nhận đây là mực</string>
+    <string name="small_colour_title">Màu nhỏ này có phải là mực không?</string>
+    <string name="small_colour_body">Một chi tiết nhỏ như mắt, chấm hay logo nhỏ vẫn cần khung riêng, trừ khi bạn bỏ nó.</string>
+    <string name="small_colour_yes">Có, là mực</string>
+    <string name="small_colour_no">Không, gộp vào mực gần nhất</string>
+    <plurals name="speck_pixels_removed">
+        <item quantity="one">Đã loại %1$d điểm ảnh lốm đốm (gộp vào mực gần nhất).</item>
+        <item quantity="other">Đã loại %1$d điểm ảnh lốm đốm (gộp vào mực gần nhất).</item>
+    </plurals>
 </resources>

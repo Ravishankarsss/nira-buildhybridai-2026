@@ -256,7 +256,8 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                         regionAnswers = emptyList(),
                         allUncertainAreFoldShadows = false,
                         keepEdgeColours = false,
-                        edgeBlendAnswer = null
+                        edgeBlendAnswer = null,
+                        smallColourAnswers = emptyList()
                     ),
                     analysisState = AnalysisState.Loading("Reading image metadata..."),
                     selectedImageUri = uri,
@@ -541,7 +542,8 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                         regionAnswers = emptyList(),
                         allUncertainAreFoldShadows = false,
                         keepEdgeColours = false,
-                        edgeBlendAnswer = null
+                        edgeBlendAnswer = null,
+                        smallColourAnswers = emptyList()
                     ),
                     analysisState = AnalysisState.Loading("Loading analysis record..."),
                     selectedColor = record.palette.firstOrNull(),
@@ -659,6 +661,18 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
     /** Answer for colours flagged "Possible thin line or blur": true = blur (merge), false = printed line. */
     fun answerEdgeBlend(isBlur: Boolean) {
         _uiState.update { it.copy(printJobInputs = it.printJobInputs.copy(edgeBlendAnswer = isBlur)) }
+        computePartAReport()
+    }
+
+    /** Answer for a colour flagged "Small colour, about N%": true = an ink (a screen), false = merge it. */
+    fun answerSmallColour(point: Pair<Float, Float>, isInk: Boolean) {
+        _uiState.update {
+            it.copy(
+                printJobInputs = it.printJobInputs.copy(
+                    smallColourAnswers = it.printJobInputs.smallColourAnswers + RegionAnswer(point.first, point.second, isInk)
+                )
+            )
+        }
         computePartAReport()
     }
 
@@ -810,6 +824,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                 val photoRules = printRulesRepository.getPhotoVsArtworkRules()
                 val shadowRules = printRulesRepository.getShadowVsInkRules()
                 val edgeBlendRules = printRulesRepository.getEdgeBlendRules()
+                val smallColourRules = printRulesRepository.getSmallColourRules()
                 val result = withContext(Dispatchers.Default) {
                     val maxDim = 2048
                     val width = bitmap.width
@@ -839,7 +854,8 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                         maskRules = maskRules,
                         photoRules = photoRules,
                         shadowRules = shadowRules,
-                        edgeBlendRules = edgeBlendRules
+                        edgeBlendRules = edgeBlendRules,
+                        smallColourRules = smallColourRules
                     )
                 }
 

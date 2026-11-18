@@ -420,7 +420,7 @@
   "display_disclaimer": "Rule-of-thumb estimate from public trade sources. Verify on the production floor and with the ink maker's technical data sheet.",
   "change_log": [
     "v2 (15 Nov 2026): added process_inks, garment_mask, white_base, recommendation, resolution and regression_cases after a device test on a real garment photo (white-to-blue gradient logo on a black T-shirt).",
-    "v3 (18 Nov 2026): added shadow_vs_ink and photo_vs_artwork (proposed starting values, Ravi to confirm) after a white T-shirt photo measured fold shadows as print colours. merge_shades_in_photo_hue_within_deg holds the 6 deg from merge_shades_in_photo as a number. Added edge_blend (camera blur and anti-aliasing bands between two inks; proposed starting values, Ravi to confirm)."
+    "v3 (18 Nov 2026): added shadow_vs_ink and photo_vs_artwork (proposed starting values, Ravi to confirm) after a white T-shirt photo measured fold shadows as print colours. merge_shades_in_photo_hue_within_deg holds the 6 deg from merge_shades_in_photo as a number. Added edge_blend (camera blur and anti-aliasing bands between two inks; proposed starting values, Ravi to confirm). Added small_colours: a colour under the minimum coverage is flagged, not dropped (the magenta eye on the skull print)."
   ],
   "process_inks": {
     "cyan": "#00AEEF",
@@ -511,6 +511,20 @@
     "merge_shades_in_artwork": "never automatic; if the lighter shade fits the garment-to-ink mixing line within 2.0 CIEDE2000, suggest 'print as tint of <ink>, saves 1 screen' for the user to accept",
     "confidence": "assumption",
     "note": "Proposed starting values; tune on real photos; Ravi to confirm"
+  },
+  "small_colours": {
+    "min_coverage_percent": 1.5,
+    "below_limit_action": "flag, never drop silently",
+    "real_ink_if": "at least one connected region of that colour with area >= min_region_mm2 at print scale, and CIEDE2000 from every palette colour >= the merge threshold",
+    "min_region_mm2": 4,
+    "merge_threshold_de00": 3.2,
+    "merge_threshold_note": "the CIEDE2000 limit Part A already uses to merge near-identical clusters (step 8)",
+    "flag_text": "Small colour, about N%: confirm it is an ink",
+    "noise_if": "only scattered regions each smaller than min_region_mm2",
+    "noise_action": "remove, and show 'N speck pixels removed'",
+    "screen_count_display": "'N screens (+M small colours to confirm)'",
+    "confidence": "assumption",
+    "note": "Proposed starting values; Ravi to confirm. A small accent colour is still a screen unless the merchandiser drops it. min_coverage_percent and merge_threshold_de00 were constants in the Part A code before 18 Nov 2026."
   },
   "edge_blend": {
     "what": "thin bands of mixed colour along the border between two inks (or ink and fabric), from camera blur or artwork anti-aliasing; not an ink",

@@ -202,4 +202,13 @@
         <item quantity="one">Kantenmischung: %1$d Pixel den benachbarten Farben zugeordnet.</item>
         <item quantity="other">Kantenmischung: %1$d Pixel den benachbarten Farben zugeordnet.</item>
     </plurals>
+    <string name="small_colour_flag">Kleine Farbe, etwa %1$s: bestätigen, dass es eine Druckfarbe ist</string>
+    <string name="small_colour_title">Ist diese kleine Farbe eine Druckfarbe?</string>
+    <string name="small_colour_body">Ein kleiner Akzent wie ein Auge, ein Punkt oder ein kleines Logo braucht ein eigenes Sieb, außer Sie lassen ihn weg.</string>
+    <string name="small_colour_yes">Ja, Druckfarbe</string>
+    <string name="small_colour_no">Nein, mit der nächsten Druckfarbe zusammenführen</string>
+    <plurals name="speck_pixels_removed">
+        <item quantity="one">%1$d Sprenkel-Pixel entfernt (der nächsten Druckfarbe zugeordnet).</item>
+        <item quantity="other">%1$d Sprenkel-Pixel entfernt (der nächsten Druckfarbe zugeordnet).</item>
+    </plurals>
 </resources>

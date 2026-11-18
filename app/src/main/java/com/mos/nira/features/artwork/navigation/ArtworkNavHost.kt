@@ -159,6 +159,8 @@ fun ArtworkNavHost(
                 keepEdgeColours = uiState.printJobInputs.keepEdgeColours,
                 onKeepEdgeColours = { keep -> viewModel.setKeepEdgeColours(keep) },
                 onAnswerEdgeBlend = { isBlur -> viewModel.answerEdgeBlend(isBlur) },
+                speckPixelsRemoved = uiState.partAResult?.speckPixelsRemoved ?: 0,
+                onAnswerSmallColour = { point, isInk -> viewModel.answerSmallColour(point, isInk) },
                 onBack = goBack
             )
         }

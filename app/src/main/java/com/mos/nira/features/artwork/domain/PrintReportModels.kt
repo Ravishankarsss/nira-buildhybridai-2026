@@ -72,7 +72,9 @@ data class PrintJobInputs(
     // Switch "Keep edge colours as separate inks": undoes the edge blending (print_rules.json edge_blend).
     val keepEdgeColours: Boolean = false,
     // Answer for colours flagged "Possible thin line or blur": true = blur, merge; false = printed line; null = not answered.
-    val edgeBlendAnswer: Boolean? = null
+    val edgeBlendAnswer: Boolean? = null,
+    // Answers for colours flagged "Small colour, about N%: confirm it is an ink" (a point in the colour's area).
+    val smallColourAnswers: List<RegionAnswer> = emptyList()
 )
 
 /** The user's answer for one uncertain region: a point inside it (normalised) and ink or shadow. */
@@ -98,7 +100,11 @@ data class MeasuredColor(
     /** A point inside each of those regions (normalised), used to record the user's answer. */
     val uncertainRegionPoints: List<Pair<Float, Float>> = emptyList(),
     /** Looks like blur between two colours, but the resolution is too low to be sure (edge_blend). */
-    val possibleEdgeBlend: Boolean = false
+    val possibleEdgeBlend: Boolean = false,
+    /** Below the minimum coverage but a compact real area: the user confirms it is an ink (small_colours). */
+    val possibleSmallColour: Boolean = false,
+    /** A point inside this colour's largest area (normalised), to record the user's answer. */
+    val smallColourPoint: Pair<Float, Float>? = null
 ) {
     val formattedRgb: String get() = "RGB(${rgb.r}, ${rgb.g}, ${rgb.b})"
     val formattedLab: String get() = String.format("L* %.1f  a* %.1f  b* %.1f", lab.l, lab.a, lab.b)
@@ -143,7 +149,9 @@ data class PartAResult(
     /** Pixels moved from thin blur bands into their neighbouring inks or the fabric (edge_blend). */
     val edgeBlendPixelsMerged: Int = 0,
     /** Band width limit used for edge blending, in pixels of the analysed image; null if not run. */
-    val edgeBlendBandMaxPx: Double? = null
+    val edgeBlendBandMaxPx: Double? = null,
+    /** Pixels of scattered speck colours removed as colours (added to the nearest ink). */
+    val speckPixelsRemoved: Int = 0
 )
 
 // ==========================================

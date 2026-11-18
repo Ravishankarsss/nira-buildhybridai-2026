@@ -202,4 +202,13 @@
         <item quantity="one">ஓர விளிம்புக் கலப்பு: %1$d பிக்சல் அருகிலுள்ள மைகளில் சேர்க்கப்பட்டது.</item>
         <item quantity="other">ஓர விளிம்புக் கலப்பு: %1$d பிக்சல்கள் அருகிலுள்ள மைகளில் சேர்க்கப்பட்டன.</item>
     </plurals>
+    <string name="small_colour_flag">சிறிய நிறம், சுமார் %1$s: இது மை என உறுதிசெய்யவும்</string>
+    <string name="small_colour_title">இந்தச் சிறிய நிறம் மையா?</string>
+    <string name="small_colour_body">கண், புள்ளி, சிறிய லோகோ போன்ற சிறிய அலங்கார நிறத்துக்கும், நீங்கள் நீக்காவிட்டால், தனி ஸ்கிரீன் தேவை.</string>
+    <string name="small_colour_yes">ஆம், இது மை</string>
+    <string name="small_colour_no">இல்லை, அருகிலுள்ள மையுடன் சேர்</string>
+    <plurals name="speck_pixels_removed">
+        <item quantity="one">%1$d புள்ளிப் பிக்சல் நீக்கப்பட்டது (அருகிலுள்ள மையுடன் சேர்க்கப்பட்டது).</item>
+        <item quantity="other">%1$d புள்ளிப் பிக்சல்கள் நீக்கப்பட்டன (அருகிலுள்ள மையுடன் சேர்க்கப்பட்டன).</item>
+    </plurals>
 </resources>

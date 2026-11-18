@@ -203,4 +203,13 @@
         <item quantity="one">Mezcla de bordes: %1$d píxel unido a las tintas vecinas.</item>
         <item quantity="other">Mezcla de bordes: %1$d píxeles unidos a las tintas vecinas.</item>
     </plurals>
+    <string name="small_colour_flag">Color pequeño, aprox. %1$s: confirme que es una tinta</string>
+    <string name="small_colour_title">¿Este color pequeño es una tinta?</string>
+    <string name="small_colour_body">Un pequeño detalle, como un ojo, un punto o un logotipo pequeño, necesita su propia pantalla a menos que lo elimine.</string>
+    <string name="small_colour_yes">Sí, es una tinta</string>
+    <string name="small_colour_no">No, unir a la tinta más cercana</string>
+    <plurals name="speck_pixels_removed">
+        <item quantity="one">Se quitó %1$d píxel de mota (añadido a la tinta más cercana).</item>
+        <item quantity="other">Se quitaron %1$d píxeles de motas (añadidos a la tinta más cercana).</item>
+    </plurals>
 </resources>

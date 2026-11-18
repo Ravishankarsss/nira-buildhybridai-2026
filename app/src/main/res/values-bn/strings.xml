@@ -202,4 +202,13 @@
         <item quantity="one">কিনারার মিশ্রণ: %1$dটি পিক্সেল পাশের কালিতে মেশানো হয়েছে।</item>
         <item quantity="other">কিনারার মিশ্রণ: %1$dটি পিক্সেল পাশের কালিতে মেশানো হয়েছে।</item>
     </plurals>
+    <string name="small_colour_flag">ছোট রং, প্রায় %1$s: এটি কালি কিনা নিশ্চিত করুন</string>
+    <string name="small_colour_title">এই ছোট রংটি কি কালি?</string>
+    <string name="small_colour_body">চোখ, বিন্দু বা ছোট লোগোর মতো ছোট রঙেরও আলাদা স্ক্রিন লাগে, যদি না আপনি সেটি বাদ দেন।</string>
+    <string name="small_colour_yes">হ্যাঁ, এটি কালি</string>
+    <string name="small_colour_no">না, নিকটতম কালির সঙ্গে মেশান</string>
+    <plurals name="speck_pixels_removed">
+        <item quantity="one">%1$dটি দাগ-পিক্সেল সরানো হয়েছে (নিকটতম কালিতে যোগ করা হয়েছে)।</item>
+        <item quantity="other">%1$dটি দাগ-পিক্সেল সরানো হয়েছে (নিকটতম কালিতে যোগ করা হয়েছে)।</item>
+    </plurals>
 </resources>

@@ -203,4 +203,13 @@
         <item quantity="one">Mélange de bords : %1$d pixel rattaché aux encres voisines.</item>
         <item quantity="other">Mélange de bords : %1$d pixels rattachés aux encres voisines.</item>
     </plurals>
+    <string name="small_colour_flag">Petite couleur, environ %1$s : confirmez que c\'est une encre</string>
+    <string name="small_colour_title">Cette petite couleur est-elle une encre ?</string>
+    <string name="small_colour_body">Un petit détail, comme un œil, un point ou un petit logo, a besoin de son propre écran, sauf si vous le supprimez.</string>
+    <string name="small_colour_yes">Oui, c\'est une encre</string>
+    <string name="small_colour_no">Non, fusionner avec l\'encre la plus proche</string>
+    <plurals name="speck_pixels_removed">
+        <item quantity="one">%1$d pixel de tache retiré (ajouté à l\'encre la plus proche).</item>
+        <item quantity="other">%1$d pixels de taches retirés (ajoutés à l\'encre la plus proche).</item>
+    </plurals>
 </resources>

@@ -114,6 +114,17 @@ data class EdgeBlendRules(
 )
 
 /**
+ * print_rules.json "small_colours": a colour below the minimum coverage is flagged when it is a
+ * compact real area, and removed only when it is scattered specks. No default values.
+ */
+data class SmallColourRules(
+    val minCoveragePercent: Double,
+    val minRegionMm2: Double,
+    val mergeThresholdDeltaE00: Double,
+    val confidence: String
+)
+
+/**
  * Ink deposit rule for a given screen mesh count.
  */
 data class MeshDepositRule(
@@ -194,6 +205,11 @@ class PrintRulesRepository(private val context: Context?) {
         loadJson()?.let { parsePhotoVsArtworkRules(it) }
     }
 
+    /** "small_colours" from print_rules.json, or null if it is missing or incomplete. */
+    suspend fun getSmallColourRules(): SmallColourRules? = withContext(Dispatchers.IO) {
+        loadJson()?.let { parseSmallColourRules(it) }
+    }
+
     /** "edge_blend" from print_rules.json, or null if it is missing or incomplete. */
     suspend fun getEdgeBlendRules(): EdgeBlendRules? = withContext(Dispatchers.IO) {
         loadJson()?.let { parseEdgeBlendRules(it) }
@@ -229,6 +245,19 @@ class PrintRulesRepository(private val context: Context?) {
                 shadowKeepsGarmentHueWithinDeg = r.getDouble("shadow_keeps_garment_hue_within_deg"),
                 minPxPerCmForEdgeTest = numberOrReference(root, r, "min_px_per_cm_for_edge_test"),
                 uncertainAction = r.getString("uncertain_action"),
+                confidence = r.getString("confidence")
+            )
+        } catch (e: Exception) {
+            null
+        }
+
+        /** Reads "small_colours". Null if the section or any value is missing. */
+        fun parseSmallColourRules(root: JSONObject): SmallColourRules? = try {
+            val r = root.getJSONObject("small_colours")
+            SmallColourRules(
+                minCoveragePercent = r.getDouble("min_coverage_percent"),
+                minRegionMm2 = r.getDouble("min_region_mm2"),
+                mergeThresholdDeltaE00 = r.getDouble("merge_threshold_de00"),
                 confidence = r.getString("confidence")
             )
         } catch (e: Exception) {
