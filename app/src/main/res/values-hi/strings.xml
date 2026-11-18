@@ -215,4 +215,10 @@
     <string name="photo_edge_include_switch">फ़ोटो के किनारे का हिस्सा शामिल करें</string>
     <string name="camera_hint_background">गारमेंट को सपाट बिछाएँ। फ़ोटो में और कुछ न हो: न मेज़, न फ़र्श।</string>
     <string name="camera_hint_settings">HDR, AI scene और beauty मोड बंद करें। फ़ोटो WhatsApp से न भेजें: इससे किनारे खराब होते हैं।</string>
+    <string name="explain_title">यह सिफ़ारिश क्यों</string>
+    <string name="explain_hint">इंजन के परिणाम और नियम फ़ाइल से Firebase AI Logic ने लिखा (केवल टेक्स्ट, कोई इमेज नहीं)। हर संख्या इंजन डेटा से जाँची जाती है।</string>
+    <string name="explain_running">समझाया जा रहा है…</string>
+    <string name="explain_unverified">नहीं दिखाया गया: असत्यापित। उत्तर में ऐसी संख्याएँ थीं जो इंजन डेटा में नहीं हैं (%1$s)। नीचे दिया गया इंजन डेटा देखें।</string>
+    <string name="explain_data_title">इंजन डेटा</string>
+    <string name="explain_blocked">Confidential mode चालू है और इस फ़ोन में ऑन-डिवाइस मॉडल नहीं है, इसलिए कुछ नहीं भेजा गया। इंजन डेटा नीचे है।</string>
 </resources>

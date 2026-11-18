@@ -214,4 +214,10 @@
     <string name="photo_edge_include_switch">Gồm cả vùng mép ảnh</string>
     <string name="camera_hint_background">Trải phẳng áo. Không có gì khác trong ảnh: không bàn, không sàn.</string>
     <string name="camera_hint_settings">Tắt HDR, cảnh AI và chế độ làm đẹp. Không gửi ảnh qua WhatsApp: nó làm hỏng các mép.</string>
+    <string name="explain_title">Vì sao đề xuất này</string>
+    <string name="explain_hint">Do Firebase AI Logic viết từ kết quả của bộ máy và tệp quy tắc (chỉ văn bản, không có ảnh). Mọi con số đều được đối chiếu với dữ liệu của bộ máy.</string>
+    <string name="explain_running">Đang giải thích…</string>
+    <string name="explain_unverified">Không hiển thị: chưa xác minh. Câu trả lời có số không có trong dữ liệu của bộ máy (%1$s). Hãy dùng dữ liệu bên dưới.</string>
+    <string name="explain_data_title">Dữ liệu của bộ máy</string>
+    <string name="explain_blocked">Chế độ bảo mật đang bật và điện thoại này không có mô hình trên thiết bị, nên không gửi gì cả. Dữ liệu của bộ máy ở bên dưới.</string>
 </resources>

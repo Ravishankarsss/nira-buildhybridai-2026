@@ -28,6 +28,10 @@ import com.mos.nira.features.advice.rememberAdviceRules
 import com.mos.nira.features.ai.ArtworkAiReadViewModel
 import com.mos.nira.features.ai.ArtworkKey
 import com.mos.nira.features.ai.DeepReportCard
+import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import com.mos.nira.features.ai.ReportExplanationCard
 import com.mos.nira.features.ai.activityViewModelStoreOwner
 
 object ArtworkDestinations {
@@ -224,9 +228,11 @@ fun ArtworkNavHost(
                 onClearExportMessage = { viewModel.clearExportMessage() },
                 onRecalculate = { viewModel.computePartAReport() },
                 onBack = goBack,
-                footer = {
+                footer = { Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     // Deep report: text and numbers only, from what this screen shows.
                     val key = ArtworkKey.of(uiState.selectedBitmap, uiState.palette.filter { !it.isGarmentBase }.map { it.hex })
+                    // AI explanation of the recommendation (text only; numbers checked against the engine data).
+                    ReportExplanationCard(artworkKey = key, partA = uiState.partAResult, partB = uiState.partBResult)
                     val aiReadViewModel: ArtworkAiReadViewModel = viewModel(viewModelStoreOwner = activityViewModelStoreOwner())
                     val choicesViewModel: PrintMethodChoicesViewModel = viewModel(viewModelStoreOwner = activityViewModelStoreOwner())
                     val adviceRules = rememberAdviceRules()
@@ -256,7 +262,7 @@ fun ArtworkNavHost(
                             )
                         }
                     )
-                }
+                } }
             )
         }
 

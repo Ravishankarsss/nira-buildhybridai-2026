@@ -216,4 +216,10 @@
     <string name="photo_edge_include_switch">Incluir el área del borde de la foto</string>
     <string name="camera_hint_background">Extienda la prenda. Nada más en la foto: ni mesa ni suelo.</string>
     <string name="camera_hint_settings">Desactive HDR, escena IA y modo belleza. No envíe fotos por WhatsApp: daña los bordes.</string>
+    <string name="explain_title">Por qué esta recomendación</string>
+    <string name="explain_hint">Escrito por Firebase AI Logic a partir del resultado del motor y del archivo de reglas (solo texto, sin imagen). Cada número se comprueba con los datos del motor.</string>
+    <string name="explain_running">Explicando…</string>
+    <string name="explain_unverified">No se muestra: sin verificar. La respuesta tenía números que no están en los datos del motor (%1$s). Use los datos del motor de abajo.</string>
+    <string name="explain_data_title">Datos del motor</string>
+    <string name="explain_blocked">El modo confidencial está activado y este teléfono no tiene modelo en el dispositivo, así que no se envió nada. Los datos del motor están abajo.</string>
 </resources>

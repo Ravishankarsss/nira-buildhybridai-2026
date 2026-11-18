@@ -215,4 +215,10 @@
     <string name="photo_edge_include_switch">Fotorandbereich einbeziehen</string>
     <string name="camera_hint_background">Kleidungsstück flach hinlegen. Nichts anderes im Foto: kein Tisch, kein Boden.</string>
     <string name="camera_hint_settings">HDR, KI-Szene und Beauty-Modus ausschalten. Fotos nicht über WhatsApp senden: das beschädigt die Kanten.</string>
+    <string name="explain_title">Warum diese Empfehlung</string>
+    <string name="explain_hint">Von Firebase AI Logic aus dem Ergebnis der Engine und der Regeldatei geschrieben (nur Text, kein Bild). Jede Zahl wird mit den Engine-Daten geprüft.</string>
+    <string name="explain_running">Wird erklärt…</string>
+    <string name="explain_unverified">Nicht angezeigt: nicht geprüft. Die Antwort enthielt Zahlen, die nicht in den Engine-Daten stehen (%1$s). Nutzen Sie die Engine-Daten unten.</string>
+    <string name="explain_data_title">Engine-Daten</string>
+    <string name="explain_blocked">Der vertrauliche Modus ist an und dieses Telefon hat kein On-Device-Modell, daher wurde nichts gesendet. Die Engine-Daten stehen unten.</string>
 </resources>

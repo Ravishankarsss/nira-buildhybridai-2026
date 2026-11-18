@@ -215,4 +215,10 @@
     <string name="photo_edge_include_switch">புகைப்பட ஓரப் பகுதியையும் சேர்</string>
     <string name="camera_hint_background">ஆடையைச் சமமாக விரிக்கவும். புகைப்படத்தில் வேறு எதுவும் வேண்டாம்: மேசையோ தரையோ வேண்டாம்.</string>
     <string name="camera_hint_settings">HDR, AI scene, beauty முறைகளை அணைக்கவும். புகைப்படங்களை WhatsApp வழியாக அனுப்ப வேண்டாம்: அது ஓரங்களைச் சேதப்படுத்தும்.</string>
+    <string name="explain_title">ஏன் இந்தப் பரிந்துரை</string>
+    <string name="explain_hint">Engine முடிவு மற்றும் விதிகள் கோப்பிலிருந்து Firebase AI Logic எழுதியது (உரை மட்டும், படம் இல்லை). ஒவ்வொரு எண்ணும் engine தரவுடன் சரிபார்க்கப்படுகிறது.</string>
+    <string name="explain_running">விளக்குகிறது…</string>
+    <string name="explain_unverified">காட்டப்படவில்லை: சரிபார்க்கப்படவில்லை. பதிலில் engine தரவில் இல்லாத எண்கள் இருந்தன (%1$s). கீழே உள்ள engine தரவைப் பயன்படுத்தவும்.</string>
+    <string name="explain_data_title">Engine தரவு</string>
+    <string name="explain_blocked">Confidential mode இயக்கத்தில் உள்ளது; இந்த போனில் சாதன AI மாதிரி இல்லை, எனவே எதுவும் அனுப்பப்படவில்லை. Engine தரவு கீழே உள்ளது.</string>
 </resources>

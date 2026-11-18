@@ -216,4 +216,10 @@
     <string name="photo_edge_include_switch">Inclure la zone au bord de la photo</string>
     <string name="camera_hint_background">Posez le vêtement à plat. Rien d\'autre dans la photo : ni table ni sol.</string>
     <string name="camera_hint_settings">Désactivez HDR, scène IA et mode beauté. N\'envoyez pas les photos par WhatsApp : cela abîme les bords.</string>
+    <string name="explain_title">Pourquoi cette recommandation</string>
+    <string name="explain_hint">Rédigé par Firebase AI Logic à partir du résultat du moteur et du fichier de règles (texte seul, sans image). Chaque nombre est vérifié avec les données du moteur.</string>
+    <string name="explain_running">Explication…</string>
+    <string name="explain_unverified">Non affiché : non vérifié. La réponse contenait des nombres absents des données du moteur (%1$s). Utilisez les données du moteur ci-dessous.</string>
+    <string name="explain_data_title">Données du moteur</string>
+    <string name="explain_blocked">Le mode confidentiel est activé et ce téléphone n\'a pas de modèle sur l\'appareil : rien n\'a été envoyé. Les données du moteur sont ci-dessous.</string>
 </resources>

@@ -215,4 +215,10 @@
     <string name="photo_edge_include_switch">ছবির কিনারার অংশও ধরুন</string>
     <string name="camera_hint_background">পোশাকটি সমান করে বিছান। ছবিতে আর কিছু নয়: টেবিল বা মেঝে নয়।</string>
     <string name="camera_hint_settings">HDR, AI scene ও beauty মোড বন্ধ করুন। ছবি WhatsApp দিয়ে পাঠাবেন না: এতে কিনারা নষ্ট হয়।</string>
+    <string name="explain_title">কেন এই সুপারিশ</string>
+    <string name="explain_hint">ইঞ্জিনের ফল ও নিয়মের ফাইল থেকে Firebase AI Logic লিখেছে (শুধু লেখা, কোনো ছবি নয়)। প্রতিটি সংখ্যা ইঞ্জিনের ডেটার সঙ্গে মিলিয়ে দেখা হয়।</string>
+    <string name="explain_running">ব্যাখ্যা করা হচ্ছে…</string>
+    <string name="explain_unverified">দেখানো হয়নি: যাচাই হয়নি। উত্তরে এমন সংখ্যা ছিল যা ইঞ্জিনের ডেটায় নেই (%1$s)। নিচের ইঞ্জিনের ডেটা দেখুন।</string>
+    <string name="explain_data_title">ইঞ্জিনের ডেটা</string>
+    <string name="explain_blocked">গোপন মোড চালু এবং এই ফোনে অন-ডিভাইস মডেল নেই, তাই কিছু পাঠানো হয়নি। ইঞ্জিনের ডেটা নিচে আছে।</string>
 </resources>

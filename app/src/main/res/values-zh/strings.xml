@@ -214,4 +214,10 @@
     <string name="photo_edge_include_switch">包含照片边缘区域</string>
     <string name="camera_hint_background">将衣物平铺。照片中不要有其他东西：不要桌子或地面。</string>
     <string name="camera_hint_settings">关闭 HDR、AI 场景和美颜模式。不要通过 WhatsApp 发送照片：它会损坏边缘。</string>
+    <string name="explain_title">为何推荐此方案</string>
+    <string name="explain_hint">由 Firebase AI Logic 根据引擎结果和规则文件撰写（仅文本，不含图片）。每个数字都会与引擎数据核对。</string>
+    <string name="explain_running">正在解释…</string>
+    <string name="explain_unverified">未显示：未经核实。回答中含有引擎数据中没有的数字（%1$s）。请使用下方的引擎数据。</string>
+    <string name="explain_data_title">引擎数据</string>
+    <string name="explain_blocked">保密模式已开启，且本手机没有设备端模型，因此未发送任何内容。引擎数据见下方。</string>
 </resources>

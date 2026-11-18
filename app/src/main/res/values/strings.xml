@@ -214,4 +214,10 @@
     <string name="photo_edge_include_switch">Include the photo edge area</string>
     <string name="camera_hint_background">Lay the garment flat. Nothing else in the photo: no table or floor.</string>
     <string name="camera_hint_settings">Turn off HDR, AI scene and beauty modes. Do not send photos through WhatsApp: it damages the edges.</string>
+    <string name="explain_title">Why this recommendation</string>
+    <string name="explain_hint">Written by Firebase AI Logic from the engine result and the rules file (text only, no image). Every number is checked against the engine data.</string>
+    <string name="explain_running">Explaining…</string>
+    <string name="explain_unverified">Not shown: unverified. The answer had numbers that are not in the engine data (%1$s). Use the engine data below.</string>
+    <string name="explain_data_title">Engine data</string>
+    <string name="explain_blocked">Confidential mode is on and this phone has no on-device model, so nothing was sent. The engine data is below.</string>
 </resources>
