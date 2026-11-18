@@ -17,6 +17,19 @@ Rule for this file: only write what was actually run. Numbers below come from re
   - Likely cause (not confirmed): laptop on the phone's hotspot, a metered connection; Chrome downloads the model only on unmetered networks.
   - Next: retry on office Wi-Fi on 18 Nov. Backup: borrow a phone with Gemini Nano support.
 
+## 000000b. Update 18 Nov 2026 — photo or artwork, fold shadows, one ink's shades
+
+Rules in print_rules.json v3: shadow_vs_ink and photo_vs_artwork (proposed starting values, Ravi to confirm). All numbers are read from the file.
+
+- Light garments now use the same fabric rules as other garments (the hard-coded L* > 80 / chroma < 9 case is gone; "light" comes from white_base limits).
+- Input mode: "Photograph a garment" = photo, "Analyse artwork" = artwork. Camera information, flat-area noise and background lighting range are scored; the Colour screen asks "This looks like a photo. Treat it as a photo?" when two or more disagree. Verified on the vivo with the white T-shirt photo (saved before 18 Nov, so treated as artwork): the question appeared.
+- Fold shadows (photos of light garments): soft-edged regions that leave the print box are removed; uncertain ones stay, labelled "Possible fold shadow - tap to confirm", with "N (+M if the flagged colours are ink)". On a neutral garment a clearly coloured region is ink (a shadow of white fabric is neutral).
+- Photos: one ink's light and dark shades merge (same hue within 6 deg, touching, change across the border wider than an ink edge). Artwork is never merged automatically.
+
+White T-shirt photo on the vivo, photo mode: "3 print colours measured (+2 if the flagged colours are ink)" (sky, ink blue, one blur-band blue; two greys flagged; resolution 51 px/cm at 30 cm, below 59, so a retake is suggested). Answering "fold shadow" removed 14 regions, but the colours re-grouped. Not yet the expected 2 colours; see UNFINISHED L13 for what is open.
+
+Build PASSES; unit tests 140 run, 140 pass.
+
 ## 000000a. Update 18 Nov 2026 — Part A speed
 
 Laptop JVM, photo-like 1024 px test image (`PrintReportRegressionTest.testPhotoLike1024Benchmark_ReportsRealTimes`):
