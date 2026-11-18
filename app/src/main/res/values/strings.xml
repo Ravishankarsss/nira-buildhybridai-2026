@@ -229,4 +229,23 @@
     <string name="artbg_printed_note">Background %1$s is printed: counted as a print colour.</string>
     <string name="artbg_print_instead">Print it instead</string>
     <string name="artbg_drop_instead">Drop it instead</string>
+    <string name="preview_title">See it on your garment</string>
+    <string name="preview_hint">Drawn on this phone with the ink model from the rules file. A model preview, not a proof. Nothing is sent.</string>
+    <string name="preview_choose_garment">Choose the garment colour to see the print on it.</string>
+    <string name="preview_chip_white">White</string>
+    <string name="preview_chip_navy">Navy</string>
+    <string name="preview_chip_black">Black</string>
+    <string name="preview_custom">Custom</string>
+    <string name="preview_custom_title">Garment colour (hex)</string>
+    <string name="preview_ok">OK</string>
+    <string name="preview_cancel">Cancel</string>
+    <string name="preview_without_base">Without white base</string>
+    <string name="preview_with_base">With white base</string>
+    <string name="preview_contrast">%1$s is hard to see on this garment: lightness difference %2$d (limit %3$s).</string>
+    <string name="preview_use_white">Use white</string>
+    <string name="preview_use_cream">Use cream</string>
+    <string name="preview_swapped">%1$s shown as %2$s in the preview.</string>
+    <string name="preview_undo">Undo</string>
+    <string name="preview_fabric_measured">Fabric measured from the photo: %1$s. Wrong? Tap the garment in the photo below.</string>
+    <string name="preview_tap_garment">Tap the garment fabric</string>
 </resources>

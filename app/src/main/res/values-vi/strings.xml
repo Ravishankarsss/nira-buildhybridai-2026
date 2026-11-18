@@ -229,4 +229,23 @@
     <string name="artbg_printed_note">Nền %1$s được in: tính là màu in.</string>
     <string name="artbg_print_instead">In thay vào đó</string>
     <string name="artbg_drop_instead">Bỏ thay vào đó</string>
+    <string name="preview_title">Xem trên áo của bạn</string>
+    <string name="preview_hint">Vẽ trên điện thoại này bằng mô hình mực trong tệp quy tắc. Đây là bản xem trước mô hình, không phải bản in thử. Không gửi gì cả.</string>
+    <string name="preview_choose_garment">Chọn màu áo để xem hình in trên đó.</string>
+    <string name="preview_chip_white">Trắng</string>
+    <string name="preview_chip_navy">Xanh navy</string>
+    <string name="preview_chip_black">Đen</string>
+    <string name="preview_custom">Tùy chọn</string>
+    <string name="preview_custom_title">Màu áo (hex)</string>
+    <string name="preview_ok">OK</string>
+    <string name="preview_cancel">Hủy</string>
+    <string name="preview_without_base">Không có lớp lót trắng</string>
+    <string name="preview_with_base">Có lớp lót trắng</string>
+    <string name="preview_contrast">%1$s khó thấy trên áo này: chênh lệch độ sáng %2$d (giới hạn %3$s).</string>
+    <string name="preview_use_white">Dùng trắng</string>
+    <string name="preview_use_cream">Dùng màu kem</string>
+    <string name="preview_swapped">%1$s được hiển thị là %2$s trong bản xem trước.</string>
+    <string name="preview_undo">Hoàn tác</string>
+    <string name="preview_fabric_measured">Vải đo từ ảnh: %1$s. Sai? Chạm vào áo trong ảnh bên dưới.</string>
+    <string name="preview_tap_garment">Chạm vào vải áo</string>
 </resources>

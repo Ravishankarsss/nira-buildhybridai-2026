@@ -230,4 +230,23 @@
     <string name="artbg_printed_note">पृष्ठभूमि %1$s छापी जाएगी: प्रिंट रंग के रूप में गिनी गई।</string>
     <string name="artbg_print_instead">इसके बजाय छापें</string>
     <string name="artbg_drop_instead">इसके बजाय हटाएँ</string>
+    <string name="preview_title">अपने गारमेंट पर देखें</string>
+    <string name="preview_hint">नियम फ़ाइल के स्याही मॉडल से इसी फ़ोन पर बनाया गया। यह मॉडल पूर्वावलोकन है, प्रूफ़ नहीं। कुछ भी नहीं भेजा जाता।</string>
+    <string name="preview_choose_garment">प्रिंट देखने के लिए गारमेंट का रंग चुनें।</string>
+    <string name="preview_chip_white">सफ़ेद</string>
+    <string name="preview_chip_navy">नेवी</string>
+    <string name="preview_chip_black">काला</string>
+    <string name="preview_custom">कस्टम</string>
+    <string name="preview_custom_title">गारमेंट का रंग (hex)</string>
+    <string name="preview_ok">ठीक है</string>
+    <string name="preview_cancel">रद्द करें</string>
+    <string name="preview_without_base">सफ़ेद बेस के बिना</string>
+    <string name="preview_with_base">सफ़ेद बेस के साथ</string>
+    <string name="preview_contrast">इस गारमेंट पर %1$s मुश्किल से दिखेगा: हल्केपन का अंतर %2$d (सीमा %3$s)।</string>
+    <string name="preview_use_white">सफ़ेद लें</string>
+    <string name="preview_use_cream">क्रीम लें</string>
+    <string name="preview_swapped">पूर्वावलोकन में %1$s को %2$s दिखाया गया।</string>
+    <string name="preview_undo">पूर्ववत करें</string>
+    <string name="preview_fabric_measured">फ़ोटो से मापा गया कपड़ा: %1$s। गलत है? नीचे फ़ोटो में गारमेंट पर टैप करें।</string>
+    <string name="preview_tap_garment">गारमेंट के कपड़े पर टैप करें</string>
 </resources>

@@ -122,6 +122,8 @@ fun ColorIntelligenceScreen(
     artworkBackgroundAnswer: Boolean? = null,
     backgroundThresholdDeltaE00: Double? = null,
     onAnswerArtworkBackground: (print: Boolean) -> Unit = {},
+    // "See it on your garment" (print_rules.json garment_preview).
+    previewContent: @Composable () -> Unit = {},
     includePhotoEdgeArea: Boolean = false,
     onIncludePhotoEdgeArea: (Boolean) -> Unit = {},
     onBack: () -> Unit,
@@ -450,6 +452,9 @@ fun ColorIntelligenceScreen(
                 MeasuredPrintColoursCard(measuredPrintColours, onAnswerFoldShadow, onAnswerAllFoldShadows, onAnswerEdgeBlend, onAnswerSmallColour)
             }
         }
+
+        // "See it on your garment": drawn on the phone with the rules' ink model.
+        item { previewContent() }
 
         // AI read of the artwork (Firebase AI Logic). Engine numbers are passed in as facts.
         item {

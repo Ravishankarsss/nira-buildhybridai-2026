@@ -170,6 +170,24 @@ fun ArtworkNavHost(
                 artworkBackgroundAnswer = uiState.printJobInputs.artworkBackgroundAnswer,
                 backgroundThresholdDeltaE00 = uiState.partAResult?.garmentProfile?.adaptiveThresholdDeltaE00,
                 onAnswerArtworkBackground = { print -> viewModel.answerArtworkBackground(print) },
+                previewContent = {
+                    val isPhoto = uiState.printJobInputs.inputKind == com.mos.nira.core.image.InputKind.PHOTO
+                    val measured = uiState.partAResult?.garmentProfile?.estimatedHex
+                    com.mos.nira.features.artwork.presentation.GarmentPreviewCard(
+                        rules = uiState.previewRules,
+                        isPhoto = isPhoto,
+                        garmentHex = uiState.previewGarmentHex ?: if (isPhoto) measured else null,
+                        measuredFabricHex = measured,
+                        photo = uiState.selectedBitmap,
+                        withoutBase = uiState.previewWithoutBase,
+                        withBase = uiState.previewWithBase,
+                        warnings = uiState.previewWarnings,
+                        swaps = uiState.inkSwaps,
+                        onGarment = { hex -> viewModel.setPreviewGarment(hex) },
+                        onSwap = { from, to -> viewModel.swapInk(from, to) },
+                        onTapGarment = { x, y -> viewModel.pickGarmentAt(x, y) }
+                    )
+                },
                 includePhotoEdgeArea = uiState.printJobInputs.includePhotoEdgeArea,
                 onIncludePhotoEdgeArea = { include -> viewModel.setIncludePhotoEdgeArea(include) },
                 onAnswerSmallColour = { point, isInk -> viewModel.answerSmallColour(point, isInk) },

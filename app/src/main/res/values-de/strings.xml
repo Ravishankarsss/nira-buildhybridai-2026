@@ -230,4 +230,23 @@
     <string name="artbg_printed_note">Hintergrund %1$s wird gedruckt: als Druckfarbe gezählt.</string>
     <string name="artbg_print_instead">Doch drucken</string>
     <string name="artbg_drop_instead">Doch weglassen</string>
+    <string name="preview_title">Auf Ihrem Kleidungsstück ansehen</string>
+    <string name="preview_hint">Auf diesem Telefon mit dem Farbmodell aus der Regeldatei gezeichnet. Eine Modellvorschau, kein Proof. Es wird nichts gesendet.</string>
+    <string name="preview_choose_garment">Wählen Sie die Farbe des Kleidungsstücks, um den Druck darauf zu sehen.</string>
+    <string name="preview_chip_white">Weiß</string>
+    <string name="preview_chip_navy">Marine</string>
+    <string name="preview_chip_black">Schwarz</string>
+    <string name="preview_custom">Eigene</string>
+    <string name="preview_custom_title">Farbe des Kleidungsstücks (Hex)</string>
+    <string name="preview_ok">OK</string>
+    <string name="preview_cancel">Abbrechen</string>
+    <string name="preview_without_base">Ohne weiße Unterlage</string>
+    <string name="preview_with_base">Mit weißer Unterlage</string>
+    <string name="preview_contrast">%1$s ist auf diesem Kleidungsstück schwer zu sehen: Helligkeitsunterschied %2$d (Grenze %3$s).</string>
+    <string name="preview_use_white">Weiß verwenden</string>
+    <string name="preview_use_cream">Creme verwenden</string>
+    <string name="preview_swapped">%1$s wird in der Vorschau als %2$s gezeigt.</string>
+    <string name="preview_undo">Rückgängig</string>
+    <string name="preview_fabric_measured">Aus dem Foto gemessener Stoff: %1$s. Falsch? Tippen Sie unten im Foto auf das Kleidungsstück.</string>
+    <string name="preview_tap_garment">Auf den Stoff tippen</string>
 </resources>

@@ -170,7 +170,11 @@ data class PartAResult(
     /** Share of the photo (%) left out as table, floor or wall at the photo edge (photo_background). */
     val photoEdgeExcludedPercent: Double = 0.0,
     /** The plain background of an artwork file, when found (artwork_background). */
-    val artworkBackground: ArtworkBackground? = null
+    val artworkBackground: ArtworkBackground? = null,
+    /** Final print mask of the analysed image (true = print), and its size; used by the preview. */
+    val printMask: BooleanArray? = null,
+    val maskWidth: Int = 0,
+    val maskHeight: Int = 0
 )
 
 // ==========================================

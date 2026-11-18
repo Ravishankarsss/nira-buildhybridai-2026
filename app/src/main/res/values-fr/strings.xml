@@ -231,4 +231,23 @@
     <string name="artbg_printed_note">Le fond %1$s est imprimé : compté comme couleur d\'impression.</string>
     <string name="artbg_print_instead">L\'imprimer plutôt</string>
     <string name="artbg_drop_instead">Le retirer plutôt</string>
+    <string name="preview_title">Voir sur votre vêtement</string>
+    <string name="preview_hint">Dessiné sur ce téléphone avec le modèle d\'encre du fichier de règles. Aperçu du modèle, pas une épreuve. Rien n\'est envoyé.</string>
+    <string name="preview_choose_garment">Choisissez la couleur du vêtement pour y voir l\'impression.</string>
+    <string name="preview_chip_white">Blanc</string>
+    <string name="preview_chip_navy">Marine</string>
+    <string name="preview_chip_black">Noir</string>
+    <string name="preview_custom">Autre</string>
+    <string name="preview_custom_title">Couleur du vêtement (hex)</string>
+    <string name="preview_ok">OK</string>
+    <string name="preview_cancel">Annuler</string>
+    <string name="preview_without_base">Sans sous-couche blanche</string>
+    <string name="preview_with_base">Avec sous-couche blanche</string>
+    <string name="preview_contrast">%1$s se verra mal sur ce vêtement : écart de clarté %2$d (limite %3$s).</string>
+    <string name="preview_use_white">Utiliser le blanc</string>
+    <string name="preview_use_cream">Utiliser le crème</string>
+    <string name="preview_swapped">%1$s est affiché en %2$s dans l\'aperçu.</string>
+    <string name="preview_undo">Annuler</string>
+    <string name="preview_fabric_measured">Tissu mesuré sur la photo : %1$s. Erreur ? Touchez le vêtement sur la photo ci-dessous.</string>
+    <string name="preview_tap_garment">Touchez le tissu du vêtement</string>
 </resources>

@@ -9,6 +9,8 @@ import com.mos.nira.core.image.ArtworkImageProcessor
 import com.mos.nira.core.image.ColorConverter
 import com.mos.nira.core.image.ColorExtractor
 import com.mos.nira.core.image.ColorSeparator
+import com.mos.nira.features.artwork.data.GarmentPreviewRules
+import com.mos.nira.core.image.GarmentPreview
 import com.mos.nira.core.image.InputKind
 import com.mos.nira.core.image.PrintAreaAndPaletteEngine
 import com.mos.nira.core.image.SeparationStrategyEngine
@@ -93,7 +95,14 @@ data class ArtworkStudioUiState(
     val exportStatusMessage: String? = null,
     // Part D: Ink Consumption State
     val partDResult: PartDResult? = null,
-    val isComputingPartD: Boolean = false
+    val isComputingPartD: Boolean = false,
+    // "See it on your garment" (print_rules.json garment_preview), all on the phone.
+    val previewRules: GarmentPreviewRules? = null,
+    val previewGarmentHex: String? = null,
+    val inkSwaps: Map<String, String> = emptyMap(),
+    val previewWithoutBase: Bitmap? = null,
+    val previewWithBase: Bitmap? = null,
+    val previewWarnings: List<GarmentPreview.ContrastWarning> = emptyList()
 )
 
 class ArtworkViewModel(application: Application) : AndroidViewModel(application) {
@@ -261,6 +270,11 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                         includePhotoEdgeArea = false,
                         artworkBackgroundAnswer = null
                     ),
+                    previewGarmentHex = null,
+                    inkSwaps = emptyMap(),
+                    previewWithoutBase = null,
+                    previewWithBase = null,
+                    previewWarnings = emptyList(),
                     analysisState = AnalysisState.Loading("Reading image metadata..."),
                     selectedImageUri = uri,
                     palette = emptyList(),
@@ -549,6 +563,11 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                         includePhotoEdgeArea = false,
                         artworkBackgroundAnswer = null
                     ),
+                    previewGarmentHex = null,
+                    inkSwaps = emptyMap(),
+                    previewWithoutBase = null,
+                    previewWithBase = null,
+                    previewWarnings = emptyList(),
                     analysisState = AnalysisState.Loading("Loading analysis record..."),
                     selectedColor = record.palette.firstOrNull(),
                     palette = record.palette,
@@ -690,6 +709,104 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
     fun answerArtworkBackground(print: Boolean) {
         _uiState.update { it.copy(printJobInputs = it.printJobInputs.copy(artworkBackgroundAnswer = print)) }
         computePartAReport()
+    }
+
+    // ---------- "See it on your garment" ----------
+
+    private var previewJob: Job? = null
+
+    /** The garment colour for the preview (a chip or a custom colour). Part A is not changed. */
+    fun setPreviewGarment(hex: String) {
+        _uiState.update { it.copy(previewGarmentHex = hex) }
+        computeGarmentPreview()
+    }
+
+    /** Shows ink [fromHex] as [toHex] in the preview (a contrast fix); null undoes it. */
+    fun swapInk(fromHex: String, toHex: String?) {
+        _uiState.update {
+            it.copy(inkSwaps = if (toHex == null) it.inkSwaps - fromHex else it.inkSwaps + (fromHex to toHex))
+        }
+        computeGarmentPreview()
+    }
+
+    /** "Tap the garment": the fabric colour from a 5 x 5 area of the photo; Part A runs again. */
+    fun pickGarmentAt(normX: Float, normY: Float) {
+        val bitmap = _uiState.value.selectedBitmap ?: return
+        val cx = (normX * bitmap.width).toInt().coerceIn(0, bitmap.width - 1)
+        val cy = (normY * bitmap.height).toInt().coerceIn(0, bitmap.height - 1)
+        var r = 0L; var g = 0L; var b = 0L; var n = 0
+        for (y in (cy - 2)..(cy + 2)) for (x in (cx - 2)..(cx + 2)) {
+            if (x !in 0 until bitmap.width || y !in 0 until bitmap.height) continue
+            val p = bitmap.getPixel(x, y)
+            r += (p shr 16) and 0xFF; g += (p shr 8) and 0xFF; b += p and 0xFF; n++
+        }
+        if (n == 0) return
+        val hex = ColorConverter.rgbToHex((r / n).toInt(), (g / n).toInt(), (b / n).toInt())
+        _uiState.update { it.copy(previewGarmentHex = null) }
+        setUserGarmentColor(hex)
+    }
+
+    /**
+     * Draws the preview without and with a white base, and checks contrast. Photos default to the
+     * measured fabric; artwork files wait until the user chooses a garment colour.
+     */
+    fun computeGarmentPreview() {
+        previewJob?.cancel()
+        previewJob = viewModelScope.launch {
+            val rules = _uiState.value.previewRules ?: printRulesRepository.getGarmentPreviewRules()
+            val state = _uiState.value
+            val partA = state.partAResult
+            val mask = partA?.printMask
+            val bitmap = state.selectedBitmap
+            val garmentHex = state.previewGarmentHex
+                ?: if (state.printJobInputs.inputKind == InputKind.PHOTO) partA?.garmentProfile?.estimatedHex else null
+            if (rules == null || partA == null || mask == null || bitmap == null || garmentHex == null ||
+                partA.maskWidth <= 0 || partA.maskHeight <= 0
+            ) {
+                _uiState.update { it.copy(previewRules = rules, previewWithoutBase = null, previewWithBase = null, previewWarnings = emptyList()) }
+                return@launch
+            }
+            val swaps = state.inkSwaps
+            val result = withContext(Dispatchers.Default) {
+                val mw = partA.maskWidth
+                val mh = partA.maskHeight
+                val scaled = if (bitmap.width == mw && bitmap.height == mh) bitmap else Bitmap.createScaledBitmap(bitmap, mw, mh, true)
+                val full = IntArray(mw * mh)
+                scaled.getPixels(full, 0, mw, 0, 0, mw, mh)
+                if (scaled != bitmap) scaled.recycle()
+                // Preview size: at most 480 px on the long side.
+                val step = maxOf(1, (maxOf(mw, mh) + 479) / 480)
+                val w = mw / step
+                val h = mh / step
+                val px = IntArray(w * h) { i -> full[(i / w) * step * mw + (i % w) * step] }
+                val pm = BooleanArray(w * h) { i -> mask[(i / w) * step * mw + (i % w) * step] }
+                // A swapped ink: print pixels whose nearest measured colour is that ink.
+                val palette = partA.measuredPalette
+                val nearest = HashMap<Int, String>()
+                val inkFor: (Int, Int) -> Int = { _, p ->
+                    if (swaps.isEmpty() || palette.isEmpty()) p else {
+                        val key = p and 0xFFFFFF
+                        val hex = nearest.getOrPut(key) {
+                            val lab = ColorConverter.rgbToLab((key shr 16) and 0xFF, (key shr 8) and 0xFF, key and 0xFF)
+                            palette.minByOrNull { ColorConverter.deltaE76(lab, it.lab) }!!.hex
+                        }
+                        swaps[hex]?.let { (0xFF shl 24) or (ColorConverter.hexToRgb(it).let { c -> (c.r shl 16) or (c.g shl 8) or c.b }) } ?: p
+                    }
+                }
+                val garment = ColorConverter.hexToRgb(garmentHex)
+                val without = GarmentPreview.render(px, pm, garment, withWhiteBase = false, inkFor = inkFor)
+                val with = GarmentPreview.render(px, pm, garment, withWhiteBase = true, inkFor = inkFor)
+                val inks = palette.map { swaps[it.hex] ?: it.hex }.distinct()
+                Triple(
+                    Bitmap.createBitmap(without, w, h, Bitmap.Config.ARGB_8888),
+                    Bitmap.createBitmap(with, w, h, Bitmap.Config.ARGB_8888),
+                    GarmentPreview.contrastWarnings(inks, garmentHex, rules.contrastMinDeltaL)
+                )
+            }
+            _uiState.update {
+                it.copy(previewRules = rules, previewWithoutBase = result.first, previewWithBase = result.second, previewWarnings = result.third)
+            }
+        }
     }
 
     /** True when the file has camera make or exposure information; null when it cannot be read. */
@@ -880,6 +997,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                 }
 
                 _uiState.update { it.copy(partAResult = result, isComputingPrintReport = false) }
+                computeGarmentPreview()
                 saveMeasuredColourCount(result.measuredPalette.size)
 
                 // Automatically trigger Part B strategy comparison

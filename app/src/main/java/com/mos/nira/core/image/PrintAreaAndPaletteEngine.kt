@@ -859,7 +859,10 @@ object PrintAreaAndPaletteEngine {
             edgeBlendBandMaxPx = edgeBandMaxPx,
             speckPixelsRemoved = speckPixelsRemoved,
             photoEdgeExcludedPercent = photoEdgeExcludedPercent,
-            artworkBackground = artworkBackground
+            artworkBackground = artworkBackground,
+            printMask = finalPrintMask,
+            maskWidth = width,
+            maskHeight = height
         )
     }
 

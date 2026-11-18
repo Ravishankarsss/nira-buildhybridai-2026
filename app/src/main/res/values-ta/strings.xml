@@ -230,4 +230,23 @@
     <string name="artbg_printed_note">பின்னணி %1$s அச்சிடப்படும்: அச்சு நிறமாகக் கணக்கிடப்பட்டது.</string>
     <string name="artbg_print_instead">பதிலாக அச்சிடு</string>
     <string name="artbg_drop_instead">பதிலாக நீக்கு</string>
+    <string name="preview_title">உங்கள் ஆடையில் பாருங்கள்</string>
+    <string name="preview_hint">விதிகள் கோப்பின் மை மாதிரியுடன் இந்த போனிலேயே வரையப்பட்டது. இது மாதிரி முன்னோட்டம், proof அல்ல. எதுவும் அனுப்பப்படவில்லை.</string>
+    <string name="preview_choose_garment">அச்சை அதில் பார்க்க ஆடை நிறத்தைத் தேர்ந்தெடுக்கவும்.</string>
+    <string name="preview_chip_white">வெள்ளை</string>
+    <string name="preview_chip_navy">நேவி</string>
+    <string name="preview_chip_black">கருப்பு</string>
+    <string name="preview_custom">தனிப்பயன்</string>
+    <string name="preview_custom_title">ஆடை நிறம் (hex)</string>
+    <string name="preview_ok">சரி</string>
+    <string name="preview_cancel">ரத்து</string>
+    <string name="preview_without_base">வெள்ளை அடிப்படை இல்லாமல்</string>
+    <string name="preview_with_base">வெள்ளை அடிப்படையுடன்</string>
+    <string name="preview_contrast">%1$s இந்த ஆடையில் தெரிவது கடினம்: ஒளிர்வு வேறுபாடு %2$d (வரம்பு %3$s).</string>
+    <string name="preview_use_white">வெள்ளை பயன்படுத்து</string>
+    <string name="preview_use_cream">கிரீம் பயன்படுத்து</string>
+    <string name="preview_swapped">முன்னோட்டத்தில் %1$s, %2$s ஆகக் காட்டப்படுகிறது.</string>
+    <string name="preview_undo">செயல்தவிர்</string>
+    <string name="preview_fabric_measured">புகைப்படத்திலிருந்து அளந்த துணி: %1$s. தவறா? கீழே உள்ள புகைப்படத்தில் ஆடையைத் தொடவும்.</string>
+    <string name="preview_tap_garment">ஆடைத் துணியைத் தொடவும்</string>
 </resources>

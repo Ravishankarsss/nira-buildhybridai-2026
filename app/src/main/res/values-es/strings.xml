@@ -231,4 +231,23 @@
     <string name="artbg_printed_note">El fondo %1$s se imprime: cuenta como color de impresión.</string>
     <string name="artbg_print_instead">Imprimirlo en su lugar</string>
     <string name="artbg_drop_instead">Quitarlo en su lugar</string>
+    <string name="preview_title">Véalo en su prenda</string>
+    <string name="preview_hint">Dibujado en este teléfono con el modelo de tinta del archivo de reglas. Es una vista previa del modelo, no una prueba. No se envía nada.</string>
+    <string name="preview_choose_garment">Elija el color de la prenda para ver la impresión en ella.</string>
+    <string name="preview_chip_white">Blanco</string>
+    <string name="preview_chip_navy">Azul marino</string>
+    <string name="preview_chip_black">Negro</string>
+    <string name="preview_custom">Otro</string>
+    <string name="preview_custom_title">Color de la prenda (hex)</string>
+    <string name="preview_ok">Aceptar</string>
+    <string name="preview_cancel">Cancelar</string>
+    <string name="preview_without_base">Sin base blanca</string>
+    <string name="preview_with_base">Con base blanca</string>
+    <string name="preview_contrast">%1$s se verá poco en esta prenda: diferencia de luminosidad %2$d (límite %3$s).</string>
+    <string name="preview_use_white">Usar blanco</string>
+    <string name="preview_use_cream">Usar crema</string>
+    <string name="preview_swapped">%1$s se muestra como %2$s en la vista previa.</string>
+    <string name="preview_undo">Deshacer</string>
+    <string name="preview_fabric_measured">Tela medida en la foto: %1$s. ¿Incorrecto? Toque la prenda en la foto de abajo.</string>
+    <string name="preview_tap_garment">Toque la tela de la prenda</string>
 </resources>

@@ -230,4 +230,23 @@
     <string name="artbg_printed_note">পটভূমি %1$s ছাপা হবে: প্রিন্ট রং হিসেবে গোনা হয়েছে।</string>
     <string name="artbg_print_instead">বরং ছাপুন</string>
     <string name="artbg_drop_instead">বরং বাদ দিন</string>
+    <string name="preview_title">আপনার পোশাকে দেখুন</string>
+    <string name="preview_hint">নিয়মের ফাইলের কালি মডেল দিয়ে এই ফোনেই আঁকা। এটি মডেল প্রিভিউ, প্রুফ নয়। কিছুই পাঠানো হয় না।</string>
+    <string name="preview_choose_garment">প্রিন্টটি দেখতে পোশাকের রং বেছে নিন।</string>
+    <string name="preview_chip_white">সাদা</string>
+    <string name="preview_chip_navy">নেভি</string>
+    <string name="preview_chip_black">কালো</string>
+    <string name="preview_custom">কাস্টম</string>
+    <string name="preview_custom_title">পোশাকের রং (hex)</string>
+    <string name="preview_ok">ঠিক আছে</string>
+    <string name="preview_cancel">বাতিল</string>
+    <string name="preview_without_base">সাদা বেস ছাড়া</string>
+    <string name="preview_with_base">সাদা বেস সহ</string>
+    <string name="preview_contrast">এই পোশাকে %1$s কম দেখা যাবে: উজ্জ্বলতার পার্থক্য %2$d (সীমা %3$s)।</string>
+    <string name="preview_use_white">সাদা নিন</string>
+    <string name="preview_use_cream">ক্রিম নিন</string>
+    <string name="preview_swapped">প্রিভিউতে %1$s কে %2$s হিসেবে দেখানো হয়েছে।</string>
+    <string name="preview_undo">আগের মতো</string>
+    <string name="preview_fabric_measured">ছবি থেকে মাপা কাপড়: %1$s। ভুল? নিচের ছবিতে পোশাকের ওপর ট্যাপ করুন।</string>
+    <string name="preview_tap_garment">পোশাকের কাপড়ে ট্যাপ করুন</string>
 </resources>

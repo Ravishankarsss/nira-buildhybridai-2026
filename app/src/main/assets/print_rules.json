@@ -432,7 +432,7 @@
   "display_disclaimer": "Rule-of-thumb estimate from public trade sources. Verify on the production floor and with the ink maker's technical data sheet.",
   "change_log": [
     "v2 (15 Nov 2026): added process_inks, garment_mask, white_base, recommendation, resolution and regression_cases after a device test on a real garment photo (white-to-blue gradient logo on a black T-shirt).",
-    "v3 (18 Nov 2026): added shadow_vs_ink and photo_vs_artwork (proposed starting values, Ravi to confirm) after a white T-shirt photo measured fold shadows as print colours. merge_shades_in_photo_hue_within_deg holds the 6 deg from merge_shades_in_photo as a number. Added edge_blend (camera blur and anti-aliasing bands between two inks; proposed starting values, Ravi to confirm). Added small_colours: a colour under the minimum coverage is flagged, not dropped (the magenta eye on the skull print). Added screen_type_mesh_rule (mesh per screen type from mesh_rules; ink figures only where ink_consumption has an entry). Ravi: flat spot 137-156 tpi; mapping verified except highlight white. Added artwork_background. Added edge_blend.keyline_protection (Ravi: black keylines are important) and photo_background (table or floor at the photo edge)."
+    "v3 (18 Nov 2026): added shadow_vs_ink and photo_vs_artwork (proposed starting values, Ravi to confirm) after a white T-shirt photo measured fold shadows as print colours. merge_shades_in_photo_hue_within_deg holds the 6 deg from merge_shades_in_photo as a number. Added edge_blend (camera blur and anti-aliasing bands between two inks; proposed starting values, Ravi to confirm). Added small_colours: a colour under the minimum coverage is flagged, not dropped (the magenta eye on the skull print). Added screen_type_mesh_rule (mesh per screen type from mesh_rules; ink figures only where ink_consumption has an entry). Ravi: flat spot 137-156 tpi; mapping verified except highlight white. Added artwork_background. Added edge_blend.keyline_protection (Ravi: black keylines are important) and photo_background (table or floor at the photo edge). Added garment_preview (contrast check and preview chips)."
   ],
   "process_inks": {
     "cyan": "#00AEEF",
@@ -535,6 +535,18 @@
     "capture_guidance": "Fill the frame with the garment. Nothing else in the photo.",
     "confidence": "assumption",
     "note": "Proposed starting values; Ravi to confirm. The centre-box condition keeps a large print that runs off one edge."
+  },
+  "garment_preview": {
+    "what": "'See it on your garment': the print drawn on a chosen garment colour, on the phone",
+    "model": "without a white base: transparent ink over the garment (ink_model.light_garment); with a white base: ink over white. No ink opacity value is used because the rules file has none; this is a model preview, not a proof",
+    "chips": {"white": "#FFFFFF", "navy": "#001F3F", "black": "#000000"},
+    "chips_note": "Taken from the Print Report garment chips. The Artwork Preview screen uses #0B1020 for navy; Ravi to choose one",
+    "contrast_min_delta_L": 30,
+    "contrast_rule": "an ink whose lightness differs from the garment's by less than contrast_min_delta_L is hard to see; warn and offer a one-tap swap",
+    "swap_colours": {"white": "#FFFFFF", "cream": "#F2E8D5"},
+    "confidence": "assumption",
+    "verified_by_ravi": false,
+    "note": "Proposed 18 Nov 2026; the contrast limit 30 and the cream colour are starting values; Ravi to confirm."
   },
   "artwork_background": {
     "what": "the plain background of an artwork file (paper, canvas colour): not ink unless the user says to print it",

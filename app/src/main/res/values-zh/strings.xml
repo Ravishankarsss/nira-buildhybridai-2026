@@ -229,4 +229,23 @@
     <string name="artbg_printed_note">背景 %1$s 将印刷：计为印花颜色。</string>
     <string name="artbg_print_instead">改为印刷</string>
     <string name="artbg_drop_instead">改为去掉</string>
+    <string name="preview_title">在您的成衣上查看</string>
+    <string name="preview_hint">在本手机上用规则文件中的油墨模型绘制。这是模型预览，不是打样。不会发送任何内容。</string>
+    <string name="preview_choose_garment">选择成衣颜色以查看印花效果。</string>
+    <string name="preview_chip_white">白色</string>
+    <string name="preview_chip_navy">藏青</string>
+    <string name="preview_chip_black">黑色</string>
+    <string name="preview_custom">自定义</string>
+    <string name="preview_custom_title">成衣颜色（十六进制）</string>
+    <string name="preview_ok">确定</string>
+    <string name="preview_cancel">取消</string>
+    <string name="preview_without_base">无白底</string>
+    <string name="preview_with_base">有白底</string>
+    <string name="preview_contrast">%1$s 在此成衣上不易看清：明度差 %2$d（下限 %3$s）。</string>
+    <string name="preview_use_white">改用白色</string>
+    <string name="preview_use_cream">改用米色</string>
+    <string name="preview_swapped">预览中 %1$s 显示为 %2$s。</string>
+    <string name="preview_undo">撤销</string>
+    <string name="preview_fabric_measured">从照片测得的面料：%1$s。不对？请点按下方照片中的成衣。</string>
+    <string name="preview_tap_garment">点按成衣面料</string>
 </resources>

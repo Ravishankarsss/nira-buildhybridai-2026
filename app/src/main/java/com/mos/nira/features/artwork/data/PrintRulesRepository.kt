@@ -137,6 +137,14 @@ data class PhotoBackgroundRules(
     val confidence: String
 )
 
+/** print_rules.json "garment_preview": chip colours, contrast limit and swap colours. No defaults. */
+data class GarmentPreviewRules(
+    val chips: List<Pair<String, String>>,
+    val contrastMinDeltaL: Double,
+    val swapColours: List<Pair<String, String>>,
+    val confidence: String
+)
+
 /** print_rules.json "artwork_background": the plain background of an artwork file. No defaults. */
 data class ArtworkBackgroundRules(val borderShareMin: Double, val flatSpreadMaxDeltaE00: Double, val confidence: String)
 
@@ -246,6 +254,11 @@ class PrintRulesRepository(private val context: Context?) {
         loadJson()?.let { parseSmallColourRules(it) }
     }
 
+    /** "garment_preview" from print_rules.json, or null if it is missing or incomplete. */
+    suspend fun getGarmentPreviewRules(): GarmentPreviewRules? = withContext(Dispatchers.IO) {
+        loadJson()?.let { parseGarmentPreviewRules(it) }
+    }
+
     /** "artwork_background" from print_rules.json, or null if it is missing or incomplete. */
     suspend fun getArtworkBackgroundRules(): ArtworkBackgroundRules? = withContext(Dispatchers.IO) {
         loadJson()?.let { parseArtworkBackgroundRules(it) }
@@ -337,6 +350,20 @@ class PrintRulesRepository(private val context: Context?) {
                 type to MeshRule(id, r.optString("applies_to"), r.getInt("tpi_min"), r.getInt("tpi_max"), r.optString("confidence"))
             }.toMap()
             ScreenMeshRules(byType, mapping.getString("confidence"))
+        } catch (e: Exception) {
+            null
+        }
+
+        /** Reads "garment_preview". Null if the section or any value is missing. */
+        fun parseGarmentPreviewRules(root: JSONObject): GarmentPreviewRules? = try {
+            val r = root.getJSONObject("garment_preview")
+            fun pairs(o: JSONObject) = o.keys().asSequence().map { it to o.getString(it) }.toList()
+            GarmentPreviewRules(
+                chips = pairs(r.getJSONObject("chips")),
+                contrastMinDeltaL = r.getDouble("contrast_min_delta_L"),
+                swapColours = pairs(r.getJSONObject("swap_colours")),
+                confidence = r.getString("confidence")
+            )
         } catch (e: Exception) {
             null
         }
