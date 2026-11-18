@@ -63,6 +63,37 @@ data class GarmentMaskRules(
 )
 
 /**
+ * print_rules.json "shadow_vs_ink": telling a fold shadow from a grey ink on a light garment.
+ * No default values: every number comes from the file. If the section is missing or incomplete
+ * the loader returns null and the check is not run.
+ */
+data class ShadowVsInkRules(
+    val inkEdgeMaxMm: Double,
+    val shadowEdgeMinMm: Double,
+    val shadowIfTouchesPlainFabricOrLeavesPrintBox: Boolean,
+    val hueTestOnlyIfGarmentChromaAtLeast: Double,
+    val shadowKeepsGarmentHueWithinDeg: Double,
+    /** Resolved from the reference in the file (resolution.px_per_cm_min_for_fine_detail). */
+    val minPxPerCmForEdgeTest: Double,
+    val uncertainAction: String,
+    val confidence: String
+)
+
+/**
+ * print_rules.json "photo_vs_artwork": telling a garment photo from a flat artwork file.
+ * No default values: every number comes from the file; null if the section is incomplete.
+ */
+data class PhotoVsArtworkRules(
+    val artworkFlatNoiseLStdMax: Double,
+    val photoFlatNoiseLStdMin: Double,
+    val photoBackgroundLRangeMin: Double,
+    val askWhenSignalsDisagreeWithMode: Int,
+    val mergeShadesInPhoto: String,
+    val mergeShadesInArtwork: String,
+    val confidence: String
+)
+
+/**
  * Ink deposit rule for a given screen mesh count.
  */
 data class MeshDepositRule(
@@ -133,12 +164,67 @@ class PrintRulesRepository(private val context: Context?) {
     /**
      * Loads minimum line width in mm by mesh from print_rules.json. Empty if not available.
      */
+    /** "shadow_vs_ink" from print_rules.json, or null if it is missing or incomplete. */
+    suspend fun getShadowVsInkRules(): ShadowVsInkRules? = withContext(Dispatchers.IO) {
+        loadJson()?.let { parseShadowVsInkRules(it) }
+    }
+
+    /** "photo_vs_artwork" from print_rules.json, or null if it is missing or incomplete. */
+    suspend fun getPhotoVsArtworkRules(): PhotoVsArtworkRules? = withContext(Dispatchers.IO) {
+        loadJson()?.let { parsePhotoVsArtworkRules(it) }
+    }
+
     suspend fun getMinLineWidthMmByMesh(): Map<Int, Double> = withContext(Dispatchers.IO) {
         val root = loadJson() ?: return@withContext emptyMap()
         parseMinLineWidthMmByMesh(root)
     }
 
     companion object {
+
+        /**
+         * A number in the rules file, or a "section.key" reference to a number elsewhere in it
+         * (for example "resolution.px_per_cm_min_for_fine_detail"). Throws if neither.
+         */
+        private fun numberOrReference(root: JSONObject, section: JSONObject, key: String): Double {
+            val value = section.get(key)
+            if (value is Number) return value.toDouble()
+            val path = value.toString().split('.')
+            require(path.size == 2) { "$key must be a number or a section.key reference" }
+            return root.getJSONObject(path[0]).getDouble(path[1])
+        }
+
+        /** Reads "shadow_vs_ink". Null if the section or any value is missing. */
+        fun parseShadowVsInkRules(root: JSONObject): ShadowVsInkRules? = try {
+            val r = root.getJSONObject("shadow_vs_ink")
+            ShadowVsInkRules(
+                inkEdgeMaxMm = r.getDouble("ink_edge_max_mm"),
+                shadowEdgeMinMm = r.getDouble("shadow_edge_min_mm"),
+                shadowIfTouchesPlainFabricOrLeavesPrintBox = r.getBoolean("shadow_if_touches_plain_fabric_or_leaves_print_box"),
+                hueTestOnlyIfGarmentChromaAtLeast = r.getDouble("hue_test_only_if_garment_chroma_at_least"),
+                shadowKeepsGarmentHueWithinDeg = r.getDouble("shadow_keeps_garment_hue_within_deg"),
+                minPxPerCmForEdgeTest = numberOrReference(root, r, "min_px_per_cm_for_edge_test"),
+                uncertainAction = r.getString("uncertain_action"),
+                confidence = r.getString("confidence")
+            )
+        } catch (e: Exception) {
+            null
+        }
+
+        /** Reads "photo_vs_artwork". Null if the section or any value is missing. */
+        fun parsePhotoVsArtworkRules(root: JSONObject): PhotoVsArtworkRules? = try {
+            val r = root.getJSONObject("photo_vs_artwork")
+            PhotoVsArtworkRules(
+                artworkFlatNoiseLStdMax = r.getDouble("artwork_flat_noise_L_std_max"),
+                photoFlatNoiseLStdMin = r.getDouble("photo_flat_noise_L_std_min"),
+                photoBackgroundLRangeMin = r.getDouble("photo_background_L_range_min"),
+                askWhenSignalsDisagreeWithMode = r.getInt("ask_when_signals_disagree_with_mode"),
+                mergeShadesInPhoto = r.getString("merge_shades_in_photo"),
+                mergeShadesInArtwork = r.getString("merge_shades_in_artwork"),
+                confidence = r.getString("confidence")
+            )
+        } catch (e: Exception) {
+            null
+        }
 
         /**
          * Reads "process_inks" (cyan, magenta, yellow, black) from the rules file.
