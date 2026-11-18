@@ -46,7 +46,7 @@ import com.mos.nira.core.ai.AppCheckDebugToken
 import com.mos.nira.core.ai.HybridInferenceRepository
 import com.mos.nira.core.ai.HybridInferenceResult
 import com.mos.nira.core.ai.HybridMode
-import com.mos.nira.core.image.OpenCvImageOps
+import com.mos.nira.core.image.KotlinImageOps
 import com.mos.nira.core.locale.LocaleHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -100,7 +100,7 @@ fun SettingsScreen(
             SettingsInfo(
                 rulesVersion = rules?.optString("rules_version")?.takeIf { it.isNotBlank() },
                 rulesStatus = rules?.optString("status")?.takeIf { it.isNotBlank() },
-                geometryLibrary = OpenCvImageOps.getOrFallback().name,
+                geometryLibrary = KotlinImageOps.name,
                 appVersion = version
             )
         }

@@ -58,8 +58,9 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.coil.compose)
 
-    // OpenCV: geometry and morphology only, always through core/image/ImageOps. Not AI.
-    implementation(libs.opencv)
+    // OpenCV removed 18 Nov 2026: no feature used it and it added about 130 MB of native code.
+    // To bring it back for garment photo straightening: add libs.opencv here and an
+    // OpenCV-backed ImageOps (see git history, OpenCvImageOps.kt).
     implementation("com.google.guava:guava:33.4.0-android")
     // CameraX: photographing a garment inside the app.
     implementation(libs.androidx.camera.core)

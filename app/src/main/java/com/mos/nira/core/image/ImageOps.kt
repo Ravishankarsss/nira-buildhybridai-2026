@@ -19,8 +19,9 @@ class ComponentLabels(
 /**
  * The only geometry / morphology operations NIRA takes from an image library.
  *
- * The app uses [OpenCvImageOps]. JVM unit tests and the fallback path use [KotlinImageOps],
- * so the engine stays testable without OpenCV. No colour maths lives here: the Kotlin colour
+ * The app uses [KotlinImageOps] (pure Kotlin, also in JVM unit tests). OpenCV was removed on
+ * 18 Nov 2026 because no feature used it; an OpenCV-backed implementation can be added again
+ * behind this interface for garment photo straightening. No colour maths lives here: the Kotlin colour
  * engine (ColorConverter, palette, separation) is separate and unchanged.
  *
  * Pixels are ARGB ints, row by row. Masks are BooleanArray (true = print / foreground).
@@ -80,8 +81,7 @@ interface ImageOps {
 }
 
 /**
- * Pure Kotlin implementation of [ImageOps]. Used in JVM unit tests and as a fallback when the
- * OpenCV native library cannot be loaded.
+ * Pure Kotlin implementation of [ImageOps], used by the app and the JVM unit tests.
  */
 object KotlinImageOps : ImageOps {
 
