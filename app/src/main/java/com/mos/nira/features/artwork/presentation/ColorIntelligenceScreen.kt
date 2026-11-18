@@ -49,6 +49,7 @@ import com.mos.nira.features.artwork.components.ColorDetailInspector
 import com.mos.nira.features.artwork.components.ColorSwatchCard
 import com.mos.nira.features.artwork.domain.ColorGroup
 import com.mos.nira.features.artwork.domain.DominantColor
+import com.mos.nira.core.image.ColourLabel
 import com.mos.nira.features.artwork.domain.ShadeEntry
 import com.mos.nira.features.artwork.domain.MeasuredColor
 import com.mos.nira.R
@@ -85,6 +86,8 @@ fun ColorIntelligenceScreen(
     // Print colours and garment colour measured by the Print Report engine, when calculated.
     measuredPrintColourHexes: List<String>? = null,
     measuredGarmentHex: String? = null,
+    // The user's shade library, used to give the garment colour a readable name.
+    garmentNameShades: List<ShadeEntry> = emptyList(),
     // The Print Report engine's measured print colours (garment removed), and whether it is working.
     measuredPrintColours: List<MeasuredColor>? = null,
     isMeasuringPrintColours: Boolean = false,
@@ -298,7 +301,10 @@ fun ColorIntelligenceScreen(
                             )
                             (measuredGarmentHex ?: garmentColor?.hex)?.let { hex ->
                                 Text(
-                                    text = stringResource(R.string.colour_garment_excluded, hex),
+                                    text = stringResource(
+                                        R.string.colour_garment_excluded,
+                                        ColourLabel.withNearestShadeName(hex, garmentNameShades)
+                                    ),
                                     color = TextMuted,
                                     fontSize = 11.sp
                                 )
