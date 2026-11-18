@@ -15,8 +15,8 @@ Status words used here:
 | :-- | :--- | :--- | :--- | :--- |
 | A1 | Firebase AI Logic called at runtime | **Done** (17 Nov, vivo V60e) | `HybridInferenceRepository`, "Test AI" button | — |
 | A2 | Cloud inference | **Done** (17 Nov, `IN_CLOUD`, 2–10 s) | Same as A1 | No product feature uses the cloud yet |
-| A3 | Real on-device inference (Gemini Nano) | **Missing** | Kotlin 2.4.0 and `firebase-ai-ondevice` active; status check works | The vivo V60e has no on-device model. Needs the Chrome web version or a supported Android phone |
-| A4 | Actual hybrid routing | Partial | `PREFER_ON_DEVICE` falls back to the cloud and shows `IN_CLOUD` (tested 17 Nov) | Needs A3 to show an `ON_DEVICE` answer |
+| A3 | Real on-device inference (Gemini Nano) | **Done 18 Nov (web)** | Chrome 159 Beta, Prompt API available, ONLY_ON_DEVICE: the SDK reported ON_DEVICE, 3,440 ms, a real answer (evidence: docs/evidence/2026-11-18_web_chrome_only_on_device.png) | The vivo V60e still has no on-device model; Android stays cloud with the honest status |
+| A4 | Actual hybrid routing | Partial | PREFER_ON_DEVICE falls back to IN_CLOUD on the vivo (17 Nov); ON_DEVICE proven in Chrome (18 Nov) | Still to capture: PREFER_ON_DEVICE in Chrome (expect ON_DEVICE), and Wi-Fi off with ONLY_ON_DEVICE |
 | A5 | App Check | Partial | Debug provider in debug builds; vivo token registered and accepted | Release builds have no provider (Play Integrity not set up) |
 | A6 | Public repository with all source | Ready to publish, waiting for Ravi | Secret scan done 17 Nov (clean); phone serial removed from Git | Ravi approves, then push and make public |
 | A7 | Open-source licence | **Done** 17 Nov | `LICENSE` (Apache 2.0) | — |
@@ -151,7 +151,7 @@ Dashboard redesign, garment camera, Settings, language switch inside the workflo
 | J6 | Unpushed commits | 3 (`733b78d`, `c5c9683`, `9c7bb37`). Everything up to `dabdcf7` is already on GitHub; that push was not done by Claude Code |
 | J7 | Secret scan before going public | **Done** 17 Nov: no keys or private files in any commit. Repeat right before publishing |
 | J8 | Gradle wrapper 9.9.0 (was 9.6.0) | Changed before 15 Nov by someone; not reviewed |
-| J9 | Web version for Chrome | Partial: `web/` page with four modes; cloud call works in Chrome (17 Nov). On-device not tested yet |
+| J9 | Web version for Chrome | Done for the AI proof: cloud (17 Nov) and on-device (18 Nov) both shown with the SDK source. Note: Gemini Nano's answer about an underbase was wrong (it is a white or light ink layer printed first on dark garments, not an adhesion coating), so engineering facts must keep coming from print_rules.json |
 
 ## L. Found in the phone check of 17 Nov
 

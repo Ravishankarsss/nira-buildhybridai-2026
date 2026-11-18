@@ -17,6 +17,14 @@ Rule for this file: only write what was actually run. Numbers below come from re
   - Likely cause (not confirmed): laptop on the phone's hotspot, a metered connection; Chrome downloads the model only on unmetered networks.
   - Next: retry on office Wi-Fi on 18 Nov. Backup: borrow a phone with Gemini Nano support.
 
+## 000000c. Update 18 Nov 2026 — first on-device answer (Gemini Nano in Chrome)
+
+**On-device inference through Firebase AI Logic works in Chrome.** Chrome 159 Beta, Prompt API "available", on-device model downloaded. Mode ONLY_ON_DEVICE, prompt "In one short sentence, what is a screen printing underbase?": the SDK reported **ON_DEVICE**, 3,440 ms, session counters 1 on device / 0 in cloud. Evidence: `docs/evidence/2026-11-18_web_chrome_only_on_device.png`. With the 17 Nov IN_CLOUD answer, both sources are now shown with the real `inferenceSource`.
+
+The on-device answer was wrong on the facts (an underbase is a white or light ink layer printed first on dark garments so colours stay bright, not an adhesion coating). This supports the design: engineering values come from print_rules.json and the engine; the AI explains them.
+
+Still to capture: PREFER_ON_DEVICE in Chrome, and ONLY_ON_DEVICE with Wi-Fi off.
+
 ## 000000b. Update 18 Nov 2026 — photo or artwork, fold shadows, one ink's shades
 
 Rules in print_rules.json v3: shadow_vs_ink and photo_vs_artwork (proposed starting values, Ravi to confirm). All numbers are read from the file.
