@@ -334,4 +334,15 @@
     <string name="details_hint">সব প্রিন্ট পদ্ধতি কারণসহ, রং সম্পাদনা ও রঙের পরিবার।</string>
     <string name="details_show">দেখান</string>
     <string name="details_hide">লুকান</string>
+    <string name="report_garment_from_brief">পোশাক: %1$s। ওপরের ব্রিফের প্রশ্ন ১-এ বদলান।</string>
+    <string name="sep_title">স্ক্রিন</string>
+    <string name="sep_back">← রং</string>
+    <string name="sep_note">এই প্রিন্টের জন্য NIRA যে স্ক্রিনগুলো পরিকল্পনা করে, সিদ্ধান্ত কার্ডের মতোই। স্ক্রিনে কালো = কালি। মডেল প্রিভিউ, প্রিন্ট-প্রস্তুত ফিল্ম নয়।</string>
+    <string name="sep_none">এখনও স্ক্রিন নেই। আগে রং খুলুন।</string>
+    <string name="sep_proof">মডেল প্রুফ</string>
+    <string name="sep_all">সব স্ক্রিন</string>
+    <string name="sep_pick">একটি স্ক্রিন বেছে নিন</string>
+    <string name="sep_colour">কালির রং</string>
+    <string name="sep_mesh">মেশ</string>
+    <string name="sep_coverage">প্রিন্টে কালির কভারেজ</string>
 </resources>

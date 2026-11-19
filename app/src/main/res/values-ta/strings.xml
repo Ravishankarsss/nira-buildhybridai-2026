@@ -334,4 +334,15 @@
     <string name="details_hint">எல்லா அச்சு முறைகளும் காரணங்களுடன், நிறத் திருத்தம் மற்றும் நிறக் குடும்பங்கள்.</string>
     <string name="details_show">காட்டு</string>
     <string name="details_hide">மறை</string>
+    <string name="report_garment_from_brief">ஆடை: %1$s. மேலே உள்ள விவரத்தின் கேள்வி 1-இல் மாற்றவும்.</string>
+    <string name="sep_title">ஸ்கிரீன்கள்</string>
+    <string name="sep_back">← நிறங்கள்</string>
+    <string name="sep_note">இந்த அச்சுக்கு NIRA திட்டமிடும் ஸ்கிரீன்கள்; முடிவு அட்டையில் உள்ளவையே. ஸ்கிரீனில் கருப்பு = மை. இது மாதிரி முன்னோட்டம், அச்சுக்குத் தயாரான film அல்ல.</string>
+    <string name="sep_none">இன்னும் ஸ்கிரீன்கள் இல்லை. முதலில் நிறங்களைத் திறக்கவும்.</string>
+    <string name="sep_proof">மாதிரி proof</string>
+    <string name="sep_all">எல்லா ஸ்கிரீன்களும்</string>
+    <string name="sep_pick">ஒரு ஸ்கிரீனைத் தேர்ந்தெடுக்கவும்</string>
+    <string name="sep_colour">மை நிறம்</string>
+    <string name="sep_mesh">மெஷ்</string>
+    <string name="sep_coverage">அச்சில் மை பரப்பு</string>
 </resources>

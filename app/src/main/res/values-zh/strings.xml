@@ -333,4 +333,15 @@
     <string name="details_hint">所有印花工艺及理由、颜色编辑和颜色组。</string>
     <string name="details_show">显示</string>
     <string name="details_hide">隐藏</string>
+    <string name="report_garment_from_brief">成衣：%1$s。请在上方需求的第 1 题中更改。</string>
+    <string name="sep_title">网版</string>
+    <string name="sep_back">← 颜色</string>
+    <string name="sep_note">NIRA 为此印花规划的网版，与决策卡相同。网版上的黑色即油墨。这是模型预览，不是可直接印刷的菲林。</string>
+    <string name="sep_none">还没有网版。请先打开颜色。</string>
+    <string name="sep_proof">模型打样</string>
+    <string name="sep_all">全部网版</string>
+    <string name="sep_pick">选择网版</string>
+    <string name="sep_colour">油墨颜色</string>
+    <string name="sep_mesh">目数</string>
+    <string name="sep_coverage">油墨覆盖率</string>
 </resources>

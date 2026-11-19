@@ -334,4 +334,15 @@
     <string name="details_hint">सभी प्रिंट तरीके कारणों सहित, रंग संपादन और रंग परिवार।</string>
     <string name="details_show">दिखाएँ</string>
     <string name="details_hide">छिपाएँ</string>
+    <string name="report_garment_from_brief">गारमेंट: %1$s। ऊपर ब्रीफ़ के प्रश्न 1 में बदलें।</string>
+    <string name="sep_title">स्क्रीन</string>
+    <string name="sep_back">← रंग</string>
+    <string name="sep_note">इस प्रिंट के लिए NIRA की योजना वाली स्क्रीन, वही जो निर्णय कार्ड पर हैं। स्क्रीन पर काला = स्याही। यह मॉडल पूर्वावलोकन है, प्रिंट-तैयार फ़िल्म नहीं।</string>
+    <string name="sep_none">अभी स्क्रीन नहीं। पहले रंग खोलें।</string>
+    <string name="sep_proof">मॉडल प्रूफ़</string>
+    <string name="sep_all">सभी स्क्रीन</string>
+    <string name="sep_pick">स्क्रीन चुनें</string>
+    <string name="sep_colour">स्याही का रंग</string>
+    <string name="sep_mesh">मेश</string>
+    <string name="sep_coverage">प्रिंट में स्याही का कवरेज</string>
 </resources>

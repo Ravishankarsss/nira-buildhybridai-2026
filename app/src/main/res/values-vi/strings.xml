@@ -333,4 +333,15 @@
     <string name="details_hint">Mọi phương pháp in kèm lý do, chỉnh sửa màu và nhóm màu.</string>
     <string name="details_show">Hiện</string>
     <string name="details_hide">Ẩn</string>
+    <string name="report_garment_from_brief">Áo: %1$s. Đổi ở câu hỏi 1 của yêu cầu in phía trên.</string>
+    <string name="sep_title">Khung in</string>
+    <string name="sep_back">← Màu</string>
+    <string name="sep_note">Các khung in NIRA dự kiến cho hình in này, giống trên thẻ quyết định. Màu đen trên khung là mực. Bản xem trước mô hình, không phải phim in sẵn.</string>
+    <string name="sep_none">Chưa có khung in. Hãy mở phần màu trước.</string>
+    <string name="sep_proof">Bản in thử mô hình</string>
+    <string name="sep_all">Tất cả khung</string>
+    <string name="sep_pick">Chọn khung in</string>
+    <string name="sep_colour">Màu mực</string>
+    <string name="sep_mesh">Lưới</string>
+    <string name="sep_coverage">Độ phủ mực</string>
 </resources>

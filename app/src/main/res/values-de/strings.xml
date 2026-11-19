@@ -334,4 +334,15 @@
     <string name="details_hint">Alle Druckverfahren mit Begründung, Farbbearbeitung und Farbfamilien.</string>
     <string name="details_show">Anzeigen</string>
     <string name="details_hide">Ausblenden</string>
+    <string name="report_garment_from_brief">Kleidungsstück: %1$s. Ändern Sie es in Frage 1 des Briefings oben.</string>
+    <string name="sep_title">Siebe</string>
+    <string name="sep_back">← Farben</string>
+    <string name="sep_note">Die Siebe, die NIRA für diesen Druck plant, dieselben wie auf der Entscheidungskarte. Schwarz auf einem Sieb ist Farbe. Modellvorschau, kein druckfertiger Film.</string>
+    <string name="sep_none">Noch keine Siebe. Öffnen Sie zuerst die Farben.</string>
+    <string name="sep_proof">Modell-Proof</string>
+    <string name="sep_all">Alle Siebe</string>
+    <string name="sep_pick">Sieb wählen</string>
+    <string name="sep_colour">Farbton</string>
+    <string name="sep_mesh">Gewebe</string>
+    <string name="sep_coverage">Farbdeckung des Drucks</string>
 </resources>

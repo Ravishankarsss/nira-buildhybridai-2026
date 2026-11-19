@@ -335,4 +335,15 @@
     <string name="details_hint">Toutes les méthodes d\'impression avec leurs raisons, l\'édition des couleurs et les familles de couleurs.</string>
     <string name="details_show">Afficher</string>
     <string name="details_hide">Masquer</string>
+    <string name="report_garment_from_brief">Vêtement : %1$s. Modifiez-le à la question 1 du brief ci-dessus.</string>
+    <string name="sep_title">Écrans</string>
+    <string name="sep_back">← Couleurs</string>
+    <string name="sep_note">Les écrans que NIRA prévoit pour cette impression, les mêmes que sur la carte de décision. Le noir sur un écran est de l\'encre. Aperçu du modèle, pas un film prêt à imprimer.</string>
+    <string name="sep_none">Pas encore d\'écrans. Ouvrez d\'abord les couleurs.</string>
+    <string name="sep_proof">Épreuve du modèle</string>
+    <string name="sep_all">Tous les écrans</string>
+    <string name="sep_pick">Choisissez un écran</string>
+    <string name="sep_colour">Couleur d\'encre</string>
+    <string name="sep_mesh">Maille</string>
+    <string name="sep_coverage">Couverture d\'encre</string>
 </resources>

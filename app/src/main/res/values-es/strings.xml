@@ -335,4 +335,15 @@
     <string name="details_hint">Todos los métodos de impresión con sus motivos, edición de colores y familias de color.</string>
     <string name="details_show">Mostrar</string>
     <string name="details_hide">Ocultar</string>
+    <string name="report_garment_from_brief">Prenda: %1$s. Cámbiela en la pregunta 1 de la ficha de arriba.</string>
+    <string name="sep_title">Pantallas</string>
+    <string name="sep_back">← Colores</string>
+    <string name="sep_note">Las pantallas que NIRA planifica para esta impresión, las mismas de la tarjeta de decisión. El negro en una pantalla es tinta. Vista previa del modelo, no un fotolito listo.</string>
+    <string name="sep_none">Aún no hay pantallas. Abra primero los colores.</string>
+    <string name="sep_proof">Prueba del modelo</string>
+    <string name="sep_all">Todas</string>
+    <string name="sep_pick">Elija una pantalla</string>
+    <string name="sep_colour">Color de tinta</string>
+    <string name="sep_mesh">Malla</string>
+    <string name="sep_coverage">Cobertura de tinta</string>
 </resources>

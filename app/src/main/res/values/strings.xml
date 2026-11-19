@@ -333,4 +333,15 @@
     <string name="details_hint">Every print method with its reasons, colour editing and colour families.</string>
     <string name="details_show">Show</string>
     <string name="details_hide">Hide</string>
+    <string name="report_garment_from_brief">Garment: %1$s. Change it in question 1 of the brief above.</string>
+    <string name="sep_title">Screens</string>
+    <string name="sep_back">← Colours</string>
+    <string name="sep_note">The screens NIRA plans for this print, the same ones as on the decision card. Black on a screen is ink. A model preview, not a print-ready film.</string>
+    <string name="sep_none">No screens yet. Open the colours first; the screens follow the print colours.</string>
+    <string name="sep_proof">Model proof</string>
+    <string name="sep_all">All screens</string>
+    <string name="sep_pick">Pick a screen</string>
+    <string name="sep_colour">Ink colour</string>
+    <string name="sep_mesh">Mesh</string>
+    <string name="sep_coverage">Ink coverage of the print</string>
 </resources>

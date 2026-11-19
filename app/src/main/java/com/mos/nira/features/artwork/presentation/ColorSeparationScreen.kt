@@ -1,5 +1,6 @@
 package com.mos.nira.features.artwork.presentation
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -32,11 +33,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mos.nira.core.image.ColorSeparator
+import com.mos.nira.R
+import com.mos.nira.features.artwork.domain.PartCResult
 
 private val NavyBg = Color(0xFF0B1020)
 private val CardBg = Color(0xFF171F35)
@@ -45,14 +47,21 @@ private val Cyan = Color(0xFF55D6E8)
 private val TextWhite = Color(0xFFF5F6FF)
 private val TextMuted = Color(0xFF9BA6C0)
 
+/**
+ * The screens NIRA plans for this print: the Print Report engine's screens (Part C), the same ones
+ * the decision card lists. The left-out background never appears here. Model proof, not films.
+ */
 @Composable
 fun ColorSeparationScreen(
-    separationResult: ColorSeparator.SeparationResult?,
+    partC: PartCResult?,
+    isComputing: Boolean,
     selectedLayerIndex: Int,
     onSelectLayer: (Int) -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val channels = partC?.channels.orEmpty()
+    val index = selectedLayerIndex.takeIf { it in channels.indices } ?: -1
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -61,99 +70,56 @@ fun ColorSeparationScreen(
             .verticalScroll(rememberScrollState())
     ) {
         Spacer(modifier = Modifier.height(10.dp))
-
-        // Navigation header
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            OutlinedButton(
-                onClick = onBack,
-                shape = RoundedCornerShape(10.dp)
-            ) {
-                Text("← Color Intelligence", color = TextWhite)
+            OutlinedButton(onClick = onBack, shape = RoundedCornerShape(10.dp)) {
+                Text(stringResource(R.string.sep_back), color = TextWhite)
             }
-
-            Text(
-                text = "PRELIMINARY SEPARATIONS",
-                color = Cyan,
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Bold,
-                letterSpacing = 1.sp
-            )
+            Text(stringResource(R.string.sep_title).uppercase(), color = Cyan, fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.sp)
         }
-
         Spacer(modifier = Modifier.height(16.dp))
-
-        // Disclaimer Card
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(14.dp),
             colors = CardDefaults.cardColors(containerColor = Color(0xFF141A2D))
         ) {
             Column(modifier = Modifier.padding(14.dp)) {
-                Text(
-                    text = "TECHNICAL NOTE",
-                    color = Violet,
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.sp
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "This preview represents a digital cluster separation for preliminary design verification. It is not a production-ready halftone screen or mechanical print plate.",
-                    color = TextMuted,
-                    fontSize = 11.sp,
-                    lineHeight = 16.sp
-                )
+                partC?.strategyName?.let {
+                    Text(it, color = TextWhite, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                    Spacer(modifier = Modifier.height(4.dp))
+                }
+                Text(stringResource(R.string.sep_note), color = TextMuted, fontSize = 11.sp, lineHeight = 16.sp)
             }
         }
-
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Layer Canvas Preview
-        val activeBitmap = if (selectedLayerIndex == -1) {
-            separationResult?.compositeBitmap
-        } else {
-            separationResult?.layers?.getOrNull(selectedLayerIndex)?.tintedBitmap
+        if (partC == null || channels.isEmpty()) {
+            Text(stringResource(if (isComputing) R.string.card_working else R.string.sep_none), color = TextMuted, fontSize = 13.sp)
+            return@Column
         }
 
+        val active: Bitmap? = if (index == -1) partC.proofBitmap else channels[index].filmPositiveBitmap
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(320.dp),
+            modifier = Modifier.fillMaxWidth().height(320.dp),
             shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF070B16)),
+            colors = CardDefaults.cardColors(containerColor = if (index == -1) Color(0xFF070B16) else Color.White),
             border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF232D48))
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clip(RoundedCornerShape(20.dp)),
-                contentAlignment = Alignment.Center
-            ) {
-                if (activeBitmap != null) {
+            Box(modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(20.dp)), contentAlignment = Alignment.Center) {
+                if (active != null) {
                     Image(
-                        bitmap = activeBitmap.asImageBitmap(),
-                        contentDescription = "Separation Layer",
+                        bitmap = active.asImageBitmap(),
+                        contentDescription = stringResource(R.string.sep_title),
                         contentScale = ContentScale.Fit,
                         modifier = Modifier.fillMaxSize()
                     )
-                } else {
-                    Text("No separation data available", color = TextMuted)
                 }
-
-                // Layer label overlay
-                val layerLabel = if (selectedLayerIndex == -1) {
-                    "Combined Composite Preview"
-                } else {
-                    val layer = separationResult?.layers?.getOrNull(selectedLayerIndex)
-                    "Layer ${selectedLayerIndex + 1}: ${layer?.dominantColor?.hex ?: ""} (${String.format("%.1f%%", layer?.pixelCoverage ?: 0f)})"
-                }
-
+                val label = if (index == -1) stringResource(R.string.sep_proof) else inkLabel(channels[index].inkName)
                 Text(
-                    text = layerLabel,
+                    text = label,
                     color = TextWhite,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.SemiBold,
@@ -165,112 +131,55 @@ fun ColorSeparationScreen(
                 )
             }
         }
-
         Spacer(modifier = Modifier.height(20.dp))
-
-        // Layer Selection Controls
-        Text(
-            text = "SELECT SEPARATION LAYER",
-            color = Violet,
-            fontSize = 11.sp,
-            letterSpacing = 1.5.sp,
-            fontWeight = FontWeight.Bold
-        )
-
+        Text(stringResource(R.string.sep_pick).uppercase(), color = Violet, fontSize = 11.sp, letterSpacing = 1.5.sp, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(12.dp))
-
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            // Combined composite pill
+        LazyRow(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
             item {
                 LayerSelectorChip(
-                    title = "All Layers",
-                    subtitle = "Composite",
-                    isSelected = selectedLayerIndex == -1,
+                    title = stringResource(R.string.sep_all),
+                    subtitle = stringResource(R.string.sep_proof),
+                    isSelected = index == -1,
                     swatchColor = null,
                     onClick = { onSelectLayer(-1) }
                 )
             }
-
-            // Individual color layer pills
-            if (separationResult != null) {
-                itemsIndexed(separationResult.layers) { index, layer ->
-                    val color = Color(layer.dominantColor.r, layer.dominantColor.g, layer.dominantColor.b)
-                    LayerSelectorChip(
-                        title = "Layer ${index + 1}",
-                        subtitle = layer.dominantColor.hex,
-                        isSelected = selectedLayerIndex == index,
-                        swatchColor = color,
-                        onClick = { onSelectLayer(index) }
-                    )
+            itemsIndexed(channels) { i, ch ->
+                LayerSelectorChip(
+                    title = inkLabel(ch.inkName),
+                    subtitle = colourName(ch.inkHex),
+                    isSelected = index == i,
+                    swatchColor = Color(ch.inkRgb.r, ch.inkRgb.g, ch.inkRgb.b),
+                    onClick = { onSelectLayer(i) }
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(20.dp))
+        if (index >= 0) {
+            val ch = channels[index]
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = CardBg)
+            ) {
+                Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+                    Text(inkLabel(ch.inkName), color = Cyan, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                    Spacer(modifier = Modifier.height(10.dp))
+                    SpecRow(stringResource(R.string.sep_colour), colourName(ch.inkHex))
+                    SpecRow(stringResource(R.string.sep_mesh), ch.recommendedMesh + (ch.meshConfidence?.let { " ($it)" } ?: ""))
+                    SpecRow(stringResource(R.string.sep_coverage), ch.formattedCoverage)
                 }
             }
         }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Active Layer Specs
-        if (selectedLayerIndex >= 0 && separationResult != null) {
-            val layer = separationResult.layers.getOrNull(selectedLayerIndex)
-            if (layer != null) {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = CardBg)
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
-                    ) {
-                        Text(
-                            text = "LAYER ${selectedLayerIndex + 1} SPECIFICATIONS",
-                            color = Cyan,
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 1.sp
-                        )
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text("Target Ink / Color", color = TextMuted, fontSize = 12.sp)
-                            Text(layer.dominantColor.hex, color = TextWhite, fontSize = 12.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
-                        }
-                        Spacer(modifier = Modifier.height(6.dp))
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text("Color Values", color = TextMuted, fontSize = 12.sp)
-                            Text(layer.dominantColor.formattedRgb, color = TextWhite, fontSize = 12.sp, fontFamily = FontFamily.Monospace)
-                        }
-                        Spacer(modifier = Modifier.height(6.dp))
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text("Estimated Lab", color = TextMuted, fontSize = 12.sp)
-                            Text(layer.dominantColor.formattedLab, color = TextWhite, fontSize = 12.sp, fontFamily = FontFamily.Monospace)
-                        }
-                        Spacer(modifier = Modifier.height(6.dp))
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text("Surface Coverage", color = TextMuted, fontSize = 12.sp)
-                            Text(String.format("%.1f%%", layer.pixelCoverage), color = Cyan, fontSize = 12.sp, fontWeight = FontWeight.Bold)
-                        }
-                    }
-                }
-            }
-        }
-
         Spacer(modifier = Modifier.height(30.dp))
+    }
+}
+
+@Composable
+private fun SpecRow(label: String, value: String) {
+    Row(modifier = Modifier.fillMaxWidth().padding(vertical = 3.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+        Text(label, color = TextMuted, fontSize = 12.sp)
+        Text(value, color = TextWhite, fontSize = 12.sp, fontWeight = FontWeight.Bold)
     }
 }
 
@@ -307,20 +216,9 @@ fun LayerSelectorChip(
                 )
                 Spacer(modifier = Modifier.width(10.dp))
             }
-
             Column {
-                Text(
-                    text = title,
-                    color = if (isSelected) Cyan else TextWhite,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = subtitle,
-                    color = TextMuted,
-                    fontSize = 10.sp,
-                    fontFamily = FontFamily.Monospace
-                )
+                Text(text = title, color = if (isSelected) Cyan else TextWhite, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                Text(text = subtitle, color = TextMuted, fontSize = 10.sp)
             }
         }
     }

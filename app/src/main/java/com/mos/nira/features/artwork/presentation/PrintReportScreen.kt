@@ -1,5 +1,6 @@
 package com.mos.nira.features.artwork.presentation
 
+import com.mos.nira.R
 import android.graphics.Bitmap
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -61,6 +62,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -408,53 +410,12 @@ fun PrintReportScreen(
                             fontWeight = FontWeight.Bold
                         )
 
-                        // Garment Color Swatches & Manual Override
-                        Column {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text("Garment Base Colour", style = MaterialTheme.typography.labelMedium)
-                                if (inputs.userGarmentHex != null) {
-                                    Text(
-                                        text = "Custom: ${inputs.userGarmentHex}",
-                                        style = MaterialTheme.typography.labelSmall,
-                                        color = MaterialTheme.colorScheme.primary,
-                                        modifier = Modifier.clickable { onSetUserGarmentColor(null) }
-                                    )
-                                }
-                            }
-                            Spacer(modifier = Modifier.height(4.dp))
-                            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                val garmentOptions = listOf(
-                                    Pair("#FFFFFF", "White"),
-                                    Pair("#000000", "Black"),
-                                    Pair("#D9D9D9", "Heather Grey"),
-                                    Pair("#001F3F", "Navy")
-                                )
-                                garmentOptions.forEach { (hex, label) ->
-                                    val isSelected = inputs.garmentColorHex.equals(hex, ignoreCase = true)
-                                    FilterChip(
-                                        selected = isSelected,
-                                        onClick = {
-                                            onSetUserGarmentColor(hex)
-                                            onUpdateGarmentHex(hex)
-                                        },
-                                        label = { Text(label) },
-                                        leadingIcon = {
-                                            Box(
-                                                modifier = Modifier
-                                                    .size(14.dp)
-                                                    .clip(CircleShape)
-                                                    .background(Color(android.graphics.Color.parseColor(hex)))
-                                                    .border(1.dp, Color.Gray, CircleShape)
-                                            )
-                                        }
-                                    )
-                                }
-                            }
-                        }
+                        // The garment is chosen once, in question 1 of the brief above.
+                        val garmentNow = inputs.targetGarmentHex ?: inputs.userGarmentHex ?: partAResult?.garmentProfile?.estimatedHex
+                        Text(
+                            text = stringResource(R.string.report_garment_from_brief, garmentNow?.let { colourName(it) } ?: "—"),
+                            style = MaterialTheme.typography.bodySmall
+                        )
 
                         // White Underbase Controls
                         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {

@@ -238,7 +238,8 @@ fun ArtworkNavHost(
 
         composable(ArtworkDestinations.COLOR_SEPARATION) {
             ColorSeparationScreen(
-                separationResult = uiState.separationResult,
+                partC = uiState.partCResult,
+                isComputing = uiState.isComputingPrintReport || uiState.isComputingPartB || uiState.isComputingPartC,
                 selectedLayerIndex = uiState.selectedLayerIndex,
                 onSelectLayer = { viewModel.selectLayer(it) },
                 onBack = goBack
