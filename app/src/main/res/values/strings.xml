@@ -418,4 +418,5 @@
     <string name="pvg_darker">%1$s: darker than the fabric — prints on top</string>
     <string name="pvg_close">%1$s: about as light as the fabric — hard to see</string>
     <string name="pvg_source">Ravi\'s rule</string>
+    <string name="error_out_of_memory">This photo is too large for this phone\'s memory. Close other apps and try again, or take the photo a little further away.</string>
 </resources>

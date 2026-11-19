@@ -419,4 +419,5 @@
     <string name="pvg_darker">%1$s: dunkler als der Stoff — wird aufgedruckt</string>
     <string name="pvg_close">%1$s: etwa so hell wie der Stoff — schwer zu sehen</string>
     <string name="pvg_source">Ravis Regel</string>
+    <string name="error_out_of_memory">Dieses Foto ist zu groß für den Speicher dieses Telefons. Schließen Sie andere Apps und versuchen Sie es erneut, oder fotografieren Sie etwas weiter weg.</string>
 </resources>

@@ -420,4 +420,5 @@
     <string name="pvg_darker">%1$s: más oscuro que el tejido — se imprime encima</string>
     <string name="pvg_close">%1$s: casi tan claro como el tejido — se verá poco</string>
     <string name="pvg_source">regla de Ravi</string>
+    <string name="error_out_of_memory">Esta foto es demasiado grande para la memoria de este teléfono. Cierre otras apps y vuelva a intentarlo, o tome la foto un poco más lejos.</string>
 </resources>

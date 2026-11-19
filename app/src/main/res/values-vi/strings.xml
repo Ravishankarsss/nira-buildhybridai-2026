@@ -418,4 +418,5 @@
     <string name="pvg_darker">%1$s: đậm hơn vải — in đè lên được</string>
     <string name="pvg_close">%1$s: sáng gần bằng vải — khó thấy</string>
     <string name="pvg_source">quy tắc của Ravi</string>
+    <string name="error_out_of_memory">Ảnh này quá lớn so với bộ nhớ của điện thoại. Hãy đóng ứng dụng khác rồi thử lại, hoặc chụp xa hơn một chút.</string>
 </resources>

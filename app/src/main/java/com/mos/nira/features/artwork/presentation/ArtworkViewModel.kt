@@ -409,14 +409,9 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                     )
                 }
 
-                val separationResult = withContext(Dispatchers.Default) {
-                    ColorSeparator.separateColors(
-                        sourceBitmap = currentBitmap,
-                        palette = matchedPalette,
-                        garmentColor = garment,
-                        maxDimension = 1024
-                    )
-                }
+                // The old colour-cluster layers are no longer shown (the Separation screen shows the
+                // engine's screens), so they are not built: on a large photo they used the memory
+                // the Print Report engine needs (OutOfMemoryError on the vivo, 18-19 Nov).
 
                 val analysisId = UUID.randomUUID().toString()
                 val context = getApplication<Application>()
@@ -448,12 +443,13 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                 _uiState.update {
                     it.copy(
                         analysisState = AnalysisState.Success,
-                        separationResult = separationResult,
                         currentRecordId = analysisId,
                         isSavedLocally = true,
                         savedAnalyses = updatedAnalyses
                     )
                 }
+            } catch (oom: OutOfMemoryError) {
+                onOutOfMemory()
             } catch (e: Exception) {
                 e.printStackTrace()
                 _uiState.update {
@@ -632,20 +628,6 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
             // Start the Print Report measurement at once; it does not need the separation layers.
             computePartAReport()
 
-            // The colour separation layers (Separation screen) are made after Part A, so the
-            // two do not compete for the phone's cores and the measured colours come first.
-            if (bitmap != null) {
-                partAJob?.join()
-                val separation = withContext(Dispatchers.Default) {
-                    ColorSeparator.separateColors(bitmap, record.palette, record.garmentColor, 1024)
-                }
-                _uiState.update {
-                    // Only if the same analysis is still open and nothing newer has set the layers.
-                    if (it.currentRecordId == record.id && it.separationResult == null) {
-                        it.copy(separationResult = separation)
-                    } else it
-                }
-            }
         }
     }
 
@@ -912,6 +894,25 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
         _uiState.update { it.copy(costDownBefore = null, costDownAfter = null) }
     }
 
+    /**
+     * A step ran out of memory (a very large photo on a phone with a small memory limit): stop the
+     * spinners and say so, instead of letting Android close the app.
+     */
+    private fun onOutOfMemory() {
+        System.gc()
+        val msg = getApplication<Application>().getString(com.mos.nira.R.string.error_out_of_memory)
+        _uiState.update {
+            it.copy(
+                isComputingPrintReport = false,
+                isComputingPartB = false,
+                isComputingPartC = false,
+                isComputingPartD = false,
+                printReportError = msg,
+                analysisState = if (it.analysisState is AnalysisState.Loading) AnalysisState.Error(msg) else it.analysisState
+            )
+        }
+    }
+
     /** True when the file has camera make or exposure information; null when it cannot be read. */
     private suspend fun readCameraExif(uri: Uri): Boolean? = withContext(Dispatchers.IO) {
         try {
@@ -1105,6 +1106,8 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
 
                 // Automatically trigger Part B strategy comparison
                 computePartBReport()
+            } catch (oom: OutOfMemoryError) {
+                onOutOfMemory()
             } catch (e: Exception) {
                 if (e is kotlin.coroutines.cancellation.CancellationException) throw e // a newer run replaced this one
                 e.printStackTrace()
@@ -1206,6 +1209,8 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                 computePartCReport(chosen)
             } catch (e: CancellationException) {
                 throw e
+            } catch (oom: OutOfMemoryError) {
+                onOutOfMemory()
             } catch (e: Exception) {
                 e.printStackTrace()
                 _uiState.update { it.copy(isComputingPartB = false) }
@@ -1273,6 +1278,8 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                 computePartDReport()
             } catch (e: CancellationException) {
                 throw e
+            } catch (oom: OutOfMemoryError) {
+                onOutOfMemory()
             } catch (e: Exception) {
                 e.printStackTrace()
                 _uiState.update { it.copy(isComputingPartC = false) }
@@ -1302,6 +1309,8 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                     )
                 }
                 _uiState.update { it.copy(partDResult = partD, isComputingPartD = false) }
+            } catch (oom: OutOfMemoryError) {
+                onOutOfMemory()
             } catch (e: Exception) {
                 e.printStackTrace()
                 _uiState.update { it.copy(isComputingPartD = false) }

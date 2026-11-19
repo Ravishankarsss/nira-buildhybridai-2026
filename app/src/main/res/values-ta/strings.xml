@@ -419,4 +419,5 @@
     <string name="pvg_darker">%1$s: துணியைவிட அடர் — மேலே அச்சிடலாம்</string>
     <string name="pvg_close">%1$s: துணியின் அதே ஒளிர்வு — தெரிவது கடினம்</string>
     <string name="pvg_source">ரவியின் விதி</string>
+    <string name="error_out_of_memory">இந்த போனின் நினைவகத்துக்கு இந்தப் புகைப்படம் மிகப் பெரியது. மற்ற செயலிகளை மூடிவிட்டு மீண்டும் முயலவும், அல்லது சற்றுத் தள்ளி நின்று எடுக்கவும்.</string>
 </resources>

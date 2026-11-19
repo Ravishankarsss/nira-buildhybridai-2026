@@ -418,4 +418,5 @@
     <string name="pvg_darker">%1$s：比面料深 — 可直接印在上面</string>
     <string name="pvg_close">%1$s：与面料明度接近 — 不易看清</string>
     <string name="pvg_source">Ravi 的规则</string>
+    <string name="error_out_of_memory">这张照片对本手机的内存来说太大。请关闭其他应用后重试，或稍远一点拍摄。</string>
 </resources>

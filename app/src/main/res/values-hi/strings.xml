@@ -419,4 +419,5 @@
     <string name="pvg_darker">%1$s: कपड़े से गहरा — ऊपर प्रिंट होगा</string>
     <string name="pvg_close">%1$s: कपड़े जितना ही हल्का — मुश्किल से दिखेगा</string>
     <string name="pvg_source">रवि का नियम</string>
+    <string name="error_out_of_memory">यह फ़ोटो इस फ़ोन की मेमोरी के लिए बहुत बड़ी है। दूसरे ऐप बंद करके फिर कोशिश करें, या थोड़ा दूर से फ़ोटो लें।</string>
 </resources>

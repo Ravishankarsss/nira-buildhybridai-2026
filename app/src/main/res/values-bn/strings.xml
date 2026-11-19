@@ -419,4 +419,5 @@
     <string name="pvg_darker">%1$s: কাপড়ের চেয়ে গাঢ় — ওপরে প্রিন্ট হবে</string>
     <string name="pvg_close">%1$s: কাপড়ের প্রায় সমান হালকা — কম দেখা যাবে</string>
     <string name="pvg_source">রবির নিয়ম</string>
+    <string name="error_out_of_memory">এই ফোনের মেমরির জন্য ছবিটি খুব বড়। অন্য অ্যাপ বন্ধ করে আবার চেষ্টা করুন, বা একটু দূর থেকে ছবি তুলুন।</string>
 </resources>
