@@ -52,7 +52,11 @@ data class TechniqueAdvice(
     val risks: List<String>,
     /** Confidence label from the rules file, or null if the file gives none. */
     val confidence: String?,
-    val verifiedByRavi: Boolean
+    val verifiedByRavi: Boolean,
+    /** Screens the method itself needs (print_techniques.json "screens" when it is a number). */
+    val screens: Int? = null,
+    val screensDetail: String? = null,
+    val processSteps: List<String> = emptyList()
 )
 
 /** One technique as read from print_techniques.json. */
@@ -68,7 +72,10 @@ data class TechniqueRule(
     val garmentColour: String?,
     val risks: List<String>,
     val confidence: String?,
-    val verifiedByRavi: Boolean
+    val verifiedByRavi: Boolean,
+    val screens: Int? = null,
+    val screensDetail: String? = null,
+    val processSteps: List<String> = emptyList()
 )
 
 /**
@@ -101,7 +108,10 @@ object TechniqueAdvisor {
                 garmentColour = t.optString("garment_colour").takeIf { it.isNotBlank() },
                 risks = strings(t.optJSONArray("risks")),
                 confidence = t.optString("confidence").takeIf { it.isNotBlank() },
-                verifiedByRavi = t.optBoolean("verified_by_ravi", false)
+                verifiedByRavi = t.optBoolean("verified_by_ravi", false),
+                screens = (t.opt("screens") as? Number)?.toInt(),
+                screensDetail = t.optString("screens_detail").takeIf { it.isNotBlank() },
+                processSteps = strings(t.optJSONArray("process_steps"))
             )
         }
     }
@@ -143,7 +153,10 @@ object TechniqueAdvisor {
             reasons = reasons,
             risks = rule.risks,
             confidence = rule.confidence,
-            verifiedByRavi = rule.verifiedByRavi
+            verifiedByRavi = rule.verifiedByRavi,
+            screens = rule.screens,
+            screensDetail = rule.screensDetail,
+            processSteps = rule.processSteps
         )
     }
 

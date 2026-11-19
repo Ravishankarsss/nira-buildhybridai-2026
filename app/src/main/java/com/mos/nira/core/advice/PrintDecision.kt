@@ -6,7 +6,7 @@ import org.json.JSONObject
 enum class Feel(val tag: String?) { SOFT("soft"), RAISED("raised"), ANY(null) }
 
 /** Where the order quantity falls against print_rules.json quantity_thresholds. */
-enum class QuantityBand { DIGITAL, BETWEEN, SCREEN, NOT_SET, NOT_ANSWERED }
+enum class QuantityBand { DIGITAL, BETWEEN, SCREEN, NOT_SET, NOT_ANSWERED, BUYER_ORDER }
 
 /** Where the white-base line on the card comes from. */
 enum class BaseSource { ENGINE, DISCHARGE, DIGITAL }
@@ -24,6 +24,8 @@ data class BriefRules(
 
 /** print_rules.json "quantity_thresholds". A null limit means Ravi has not given it yet. */
 data class QuantityRules(
+    /** False (Ravi, 19 Nov 2026): quantity is the buyer's order and does not change the method. */
+    val changesMethod: Boolean,
     val digitalBelowPieces: Int?,
     val screenFromPieces: Int?,
     val confidence: String,
@@ -108,13 +110,17 @@ object PrintDecision {
     fun parseQuantityRules(root: JSONObject): QuantityRules? = try {
         val r = root.getJSONObject("quantity_thresholds")
         fun intOrNull(key: String): Int? = if (!r.has(key) || r.isNull(key)) null else r.getInt(key)
-        QuantityRules(intOrNull("digital_below_pieces"), intOrNull("screen_from_pieces"), r.getString("confidence"), r.getBoolean("verified_by_ravi"))
+        QuantityRules(
+            r.getBoolean("quantity_changes_method"),
+            intOrNull("digital_below_pieces"), intOrNull("screen_from_pieces"), r.getString("confidence"), r.getBoolean("verified_by_ravi")
+        )
     } catch (e: Exception) {
         null
     }
 
     fun quantityBand(quantity: Int?, rules: QuantityRules?): QuantityBand {
         if (quantity == null) return QuantityBand.NOT_ANSWERED
+        if (rules != null && !rules.changesMethod) return QuantityBand.BUYER_ORDER
         val below = rules?.digitalBelowPieces
         val from = rules?.screenFromPieces
         if (below == null || from == null) return QuantityBand.NOT_SET

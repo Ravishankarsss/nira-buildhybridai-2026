@@ -281,7 +281,6 @@
     <string name="card_screens">Screens</string>
     <string name="card_screens_value">%1$d: %2$s</string>
     <string name="card_screens_digital">No screens: digital print.</string>
-    <string name="card_screens_not_given">How the discharge is applied is not in the rules file yet (Ravi to give).</string>
     <string name="card_working">Working out screens and ink…</string>
     <string name="card_base">White base</string>
     <string name="card_base_yes">Yes, under the print only</string>
@@ -305,4 +304,7 @@
     <string name="card_need_basics">Answer the garment colour and the fibre first: they decide which methods are possible.</string>
     <string name="card_explain_button">Explain this card</string>
     <string name="card_explain_hint">AI explains the card in plain words, on this phone when the on-device model is available. Text only, never the image. An answer with a number that is not on the card is not shown.</string>
+    <string name="card_quantity_buyer">%1$d pieces: the buyer\'s order. Quantity does not change the method; it is used for the ink total of the order.</string>
+    <string name="card_ink_order">For %1$d pieces: %2$s g (min %3$s, max %4$s)</string>
+    <string name="card_process">How it is printed (from the rules file)</string>
 </resources>

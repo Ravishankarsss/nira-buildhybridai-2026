@@ -282,7 +282,6 @@
     <string name="card_screens">ஸ்கிரீன்கள்</string>
     <string name="card_screens_value">%1$d: %2$s</string>
     <string name="card_screens_digital">ஸ்கிரீன் இல்லை: டிஜிட்டல் அச்சு.</string>
-    <string name="card_screens_not_given">டிஸ்சார்ஜ் எப்படி செய்யப்படுகிறது என்பது இன்னும் விதிகள் கோப்பில் இல்லை (ரவி தர வேண்டும்).</string>
     <string name="card_working">ஸ்கிரீன்களும் மையும் கணக்கிடப்படுகின்றன…</string>
     <string name="card_base">வெள்ளை அடிப்படை</string>
     <string name="card_base_yes">ஆம், அச்சின் கீழ் மட்டும்</string>
@@ -306,4 +305,7 @@
     <string name="card_need_basics">முதலில் ஆடை நிறம் மற்றும் இழைக்குப் பதிலளிக்கவும்: எந்த முறைகள் சாத்தியம் என்பதை அவையே தீர்மானிக்கின்றன.</string>
     <string name="card_explain_button">இந்த அட்டையை விளக்கு</string>
     <string name="card_explain_hint">AI இந்த அட்டையை எளிய சொற்களில் விளக்குகிறது; சாதன மாதிரி இருந்தால் இந்த போனிலேயே. உரை மட்டும், படம் ஒருபோதும் இல்லை. அட்டையில் இல்லாத எண் கொண்ட பதில் காட்டப்படாது.</string>
+    <string name="card_quantity_buyer">%1$d துண்டுகள்: வாங்குபவரின் ஆர்டர். எண்ணிக்கை முறையை மாற்றாது; ஆர்டரின் மொத்த மைக்கு மட்டும் பயன்படும்.</string>
+    <string name="card_ink_order">%1$d துண்டுகளுக்கு: %2$s கி (குறைந்தது %3$s, அதிகம் %4$s)</string>
+    <string name="card_process">எப்படி அச்சிடப்படுகிறது (விதிகள் கோப்பிலிருந்து)</string>
 </resources>

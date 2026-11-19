@@ -245,6 +245,7 @@ fun PrintDecisionCard(
             val qText = when (card.quantityBand) {
                 QuantityBand.NOT_ANSWERED -> stringResource(R.string.card_quantity_not_answered)
                 QuantityBand.NOT_SET -> stringResource(R.string.card_quantity_not_set)
+                QuantityBand.BUYER_ORDER -> stringResource(R.string.card_quantity_buyer, q ?: 0)
                 QuantityBand.DIGITAL -> stringResource(R.string.card_quantity_digital, q ?: 0, quantityRules?.digitalBelowPieces ?: 0)
                 QuantityBand.SCREEN -> stringResource(R.string.card_quantity_screen, q ?: 0, quantityRules?.screenFromPieces ?: 0)
                 QuantityBand.BETWEEN -> stringResource(R.string.card_quantity_between, q ?: 0, quantityRules?.digitalBelowPieces ?: 0, quantityRules?.screenFromPieces ?: 0)
@@ -253,9 +254,23 @@ fun PrintDecisionCard(
 
             if (best != null) {
                 if (card.baseSource == BaseSource.DIGITAL) {
-                    val screensText = if (best.advice.id == "discharge_digital") stringResource(R.string.card_screens_not_given)
+                    val n = best.advice.screens
+                    val screensText = if (n != null && n > 0) stringResource(R.string.card_screens_value, n, best.advice.screensDetail ?: "")
                     else stringResource(R.string.card_screens_digital)
                     Line(stringResource(R.string.card_screens), screensText, stringResource(R.string.src_rules), best.advice.confidence, best.advice.verifiedByRavi)
+                    if ("discharge" in best.advice.id) {
+                        Line(
+                            stringResource(R.string.card_base), stringResource(R.string.card_base_discharge),
+                            stringResource(R.string.src_rules), best.advice.confidence, best.advice.verifiedByRavi
+                        )
+                    }
+                    if (best.advice.processSteps.isNotEmpty()) {
+                        Spacer(Modifier.height(8.dp))
+                        Text(stringResource(R.string.card_process), color = DMuted, fontSize = 11.sp)
+                        best.advice.processSteps.forEachIndexed { i, step ->
+                            Text("${i + 1}. $step", color = DWhite, fontSize = 12.sp, lineHeight = 17.sp)
+                        }
+                    }
                 } else if (isComputing && screens.isEmpty()) {
                     Small(stringResource(R.string.card_working))
                 } else {
@@ -286,7 +301,13 @@ fun PrintDecisionCard(
                     Line(
                         stringResource(R.string.card_ink),
                         card.gramsPerGarment?.let {
-                            stringResource(R.string.card_ink_value, fmt(it), fmt(card.gramsMin ?: it), fmt(card.gramsMax ?: it))
+                            stringResource(R.string.card_ink_value, fmt(it), fmt(card.gramsMin ?: it), fmt(card.gramsMax ?: it)) +
+                                (q?.let { pieces ->
+                                    "\n" + stringResource(
+                                        R.string.card_ink_order, pieces,
+                                        fmt0(it * pieces), fmt0((card.gramsMin ?: it) * pieces), fmt0((card.gramsMax ?: it) * pieces)
+                                    )
+                                } ?: "")
                         } ?: stringResource(R.string.card_ink_none),
                         stringResource(R.string.src_rules), null, false
                     )
@@ -321,6 +342,7 @@ fun PrintDecisionCard(
 }
 
 private fun fmt(v: Double) = String.format("%.1f", v)
+private fun fmt0(v: Double) = String.format("%.0f", v)
 
 @Composable
 private fun MethodLine(label: String, choice: MethodChoice, emphasise: Boolean) {

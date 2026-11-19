@@ -283,7 +283,6 @@
     <string name="card_screens">Écrans</string>
     <string name="card_screens_value">%1$d : %2$s</string>
     <string name="card_screens_digital">Pas d\'écran : impression numérique.</string>
-    <string name="card_screens_not_given">La façon d\'appliquer le rongeant n\'est pas encore dans le fichier de règles (Ravi la donnera).</string>
     <string name="card_working">Calcul des écrans et de l\'encre…</string>
     <string name="card_base">Sous-couche blanche</string>
     <string name="card_base_yes">Oui, sous l\'impression seulement</string>
@@ -307,4 +306,7 @@
     <string name="card_need_basics">Répondez d\'abord à la couleur du vêtement et à la fibre : elles décident des méthodes possibles.</string>
     <string name="card_explain_button">Expliquer cette carte</string>
     <string name="card_explain_hint">L\'IA explique la carte simplement, sur ce téléphone si le modèle local est disponible. Texte seulement, jamais l\'image. Une réponse avec un nombre absent de la carte n\'est pas affichée.</string>
+    <string name="card_quantity_buyer">%1$d pièces : la commande de l\'acheteur. La quantité ne change pas la méthode ; elle sert au total d\'encre de la commande.</string>
+    <string name="card_ink_order">Pour %1$d pièces : %2$s g (min %3$s, max %4$s)</string>
+    <string name="card_process">Comment c\'est imprimé (fichier de règles)</string>
 </resources>

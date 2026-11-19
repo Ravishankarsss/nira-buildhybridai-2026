@@ -46,6 +46,7 @@ object CardExplanation {
             when (card.quantityBand) {
                 QuantityBand.NOT_ANSWERED -> "Quantity: not answered."
                 QuantityBand.NOT_SET -> "Quantity: the quantity limits are not in the rules file yet, so quantity did not change the method."
+                QuantityBand.BUYER_ORDER -> "Quantity: ${a.quantity} pieces, the buyer's order. Quantity does not change the method; it is used for the ink total of the order."
                 QuantityBand.DIGITAL -> "Quantity: below ${quantityRules?.digitalBelowPieces} pieces, digital comes first."
                 QuantityBand.SCREEN -> "Quantity: from ${quantityRules?.screenFromPieces} pieces, screen printing comes first."
                 QuantityBand.BETWEEN -> "Quantity: between ${quantityRules?.digitalBelowPieces} and ${quantityRules?.screenFromPieces} pieces, both digital and screen are offered."
@@ -53,10 +54,16 @@ object CardExplanation {
         )
         val best = card.best ?: return@buildList
         when (card.baseSource) {
-            BaseSource.DIGITAL -> add(
-                if (best.advice.id == "discharge_digital") "Screens: how the discharge is applied is not in the rules file yet."
-                else "Screens: none, this is a digital print."
-            )
+            BaseSource.DIGITAL -> {
+                val n = best.advice.screens
+                if (n != null && n > 0) {
+                    add("Screens: $n (${best.advice.screensDetail ?: "from the rules file"}).")
+                } else {
+                    add("Screens: none, this is a digital print.")
+                }
+                if (best.advice.processSteps.isNotEmpty()) add("How it is printed: ${best.advice.processSteps.joinToString(" ")}")
+                if ("discharge" in best.advice.id) add("White base: no, discharge removes the garment dye.")
+            }
             else -> {
                 card.separationName?.let { add("Separation measured by the engine: $it.") }
                 add("Screens: ${card.screens.size} (${card.screens.joinToString(", ") { it.name }}).")
@@ -73,6 +80,9 @@ object CardExplanation {
                 }
                 card.gramsPerGarment?.let {
                     add("Ink per garment: ${f1(it)} g (min ${f1(card.gramsMin ?: it)}, max ${f1(card.gramsMax ?: it)}).")
+                    a.quantity?.let { q ->
+                        add("Ink for $q pieces: ${f0(it * q)} g (min ${f0((card.gramsMin ?: it) * q)}, max ${f0((card.gramsMax ?: it) * q)}).")
+                    }
                 }
             }
         }
@@ -102,4 +112,5 @@ object CardExplanation {
         .toString(2)
 
     private fun f1(v: Double) = String.format(java.util.Locale.US, "%.1f", v)
+    private fun f0(v: Double) = String.format(java.util.Locale.US, "%.0f", v)
 }

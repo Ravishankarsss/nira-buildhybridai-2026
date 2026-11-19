@@ -41,10 +41,12 @@ class CardExplanationTest {
         assertTrue(text.contains("Brief: garment colour #FFFFFF; fibre cotton; fabric single jersey; quantity 500 pieces; feel wanted soft."))
         assertTrue(text.contains("Method: Water-based pigment print"))
         assertTrue(text.contains("not floor-verified"))
-        assertTrue(text.contains("quantity limits are not in the rules file yet"))
+        assertTrue(text.contains("Quantity: 500 pieces, the buyer's order. Quantity does not change the method"))
         assertTrue(text.contains("Screen Ink Blue: mesh 137–156 tpi (sourced), ink 0.5 g per garment."))
         assertTrue(text.contains("Screen Deep Red: mesh 137–156 tpi (sourced), ink figure not available in the rules file."))
         assertTrue(text.contains("strike-off"))
+        // Ink total for the order (0.5 g x 500 pieces).
+        assertTrue(text.contains("Ink for 500 pieces: 250 g"))
     }
 
     @Test
@@ -54,7 +56,9 @@ class CardExplanationTest {
         val text = facts.joinToString("\n")
         assertTrue(text.contains("Contrast warning: ink #1F2A5C"))
         assertTrue(text.contains("Discharge + digital print (possible, see notes; verified by Ravi on the floor"))
-        assertTrue(text.contains("how the discharge is applied is not in the rules file yet"))
+        assertTrue(text.contains("Screens: 1 (one white discharge screen in the shape of the artwork)."))
+        assertTrue(text.contains("How it is printed: Print white discharge"))
+        assertTrue(text.contains("White base: no, discharge removes the garment dye."))
         assertTrue(text.contains("Risk: Reactive-dyed cotton only; discharge test first"))
     }
 

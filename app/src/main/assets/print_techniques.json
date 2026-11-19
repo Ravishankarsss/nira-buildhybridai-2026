@@ -580,8 +580,14 @@
       "what_it_is": "The garment's dye is discharged in the print area, then the design is printed digitally on the discharged area. Soft print on dark cotton with no white base.",
       "artwork_fit": "ANY",
       "garment_colour": "dark or medium, dyed with dischargeable reactive dyes",
-      "screens": null,
-      "screens_note": "How the discharge is applied (a discharge screen or a digital discharge step) is not in this file yet. Ravi to give.",
+      "screens": 1,
+      "screens_detail": "one white discharge screen in the shape of the artwork",
+      "process_steps": [
+        "Print white discharge through one screen in the shape of the artwork.",
+        "Cure: the discharge removes the garment dye and the print area turns white.",
+        "Print the design digitally on the white discharged area."
+      ],
+      "process_source": "Ravi, 19 Nov 2026 (navy, red and other medium or dark colours)",
       "suitable_fibres": [
         "cotton (100%, reactive-dyed, dischargeable)"
       ],
@@ -913,7 +919,7 @@
   },
   "change_log": [
     "v2 (15 Nov 2026): added spot_halftone_gradient, garment_colour_principles and floor notes after a device test on a real garment photo.",
-    "v3 (18 Nov 2026): added discharge_digital (discharge plus digital print; Ravi floor knowledge, verified_by_ravi true)."
+    "v3 (18 Nov 2026): added discharge_digital (discharge plus digital print; Ravi floor knowledge, verified_by_ravi true). 19 Nov: Ravi gave the process: one white discharge screen in the shape of the artwork, cure, then digital print on the white area."
   ],
   "garment_colour_principles": {
     "rules": [

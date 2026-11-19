@@ -283,7 +283,6 @@
     <string name="card_screens">Pantallas</string>
     <string name="card_screens_value">%1$d: %2$s</string>
     <string name="card_screens_digital">Sin pantallas: impresión digital.</string>
-    <string name="card_screens_not_given">Cómo se aplica el corrosivo aún no está en el archivo de reglas (lo dará Ravi).</string>
     <string name="card_working">Calculando pantallas y tinta…</string>
     <string name="card_base">Base blanca</string>
     <string name="card_base_yes">Sí, solo bajo la impresión</string>
@@ -307,4 +306,7 @@
     <string name="card_need_basics">Responda primero el color de la prenda y la fibra: deciden qué métodos son posibles.</string>
     <string name="card_explain_button">Explicar esta tarjeta</string>
     <string name="card_explain_hint">La IA explica la tarjeta con palabras sencillas, en este teléfono si el modelo local está disponible. Solo texto, nunca la imagen. No se muestra una respuesta con un número que no esté en la tarjeta.</string>
+    <string name="card_quantity_buyer">%1$d piezas: el pedido del comprador. La cantidad no cambia el método; sirve para el total de tinta del pedido.</string>
+    <string name="card_ink_order">Para %1$d piezas: %2$s g (mín. %3$s, máx. %4$s)</string>
+    <string name="card_process">Cómo se imprime (del archivo de reglas)</string>
 </resources>

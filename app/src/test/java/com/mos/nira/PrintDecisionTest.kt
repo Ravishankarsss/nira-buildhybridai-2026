@@ -48,10 +48,12 @@ class PrintDecisionTest {
     fun rulesLoadAndQuantityLimitsAreNotInvented() {
         assertTrue(brief.fabrics.contains("single_jersey"))
         assertEquals("soft", brief.feelOfTechnique["discharge_digital"])
-        // Ravi has not given the limits yet: they must stay empty.
+        // Ravi, 19 Nov: quantity is the buyer's order and does not change the method.
+        assertEquals(false, quantity.changesMethod)
         assertNull(quantity.digitalBelowPieces)
         assertNull(quantity.screenFromPieces)
-        assertEquals(QuantityBand.NOT_SET, PrintDecision.quantityBand(50, quantity))
+        assertEquals(QuantityBand.BUYER_ORDER, PrintDecision.quantityBand(50, quantity))
+        assertEquals(QuantityBand.NOT_SET, PrintDecision.quantityBand(50, quantity.copy(changesMethod = true)))
         assertEquals(QuantityBand.NOT_ANSWERED, PrintDecision.quantityBand(null, quantity))
         assertNull(PrintDecision.parseBriefRules(JSONObject("{}")))
     }
@@ -73,6 +75,9 @@ class PrintDecisionTest {
         assertTrue(t.verifiedByRavi)
         assertEquals("digital", t.group)
         assertTrue(t.risks.any { it.contains("discharge test first") })
+        // Ravi, 19 Nov: one white discharge screen in the shape of the artwork, then digital.
+        assertEquals(1, t.screens)
+        assertEquals(3, t.processSteps.size)
     }
 
     @Test
@@ -132,7 +137,7 @@ class PrintDecisionTest {
 
     @Test
     fun quantityBandsMoveTheMethodOnceRaviGivesTheLimits() {
-        val q = quantity.copy(digitalBelowPieces = 100, screenFromPieces = 300)
+        val q = quantity.copy(changesMethod = true, digitalBelowPieces = 100, screenFromPieces = 300)
         assertEquals(QuantityBand.DIGITAL, PrintDecision.quantityBand(50, q))
         assertEquals(QuantityBand.BETWEEN, PrintDecision.quantityBand(150, q))
         assertEquals(QuantityBand.SCREEN, PrintDecision.quantityBand(300, q))

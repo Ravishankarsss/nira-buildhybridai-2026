@@ -282,7 +282,6 @@
     <string name="card_screens">Siebe</string>
     <string name="card_screens_value">%1$d: %2$s</string>
     <string name="card_screens_digital">Keine Siebe: Digitaldruck.</string>
-    <string name="card_screens_not_given">Wie der Ätzdruck aufgebracht wird, steht noch nicht in der Regeldatei (kommt von Ravi).</string>
     <string name="card_working">Siebe und Farbe werden berechnet…</string>
     <string name="card_base">Weiße Unterlage</string>
     <string name="card_base_yes">Ja, nur unter dem Druck</string>
@@ -306,4 +305,7 @@
     <string name="card_need_basics">Beantworten Sie zuerst Farbe und Faser: sie entscheiden, welche Verfahren möglich sind.</string>
     <string name="card_explain_button">Diese Karte erklären</string>
     <string name="card_explain_hint">Die KI erklärt die Karte in einfachen Worten, auf diesem Telefon, wenn das lokale Modell verfügbar ist. Nur Text, nie das Bild. Eine Antwort mit einer Zahl, die nicht auf der Karte steht, wird nicht gezeigt.</string>
+    <string name="card_quantity_buyer">%1$d Stück: der Auftrag des Käufers. Die Menge ändert das Verfahren nicht; sie dient für die Farbmenge des Auftrags.</string>
+    <string name="card_ink_order">Für %1$d Stück: %2$s g (min. %3$s, max. %4$s)</string>
+    <string name="card_process">So wird gedruckt (aus der Regeldatei)</string>
 </resources>

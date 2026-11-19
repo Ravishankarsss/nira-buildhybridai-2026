@@ -1,21 +1,22 @@
 {
   "generated_by": "NIRA Android app (engine and rules files; no AI used to make these facts)",
-  "saved_at": "2026-11-19 07:15",
+  "saved_at": "2026-11-19 07:53",
   "prompt_asset": "prompts\/card_explain_v1.txt",
   "facts": [
     "Brief: garment colour #FFFFFF; fibre cotton; fabric single jersey; quantity 500 pieces; feel wanted soft.",
     "Method: Water-based pigment print (possible, see notes; not floor-verified; confidence not given in the rules file; feel soft).",
     "Second choice: DTG (direct-to-garment) digital print (possible, see notes; not floor-verified; confidence not given in the rules file).",
-    "Quantity: the quantity limits are not in the rules file yet, so quantity did not change the method.",
+    "Quantity: 500 pieces, the buyer's order. Quantity does not change the method; it is used for the ink total of the order.",
     "Separation measured by the engine: Best 2 Spot Inks (Halftone).",
     "Screens: 2 (Ink Blue, Deep Red).",
     "White base: no.",
     "Screen Ink Blue: mesh 230–305 tpi (sourced), ink 0.5 g per garment.",
     "Screen Deep Red: mesh 230–305 tpi (sourced), ink 0.1 g per garment.",
     "Ink per garment: 0.5 g (min 0.3, max 0.8).",
+    "Ink for 500 pieces: 267 g (min 165, max 419).",
     "Risk: Stiff handle and lower rub fastness with heavy dark shades",
     "Risk: Abrasion marks at creases on polyester\/cotton",
     "All values are a model result for planning; a strike-off is needed before bulk production."
   ],
-  "prompt": "You explain a garment print decision card to a merchandiser who has no print master nearby.\nWrite 3 plain sentences: what to print with and why, the main risk, and what must be checked before bulk production.\nUse only the facts below. Do not add any number, colour code, method or rule that is not in the facts.\nIf a fact says a line is not floor-verified, say that it still needs checking.\nDo not use lists or headings.\n\nFacts:\n- Brief: garment colour #FFFFFF; fibre cotton; fabric single jersey; quantity 500 pieces; feel wanted soft.\n- Method: Water-based pigment print (possible, see notes; not floor-verified; confidence not given in the rules file; feel soft).\n- Second choice: DTG (direct-to-garment) digital print (possible, see notes; not floor-verified; confidence not given in the rules file).\n- Quantity: the quantity limits are not in the rules file yet, so quantity did not change the method.\n- Separation measured by the engine: Best 2 Spot Inks (Halftone).\n- Screens: 2 (Ink Blue, Deep Red).\n- White base: no.\n- Screen Ink Blue: mesh 230–305 tpi (sourced), ink 0.5 g per garment.\n- Screen Deep Red: mesh 230–305 tpi (sourced), ink 0.1 g per garment.\n- Ink per garment: 0.5 g (min 0.3, max 0.8).\n- Risk: Stiff handle and lower rub fastness with heavy dark shades\n- Risk: Abrasion marks at creases on polyester\/cotton\n- All values are a model result for planning; a strike-off is needed before bulk production."
+  "prompt": "You explain a garment print decision card to a merchandiser who has no print master nearby.\nWrite 3 plain sentences: what to print with and why, the main risk, and what must be checked before bulk production.\nUse only the facts below. Do not add any number, colour code, method or rule that is not in the facts.\nIf a fact says a line is not floor-verified, say that it still needs checking.\nDo not use lists or headings.\n\nFacts:\n- Brief: garment colour #FFFFFF; fibre cotton; fabric single jersey; quantity 500 pieces; feel wanted soft.\n- Method: Water-based pigment print (possible, see notes; not floor-verified; confidence not given in the rules file; feel soft).\n- Second choice: DTG (direct-to-garment) digital print (possible, see notes; not floor-verified; confidence not given in the rules file).\n- Quantity: 500 pieces, the buyer's order. Quantity does not change the method; it is used for the ink total of the order.\n- Separation measured by the engine: Best 2 Spot Inks (Halftone).\n- Screens: 2 (Ink Blue, Deep Red).\n- White base: no.\n- Screen Ink Blue: mesh 230–305 tpi (sourced), ink 0.5 g per garment.\n- Screen Deep Red: mesh 230–305 tpi (sourced), ink 0.1 g per garment.\n- Ink per garment: 0.5 g (min 0.3, max 0.8).\n- Ink for 500 pieces: 267 g (min 165, max 419).\n- Risk: Stiff handle and lower rub fastness with heavy dark shades\n- Risk: Abrasion marks at creases on polyester\/cotton\n- All values are a model result for planning; a strike-off is needed before bulk production."
 }

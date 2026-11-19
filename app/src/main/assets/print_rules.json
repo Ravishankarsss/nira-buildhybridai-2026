@@ -432,7 +432,7 @@
   "display_disclaimer": "Rule-of-thumb estimate from public trade sources. Verify on the production floor and with the ink maker's technical data sheet.",
   "change_log": [
     "v2 (15 Nov 2026): added process_inks, garment_mask, white_base, recommendation, resolution and regression_cases after a device test on a real garment photo (white-to-blue gradient logo on a black T-shirt).",
-    "v3 (18 Nov 2026): added shadow_vs_ink and photo_vs_artwork (proposed starting values, Ravi to confirm) after a white T-shirt photo measured fold shadows as print colours. merge_shades_in_photo_hue_within_deg holds the 6 deg from merge_shades_in_photo as a number. Added edge_blend (camera blur and anti-aliasing bands between two inks; proposed starting values, Ravi to confirm). Added small_colours: a colour under the minimum coverage is flagged, not dropped (the magenta eye on the skull print). Added screen_type_mesh_rule (mesh per screen type from mesh_rules; ink figures only where ink_consumption has an entry). Ravi: flat spot 137-156 tpi; mapping verified except highlight white. Added artwork_background. Added edge_blend.keyline_protection (Ravi: black keylines are important) and photo_background (table or floor at the photo edge). Added garment_preview (contrast check and preview chips). Added print_brief (feel tags from the technique texts, method order) and quantity_thresholds (values empty until Ravi gives them). Added mixed_separation (CMYK plus spot screens for solid colours; black text from the K screen)."
+    "v3 (18 Nov 2026): added shadow_vs_ink and photo_vs_artwork (proposed starting values, Ravi to confirm) after a white T-shirt photo measured fold shadows as print colours. merge_shades_in_photo_hue_within_deg holds the 6 deg from merge_shades_in_photo as a number. Added edge_blend (camera blur and anti-aliasing bands between two inks; proposed starting values, Ravi to confirm). Added small_colours: a colour under the minimum coverage is flagged, not dropped (the magenta eye on the skull print). Added screen_type_mesh_rule (mesh per screen type from mesh_rules; ink figures only where ink_consumption has an entry). Ravi: flat spot 137-156 tpi; mapping verified except highlight white. Added artwork_background. Added edge_blend.keyline_protection (Ravi: black keylines are important) and photo_background (table or floor at the photo edge). Added garment_preview (contrast check and preview chips). Added print_brief (feel tags from the technique texts, method order) and quantity_thresholds (values empty until Ravi gives them). Added mixed_separation (CMYK plus spot screens for solid colours; black text from the K screen). Ravi 19 Nov: quantity is the buyer's order and does not change the method (quantity_changes_method false)."
   ],
   "process_inks": {
     "cyan": "#00AEEF",
@@ -567,13 +567,14 @@
     "note": "Proposed 18 Nov 2026; Ravi to confirm the feel tags and the method order."
   },
   "quantity_thresholds": {
-    "what": "Order quantity bands that move the method between digital and screen printing",
+    "what": "Order quantity and the print method",
+    "quantity_changes_method": false,
     "digital_below_pieces": null,
     "screen_from_pieces": null,
-    "rule": "below digital_below_pieces: digital (DTG, DTF) first; from screen_from_pieces: screen printing first; in between: both are offered. While a value is null, quantity does not change the method and the card says the limit is not set.",
+    "rule": "The order quantity is the buyer's order. It does not change the method; it is used for the ink totals of the order. The two limits stay empty while quantity_changes_method is false.",
+    "source": "Ravi, 19 Nov 2026",
     "confidence": "assumption",
-    "verified_by_ravi": false,
-    "note": "Values to be given by Ravi. Never filled in by the app."
+    "verified_by_ravi": true
   },
   "garment_preview": {
     "what": "'See it on your garment': the print drawn on a chosen garment colour, on the phone",

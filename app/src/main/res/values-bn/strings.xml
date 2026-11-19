@@ -282,7 +282,6 @@
     <string name="card_screens">স্ক্রিন</string>
     <string name="card_screens_value">%1$d: %2$s</string>
     <string name="card_screens_digital">স্ক্রিন নেই: ডিজিটাল প্রিন্ট।</string>
-    <string name="card_screens_not_given">ডিসচার্জ কীভাবে দেওয়া হয় তা এখনও নিয়মের ফাইলে নেই (রবি দেবেন)।</string>
     <string name="card_working">স্ক্রিন ও কালি হিসাব হচ্ছে…</string>
     <string name="card_base">সাদা বেস</string>
     <string name="card_base_yes">হ্যাঁ, শুধু প্রিন্টের নিচে</string>
@@ -306,4 +305,7 @@
     <string name="card_need_basics">আগে পোশাকের রং ও ফাইবার বলুন: এগুলোই ঠিক করে কোন পদ্ধতি সম্ভব।</string>
     <string name="card_explain_button">এই কার্ড বুঝিয়ে দিন</string>
     <string name="card_explain_hint">AI সহজ ভাষায় কার্ডটি বোঝায়; অন-ডিভাইস মডেল থাকলে এই ফোনেই। শুধু লেখা, ছবি কখনও নয়। কার্ডে নেই এমন সংখ্যা থাকলে উত্তর দেখানো হয় না।</string>
+    <string name="card_quantity_buyer">%1$d পিস: ক্রেতার অর্ডার। পরিমাণ পদ্ধতি বদলায় না; অর্ডারের মোট কালির হিসাবে লাগে।</string>
+    <string name="card_ink_order">%1$d পিসের জন্য: %2$s গ্রা (সর্বনিম্ন %3$s, সর্বোচ্চ %4$s)</string>
+    <string name="card_process">কীভাবে প্রিন্ট হয় (নিয়মের ফাইল থেকে)</string>
 </resources>
