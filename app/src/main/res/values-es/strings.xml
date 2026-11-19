@@ -400,4 +400,19 @@
     <string name="badge_buyer">Decisión del comprador: cambia el color de la prenda</string>
     <string name="costdown_explain">Explicar el compromiso</string>
     <string name="costdown_explain_hint">La IA explica las opciones con los números exactos de arriba, en este teléfono si es posible. No se muestra una respuesta con un número que no esté aquí.</string>
+    <string name="sheet_button">Hoja para compartir</string>
+    <string name="sheet_share">Compartir</string>
+    <string name="sheet_buyer_toggle">Cotización comprador (inglés)</string>
+    <string name="sheet_floor_toggle">Hoja de taller (tamil)</string>
+    <string name="sheet_making">Preparando la hoja…</string>
+    <string name="sheet_buyer_title">Decisión de impresión — Cotización</string>
+    <string name="sheet_floor_title">Decisión de impresión — Hoja de taller</string>
+    <string name="sheet_job">Colores de impresión: %1$s</string>
+    <string name="sheet_garment">Prenda: %1$s</string>
+    <string name="sheet_quantity">%1$d piezas</string>
+    <string name="sheet_preview_note">Vista previa del modelo en la prenda, no una prueba.</string>
+    <string name="sheet_ink_kg">tinta %1$s kg para el pedido</string>
+    <string name="sheet_cost_partial">Algunos costes no están incluidos; vea la tarjeta de decisión.</string>
+    <string name="sheet_costdown">Reducción elegida: %1$s</string>
+    <string name="sheet_footer">Hecho con NIRA en el teléfono. Los números vienen del motor y los archivos de reglas de NIRA, no de la IA.</string>
 </resources>

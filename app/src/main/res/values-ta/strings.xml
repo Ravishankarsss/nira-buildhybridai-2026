@@ -399,4 +399,19 @@
     <string name="badge_buyer">வாங்குபவர் முடிவு: ஆடை நிறம் மாறும்</string>
     <string name="costdown_explain">நன்மை-தீமையை விளக்கு</string>
     <string name="costdown_explain_hint">மேலே உள்ள சரியான எண்களிலிருந்து AI வழிகளை விளக்குகிறது; முடிந்தால் இந்த போனிலேயே. இங்கு இல்லாத எண் கொண்ட பதில் காட்டப்படாது.</string>
+    <string name="sheet_button">பகிர்வுத் தாள்</string>
+    <string name="sheet_share">பகிர்</string>
+    <string name="sheet_buyer_toggle">வாங்குபவர் மேற்கோள் (ஆங்கிலம்)</string>
+    <string name="sheet_floor_toggle">தள வேலைத் தாள் (தமிழ்)</string>
+    <string name="sheet_making">தாள் தயாராகிறது…</string>
+    <string name="sheet_buyer_title">அச்சு முடிவு — வாங்குபவர் மேற்கோள்</string>
+    <string name="sheet_floor_title">அச்சு முடிவு — தள வேலைத் தாள்</string>
+    <string name="sheet_job">அச்சு நிறங்கள்: %1$s</string>
+    <string name="sheet_garment">ஆடை: %1$s</string>
+    <string name="sheet_quantity">%1$d துண்டுகள்</string>
+    <string name="sheet_preview_note">ஆடையில் மாதிரி முன்னோட்டம், proof அல்ல.</string>
+    <string name="sheet_ink_kg">ஆர்டருக்கு மை %1$s கிலோ</string>
+    <string name="sheet_cost_partial">சில செலவுகள் சேர்க்கப்படவில்லை; முடிவு அட்டையைப் பார்க்கவும்.</string>
+    <string name="sheet_costdown">தேர்ந்த செலவு குறைப்பு: %1$s</string>
+    <string name="sheet_footer">NIRA மூலம் போனில் உருவாக்கப்பட்டது. எண்கள் NIRA எஞ்சின் மற்றும் விதிகள் கோப்புகளிலிருந்து வருகின்றன, AI-இலிருந்து அல்ல.</string>
 </resources>

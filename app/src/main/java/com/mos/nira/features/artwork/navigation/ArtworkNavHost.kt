@@ -216,7 +216,8 @@ fun ArtworkNavHost(
                         costDownBefore = uiState.costDownBefore,
                         costDownAfter = uiState.costDownAfter,
                         onCostDownPreview = { from, into, garment -> viewModel.renderCostDownPreview(from, into, garment) },
-                        onCloseCostDownPreview = { viewModel.clearCostDownPreview() }
+                        onCloseCostDownPreview = { viewModel.clearCostDownPreview() },
+                        sheetPreview = if (uiState.partBResult?.isDarkGarment == true) uiState.previewWithBase else uiState.previewWithoutBase
                     )
                 },
                 includePhotoEdgeArea = uiState.printJobInputs.includePhotoEdgeArea,
@@ -311,7 +312,8 @@ fun ArtworkNavHost(
                         costDownBefore = uiState.costDownBefore,
                         costDownAfter = uiState.costDownAfter,
                         onCostDownPreview = { from, into, garment -> viewModel.renderCostDownPreview(from, into, garment) },
-                        onCloseCostDownPreview = { viewModel.clearCostDownPreview() }
+                        onCloseCostDownPreview = { viewModel.clearCostDownPreview() },
+                        sheetPreview = if (uiState.partBResult?.isDarkGarment == true) uiState.previewWithBase else uiState.previewWithoutBase
                     )
                 },
                 footer = { Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {

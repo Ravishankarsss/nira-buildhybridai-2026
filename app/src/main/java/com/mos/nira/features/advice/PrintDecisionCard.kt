@@ -132,7 +132,8 @@ fun PrintDecisionCard(
     costDownAfter: android.graphics.Bitmap? = null,
     onCostDownPreview: (fromHex: String?, intoHex: String?, afterGarmentHex: String?) -> Unit = { _, _, _ -> },
     onCloseCostDownPreview: () -> Unit = {},
-    extraActions: @Composable () -> Unit = {},
+    /** The garment preview to put on the Decision Sheet (with or without the white base). */
+    sheetPreview: android.graphics.Bitmap? = null,
     choicesViewModel: PrintMethodChoicesViewModel = viewModel(viewModelStoreOwner = activityViewModelStoreOwner())
 ) {
     LaunchedEffect(Unit) { onLoadRules() }
@@ -351,6 +352,8 @@ fun PrintDecisionCard(
                 }
 
                 // Order cost and Cost-Down: deterministic, from the factory's own rates.
+                var chosenOption by remember { mutableStateOf<com.mos.nira.core.commercial.CostDownOption?>(null) }
+                var sheetOpen by remember { mutableStateOf(false) }
                 val rates = com.mos.nira.features.commercial.rememberFactoryRates()
                 val cost = remember(card, screens, rates) { com.mos.nira.core.commercial.PrintCost.forCard(card, screens, rates) }
                 val options = remember(card, screens, rates, costDownRules) {
@@ -371,8 +374,26 @@ fun PrintDecisionCard(
                         }
                     },
                     onClosePreview = onCloseCostDownPreview,
-                    extraActions = extraActions
+                    onOptionSelected = { chosenOption = it },
+                    extraActions = {
+                        androidx.compose.material3.OutlinedButton(onClick = { sheetOpen = true }, modifier = Modifier.fillMaxWidth()) {
+                            Text(stringResource(R.string.sheet_button), fontSize = 12.sp, color = DCyan)
+                        }
+                    }
                 )
+                if (sheetOpen) {
+                    com.mos.nira.features.commercial.DecisionSheetDialog(
+                        data = com.mos.nira.features.commercial.SheetData(
+                            card = card,
+                            cost = cost,
+                            rates = rates,
+                            chosenOption = chosenOption?.takeIf { it in options },
+                            contrast = contrastWarnings,
+                            preview = sheetPreview
+                        ),
+                        onDismiss = { sheetOpen = false }
+                    )
+                }
 
                 // Risks from the rules file for the chosen method
                 if (best.advice.risks.isNotEmpty()) {

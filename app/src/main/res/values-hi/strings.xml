@@ -399,4 +399,19 @@
     <string name="badge_buyer">खरीदार का निर्णय: गारमेंट का रंग बदलेगा</string>
     <string name="costdown_explain">फ़ायदा-नुकसान समझाएँ</string>
     <string name="costdown_explain_hint">AI ऊपर के सटीक अंकों से विकल्प समझाता है; हो सके तो इसी फ़ोन पर। यहाँ न दिखाए गए अंक वाला उत्तर नहीं दिखाया जाता।</string>
+    <string name="sheet_button">शेयर शीट</string>
+    <string name="sheet_share">शेयर करें</string>
+    <string name="sheet_buyer_toggle">खरीदार कोट (अंग्रेज़ी)</string>
+    <string name="sheet_floor_toggle">फ़्लोर जॉब शीट (तमिल)</string>
+    <string name="sheet_making">शीट तैयार हो रही है…</string>
+    <string name="sheet_buyer_title">प्रिंट निर्णय — खरीदार कोट</string>
+    <string name="sheet_floor_title">प्रिंट निर्णय — फ़्लोर जॉब शीट</string>
+    <string name="sheet_job">प्रिंट रंग: %1$s</string>
+    <string name="sheet_garment">गारमेंट: %1$s</string>
+    <string name="sheet_quantity">%1$d पीस</string>
+    <string name="sheet_preview_note">गारमेंट पर मॉडल पूर्वावलोकन, प्रूफ़ नहीं।</string>
+    <string name="sheet_ink_kg">ऑर्डर के लिए स्याही %1$s किलो</string>
+    <string name="sheet_cost_partial">कुछ लागतें शामिल नहीं; निर्णय कार्ड देखें।</string>
+    <string name="sheet_costdown">चुना गया लागत विकल्प: %1$s</string>
+    <string name="sheet_footer">NIRA से फ़ोन पर बनाया गया। अंक NIRA के इंजन और नियम फ़ाइलों से हैं, AI से नहीं।</string>
 </resources>

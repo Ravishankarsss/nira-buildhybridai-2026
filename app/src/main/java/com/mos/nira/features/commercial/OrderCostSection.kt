@@ -108,6 +108,7 @@ fun OrderCostSection(
     costDownAfter: Bitmap?,
     onPreviewOption: (CostDownOption) -> Unit,
     onClosePreview: () -> Unit,
+    onOptionSelected: (CostDownOption?) -> Unit = {},
     extraActions: @Composable () -> Unit = {}
 ) {
     var ratesOpen by remember { mutableStateOf(false) }
@@ -165,13 +166,14 @@ fun OrderCostSection(
         }
     }
 
-    // Action row: Cost-Down and the share sheet.
+    // Actions: Cost-Down and the share sheet, one above the other (long labels in Tamil fit).
     Spacer(Modifier.height(8.dp))
-    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
+    Column(verticalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.fillMaxWidth()) {
         val best = options.maxOfOrNull { it.savingPerPc }
         Button(
             onClick = { costDownOpen = true },
             enabled = cost != null && cost.quantity != null,
+            modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = CGreen, contentColor = Color(0xFF0F1526))
         ) {
             Text(
@@ -225,6 +227,7 @@ fun OrderCostSection(
                             .background(if (selected == o) Color(0xFF263254) else CInner)
                             .clickable {
                                 selected = o
+                                onOptionSelected(o)
                                 if (o.kind != CostDownKind.SWITCH_METHOD) onPreviewOption(o) else onClosePreview()
                             }
                             .padding(12.dp)

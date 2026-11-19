@@ -399,4 +399,19 @@
     <string name="badge_buyer">Entscheidung des Käufers: Die Farbe des Teils ändert sich</string>
     <string name="costdown_explain">Abwägung erklären</string>
     <string name="costdown_explain_hint">Die KI erklärt die Möglichkeiten mit den genauen Zahlen oben, wenn möglich auf diesem Telefon. Eine Antwort mit einer Zahl, die hier fehlt, wird nicht gezeigt.</string>
+    <string name="sheet_button">Blatt teilen</string>
+    <string name="sheet_share">Teilen</string>
+    <string name="sheet_buyer_toggle">Käuferangebot (Englisch)</string>
+    <string name="sheet_floor_toggle">Werkstattblatt (Tamil)</string>
+    <string name="sheet_making">Blatt wird erstellt…</string>
+    <string name="sheet_buyer_title">Druckentscheidung — Angebot</string>
+    <string name="sheet_floor_title">Druckentscheidung — Werkstattblatt</string>
+    <string name="sheet_job">Druckfarben: %1$s</string>
+    <string name="sheet_garment">Teil: %1$s</string>
+    <string name="sheet_quantity">%1$d Stück</string>
+    <string name="sheet_preview_note">Modellvorschau auf dem Teil, kein Proof.</string>
+    <string name="sheet_ink_kg">Farbe %1$s kg für den Auftrag</string>
+    <string name="sheet_cost_partial">Einige Kosten fehlen; siehe Entscheidungskarte.</string>
+    <string name="sheet_costdown">Gewählte Einsparung: %1$s</string>
+    <string name="sheet_footer">Mit NIRA auf dem Telefon erstellt. Die Zahlen stammen aus NIRAs Engine und Regeldateien, nicht von KI.</string>
 </resources>

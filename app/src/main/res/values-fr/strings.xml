@@ -400,4 +400,19 @@
     <string name="badge_buyer">Décision de l\'acheteur : la couleur du vêtement change</string>
     <string name="costdown_explain">Expliquer le compromis</string>
     <string name="costdown_explain_hint">L\'IA explique les options avec les chiffres exacts ci-dessus, sur ce téléphone si possible. Une réponse avec un nombre absent ici n\'est pas affichée.</string>
+    <string name="sheet_button">Fiche à partager</string>
+    <string name="sheet_share">Partager</string>
+    <string name="sheet_buyer_toggle">Devis acheteur (anglais)</string>
+    <string name="sheet_floor_toggle">Fiche d\'atelier (tamoul)</string>
+    <string name="sheet_making">Préparation de la fiche…</string>
+    <string name="sheet_buyer_title">Décision d\'impression — Devis</string>
+    <string name="sheet_floor_title">Décision d\'impression — Fiche d\'atelier</string>
+    <string name="sheet_job">Couleurs d\'impression : %1$s</string>
+    <string name="sheet_garment">Vêtement : %1$s</string>
+    <string name="sheet_quantity">%1$d pièces</string>
+    <string name="sheet_preview_note">Aperçu du modèle sur le vêtement, pas une épreuve.</string>
+    <string name="sheet_ink_kg">encre %1$s kg pour la commande</string>
+    <string name="sheet_cost_partial">Certains coûts ne sont pas inclus ; voir la carte de décision.</string>
+    <string name="sheet_costdown">Réduction choisie : %1$s</string>
+    <string name="sheet_footer">Fait avec NIRA sur le téléphone. Les chiffres viennent du moteur et des fichiers de règles de NIRA, pas de l\'IA.</string>
 </resources>
