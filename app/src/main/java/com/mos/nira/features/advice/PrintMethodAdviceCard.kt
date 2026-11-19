@@ -79,6 +79,42 @@ fun rememberAdviceRules(): AdviceRulesData? {
 }
 
 /**
+ * Keeps the method choices in step with the AI read (artwork type) and the measured garment
+ * (photos only), without drawing anything. Used where the full advice card is hidden.
+ */
+@Composable
+fun SyncAdviceChoices(
+    garmentColor: DominantColor?,
+    artworkKey: ArtworkKey?,
+    garmentFromMeasureAllowed: Boolean,
+    aiReadViewModel: ArtworkAiReadViewModel = viewModel(viewModelStoreOwner = activityViewModelStoreOwner()),
+    choicesViewModel: PrintMethodChoicesViewModel = viewModel(viewModelStoreOwner = activityViewModelStoreOwner())
+) {
+    val rules = rememberAdviceRules()
+    fun update(change: (PrintMethodChoices) -> PrintMethodChoices) = choicesViewModel.update(artworkKey, change)
+    val aiState by aiReadViewModel.state.collectAsState()
+    LaunchedEffect(aiState, artworkKey) {
+        val read = aiReadViewModel.doneFor(artworkKey)?.read ?: return@LaunchedEffect
+        val kind = when (read.artworkType) {
+            ArtworkType.FLAT -> ArtworkKind.FLAT
+            ArtworkType.TONAL -> ArtworkKind.TONAL
+            ArtworkType.UNKNOWN -> null
+        } ?: return@LaunchedEffect
+        update { c -> if (c.artwork == null || c.artworkFromAi) c.copy(artwork = kind, artworkFromAi = true) else c }
+    }
+    LaunchedEffect(rules, garmentColor, artworkKey, garmentFromMeasureAllowed) {
+        if (!garmentFromMeasureAllowed) {
+            update { c -> if (c.garmentFromMeasure) c.copy(garment = null, garmentFromMeasure = false) else c }
+            return@LaunchedEffect
+        }
+        val r = rules ?: return@LaunchedEffect
+        val g = garmentColor ?: return@LaunchedEffect
+        val tone = TechniqueAdvisor.garmentTone(g.labL, g.labA, g.labB, r.lightnessLimit, r.chromaLimit)
+        update { c -> if (c.garment == null || c.garmentFromMeasure) c.copy(garment = tone, garmentFromMeasure = true) else c }
+    }
+}
+
+/**
  * Print method advice from print_techniques.json. The user chooses the fabric; artwork type is
  * set from the AI read when there is one, and the garment from the measured colour. Every
  * choice can be changed by the user.

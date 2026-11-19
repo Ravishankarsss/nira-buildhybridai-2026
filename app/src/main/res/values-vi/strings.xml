@@ -329,4 +329,8 @@
     <string name="colour_light">%1$s nhạt</string>
     <string name="card_explain_method_missing">Không hiển thị: câu trả lời không nêu phương pháp trên thẻ (thiếu: %1$s).</string>
     <string name="card_explain_code_found">Không hiển thị: câu trả lời có mã màu, trong khi thẻ chỉ dùng tên màu.</string>
+    <string name="details_title">Chi tiết</string>
+    <string name="details_hint">Mọi phương pháp in kèm lý do, chỉnh sửa màu và nhóm màu.</string>
+    <string name="details_show">Hiện</string>
+    <string name="details_hide">Ẩn</string>
 </resources>

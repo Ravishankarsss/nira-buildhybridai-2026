@@ -331,4 +331,8 @@
     <string name="colour_light">%1$s clair</string>
     <string name="card_explain_method_missing">Non affiché : la réponse ne nomme pas la méthode de la carte (manque : %1$s).</string>
     <string name="card_explain_code_found">Non affiché : la réponse contient un code couleur, alors que la carte ne donne que des noms de couleurs.</string>
+    <string name="details_title">Détails</string>
+    <string name="details_hint">Toutes les méthodes d\'impression avec leurs raisons, l\'édition des couleurs et les familles de couleurs.</string>
+    <string name="details_show">Afficher</string>
+    <string name="details_hide">Masquer</string>
 </resources>

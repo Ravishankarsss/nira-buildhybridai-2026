@@ -330,4 +330,8 @@
     <string name="colour_light">हल्का %1$s</string>
     <string name="card_explain_method_missing">नहीं दिखाया: उत्तर में कार्ड का तरीका नहीं लिखा (छूटा: %1$s)।</string>
     <string name="card_explain_code_found">नहीं दिखाया: उत्तर में रंग कोड है, जबकि कार्ड केवल रंगों के नाम देता है।</string>
+    <string name="details_title">विवरण</string>
+    <string name="details_hint">सभी प्रिंट तरीके कारणों सहित, रंग संपादन और रंग परिवार।</string>
+    <string name="details_show">दिखाएँ</string>
+    <string name="details_hide">छिपाएँ</string>
 </resources>

@@ -330,4 +330,8 @@
     <string name="colour_light">হালকা %1$s</string>
     <string name="card_explain_method_missing">দেখানো হয়নি: উত্তরে কার্ডের পদ্ধতির নাম নেই (বাদ: %1$s)।</string>
     <string name="card_explain_code_found">দেখানো হয়নি: উত্তরে রঙের কোড আছে, কার্ডে শুধু রঙের নাম থাকে।</string>
+    <string name="details_title">বিস্তারিত</string>
+    <string name="details_hint">সব প্রিন্ট পদ্ধতি কারণসহ, রং সম্পাদনা ও রঙের পরিবার।</string>
+    <string name="details_show">দেখান</string>
+    <string name="details_hide">লুকান</string>
 </resources>

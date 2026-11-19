@@ -35,6 +35,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -141,6 +142,7 @@ fun ColorIntelligenceScreen(
         val limit = backgroundThresholdDeltaE00 ?: return false
         return ColorConverter.deltaE00(ColorConverter.Lab(c.labL, c.labA, c.labB), lab) <= limit
     }
+    var detailsOpen by rememberSaveable { mutableStateOf(false) }
     var showAddDialog by remember { mutableStateOf(false) }
     var showMergeDialog by remember { mutableStateOf(false) }
     var mergeTargetId by remember { mutableStateOf<Int?>(null) }
@@ -472,173 +474,202 @@ fun ColorIntelligenceScreen(
             )
         }
 
-        // Print method advice from print_techniques.json (rules, not AI).
+        // The method list and the AI read's artwork type stay in step even when Details is closed.
         item {
-            PrintMethodAdviceCard(
+            com.mos.nira.features.advice.SyncAdviceChoices(
                 garmentColor = garmentColor,
-                // An artwork file's border is paper, not fabric: the user chooses the garment.
-                garmentFromMeasureAllowed = inputKind == InputKind.PHOTO,
-                artworkKey = ArtworkKey.of(bitmap, palette.filter { !it.isGarmentBase }.map { it.hex })
+                artworkKey = ArtworkKey.of(bitmap, palette.filter { !it.isGarmentBase }.map { it.hex }),
+                garmentFromMeasureAllowed = inputKind == InputKind.PHOTO
             )
         }
 
-        // Active Selected Color Technical Inspector + Editing Toolbar + Top 3 Shade Matches
-        if (selectedColor != null) {
-            item {
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    ColorDetailInspector(
-                        color = selectedColor,
-                        onAssignShade = { shade -> onAssignShade(selectedColor.id, shade) }
-                    )
-
-                    // Stage 1 interactive editing controls: Merge, Remove, Lock, Set as Garment Base
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        OutlinedButton(
-                            onClick = { showMergeDialog = true },
-                            modifier = Modifier.weight(1f),
-                            shape = RoundedCornerShape(10.dp)
-                        ) {
-                            Text("Merge...", fontSize = 11.sp, color = TextWhite)
-                        }
-
-                        OutlinedButton(
-                            onClick = { onToggleLock(selectedColor.id) },
-                            modifier = Modifier.weight(1f),
-                            shape = RoundedCornerShape(10.dp)
-                        ) {
-                            Text(if (selectedColor.isLocked) "Unlock" else "Lock", fontSize = 11.sp, color = Cyan)
-                        }
-
-                        OutlinedButton(
-                            onClick = { onSetGarmentColor(selectedColor) },
-                            modifier = Modifier.weight(1f),
-                            shape = RoundedCornerShape(10.dp)
-                        ) {
-                            Text("Base Fabric", fontSize = 11.sp, color = Violet)
-                        }
-
-                        OutlinedButton(
-                            onClick = { onRemoveColor(selectedColor.id) },
-                            modifier = Modifier.weight(1f),
-                            shape = RoundedCornerShape(10.dp)
-                        ) {
-                            Text("Remove", fontSize = 11.sp, color = Color(0xFFFF6E6E))
-                        }
+        // Details: every method, colour editing and colour families. Closed by default so the
+        // journey reads picture -> colours -> preview -> brief -> decision card.
+        item {
+            Card(
+                modifier = Modifier.fillMaxWidth().clickable { detailsOpen = !detailsOpen },
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = CardBg)
+            ) {
+                Row(modifier = Modifier.fillMaxWidth().padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(stringResource(R.string.details_title).uppercase(), color = Violet, fontSize = 11.sp, letterSpacing = 1.5.sp, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.details_hint), color = TextMuted, fontSize = 12.sp, lineHeight = 16.sp)
                     }
+                    Text(stringResource(if (detailsOpen) R.string.details_hide else R.string.details_show), color = Cyan, fontSize = 13.sp, fontWeight = FontWeight.Bold)
                 }
             }
         }
 
-        // Color Swatches Palette Header with "Add Required Colour" CTA
-        item {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
+        if (detailsOpen) {
+            // Print method advice from print_techniques.json (rules, not AI).
+            item {
+                PrintMethodAdviceCard(
+                    garmentColor = garmentColor,
+                    // An artwork file's border is paper, not fabric: the user chooses the garment.
+                    garmentFromMeasureAllowed = inputKind == InputKind.PHOTO,
+                    artworkKey = ArtworkKey.of(bitmap, palette.filter { !it.isGarmentBase }.map { it.hex })
+                )
+            }
+
+            // Active Selected Color Technical Inspector + Editing Toolbar + Top 3 Shade Matches
+            if (selectedColor != null && !isHiddenBackground(selectedColor)) {
+                item {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        ColorDetailInspector(
+                            color = selectedColor,
+                            onAssignShade = { shade -> onAssignShade(selectedColor.id, shade) }
+                        )
+
+                        // Stage 1 interactive editing controls: Merge, Remove, Lock, Set as Garment Base
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            OutlinedButton(
+                                onClick = { showMergeDialog = true },
+                                modifier = Modifier.weight(1f),
+                                shape = RoundedCornerShape(10.dp)
+                            ) {
+                                Text("Merge...", fontSize = 11.sp, color = TextWhite)
+                            }
+
+                            OutlinedButton(
+                                onClick = { onToggleLock(selectedColor.id) },
+                                modifier = Modifier.weight(1f),
+                                shape = RoundedCornerShape(10.dp)
+                            ) {
+                                Text(if (selectedColor.isLocked) "Unlock" else "Lock", fontSize = 11.sp, color = Cyan)
+                            }
+
+                            OutlinedButton(
+                                onClick = { onSetGarmentColor(selectedColor) },
+                                modifier = Modifier.weight(1f),
+                                shape = RoundedCornerShape(10.dp)
+                            ) {
+                                Text("Base Fabric", fontSize = 11.sp, color = Violet)
+                            }
+
+                            OutlinedButton(
+                                onClick = { onRemoveColor(selectedColor.id) },
+                                modifier = Modifier.weight(1f),
+                                shape = RoundedCornerShape(10.dp)
+                            ) {
+                                Text("Remove", fontSize = 11.sp, color = Color(0xFFFF6E6E))
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Color Swatches Palette Header with "Add Required Colour" CTA
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = stringResource(R.string.colour_clusters_title, palette.size),
+                            color = Violet,
+                            fontSize = 11.sp,
+                            letterSpacing = 1.5.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = stringResource(R.string.colour_clusters_hint),
+                            color = TextMuted,
+                            fontSize = 11.sp,
+                            lineHeight = 15.sp
+                        )
+                    }
+
+                    TextButton(onClick = { showAddDialog = true }) {
+                        Text("+ Add Custom HEX", color = Cyan, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
+
+            // Palette Swatches List (an artwork background that was left out is not listed)
+            items(palette.filter { !isHiddenBackground(it) }) { color ->
+                ColorSwatchCard(
+                    color = color,
+                    isSelected = selectedColor?.id == color.id,
+                    onClick = { onColorSelected(color) }
+                )
+            }
+
+            // Perceptual Color Families / Grouping Section
+            // Families with only one shade add nothing: hidden. The left-out background is not a family.
+            val shownGroups = colorGroups
+                .map { g -> g.copy(members = g.members.filter { !isHiddenBackground(it) }) }
+                .filter { it.members.size > 1 }
+            if (shownGroups.isNotEmpty()) {
+                item {
+                    Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        text = stringResource(R.string.colour_clusters_title, palette.size),
+                        text = "PERCEPTUAL COLOR FAMILIES (CIEDE2000 < 5.0)",
                         color = Violet,
                         fontSize = 11.sp,
                         letterSpacing = 1.5.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    Text(
-                        text = stringResource(R.string.colour_clusters_hint),
-                        color = TextMuted,
-                        fontSize = 11.sp,
-                        lineHeight = 15.sp
-                    )
                 }
 
-                TextButton(onClick = { showAddDialog = true }) {
-                    Text("+ Add Custom HEX", color = Cyan, fontSize = 12.sp, fontWeight = FontWeight.Bold)
-                }
-            }
-        }
-
-        // Palette Swatches List (an artwork background that was left out is not listed)
-        items(palette.filter { !isHiddenBackground(it) }) { color ->
-            ColorSwatchCard(
-                color = color,
-                isSelected = selectedColor?.id == color.id,
-                onClick = { onColorSelected(color) }
-            )
-        }
-
-        // Perceptual Color Families / Grouping Section
-        // Families with only one shade add nothing: hidden. The left-out background is not a family.
-        val shownGroups = colorGroups
-            .map { g -> g.copy(members = g.members.filter { !isHiddenBackground(it) }) }
-            .filter { it.members.size > 1 }
-        if (shownGroups.isNotEmpty()) {
-            item {
-                Spacer(modifier = Modifier.height(6.dp))
-                Text(
-                    text = "PERCEPTUAL COLOR FAMILIES (CIEDE2000 < 5.0)",
-                    color = Violet,
-                    fontSize = 11.sp,
-                    letterSpacing = 1.5.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-
-            items(shownGroups) { group ->
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = CardBg)
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(14.dp)
+                items(shownGroups) { group ->
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = CardDefaults.cardColors(containerColor = CardBg)
                     ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(14.dp)
                         ) {
-                            Text(
-                                text = "Family #${group.groupId + 1}: ${group.primaryColor.hex}",
-                                color = TextWhite,
-                                fontSize = 13.sp,
-                                fontWeight = FontWeight.Bold,
-                                fontFamily = FontFamily.Monospace
-                            )
-                            Text(
-                                text = String.format("%.1f%% coverage", group.totalPercentage),
-                                color = Cyan,
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            group.members.forEach { m ->
-                                Box(
-                                    modifier = Modifier
-                                        .size(28.dp)
-                                        .clip(CircleShape)
-                                        .background(Color(m.r, m.g, m.b))
-                                        .border(1.dp, Color.White.copy(alpha = 0.2f), CircleShape)
-                                        .clickable { onColorSelected(m) }
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = "Family #${group.groupId + 1}: ${group.primaryColor.hex}",
+                                    color = TextWhite,
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    fontFamily = FontFamily.Monospace
+                                )
+                                Text(
+                                    text = String.format("%.1f%% coverage", group.totalPercentage),
+                                    color = Cyan,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.SemiBold
                                 )
                             }
-                            Text(
-                                text = "${group.members.size} shades",
-                                color = TextMuted,
-                                fontSize = 11.sp
-                            )
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                group.members.forEach { m ->
+                                    Box(
+                                        modifier = Modifier
+                                            .size(28.dp)
+                                            .clip(CircleShape)
+                                            .background(Color(m.r, m.g, m.b))
+                                            .border(1.dp, Color.White.copy(alpha = 0.2f), CircleShape)
+                                            .clickable { onColorSelected(m) }
+                                    )
+                                }
+                                Text(
+                                    text = "${group.members.size} shades",
+                                    color = TextMuted,
+                                    fontSize = 11.sp
+                                )
+                            }
                         }
                     }
                 }

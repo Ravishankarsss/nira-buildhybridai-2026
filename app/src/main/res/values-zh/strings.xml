@@ -329,4 +329,8 @@
     <string name="colour_light">浅%1$s</string>
     <string name="card_explain_method_missing">未显示：回答没有说出卡片上的工艺（缺少：%1$s）。</string>
     <string name="card_explain_code_found">未显示：回答中有颜色代码，而卡片只给出颜色名称。</string>
+    <string name="details_title">详细信息</string>
+    <string name="details_hint">所有印花工艺及理由、颜色编辑和颜色组。</string>
+    <string name="details_show">显示</string>
+    <string name="details_hide">隐藏</string>
 </resources>

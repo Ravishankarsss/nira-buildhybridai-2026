@@ -330,4 +330,8 @@
     <string name="colour_light">இளம் %1$s</string>
     <string name="card_explain_method_missing">காட்டப்படவில்லை: பதில் அட்டையில் உள்ள முறையைக் குறிப்பிடவில்லை (இல்லாதவை: %1$s).</string>
     <string name="card_explain_code_found">காட்டப்படவில்லை: பதிலில் நிறக் குறியீடு உள்ளது; அட்டை நிறப் பெயர்களை மட்டுமே தருகிறது.</string>
+    <string name="details_title">விவரங்கள்</string>
+    <string name="details_hint">எல்லா அச்சு முறைகளும் காரணங்களுடன், நிறத் திருத்தம் மற்றும் நிறக் குடும்பங்கள்.</string>
+    <string name="details_show">காட்டு</string>
+    <string name="details_hide">மறை</string>
 </resources>
