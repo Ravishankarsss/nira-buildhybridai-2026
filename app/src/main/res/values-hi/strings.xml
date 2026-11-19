@@ -414,4 +414,9 @@
     <string name="sheet_cost_partial">कुछ लागतें शामिल नहीं; निर्णय कार्ड देखें।</string>
     <string name="sheet_costdown">चुना गया लागत विकल्प: %1$s</string>
     <string name="sheet_footer">NIRA से फ़ोन पर बनाया गया। अंक NIRA के इंजन और नियम फ़ाइलों से हैं, AI से नहीं।</string>
+    <string name="pvg_title">प्रिंट बनाम कपड़ा</string>
+    <string name="pvg_lighter">%1$s: कपड़े से हल्का — डिस्चार्ज या सफ़ेद बेस चाहिए</string>
+    <string name="pvg_darker">%1$s: कपड़े से गहरा — ऊपर प्रिंट होगा</string>
+    <string name="pvg_close">%1$s: कपड़े जितना ही हल्का — मुश्किल से दिखेगा</string>
+    <string name="pvg_source">रवि का नियम</string>
 </resources>

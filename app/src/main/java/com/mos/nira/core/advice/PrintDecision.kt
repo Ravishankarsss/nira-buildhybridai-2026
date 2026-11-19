@@ -54,8 +54,13 @@ data class PlannedScreen(
     val gramsMin: Double?,
     val gramsMax: Double?,
     /** A CMYK process screen (Cyan, Magenta, Yellow, Black): never merged with another colour. */
-    val isProcess: Boolean = false
-)
+    val isProcess: Boolean = false,
+    /** The engine's highlight white (part of the white-base system, not an artwork colour). */
+    val isHighlightWhite: Boolean = false
+) {
+    /** A print colour of the artwork itself: not the underbase, highlight white or a process ink. */
+    val isArtworkColour: Boolean get() = !isBaseWhite && !isHighlightWhite && !isProcess
+}
 
 data class MethodChoice(val advice: TechniqueAdvice, val feelTag: String?, val fitsQuantity: Boolean?)
 

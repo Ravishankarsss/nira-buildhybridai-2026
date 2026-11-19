@@ -432,7 +432,7 @@
   "display_disclaimer": "Rule-of-thumb estimate from public trade sources. Verify on the production floor and with the ink maker's technical data sheet.",
   "change_log": [
     "v2 (15 Nov 2026): added process_inks, garment_mask, white_base, recommendation, resolution and regression_cases after a device test on a real garment photo (white-to-blue gradient logo on a black T-shirt).",
-    "v3 (18 Nov 2026): added shadow_vs_ink and photo_vs_artwork (proposed starting values, Ravi to confirm) after a white T-shirt photo measured fold shadows as print colours. merge_shades_in_photo_hue_within_deg holds the 6 deg from merge_shades_in_photo as a number. Added edge_blend (camera blur and anti-aliasing bands between two inks; proposed starting values, Ravi to confirm). Added small_colours: a colour under the minimum coverage is flagged, not dropped (the magenta eye on the skull print). Added screen_type_mesh_rule (mesh per screen type from mesh_rules; ink figures only where ink_consumption has an entry). Ravi: flat spot 137-156 tpi; mapping verified except highlight white. Added artwork_background. Added edge_blend.keyline_protection (Ravi: black keylines are important) and photo_background (table or floor at the photo edge). Added garment_preview (contrast check and preview chips). Added print_brief (feel tags from the technique texts, method order) and quantity_thresholds (values empty until Ravi gives them). Added mixed_separation (CMYK plus spot screens for solid colours; black text from the K screen). Ravi 19 Nov: quantity is the buyer's order and does not change the method (quantity_changes_method false). Added cost_down (Cost-Down options; values from Ravi's brief)."
+    "v3 (18 Nov 2026): added shadow_vs_ink and photo_vs_artwork (proposed starting values, Ravi to confirm) after a white T-shirt photo measured fold shadows as print colours. merge_shades_in_photo_hue_within_deg holds the 6 deg from merge_shades_in_photo as a number. Added edge_blend (camera blur and anti-aliasing bands between two inks; proposed starting values, Ravi to confirm). Added small_colours: a colour under the minimum coverage is flagged, not dropped (the magenta eye on the skull print). Added screen_type_mesh_rule (mesh per screen type from mesh_rules; ink figures only where ink_consumption has an entry). Ravi: flat spot 137-156 tpi; mapping verified except highlight white. Added artwork_background. Added edge_blend.keyline_protection (Ravi: black keylines are important) and photo_background (table or floor at the photo edge). Added garment_preview (contrast check and preview chips). Added print_brief (feel tags from the technique texts, method order) and quantity_thresholds (values empty until Ravi gives them). Added mixed_separation (CMYK plus spot screens for solid colours; black text from the K screen). Ravi 19 Nov: quantity is the buyer's order and does not change the method (quantity_changes_method false). Added cost_down (Cost-Down options; values from Ravi's brief). Added print_vs_ground (Ravi's lighter-needs-discharge-or-base rule)."
   ],
   "process_inks": {
     "cyan": "#00AEEF",
@@ -535,6 +535,17 @@
     "capture_guidance": "Fill the frame with the garment. Nothing else in the photo.",
     "confidence": "assumption",
     "note": "Proposed starting values; Ravi to confirm. The centre-box condition keeps a large print that runs off one edge."
+  },
+  "print_vs_ground": {
+    "what": "Per print colour on a dyed (dark or coloured) garment: does it need the dye removed, or can it print on top?",
+    "principle": "A print colour lighter than the fabric must remove the dye (discharge) or sit on a white base; a colour darker than the fabric prints on top.",
+    "principle_source": "Ravi, decision of 19 Nov 2026 (from the pink bunny all-over print)",
+    "lighter_threshold_L": 5,
+    "threshold_rule": "Lighter or darker means a CIELAB L* difference above lighter_threshold_L; within it the colour is reported as close to the fabric (hard to see).",
+    "applies_when": "the garment is dark or coloured (white_base garment limits)",
+    "confidence": "assumption",
+    "verified_by_ravi": false,
+    "note": "The principle is Ravi's decision; the threshold 5 is a starting value to absorb photo noise, to be confirmed."
   },
   "cost_down": {
     "what": "Cost-Down options on the decision card: merge the two closest print colours, switch method at the order quantity, or a light garment (no white underbase)",

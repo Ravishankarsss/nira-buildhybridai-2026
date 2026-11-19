@@ -415,4 +415,9 @@
     <string name="sheet_cost_partial">Certains coûts ne sont pas inclus ; voir la carte de décision.</string>
     <string name="sheet_costdown">Réduction choisie : %1$s</string>
     <string name="sheet_footer">Fait avec NIRA sur le téléphone. Les chiffres viennent du moteur et des fichiers de règles de NIRA, pas de l\'IA.</string>
+    <string name="pvg_title">Impression et tissu</string>
+    <string name="pvg_lighter">%1$s : plus clair que le tissu — rongeant ou sous-couche blanche nécessaire</string>
+    <string name="pvg_darker">%1$s : plus foncé que le tissu — s\'imprime par-dessus</string>
+    <string name="pvg_close">%1$s : presque aussi clair que le tissu — peu visible</string>
+    <string name="pvg_source">règle de Ravi</string>
 </resources>

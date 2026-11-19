@@ -413,4 +413,9 @@
     <string name="sheet_cost_partial">Một số chi phí chưa tính; xem thẻ quyết định.</string>
     <string name="sheet_costdown">Cách giảm đã chọn: %1$s</string>
     <string name="sheet_footer">Tạo bằng NIRA trên điện thoại. Các số liệu đến từ bộ máy và tệp quy tắc của NIRA, không phải từ AI.</string>
+    <string name="pvg_title">Màu in so với vải</string>
+    <string name="pvg_lighter">%1$s: sáng hơn vải — cần tẩy màu hoặc lót trắng</string>
+    <string name="pvg_darker">%1$s: đậm hơn vải — in đè lên được</string>
+    <string name="pvg_close">%1$s: sáng gần bằng vải — khó thấy</string>
+    <string name="pvg_source">quy tắc của Ravi</string>
 </resources>

@@ -90,6 +90,9 @@ class CommercialCostTest {
         val two = listOf(scr("Navy", "#1F2A5C", 1.5), scr("Red", "#C0392B", 0.5))
         val visible = PrintCost.costDown(screenCard(two, 500), two, rates, costDownRules).first { it.kind == CostDownKind.MERGE_COLOURS }
         assertEquals(false, visible.closeMatch)
+        // A highlight white (part of the white base) is never merged either.
+        val withHighlight = listOf(scr("Navy", "#1F2A5C", 1.5), PlannedScreen("Highlight White", "#FFFFFF", false, "x", null, 0.3, 0.2, 0.4, isHighlightWhite = true))
+        assertTrue(PrintCost.costDown(screenCard(withHighlight, 500), withHighlight, rates, costDownRules).none { it.kind == CostDownKind.MERGE_COLOURS })
         // CMYK process screens are never merged.
         val cmyk = listOf(scr("Cyan", "#00AEEF", 0.3, process = true), scr("Magenta", "#EC008C", 0.3, process = true))
         assertTrue(PrintCost.costDown(screenCard(cmyk, 500), cmyk, rates, costDownRules).none { it.kind == CostDownKind.MERGE_COLOURS })

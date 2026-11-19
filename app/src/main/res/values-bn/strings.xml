@@ -414,4 +414,9 @@
     <string name="sheet_cost_partial">কিছু খরচ যোগ হয়নি; সিদ্ধান্ত কার্ড দেখুন।</string>
     <string name="sheet_costdown">বেছে নেওয়া খরচ কমানো: %1$s</string>
     <string name="sheet_footer">ফোনে NIRA দিয়ে তৈরি। সংখ্যাগুলো NIRA-র ইঞ্জিন ও নিয়মের ফাইল থেকে, AI থেকে নয়।</string>
+    <string name="pvg_title">প্রিন্ট বনাম কাপড়</string>
+    <string name="pvg_lighter">%1$s: কাপড়ের চেয়ে হালকা — ডিসচার্জ বা সাদা বেস দরকার</string>
+    <string name="pvg_darker">%1$s: কাপড়ের চেয়ে গাঢ় — ওপরে প্রিন্ট হবে</string>
+    <string name="pvg_close">%1$s: কাপড়ের প্রায় সমান হালকা — কম দেখা যাবে</string>
+    <string name="pvg_source">রবির নিয়ম</string>
 </resources>

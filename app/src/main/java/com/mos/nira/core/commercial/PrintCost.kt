@@ -186,7 +186,7 @@ object PrintCost {
             val before = screen(screens, qty, rates)
 
             // Rule 1: merge the two closest print colours (never the white underbase).
-            val colours = screens.filter { !it.isBaseWhite && !it.isProcess }
+            val colours = screens.filter { it.isArtworkColour }
             if (colours.size >= 2 && before.complete) {
                 var best: Triple<PlannedScreen, PlannedScreen, Double>? = null
                 for (i in colours.indices) for (j in i + 1 until colours.size) {

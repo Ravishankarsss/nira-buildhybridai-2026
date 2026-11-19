@@ -29,7 +29,8 @@ object CardExplanation {
         card: DecisionCard,
         contrast: List<GarmentPreview.ContrastWarning>,
         quantityRules: QuantityRules?,
-        fibreName: String?
+        fibreName: String?,
+        ground: List<com.mos.nira.core.advice.GroundCheck> = emptyList()
     ): List<String> = buildList {
         val a = card.answers
         val brief = listOfNotNull(
@@ -43,6 +44,16 @@ object CardExplanation {
         val garmentName = a.garmentHex?.let { ColourName.english(it) } ?: "this"
         contrast.forEach {
             add("Contrast warning: the ${ColourName.english(it.inkHex)} ink is hard to see on the $garmentName garment (lightness difference ${it.deltaL}).")
+        }
+        ground.forEach { g ->
+            val ink = ColourName.english(g.inkHex)
+            add(
+                when (g.verdict) {
+                    com.mos.nira.core.advice.GroundVerdict.NEEDS_DISCHARGE_OR_BASE -> "Print vs fabric: the $ink ink is lighter than the $garmentName garment, so it needs discharge or a white base (Ravi's rule)."
+                    com.mos.nira.core.advice.GroundVerdict.PRINTS_ON_TOP -> "Print vs fabric: the $ink ink is darker than the $garmentName garment, so it prints on top (Ravi's rule)."
+                    com.mos.nira.core.advice.GroundVerdict.CLOSE_TO_GROUND -> "Print vs fabric: the $ink ink is about as light as the $garmentName garment, so it is hard to see."
+                }
+            )
         }
         card.best?.let { add("Method: ${method(it)}") }
         card.second?.let { add("Second choice: ${method(it)}") }

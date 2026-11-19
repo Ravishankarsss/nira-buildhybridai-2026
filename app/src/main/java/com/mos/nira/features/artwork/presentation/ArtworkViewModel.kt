@@ -115,6 +115,7 @@ data class ArtworkStudioUiState(
     val quantityRules: QuantityRules? = null,
     // Cost-Down (print_rules.json cost_down) and its before / after preview on the garment.
     val costDownRules: com.mos.nira.core.commercial.CostDownRules? = null,
+    val printVsGroundRules: com.mos.nira.core.advice.PrintVsGroundRules? = null,
     val costDownBefore: Bitmap? = null,
     val costDownAfter: Bitmap? = null
 )
@@ -752,12 +753,15 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
     // ---------- Print brief ----------
 
     fun loadBriefRules() {
-        if (_uiState.value.briefRules != null && _uiState.value.quantityRules != null && _uiState.value.costDownRules != null) return
+        if (_uiState.value.briefRules != null && _uiState.value.quantityRules != null && _uiState.value.costDownRules != null &&
+            _uiState.value.printVsGroundRules != null
+        ) return
         viewModelScope.launch {
             val brief = printRulesRepository.getBriefRules()
             val quantity = printRulesRepository.getQuantityRules()
             val costDown = printRulesRepository.getCostDownRules()
-            _uiState.update { it.copy(briefRules = brief, quantityRules = quantity, costDownRules = costDown) }
+            val ground = printRulesRepository.getPrintVsGroundRules()
+            _uiState.update { it.copy(briefRules = brief, quantityRules = quantity, costDownRules = costDown, printVsGroundRules = ground) }
         }
     }
 

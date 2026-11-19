@@ -160,7 +160,7 @@ object DecisionSheet {
         // Header
         text("NIRA", 44f, accent, bold = true, gapAfter = 0f)
         text(c.getString(if (floor) R.string.sheet_floor_title else R.string.sheet_buyer_title), 52f, ink, bold = true, gapAfter = 4f)
-        val colours = card.screens.filter { !it.isBaseWhite && !it.isProcess }.map { colourName(c, it.hex).lowercase(c.resources.configuration.locales[0]) }.distinct()
+        val colours = card.screens.filter { it.isArtworkColour }.map { colourName(c, it.hex).lowercase(c.resources.configuration.locales[0]) }.distinct()
         val jobColours = if (colours.isNotEmpty()) colours.joinToString(", ") else card.screens.map { label(c, it.name) }.joinToString(", ")
         if (jobColours.isNotBlank()) text(c.getString(R.string.sheet_job, jobColours), 30f, muted, gapAfter = 2f)
         text(SimpleDateFormat("d MMM yyyy", c.resources.configuration.locales[0]).format(Date()), 26f, muted)

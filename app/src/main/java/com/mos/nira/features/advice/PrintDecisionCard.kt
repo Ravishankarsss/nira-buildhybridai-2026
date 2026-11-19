@@ -73,11 +73,14 @@ private val DAmber = Color(0xFFFFC870)
 
 private fun hexColor(hex: String) = Color(android.graphics.Color.parseColor(hex))
 
+/** The engine's name for its highlight-white screen (SeparationStrategyEngine.generatePartC). */
+private const val HIGHLIGHT_WHITE = "Highlight White"
+
 /** The engine's screens (Parts C and D) in the form the decision card needs. */
 fun plannedScreens(partC: PartCResult?, partD: PartDResult?): List<PlannedScreen> =
     partC?.channels.orEmpty().filter { true }.let { chans ->
         // CMYK process screens: all four in CMYK, the first four colour screens in the mixed option.
-        val colourChans = chans.filter { !it.isBaseWhite && it.inkName != "Highlight White" }
+        val colourChans = chans.filter { !it.isBaseWhite && it.inkName != HIGHLIGHT_WHITE }
         val processNames = when (partC?.strategyType) {
             com.mos.nira.features.artwork.domain.SeparationStrategyType.CMYK_PROCESS,
             com.mos.nira.features.artwork.domain.SeparationStrategyType.MIXED_CMYK_SPOT -> colourChans.take(4).map { it.channelIndex }.toSet()
@@ -95,7 +98,8 @@ fun plannedScreens(partC: PartCResult?, partD: PartDResult?): List<PlannedScreen
             gramsPerGarment = ink?.inkGramsPerGarment,
             gramsMin = ink?.inkGramsPerGarmentMin,
             gramsMax = ink?.inkGramsPerGarmentMax,
-            isProcess = process
+            isProcess = process,
+            isHighlightWhite = ch.inkName == HIGHLIGHT_WHITE
         )
     }
 
@@ -128,6 +132,7 @@ fun PrintDecisionCard(
     onLoadRules: () -> Unit,
     // Order cost and Cost-Down (factory rates on this phone; print_rules.json cost_down).
     costDownRules: com.mos.nira.core.commercial.CostDownRules? = null,
+    printVsGroundRules: com.mos.nira.core.advice.PrintVsGroundRules? = null,
     costDownBefore: android.graphics.Bitmap? = null,
     costDownAfter: android.graphics.Bitmap? = null,
     onCostDownPreview: (fromHex: String?, intoHex: String?, afterGarmentHex: String?) -> Unit = { _, _, _ -> },
@@ -240,6 +245,40 @@ fun PrintDecisionCard(
             }
             if (card.unanswered > 0) Small(stringResource(R.string.card_questions_left, card.unanswered))
 
+            // Print vs fabric (print_vs_ground): on a dark or coloured garment, per print colour.
+            val groundChecks = remember(garmentHex, screens, printVsGroundRules, tone) {
+                val g = garmentHex
+                val r = printVsGroundRules
+                if (g == null || r == null || tone != com.mos.nira.core.advice.GarmentTone.DARK_OR_COLOURED) emptyList()
+                else com.mos.nira.core.advice.PrintVsGround.check(screens.filter { it.isArtworkColour }.map { it.hex }, g, r)
+            }
+            if (groundChecks.isNotEmpty()) {
+                Spacer(Modifier.height(8.dp))
+                Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(DInner).padding(10.dp)) {
+                    Text(stringResource(R.string.pvg_title), color = DMuted, fontSize = 11.sp)
+                    groundChecks.forEach { c ->
+                        val name = com.mos.nira.features.artwork.presentation.colourName(c.inkHex)
+                        Text(
+                            "• " + stringResource(
+                                when (c.verdict) {
+                                    com.mos.nira.core.advice.GroundVerdict.NEEDS_DISCHARGE_OR_BASE -> R.string.pvg_lighter
+                                    com.mos.nira.core.advice.GroundVerdict.PRINTS_ON_TOP -> R.string.pvg_darker
+                                    com.mos.nira.core.advice.GroundVerdict.CLOSE_TO_GROUND -> R.string.pvg_close
+                                },
+                                name
+                            ),
+                            color = if (c.verdict == com.mos.nira.core.advice.GroundVerdict.PRINTS_ON_TOP) DWhite else DAmber,
+                            fontSize = 12.sp, lineHeight = 17.sp
+                        )
+                    }
+                    Text(
+                        stringResource(R.string.src_rules) + "  •  " + stringResource(R.string.card_confidence, printVsGroundRules!!.confidence) +
+                            "  •  " + stringResource(R.string.pvg_source),
+                        color = DMuted, fontSize = 10.sp
+                    )
+                }
+            }
+
             // Contrast first (garment_preview)
             contrastWarnings.forEach { w ->
                 Spacer(Modifier.height(6.dp))
@@ -347,8 +386,8 @@ fun PrintDecisionCard(
                         else -> it.name.lowercase()
                     }
                 }
-                val facts = remember(card, contrastWarnings, quantityRules, fibreName) {
-                    com.mos.nira.core.ai.CardExplanation.facts(card, contrastWarnings, quantityRules, fibreName)
+                val facts = remember(card, contrastWarnings, quantityRules, fibreName, groundChecks) {
+                    com.mos.nira.core.ai.CardExplanation.facts(card, contrastWarnings, quantityRules, fibreName, groundChecks)
                 }
 
                 // Order cost and Cost-Down: deterministic, from the factory's own rates.

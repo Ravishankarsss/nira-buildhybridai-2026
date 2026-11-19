@@ -414,4 +414,9 @@
     <string name="sheet_cost_partial">Einige Kosten fehlen; siehe Entscheidungskarte.</string>
     <string name="sheet_costdown">Gewählte Einsparung: %1$s</string>
     <string name="sheet_footer">Mit NIRA auf dem Telefon erstellt. Die Zahlen stammen aus NIRAs Engine und Regeldateien, nicht von KI.</string>
+    <string name="pvg_title">Druck und Stoff</string>
+    <string name="pvg_lighter">%1$s: heller als der Stoff — Ätzdruck oder weiße Unterlage nötig</string>
+    <string name="pvg_darker">%1$s: dunkler als der Stoff — wird aufgedruckt</string>
+    <string name="pvg_close">%1$s: etwa so hell wie der Stoff — schwer zu sehen</string>
+    <string name="pvg_source">Ravis Regel</string>
 </resources>
