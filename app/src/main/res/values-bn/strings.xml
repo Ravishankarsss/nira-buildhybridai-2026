@@ -304,4 +304,6 @@
     <string name="card_not_verified">ফ্লোরে যাচাই হয়নি</string>
     <string name="card_disclaimer">পরিকল্পনার জন্য মডেল ফল। বাল্ক উৎপাদনের আগে স্ট্রাইক-অফ দিয়ে নিশ্চিত করুন।</string>
     <string name="card_need_basics">আগে পোশাকের রং ও ফাইবার বলুন: এগুলোই ঠিক করে কোন পদ্ধতি সম্ভব।</string>
+    <string name="card_explain_button">এই কার্ড বুঝিয়ে দিন</string>
+    <string name="card_explain_hint">AI সহজ ভাষায় কার্ডটি বোঝায়; অন-ডিভাইস মডেল থাকলে এই ফোনেই। শুধু লেখা, ছবি কখনও নয়। কার্ডে নেই এমন সংখ্যা থাকলে উত্তর দেখানো হয় না।</string>
 </resources>

@@ -305,4 +305,6 @@
     <string name="card_not_verified">non vérifié en atelier</string>
     <string name="card_disclaimer">Résultat de modèle pour la planification. Confirmez par un essai avant la production.</string>
     <string name="card_need_basics">Répondez d\'abord à la couleur du vêtement et à la fibre : elles décident des méthodes possibles.</string>
+    <string name="card_explain_button">Expliquer cette carte</string>
+    <string name="card_explain_hint">L\'IA explique la carte simplement, sur ce téléphone si le modèle local est disponible. Texte seulement, jamais l\'image. Une réponse avec un nombre absent de la carte n\'est pas affichée.</string>
 </resources>

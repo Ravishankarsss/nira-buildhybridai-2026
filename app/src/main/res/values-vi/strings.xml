@@ -303,4 +303,6 @@
     <string name="card_not_verified">chưa kiểm tra tại xưởng</string>
     <string name="card_disclaimer">Kết quả mô hình để lập kế hoạch. Xác nhận bằng mẫu in thử trước khi sản xuất hàng loạt.</string>
     <string name="card_need_basics">Hãy trả lời màu áo và loại sợi trước: chúng quyết định phương pháp nào khả thi.</string>
+    <string name="card_explain_button">Giải thích thẻ này</string>
+    <string name="card_explain_hint">AI giải thích thẻ bằng lời đơn giản, ngay trên điện thoại nếu có mô hình trên máy. Chỉ văn bản, không bao giờ gửi ảnh. Câu trả lời có số không nằm trên thẻ sẽ không được hiển thị.</string>
 </resources>

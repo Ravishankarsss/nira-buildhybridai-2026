@@ -305,4 +305,6 @@
     <string name="card_not_verified">no verificado en planta</string>
     <string name="card_disclaimer">Resultado del modelo para planificar. Confirme con una prueba antes de la producción.</string>
     <string name="card_need_basics">Responda primero el color de la prenda y la fibra: deciden qué métodos son posibles.</string>
+    <string name="card_explain_button">Explicar esta tarjeta</string>
+    <string name="card_explain_hint">La IA explica la tarjeta con palabras sencillas, en este teléfono si el modelo local está disponible. Solo texto, nunca la imagen. No se muestra una respuesta con un número que no esté en la tarjeta.</string>
 </resources>

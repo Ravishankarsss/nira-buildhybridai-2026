@@ -301,6 +301,18 @@ fun PrintDecisionCard(
                     Text(stringResource(R.string.card_risks), color = DMuted, fontSize = 11.sp)
                     best.advice.risks.forEach { Text("• $it", color = DWhite, fontSize = 12.sp, lineHeight = 17.sp) }
                 }
+
+                // "Explain this card": AI explains the card's facts (text only, on-device preferred).
+                val fibreName = fibre?.let {
+                    when (it) {
+                        Fibre.COTTON_POLY_BLEND -> "cotton/polyester blend"
+                        else -> it.name.lowercase()
+                    }
+                }
+                val facts = remember(card, contrastWarnings, quantityRules, fibreName) {
+                    com.mos.nira.core.ai.CardExplanation.facts(card, contrastWarnings, quantityRules, fibreName)
+                }
+                com.mos.nira.features.ai.CardExplanationSection(facts)
             }
             Spacer(Modifier.height(10.dp))
             Small(stringResource(R.string.card_disclaimer))

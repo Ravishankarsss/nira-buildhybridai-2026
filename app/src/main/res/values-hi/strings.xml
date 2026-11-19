@@ -304,4 +304,6 @@
     <string name="card_not_verified">फ़्लोर पर जाँचा नहीं</string>
     <string name="card_disclaimer">योजना के लिए मॉडल परिणाम। बल्क उत्पादन से पहले स्ट्राइक-ऑफ़ से पुष्टि करें।</string>
     <string name="card_need_basics">पहले गारमेंट का रंग और फ़ाइबर बताएँ: इन्हीं से तय होता है कि कौन से तरीके संभव हैं।</string>
+    <string name="card_explain_button">यह कार्ड समझाएँ</string>
+    <string name="card_explain_hint">AI कार्ड को सरल शब्दों में समझाता है; ऑन-डिवाइस मॉडल हो तो इसी फ़ोन पर। केवल टेक्स्ट, छवि कभी नहीं। कार्ड में न दिया गया अंक हो तो उत्तर नहीं दिखाया जाता।</string>
 </resources>

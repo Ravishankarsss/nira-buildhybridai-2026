@@ -159,6 +159,83 @@ $("run").addEventListener("click", async () => {
   }
 });
 
+// ---------------------------------------------------------------- A real NIRA job
+
+// The sample card JSON is exported by the Android app (CardExplanation.exportJson): the facts its
+// engine and rules files produced, and the exact prompt it sent. The web sends the same prompt.
+let job = null;
+
+async function loadJob() {
+  const path = $("job").value;
+  $("job-facts").textContent = "";
+  $("explain-result").hidden = true;
+  try {
+    job = await (await fetch(path)).json();
+  } catch (e) {
+    job = null;
+    $("job-saved").textContent = "Could not load " + path + ": " + (e?.message ?? e);
+    return;
+  }
+  $("job-saved").textContent = `${job.generated_by} · saved ${job.saved_at}`;
+  for (const f of job.facts) {
+    const li = document.createElement("li");
+    li.textContent = f;
+    $("job-facts").appendChild(li);
+  }
+}
+$("job").addEventListener("change", loadJob);
+await loadJob();
+
+/** Same check as the Android app (ReportExplanation.unverifiedNumbers): numbers not in the facts. */
+function numbers(text) {
+  const cleaned = text.replace(/#[0-9A-Fa-f]{6}/g, " ");
+  return [...cleaned.matchAll(/(?<![A-Za-z0-9.])\d+(?:[.,]\d+)?/g)].map((m) => Number(m[0].replace(",", ".")));
+}
+function unverifiedNumbers(answer, facts) {
+  const known = numbers(facts.join("\n"));
+  const same = (a, b) => Math.abs(a - b) < 1e-9;
+  return [...new Set(numbers(answer).filter((n) =>
+    !known.some((k) => same(n, k) || same(n, Math.round(k)) || same(n, Math.round(k * 10) / 10))))];
+}
+
+$("explain").addEventListener("click", async () => {
+  if (!job) return;
+  $("explain").disabled = true;
+  $("explain-result").hidden = false;
+  $("e-source").textContent = "…";
+  $("e-duration").textContent = "…";
+  $("e-text").textContent = "";
+  $("e-check").textContent = "";
+  const start = performance.now();
+  try {
+    const result = await modelFor("PREFER_ON_DEVICE").generateContent(job.prompt);
+    const source = sourceName(result.response.inferenceSource);
+    if (source === "ON_DEVICE") counts.device++;
+    if (source === "IN_CLOUD") counts.cloud++;
+    $("e-source").textContent = source;
+    const text = result.response.text();
+    const bad = unverifiedNumbers(text, job.facts);
+    if (bad.length) {
+      $("e-text").textContent = "";
+      $("e-check").textContent = `Not shown: the answer has numbers that are not on the card (${bad.join(", ")}).`;
+    } else {
+      $("e-text").textContent = text;
+      $("e-check").textContent = "Every number in the answer is on the card.";
+    }
+  } catch (e) {
+    $("e-source").textContent = "ERROR";
+    $("e-text").textContent = isLimitReached(e)
+      ? "The free AI limit for NIRA is used up for now. Try again in a few minutes; the daily limit resets at midnight Pacific time."
+      : (e?.message ?? String(e));
+  } finally {
+    $("e-duration").textContent = `${Math.round(performance.now() - start)} ms`;
+    $("c-device").textContent = counts.device;
+    $("c-cloud").textContent = counts.cloud;
+    $("explain").disabled = false;
+    await refreshAvailability();
+  }
+});
+
 /** HTTP 429 / RESOURCE_EXHAUSTED: the project's free AI limit is used up (limits are per project). */
 function isLimitReached(e) {
   const text = String(e?.message ?? e).toLowerCase();

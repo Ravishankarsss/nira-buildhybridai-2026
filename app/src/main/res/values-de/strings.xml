@@ -304,4 +304,6 @@
     <string name="card_not_verified">nicht in der Fertigung geprüft</string>
     <string name="card_disclaimer">Modellergebnis zur Planung. Vor der Serie mit einem Andruck bestätigen.</string>
     <string name="card_need_basics">Beantworten Sie zuerst Farbe und Faser: sie entscheiden, welche Verfahren möglich sind.</string>
+    <string name="card_explain_button">Diese Karte erklären</string>
+    <string name="card_explain_hint">Die KI erklärt die Karte in einfachen Worten, auf diesem Telefon, wenn das lokale Modell verfügbar ist. Nur Text, nie das Bild. Eine Antwort mit einer Zahl, die nicht auf der Karte steht, wird nicht gezeigt.</string>
 </resources>

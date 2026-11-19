@@ -303,4 +303,6 @@
     <string name="card_not_verified">未经车间验证</string>
     <string name="card_disclaimer">用于计划的模型结果。大货前请用打样确认。</string>
     <string name="card_need_basics">请先回答成衣颜色和纤维：它们决定哪些工艺可行。</string>
+    <string name="card_explain_button">解释这张卡</string>
+    <string name="card_explain_hint">AI 用简单的话解释这张卡；若有设备端模型则在本手机上运行。只发送文字，从不发送图片。含有卡片上没有的数字的回答不会显示。</string>
 </resources>

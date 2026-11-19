@@ -32,6 +32,25 @@
     </section>
 
     <section class="card">
+      <h2>A real NIRA job: explain this card</h2>
+      <p class="muted">Engine results computed by the NIRA Android app. The facts below were made by the app's engine and rules files (no AI); the AI only explains them. Text only, no image.</p>
+      <label class="label" for="job">Job</label>
+      <select id="job">
+        <option value="samples/card_navy_logo.json">Navy + red logo on a navy cotton T-shirt</option>
+        <option value="samples/card_white_logo.json">Navy + red logo on a white cotton T-shirt</option>
+      </select>
+      <p id="job-saved" class="muted small"></p>
+      <ul id="job-facts" class="facts"></ul>
+      <button id="explain" type="button">Explain this card (PREFER_ON_DEVICE)</button>
+      <div id="explain-result" hidden>
+        <div class="row"><span class="label">Inference source (reported by the SDK)</span><span id="e-source" class="value big"></span></div>
+        <div class="row"><span class="label">Duration</span><span id="e-duration" class="value"></span></div>
+        <div class="row stack"><span class="label">Explanation</span><span id="e-text" class="value"></span></div>
+        <p id="e-check" class="muted small"></p>
+      </div>
+    </section>
+
+    <section class="card">
       <h2>Run</h2>
       <fieldset>
         <legend class="label">Mode</legend>

@@ -303,4 +303,6 @@
     <string name="card_not_verified">not floor-verified</string>
     <string name="card_disclaimer">Model result for planning. Confirm with a strike-off before bulk production.</string>
     <string name="card_need_basics">Answer the garment colour and the fibre first: they decide which methods are possible.</string>
+    <string name="card_explain_button">Explain this card</string>
+    <string name="card_explain_hint">AI explains the card in plain words, on this phone when the on-device model is available. Text only, never the image. An answer with a number that is not on the card is not shown.</string>
 </resources>
