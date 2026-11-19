@@ -130,7 +130,7 @@ fun GarmentPreviewCard(
             // Photos: the measured fabric, and "tap the garment" to correct it.
             if (isPhoto && measuredFabricHex != null) {
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(stringResource(R.string.preview_fabric_measured, measuredFabricHex), color = PMuted, fontSize = 12.sp, lineHeight = 17.sp)
+                Text(stringResource(R.string.preview_fabric_measured, colourName(measuredFabricHex)), color = PMuted, fontSize = 12.sp, lineHeight = 17.sp)
                 if (photo != null) {
                     Spacer(modifier = Modifier.height(6.dp))
                     Image(
@@ -175,7 +175,7 @@ fun GarmentPreviewCard(
                 Spacer(modifier = Modifier.height(8.dp))
                 Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(PInner).padding(10.dp)) {
                     Text(
-                        stringResource(R.string.preview_contrast, w.inkHex, w.deltaL, rules.contrastMinDeltaL.toInt().toString()),
+                        stringResource(R.string.preview_contrast, colourName(w.inkHex), w.deltaL, rules.contrastMinDeltaL.toInt().toString()),
                         color = PAmber, fontSize = 12.sp, lineHeight = 17.sp
                     )
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -197,7 +197,7 @@ fun GarmentPreviewCard(
             }
             swaps.forEach { (from, to) ->
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(stringResource(R.string.preview_swapped, from, to), color = PMuted, fontSize = 12.sp, modifier = Modifier.weight(1f))
+                    Text(stringResource(R.string.preview_swapped, colourName(from), colourName(to)), color = PMuted, fontSize = 12.sp, modifier = Modifier.weight(1f))
                     TextButton(onClick = { onSwap(from, null) }) { Text(stringResource(R.string.preview_undo), color = PCyan, fontSize = 12.sp) }
                 }
             }

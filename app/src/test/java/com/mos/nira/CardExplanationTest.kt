@@ -38,7 +38,7 @@ class CardExplanationTest {
     fun factsCarryTheCardAndItsHonestyLabels() {
         val facts = CardExplanation.facts(card(GarmentTone.LIGHT, "#FFFFFF"), emptyList(), quantity, "cotton")
         val text = facts.joinToString("\n")
-        assertTrue(text.contains("Brief: garment colour #FFFFFF; fibre cotton; fabric single jersey; quantity 500 pieces; feel wanted soft."))
+        assertTrue(text.contains("Brief: garment colour white; fibre cotton; fabric single jersey; quantity 500 pieces; feel wanted soft."))
         assertTrue(text.contains("Method: Water-based pigment print"))
         assertTrue(text.contains("not floor-verified"))
         assertTrue(text.contains("Quantity: 500 pieces, the buyer's order. Quantity does not change the method"))
@@ -54,7 +54,9 @@ class CardExplanationTest {
         val warn = listOf(GarmentPreview.ContrastWarning("#1F2A5C", 7))
         val facts = CardExplanation.facts(card(GarmentTone.DARK_OR_COLOURED, "#001F3F"), warn, quantity, "cotton")
         val text = facts.joinToString("\n")
-        assertTrue(text.contains("Contrast warning: ink #1F2A5C"))
+        assertTrue(text.contains("Contrast warning: the navy ink is hard to see on the navy garment"))
+        // No colour codes reach the model.
+        assertTrue(facts.none { Regex("#[0-9A-Fa-f]{6}").containsMatchIn(it) })
         assertTrue(text.contains("Discharge + digital print (possible, see notes; verified by Ravi on the floor"))
         assertTrue(text.contains("Screens: 1 (one white discharge screen in the shape of the artwork)."))
         assertTrue(text.contains("How it is printed: Print white discharge"))
@@ -70,12 +72,21 @@ class CardExplanationTest {
     }
 
     @Test
+    fun theMethodAndColourCodeChecks() {
+        assertEquals(listOf("discharge", "digital"), CardExplanation.methodWords("Discharge + digital print"))
+        assertEquals(listOf("digital"), CardExplanation.missingMethodWords("Print with a discharge print and pigment ink.", "Discharge + digital print"))
+        assertTrue(CardExplanation.missingMethodWords("Use discharge plus digital printing.", "Discharge + digital print").isEmpty())
+        assertTrue(CardExplanation.hasColourCode("Print #1F2A5C on navy."))
+        assertTrue(!CardExplanation.hasColourCode("Print navy ink."))
+    }
+
+    @Test
     fun exportHoldsTheExactPrompt() {
         val facts = listOf("Method: X.")
         val json = JSONObject(CardExplanation.exportJson(facts, "PROMPT", "2026-11-19 10:00"))
         assertEquals("PROMPT", json.getString("prompt"))
         assertEquals(1, json.getJSONArray("facts").length())
-        val template = listOf(File("src/main/assets/prompts/card_explain_v1.txt"), File("app/src/main/assets/prompts/card_explain_v1.txt")).first { it.exists() }.readText()
+        val template = listOf(File("src/main/assets/prompts/card_explain_v2.txt"), File("app/src/main/assets/prompts/card_explain_v2.txt")).first { it.exists() }.readText()
         assertTrue(CardExplanation.build(template, facts).contains("- Method: X."))
     }
 }

@@ -308,4 +308,26 @@
     <string name="card_quantity_buyer">%1$d पीस: खरीदार का ऑर्डर। मात्रा तरीका नहीं बदलती; यह ऑर्डर की कुल स्याही के लिए है।</string>
     <string name="card_ink_order">%1$d पीस के लिए: %2$s ग्रा (न्यूनतम %3$s, अधिकतम %4$s)</string>
     <string name="card_process">कैसे प्रिंट होता है (नियम फ़ाइल से)</string>
+    <string name="colour_white">सफ़ेद</string>
+    <string name="colour_light_grey">हल्का ग्रे</string>
+    <string name="colour_grey">ग्रे</string>
+    <string name="colour_dark_grey">गहरा ग्रे</string>
+    <string name="colour_black">काला</string>
+    <string name="colour_red">लाल</string>
+    <string name="colour_pink">गुलाबी</string>
+    <string name="colour_magenta">मैजेंटा</string>
+    <string name="colour_orange">नारंगी</string>
+    <string name="colour_brown">भूरा</string>
+    <string name="colour_yellow">पीला</string>
+    <string name="colour_olive">ऑलिव</string>
+    <string name="colour_cream">क्रीम</string>
+    <string name="colour_green">हरा</string>
+    <string name="colour_teal">टील</string>
+    <string name="colour_blue">नीला</string>
+    <string name="colour_navy">नेवी</string>
+    <string name="colour_purple">बैंगनी</string>
+    <string name="colour_dark">गहरा %1$s</string>
+    <string name="colour_light">हल्का %1$s</string>
+    <string name="card_explain_method_missing">नहीं दिखाया: उत्तर में कार्ड का तरीका नहीं लिखा (छूटा: %1$s)।</string>
+    <string name="card_explain_code_found">नहीं दिखाया: उत्तर में रंग कोड है, जबकि कार्ड केवल रंगों के नाम देता है।</string>
 </resources>

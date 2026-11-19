@@ -307,4 +307,26 @@
     <string name="card_quantity_buyer">%1$d pieces: the buyer\'s order. Quantity does not change the method; it is used for the ink total of the order.</string>
     <string name="card_ink_order">For %1$d pieces: %2$s g (min %3$s, max %4$s)</string>
     <string name="card_process">How it is printed (from the rules file)</string>
+    <string name="colour_white">White</string>
+    <string name="colour_light_grey">Light grey</string>
+    <string name="colour_grey">Grey</string>
+    <string name="colour_dark_grey">Dark grey</string>
+    <string name="colour_black">Black</string>
+    <string name="colour_red">Red</string>
+    <string name="colour_pink">Pink</string>
+    <string name="colour_magenta">Magenta</string>
+    <string name="colour_orange">Orange</string>
+    <string name="colour_brown">Brown</string>
+    <string name="colour_yellow">Yellow</string>
+    <string name="colour_olive">Olive</string>
+    <string name="colour_cream">Cream</string>
+    <string name="colour_green">Green</string>
+    <string name="colour_teal">Teal</string>
+    <string name="colour_blue">Blue</string>
+    <string name="colour_navy">Navy</string>
+    <string name="colour_purple">Purple</string>
+    <string name="colour_dark">dark %1$s</string>
+    <string name="colour_light">light %1$s</string>
+    <string name="card_explain_method_missing">Not shown: the answer did not name the method on the card (missing: %1$s).</string>
+    <string name="card_explain_code_found">Not shown: the answer has a colour code, and the card gives colour names only.</string>
 </resources>

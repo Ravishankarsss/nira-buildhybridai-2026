@@ -308,4 +308,26 @@
     <string name="card_quantity_buyer">%1$d পিস: ক্রেতার অর্ডার। পরিমাণ পদ্ধতি বদলায় না; অর্ডারের মোট কালির হিসাবে লাগে।</string>
     <string name="card_ink_order">%1$d পিসের জন্য: %2$s গ্রা (সর্বনিম্ন %3$s, সর্বোচ্চ %4$s)</string>
     <string name="card_process">কীভাবে প্রিন্ট হয় (নিয়মের ফাইল থেকে)</string>
+    <string name="colour_white">সাদা</string>
+    <string name="colour_light_grey">হালকা ধূসর</string>
+    <string name="colour_grey">ধূসর</string>
+    <string name="colour_dark_grey">গাঢ় ধূসর</string>
+    <string name="colour_black">কালো</string>
+    <string name="colour_red">লাল</string>
+    <string name="colour_pink">গোলাপি</string>
+    <string name="colour_magenta">ম্যাজেন্টা</string>
+    <string name="colour_orange">কমলা</string>
+    <string name="colour_brown">বাদামি</string>
+    <string name="colour_yellow">হলুদ</string>
+    <string name="colour_olive">জলপাই</string>
+    <string name="colour_cream">ক্রিম</string>
+    <string name="colour_green">সবুজ</string>
+    <string name="colour_teal">টিল</string>
+    <string name="colour_blue">নীল</string>
+    <string name="colour_navy">নেভি</string>
+    <string name="colour_purple">বেগুনি</string>
+    <string name="colour_dark">গাঢ় %1$s</string>
+    <string name="colour_light">হালকা %1$s</string>
+    <string name="card_explain_method_missing">দেখানো হয়নি: উত্তরে কার্ডের পদ্ধতির নাম নেই (বাদ: %1$s)।</string>
+    <string name="card_explain_code_found">দেখানো হয়নি: উত্তরে রঙের কোড আছে, কার্ডে শুধু রঙের নাম থাকে।</string>
 </resources>

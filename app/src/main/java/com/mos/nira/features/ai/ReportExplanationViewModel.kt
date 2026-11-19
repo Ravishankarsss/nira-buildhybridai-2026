@@ -27,7 +27,11 @@ sealed interface ReportExplanationState {
         val facts: List<String>,
         val result: HybridInferenceResult,
         /** Numbers in the answer that are not in the facts; when not empty the text is not shown. */
-        val unverified: List<Double>
+        val unverified: List<Double>,
+        /** Card explanation only: method words the answer did not use; when not empty the text is not shown. */
+        val missingMethodWords: List<String> = emptyList(),
+        /** Card explanation only: the answer has a colour code; the text is not shown. */
+        val colourCode: Boolean = false
     ) : ReportExplanationState
 }
 

@@ -308,4 +308,26 @@
     <string name="card_quantity_buyer">%1$d Stück: der Auftrag des Käufers. Die Menge ändert das Verfahren nicht; sie dient für die Farbmenge des Auftrags.</string>
     <string name="card_ink_order">Für %1$d Stück: %2$s g (min. %3$s, max. %4$s)</string>
     <string name="card_process">So wird gedruckt (aus der Regeldatei)</string>
+    <string name="colour_white">Weiß</string>
+    <string name="colour_light_grey">Hellgrau</string>
+    <string name="colour_grey">Grau</string>
+    <string name="colour_dark_grey">Dunkelgrau</string>
+    <string name="colour_black">Schwarz</string>
+    <string name="colour_red">Rot</string>
+    <string name="colour_pink">Rosa</string>
+    <string name="colour_magenta">Magenta</string>
+    <string name="colour_orange">Orange</string>
+    <string name="colour_brown">Braun</string>
+    <string name="colour_yellow">Gelb</string>
+    <string name="colour_olive">Oliv</string>
+    <string name="colour_cream">Creme</string>
+    <string name="colour_green">Grün</string>
+    <string name="colour_teal">Petrol</string>
+    <string name="colour_blue">Blau</string>
+    <string name="colour_navy">Marineblau</string>
+    <string name="colour_purple">Lila</string>
+    <string name="colour_dark">dunkel%1$s</string>
+    <string name="colour_light">hell%1$s</string>
+    <string name="card_explain_method_missing">Nicht gezeigt: Die Antwort nennt das Verfahren der Karte nicht (fehlt: %1$s).</string>
+    <string name="card_explain_code_found">Nicht gezeigt: Die Antwort enthält einen Farbcode, die Karte nennt nur Farbnamen.</string>
 </resources>

@@ -308,4 +308,26 @@
     <string name="card_quantity_buyer">%1$d துண்டுகள்: வாங்குபவரின் ஆர்டர். எண்ணிக்கை முறையை மாற்றாது; ஆர்டரின் மொத்த மைக்கு மட்டும் பயன்படும்.</string>
     <string name="card_ink_order">%1$d துண்டுகளுக்கு: %2$s கி (குறைந்தது %3$s, அதிகம் %4$s)</string>
     <string name="card_process">எப்படி அச்சிடப்படுகிறது (விதிகள் கோப்பிலிருந்து)</string>
+    <string name="colour_white">வெள்ளை</string>
+    <string name="colour_light_grey">இளம் சாம்பல்</string>
+    <string name="colour_grey">சாம்பல்</string>
+    <string name="colour_dark_grey">அடர் சாம்பல்</string>
+    <string name="colour_black">கருப்பு</string>
+    <string name="colour_red">சிவப்பு</string>
+    <string name="colour_pink">இளஞ்சிவப்பு</string>
+    <string name="colour_magenta">மெஜந்தா</string>
+    <string name="colour_orange">ஆரஞ்சு</string>
+    <string name="colour_brown">பழுப்பு</string>
+    <string name="colour_yellow">மஞ்சள்</string>
+    <string name="colour_olive">ஆலிவ்</string>
+    <string name="colour_cream">கிரீம்</string>
+    <string name="colour_green">பச்சை</string>
+    <string name="colour_teal">டீல்</string>
+    <string name="colour_blue">நீலம்</string>
+    <string name="colour_navy">நேவி</string>
+    <string name="colour_purple">ஊதா</string>
+    <string name="colour_dark">அடர் %1$s</string>
+    <string name="colour_light">இளம் %1$s</string>
+    <string name="card_explain_method_missing">காட்டப்படவில்லை: பதில் அட்டையில் உள்ள முறையைக் குறிப்பிடவில்லை (இல்லாதவை: %1$s).</string>
+    <string name="card_explain_code_found">காட்டப்படவில்லை: பதிலில் நிறக் குறியீடு உள்ளது; அட்டை நிறப் பெயர்களை மட்டுமே தருகிறது.</string>
 </resources>

@@ -6,6 +6,7 @@ import com.mos.nira.core.advice.DecisionCard
 import com.mos.nira.core.advice.MethodChoice
 import com.mos.nira.core.advice.QuantityBand
 import com.mos.nira.core.advice.QuantityRules
+import com.mos.nira.core.image.ColourName
 import com.mos.nira.core.image.GarmentPreview
 import org.json.JSONArray
 import org.json.JSONObject
@@ -18,7 +19,7 @@ import org.json.JSONObject
  */
 object CardExplanation {
 
-    const val ASSET_PATH = "prompts/card_explain_v1.txt"
+    const val ASSET_PATH = "prompts/card_explain_v2.txt"
     const val EXPORT_FILE = "card_last.json"
 
     fun build(template: String, facts: List<String>): String = ReportExplanation.build(template, facts)
@@ -31,14 +32,17 @@ object CardExplanation {
     ): List<String> = buildList {
         val a = card.answers
         val brief = listOfNotNull(
-            a.garmentHex?.let { "garment colour $it" },
+            a.garmentHex?.let { "garment colour ${ColourName.english(it)}" },
             fibreName?.let { "fibre $it" },
             a.fabric?.let { "fabric ${it.replace('_', ' ')}" },
             a.quantity?.let { "quantity $it pieces" },
             a.feel?.let { "feel wanted ${it.name.lowercase()}" }
         )
         if (brief.isNotEmpty()) add("Brief: ${brief.joinToString("; ")}.")
-        contrast.forEach { add("Contrast warning: ink ${it.inkHex} is hard to see on this garment (lightness difference ${it.deltaL}).") }
+        val garmentName = a.garmentHex?.let { ColourName.english(it) } ?: "this"
+        contrast.forEach {
+            add("Contrast warning: the ${ColourName.english(it.inkHex)} ink is hard to see on the $garmentName garment (lightness difference ${it.deltaL}).")
+        }
         card.best?.let { add("Method: ${method(it)}") }
         card.second?.let { add("Second choice: ${method(it)}") }
         card.smallRun?.let { add("For small quantities: ${method(it)}") }
@@ -66,7 +70,7 @@ object CardExplanation {
             }
             else -> {
                 card.separationName?.let { add("Separation measured by the engine: $it.") }
-                add("Screens: ${card.screens.size} (${card.screens.joinToString(", ") { it.name }}).")
+                add("Screens: ${card.screens.size} (${card.screens.joinToString(", ") { label(it.name) }}).")
                 add(
                     when {
                         card.baseSource == BaseSource.DISCHARGE -> "White base: no, discharge removes the garment dye."
@@ -76,7 +80,7 @@ object CardExplanation {
                 )
                 card.screens.forEach { s ->
                     val ink = s.gramsPerGarment?.let { "ink ${f1(it)} g per garment" } ?: "ink figure not available in the rules file"
-                    add("Screen ${s.name}: mesh ${s.mesh}${s.meshConfidence?.let { " ($it)" } ?: ""}, $ink.")
+                    add("Screen ${label(s.name)}: mesh ${s.mesh}${s.meshConfidence?.let { " ($it)" } ?: ""}, $ink.")
                 }
                 card.gramsPerGarment?.let {
                     add("Ink per garment: ${f1(it)} g (min ${f1(card.gramsMin ?: it)}, max ${f1(card.gramsMax ?: it)}).")
@@ -102,9 +106,30 @@ object CardExplanation {
         return "${a.name} ($level; $check; confidence ${a.confidence ?: "not given in the rules file"}$feel)."
     }
 
+    private val HEX = Regex("#[0-9A-Fa-f]{6}")
+
+    /** A screen label for the model: a hex label becomes its colour name (no codes in the facts). */
+    private fun label(name: String) = if (HEX.matches(name)) ColourName.english(name) else name
+
+    /** Words of the method name the answer must contain ("Discharge + digital print" -> discharge, digital). */
+    fun methodWords(methodName: String): List<String> =
+        Regex("[A-Za-z]+").findAll(methodName.substringBefore("(")).map { it.value.lowercase() }
+            .filter { it.length >= 4 && it != "print" }.distinct().toList()
+
+    /** Method words missing from the answer; empty when the answer names the card's method. */
+    fun missingMethodWords(answer: String, methodName: String?): List<String> {
+        if (methodName == null) return emptyList()
+        val text = answer.lowercase()
+        return methodWords(methodName).filter { it !in text }
+    }
+
+    /** True when the answer has a colour code (the facts have none, so any code was made up). */
+    fun hasColourCode(answer: String): Boolean = HEX.containsMatchIn(answer)
+
     /** The export the web page loads: the facts and the exact prompt the app sent. */
-    fun exportJson(facts: List<String>, prompt: String, savedAt: String): String = JSONObject()
+    fun exportJson(facts: List<String>, prompt: String, savedAt: String, methodName: String? = null): String = JSONObject()
         .put("generated_by", "NIRA Android app (engine and rules files; no AI used to make these facts)")
+        .put("method_name", methodName ?: JSONObject.NULL)
         .put("saved_at", savedAt)
         .put("prompt_asset", ASSET_PATH)
         .put("facts", JSONArray(facts))

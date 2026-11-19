@@ -39,6 +39,7 @@ private val SRed = Color(0xFFFF8A80)
 @Composable
 fun CardExplanationSection(
     facts: List<String>,
+    methodName: String?,
     viewModel: CardExplanationViewModel = viewModel(viewModelStoreOwner = activityViewModelStoreOwner())
 ) {
     val requestKey = facts.hashCode().toString()
@@ -50,7 +51,7 @@ fun CardExplanationSection(
     Spacer(Modifier.height(6.dp))
     val running = state is ReportExplanationState.Running
     Button(
-        onClick = { viewModel.explain(requestKey, facts) },
+        onClick = { viewModel.explain(requestKey, facts, methodName) },
         enabled = !running,
         colors = ButtonDefaults.buttonColors(containerColor = SViolet, contentColor = Color(0xFF0F1526))
     ) {
@@ -89,6 +90,14 @@ fun CardExplanationSection(
                             R.string.explain_unverified,
                             s.unverified.joinToString(", ") { n -> if (n % 1.0 == 0.0) n.toLong().toString() else n.toString() }
                         ),
+                        color = SAmber, fontSize = 13.sp, lineHeight = 18.sp, fontWeight = FontWeight.Bold
+                    )
+                    s.colourCode -> Text(
+                        stringResource(R.string.card_explain_code_found),
+                        color = SAmber, fontSize = 13.sp, lineHeight = 18.sp, fontWeight = FontWeight.Bold
+                    )
+                    s.missingMethodWords.isNotEmpty() -> Text(
+                        stringResource(R.string.card_explain_method_missing, s.missingMethodWords.joinToString(", ")),
                         color = SAmber, fontSize = 13.sp, lineHeight = 18.sp, fontWeight = FontWeight.Bold
                     )
                     else -> SelectionContainer { Text(s.result.text!!, color = SWhite, fontSize = 14.sp, lineHeight = 21.sp) }

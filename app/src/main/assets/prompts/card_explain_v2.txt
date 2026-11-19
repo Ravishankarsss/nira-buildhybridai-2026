@@ -1,6 +1,8 @@
 You explain a garment print decision card to a merchandiser who has no print master nearby.
 Write 3 plain sentences: what to print with and why, the main risk, and what must be checked before bulk production.
-Use only the facts below. Do not add any number, colour code, method or rule that is not in the facts.
+The first sentence must name the method exactly as written after "Method:".
+Use only the facts below. Do not add any number, colour, ink, chemical, method or rule that is not in the facts.
+Use colour names only, never colour codes.
 If a fact says a line is not floor-verified, say that it still needs checking.
 Do not use lists or headings.
 

@@ -309,4 +309,26 @@
     <string name="card_quantity_buyer">%1$d piezas: el pedido del comprador. La cantidad no cambia el método; sirve para el total de tinta del pedido.</string>
     <string name="card_ink_order">Para %1$d piezas: %2$s g (mín. %3$s, máx. %4$s)</string>
     <string name="card_process">Cómo se imprime (del archivo de reglas)</string>
+    <string name="colour_white">Blanco</string>
+    <string name="colour_light_grey">Gris claro</string>
+    <string name="colour_grey">Gris</string>
+    <string name="colour_dark_grey">Gris oscuro</string>
+    <string name="colour_black">Negro</string>
+    <string name="colour_red">Rojo</string>
+    <string name="colour_pink">Rosa</string>
+    <string name="colour_magenta">Magenta</string>
+    <string name="colour_orange">Naranja</string>
+    <string name="colour_brown">Marrón</string>
+    <string name="colour_yellow">Amarillo</string>
+    <string name="colour_olive">Oliva</string>
+    <string name="colour_cream">Crema</string>
+    <string name="colour_green">Verde</string>
+    <string name="colour_teal">Verde azulado</string>
+    <string name="colour_blue">Azul</string>
+    <string name="colour_navy">Azul marino</string>
+    <string name="colour_purple">Morado</string>
+    <string name="colour_dark">%1$s oscuro</string>
+    <string name="colour_light">%1$s claro</string>
+    <string name="card_explain_method_missing">No se muestra: la respuesta no nombró el método de la tarjeta (falta: %1$s).</string>
+    <string name="card_explain_code_found">No se muestra: la respuesta tiene un código de color y la tarjeta solo da nombres de colores.</string>
 </resources>

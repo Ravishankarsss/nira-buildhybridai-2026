@@ -198,6 +198,15 @@ function unverifiedNumbers(answer, facts) {
     !known.some((k) => same(n, k) || same(n, Math.round(k)) || same(n, Math.round(k * 10) / 10))))];
 }
 
+/** Same as CardExplanation.missingMethodWords on Android: method words the answer did not use. */
+function missingMethodWords(answer, methodName) {
+  if (!methodName) return [];
+  const words = [...new Set((methodName.split("(")[0].match(/[A-Za-z]+/g) ?? [])
+    .map((w) => w.toLowerCase()).filter((w) => w.length >= 4 && w !== "print"))];
+  const text = answer.toLowerCase();
+  return words.filter((w) => !text.includes(w));
+}
+
 $("explain").addEventListener("click", async () => {
   if (!job) return;
   $("explain").disabled = true;
@@ -215,12 +224,19 @@ $("explain").addEventListener("click", async () => {
     $("e-source").textContent = source;
     const text = result.response.text();
     const bad = unverifiedNumbers(text, job.facts);
+    const missing = missingMethodWords(text, job.method_name);
     if (bad.length) {
       $("e-text").textContent = "";
       $("e-check").textContent = `Not shown: the answer has numbers that are not on the card (${bad.join(", ")}).`;
+    } else if (/#[0-9A-Fa-f]{6}/.test(text)) {
+      $("e-text").textContent = "";
+      $("e-check").textContent = "Not shown: the answer has a colour code, and the card gives colour names only.";
+    } else if (missing.length) {
+      $("e-text").textContent = "";
+      $("e-check").textContent = `Not shown: the answer did not name the method on the card (missing: ${missing.join(", ")}).`;
     } else {
       $("e-text").textContent = text;
-      $("e-check").textContent = "Every number in the answer is on the card.";
+      $("e-check").textContent = "Checked: every number is on the card, the card's method is named, and no colour code was added.";
     }
   } catch (e) {
     $("e-source").textContent = "ERROR";

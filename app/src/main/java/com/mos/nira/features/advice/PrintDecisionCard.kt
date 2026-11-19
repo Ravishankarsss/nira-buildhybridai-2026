@@ -152,7 +152,7 @@ fun PrintDecisionCard(
                 if (garmentHex != null && garmentChips?.chips?.none { it.second.equals(garmentHex, true) } == true &&
                     !garmentHex.equals(measuredFabricHex, true)
                 ) {
-                    Chip(garmentHex, true, garmentHex) {}
+                    Chip(com.mos.nira.features.artwork.presentation.colourName(garmentHex), true, garmentHex) {}
                 }
             }
 
@@ -225,7 +225,10 @@ fun PrintDecisionCard(
             // Contrast first (garment_preview)
             contrastWarnings.forEach { w ->
                 Spacer(Modifier.height(6.dp))
-                Text("⚠ " + stringResource(R.string.card_contrast_risk, w.inkHex, w.deltaL), color = DAmber, fontSize = 12.sp, lineHeight = 17.sp)
+                Text(
+                    "⚠ " + stringResource(R.string.card_contrast_risk, com.mos.nira.features.artwork.presentation.colourName(w.inkHex), w.deltaL),
+                    color = DAmber, fontSize = 12.sp, lineHeight = 17.sp
+                )
             }
 
             val best = card.best
@@ -280,7 +283,10 @@ fun PrintDecisionCard(
                     )
                     Line(
                         stringResource(R.string.card_screens),
-                        stringResource(R.string.card_screens_value, card.screens.size, card.screens.joinToString(", ") { it.name }),
+                        stringResource(
+                            R.string.card_screens_value, card.screens.size,
+                            card.screens.map { com.mos.nira.features.artwork.presentation.inkLabel(it.name) }.joinToString(", ")
+                        ),
                         stringResource(R.string.src_engine), briefRules.separationConfidence, false
                     )
                     Line(
@@ -333,7 +339,7 @@ fun PrintDecisionCard(
                 val facts = remember(card, contrastWarnings, quantityRules, fibreName) {
                     com.mos.nira.core.ai.CardExplanation.facts(card, contrastWarnings, quantityRules, fibreName)
                 }
-                com.mos.nira.features.ai.CardExplanationSection(facts)
+                com.mos.nira.features.ai.CardExplanationSection(facts, best.advice.name)
             }
             Spacer(Modifier.height(10.dp))
             Small(stringResource(R.string.card_disclaimer))
@@ -363,7 +369,7 @@ private fun ScreenRow(s: PlannedScreen) {
         Spacer(Modifier.width(8.dp))
         val grams = s.gramsPerGarment?.let { stringResource(R.string.card_grams, fmt(it)) } ?: stringResource(R.string.card_grams_none)
         Text(
-            "${s.name}: ${s.mesh}" + (s.meshConfidence?.let { " ($it)" } ?: "") + "  •  $grams",
+            "${com.mos.nira.features.artwork.presentation.inkLabel(s.name)}: ${s.mesh}" + (s.meshConfidence?.let { " ($it)" } ?: "") + "  •  $grams",
             color = DWhite, fontSize = 12.sp, lineHeight = 17.sp
         )
     }

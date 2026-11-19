@@ -309,4 +309,26 @@
     <string name="card_quantity_buyer">%1$d pièces : la commande de l\'acheteur. La quantité ne change pas la méthode ; elle sert au total d\'encre de la commande.</string>
     <string name="card_ink_order">Pour %1$d pièces : %2$s g (min %3$s, max %4$s)</string>
     <string name="card_process">Comment c\'est imprimé (fichier de règles)</string>
+    <string name="colour_white">Blanc</string>
+    <string name="colour_light_grey">Gris clair</string>
+    <string name="colour_grey">Gris</string>
+    <string name="colour_dark_grey">Gris foncé</string>
+    <string name="colour_black">Noir</string>
+    <string name="colour_red">Rouge</string>
+    <string name="colour_pink">Rose</string>
+    <string name="colour_magenta">Magenta</string>
+    <string name="colour_orange">Orange</string>
+    <string name="colour_brown">Marron</string>
+    <string name="colour_yellow">Jaune</string>
+    <string name="colour_olive">Olive</string>
+    <string name="colour_cream">Crème</string>
+    <string name="colour_green">Vert</string>
+    <string name="colour_teal">Bleu canard</string>
+    <string name="colour_blue">Bleu</string>
+    <string name="colour_navy">Bleu marine</string>
+    <string name="colour_purple">Violet</string>
+    <string name="colour_dark">%1$s foncé</string>
+    <string name="colour_light">%1$s clair</string>
+    <string name="card_explain_method_missing">Non affiché : la réponse ne nomme pas la méthode de la carte (manque : %1$s).</string>
+    <string name="card_explain_code_found">Non affiché : la réponse contient un code couleur, alors que la carte ne donne que des noms de couleurs.</string>
 </resources>

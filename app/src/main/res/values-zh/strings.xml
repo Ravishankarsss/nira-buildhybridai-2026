@@ -307,4 +307,26 @@
     <string name="card_quantity_buyer">%1$d 件：买家的订单数量。数量不改变工艺，只用于计算订单的油墨总量。</string>
     <string name="card_ink_order">%1$d 件：%2$s 克（最少 %3$s，最多 %4$s）</string>
     <string name="card_process">印制方法（来自规则文件）</string>
+    <string name="colour_white">白色</string>
+    <string name="colour_light_grey">浅灰</string>
+    <string name="colour_grey">灰色</string>
+    <string name="colour_dark_grey">深灰</string>
+    <string name="colour_black">黑色</string>
+    <string name="colour_red">红色</string>
+    <string name="colour_pink">粉色</string>
+    <string name="colour_magenta">洋红</string>
+    <string name="colour_orange">橙色</string>
+    <string name="colour_brown">棕色</string>
+    <string name="colour_yellow">黄色</string>
+    <string name="colour_olive">橄榄色</string>
+    <string name="colour_cream">米色</string>
+    <string name="colour_green">绿色</string>
+    <string name="colour_teal">青色</string>
+    <string name="colour_blue">蓝色</string>
+    <string name="colour_navy">藏青</string>
+    <string name="colour_purple">紫色</string>
+    <string name="colour_dark">深%1$s</string>
+    <string name="colour_light">浅%1$s</string>
+    <string name="card_explain_method_missing">未显示：回答没有说出卡片上的工艺（缺少：%1$s）。</string>
+    <string name="card_explain_code_found">未显示：回答中有颜色代码，而卡片只给出颜色名称。</string>
 </resources>

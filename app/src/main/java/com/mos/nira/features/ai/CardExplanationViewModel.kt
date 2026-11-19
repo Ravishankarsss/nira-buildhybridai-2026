@@ -44,7 +44,7 @@ class CardExplanationViewModel(application: Application) : AndroidViewModel(appl
         if (key != requestKey) _state.value = ReportExplanationState.Idle
     }
 
-    fun explain(requestKey: String, facts: List<String>) {
+    fun explain(requestKey: String, facts: List<String>, methodName: String?) {
         if (_state.value is ReportExplanationState.Running) return
         _state.value = ReportExplanationState.Running(requestKey)
         viewModelScope.launch {
@@ -56,7 +56,7 @@ class CardExplanationViewModel(application: Application) : AndroidViewModel(appl
             withContext(Dispatchers.IO) {
                 runCatching {
                     val stamp = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm", java.util.Locale.US).format(java.util.Date())
-                    File(app.filesDir, CardExplanation.EXPORT_FILE).writeText(CardExplanation.exportJson(facts, prompt, stamp))
+                    File(app.filesDir, CardExplanation.EXPORT_FILE).writeText(CardExplanation.exportJson(facts, prompt, stamp, methodName))
                 }
             }
             val onDevice = repository.checkOnDeviceStatus() == "available"
@@ -69,8 +69,11 @@ class CardExplanationViewModel(application: Application) : AndroidViewModel(appl
                 is AiRoute.Run -> {
                     val result = repository.generate(prompt, image = null, mode = route.mode)
                     AiSettings.record(app, result, imageAttached = false)
-                    val unverified = result.text?.let { ReportExplanation.unverifiedNumbers(it, facts) } ?: emptyList()
-                    _state.value = ReportExplanationState.Done(requestKey, facts, result, unverified)
+                    val text = result.text
+                    val unverified = text?.let { ReportExplanation.unverifiedNumbers(it, facts) } ?: emptyList()
+                    val missing = text?.let { CardExplanation.missingMethodWords(it, methodName) } ?: emptyList()
+                    val code = text?.let { CardExplanation.hasColourCode(it) } ?: false
+                    _state.value = ReportExplanationState.Done(requestKey, facts, result, unverified, missing, code)
                 }
                 else -> _state.value = ReportExplanationState.Blocked(requestKey, facts)
             }

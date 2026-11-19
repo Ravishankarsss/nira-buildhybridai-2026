@@ -307,4 +307,26 @@
     <string name="card_quantity_buyer">%1$d chiếc: đơn hàng của người mua. Số lượng không thay đổi phương pháp; chỉ dùng để tính tổng mực của đơn.</string>
     <string name="card_ink_order">Cho %1$d chiếc: %2$s g (tối thiểu %3$s, tối đa %4$s)</string>
     <string name="card_process">Cách in (từ tệp quy tắc)</string>
+    <string name="colour_white">Trắng</string>
+    <string name="colour_light_grey">Xám nhạt</string>
+    <string name="colour_grey">Xám</string>
+    <string name="colour_dark_grey">Xám đậm</string>
+    <string name="colour_black">Đen</string>
+    <string name="colour_red">Đỏ</string>
+    <string name="colour_pink">Hồng</string>
+    <string name="colour_magenta">Hồng cánh sen</string>
+    <string name="colour_orange">Cam</string>
+    <string name="colour_brown">Nâu</string>
+    <string name="colour_yellow">Vàng</string>
+    <string name="colour_olive">Ô liu</string>
+    <string name="colour_cream">Kem</string>
+    <string name="colour_green">Xanh lá</string>
+    <string name="colour_teal">Xanh mòng két</string>
+    <string name="colour_blue">Xanh dương</string>
+    <string name="colour_navy">Xanh navy</string>
+    <string name="colour_purple">Tím</string>
+    <string name="colour_dark">%1$s đậm</string>
+    <string name="colour_light">%1$s nhạt</string>
+    <string name="card_explain_method_missing">Không hiển thị: câu trả lời không nêu phương pháp trên thẻ (thiếu: %1$s).</string>
+    <string name="card_explain_code_found">Không hiển thị: câu trả lời có mã màu, trong khi thẻ chỉ dùng tên màu.</string>
 </resources>
