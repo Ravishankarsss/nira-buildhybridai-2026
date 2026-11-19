@@ -20,7 +20,7 @@ object ReportExplanation {
     /** Engine facts for the recommendation, one per line. Every number comes from the results passed in. */
     fun engineFacts(partA: PartAResult?, partB: PartBResult?): List<String> = buildList {
         partA?.let { a ->
-            a.garmentProfile?.let { add("Garment colour ${it.estimatedHex} (L* ${f1(it.medianLab.l)}).") }
+            a.garmentProfile?.let { add("Garment colour ${com.mos.nira.core.image.ColourName.english(it.estimatedHex)} (L* ${f1(it.medianLab.l)}).") }
             add("Print colours measured: ${a.measuredPalette.size}.")
             add("Inked area: ${f1(a.printMaskCoveragePercent)}% of the print box, ${f1(a.printWidthCm)} x ${f1(a.printHeightCm)} cm.")
         }

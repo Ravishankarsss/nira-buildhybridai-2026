@@ -354,7 +354,7 @@ fun ColorIntelligenceScreen(
                                 Text(
                                     text = stringResource(
                                         R.string.colour_garment_excluded,
-                                        ColourLabel.withNearestShadeName(hex, garmentNameShades)
+                                        colourName(hex)
                                     ),
                                     color = TextMuted,
                                     fontSize = 11.sp
@@ -879,7 +879,7 @@ private fun ArtworkBackgroundCard(bg: ArtworkBackground, answer: Boolean?, onAns
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         stringResource(
-                            R.string.artbg_body, bg.hex,
+                            R.string.artbg_body, colourName(bg.hex),
                             String.format("%.0f%%", bg.imageCoveragePercent), String.format("%.0f%%", bg.borderSharePercent)
                         ),
                         color = TextMuted, fontSize = 12.sp, lineHeight = 17.sp
@@ -891,7 +891,7 @@ private fun ArtworkBackgroundCard(bg: ArtworkBackground, answer: Boolean?, onAns
                     }
                 } else {
                     Text(
-                        stringResource(if (bg.printed) R.string.artbg_printed_note else R.string.artbg_dropped_note, bg.hex),
+                        stringResource(if (bg.printed) R.string.artbg_printed_note else R.string.artbg_dropped_note, colourName(bg.hex)),
                         color = TextMuted, fontSize = 12.sp, lineHeight = 17.sp
                     )
                     TextButton(onClick = { onAnswer(!bg.printed) }) {

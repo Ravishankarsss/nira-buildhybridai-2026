@@ -72,9 +72,24 @@ data class ArtworkMetadata(
 /**
  * Complete record of a local artwork analysis.
  */
-/** The two largest print colours of a saved analysis (garment left out), for its readable title. */
-fun ArtworkAnalysisRecord.mainPrintHexes(): List<String> =
-    palette.filter { !it.isGarmentBase }.sortedByDescending { it.pixelPercentage }.take(2).map { it.hex }
+/**
+ * The two largest print colours of a saved analysis, for its readable title. The garment (or an
+ * artwork file's background) is left out: colours marked as the garment base, and colours within
+ * ΔE00 5 of the saved garment colour, and a colour covering half the image or more (display
+ * choices only, not print rules).
+ */
+fun ArtworkAnalysisRecord.mainPrintHexes(): List<String> {
+    val g = garmentColor?.let { com.mos.nira.core.image.ColorConverter.Lab(it.labL, it.labA, it.labB) }
+    return palette
+        .filter { !it.isGarmentBase }
+        .filter { c -> g == null || com.mos.nira.core.image.ColorConverter.deltaE00(com.mos.nira.core.image.ColorConverter.Lab(c.labL, c.labA, c.labB), g) > 5.0 }
+        .sortedByDescending { it.pixelPercentage }
+        // Older records have no garment colour: a colour covering half the image or more is the
+        // background or the fabric, not a print colour.
+        .let { list -> if (list.size > 1 && list.first().pixelPercentage >= 50f) list.drop(1) else list }
+        .take(2)
+        .map { it.hex }
+}
 
 data class ArtworkAnalysisRecord(
     val id: String,
