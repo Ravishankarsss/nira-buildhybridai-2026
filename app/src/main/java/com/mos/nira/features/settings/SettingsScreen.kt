@@ -148,6 +148,7 @@ fun SettingsScreen(
             }
         }
 
+        var versionTaps by androidx.compose.runtime.saveable.rememberSaveable { androidx.compose.runtime.mutableIntStateOf(0) }
         AiPrivacySection()
 
         SettingsSection(stringResource(R.string.settings_section_rules)) {
@@ -161,13 +162,19 @@ fun SettingsScreen(
             SettingsRow(stringResource(R.string.settings_saved_analyses), savedAnalysesCount.toString())
         }
         SettingsSection(stringResource(R.string.settings_section_app)) {
-            SettingsRow(stringResource(R.string.settings_app_version), info.appVersion ?: notAvailable)
+            // Seven taps on the version open the developer test (debug builds only), so it never
+            // shows by accident in a demo or a judge build.
+            androidx.compose.foundation.layout.Box(
+                modifier = Modifier.clickable { versionTaps++ }
+            ) {
+                SettingsRow(stringResource(R.string.settings_app_version), info.appVersion ?: notAvailable)
+            }
         }
 
         // TEMPORARY (Firebase Stage B): debug builds only. Sends one real request through
         // Firebase AI Logic and shows exactly what came back. Remove when the Hybrid AI
         // Analysis and Diagnostics screens exist. Text is English only on purpose.
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG && versionTaps >= 7) {
             TestAiSection()
         }
         Spacer(modifier = Modifier.height(24.dp))

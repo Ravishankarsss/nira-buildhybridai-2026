@@ -460,18 +460,6 @@ fun NIRADashboard(
             }
         }
 
-        // Coming soon: muted, tagged, not clickable
-        Spacer(modifier = Modifier.height(30.dp))
-        SectionLabel(stringResource(R.string.section_coming_soon))
-        Spacer(modifier = Modifier.height(12.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            ComingSoonChip(stringResource(R.string.soon_recipe_lab), Modifier.weight(1f))
-            ComingSoonChip(stringResource(R.string.soon_cad_studio), Modifier.weight(1f))
-        }
-
         Spacer(modifier = Modifier.height(28.dp))
     }
 }
