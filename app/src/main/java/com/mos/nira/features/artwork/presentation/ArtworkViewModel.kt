@@ -1086,6 +1086,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                 val processInks = printRulesRepository.getProcessInks()
                 val decisionRules = printRulesRepository.getSeparationDecisionRules()
                 val selectedStrat = _uiState.value.selectedStrategyType
+                val mixedRules = printRulesRepository.getMixedSeparationRules()
 
                 val result = withContext(Dispatchers.Default) {
                     val maxDim = 1024
@@ -1131,7 +1132,8 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                         inputs = inputs,
                         processInks = processInks,
                         decisionRules = decisionRules,
-                        selectedStrategy = selectedStrat
+                        selectedStrategy = selectedStrat,
+                        mixedRules = mixedRules
                     )
                 }
 

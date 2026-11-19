@@ -145,6 +145,15 @@ data class GarmentPreviewRules(
     val confidence: String
 )
 
+/** print_rules.json "mixed_separation": CMYK for the picture plus spot screens for solid colours. No defaults. */
+data class MixedSeparationRules(
+    val solidCoreDeltaE00: Double,
+    val solidMinShare: Double,
+    val blackFromKMaxDeltaE00: Double,
+    val preferOverCmyk: Boolean,
+    val confidence: String
+)
+
 /** print_rules.json "artwork_background": the plain background of an artwork file. No defaults. */
 data class ArtworkBackgroundRules(val borderShareMin: Double, val flatSpreadMaxDeltaE00: Double, val confidence: String)
 
@@ -270,6 +279,10 @@ class PrintRulesRepository(private val context: Context?) {
     }
 
     /** "artwork_background" from print_rules.json, or null if it is missing or incomplete. */
+    suspend fun getMixedSeparationRules(): MixedSeparationRules? = withContext(Dispatchers.IO) {
+        loadJson()?.let { parseMixedSeparationRules(it) }
+    }
+
     suspend fun getArtworkBackgroundRules(): ArtworkBackgroundRules? = withContext(Dispatchers.IO) {
         loadJson()?.let { parseArtworkBackgroundRules(it) }
     }
@@ -379,6 +392,20 @@ class PrintRulesRepository(private val context: Context?) {
         }
 
         /** Reads "artwork_background". Null if the section or any value is missing. */
+        /** Reads "mixed_separation". Null if the section or any value is missing. */
+        fun parseMixedSeparationRules(root: JSONObject): MixedSeparationRules? = try {
+            val r = root.getJSONObject("mixed_separation")
+            MixedSeparationRules(
+                solidCoreDeltaE00 = r.getDouble("solid_core_de00"),
+                solidMinShare = r.getDouble("solid_min_share"),
+                blackFromKMaxDeltaE00 = r.getDouble("black_from_k_max_de00"),
+                preferOverCmyk = r.getBoolean("prefer_over_cmyk"),
+                confidence = r.getString("confidence")
+            )
+        } catch (e: Exception) {
+            null
+        }
+
         fun parseArtworkBackgroundRules(root: JSONObject): ArtworkBackgroundRules? = try {
             val r = root.getJSONObject("artwork_background")
             ArtworkBackgroundRules(r.getDouble("border_share_min"), r.getDouble("flat_spread_max_de00"), r.getString("confidence"))

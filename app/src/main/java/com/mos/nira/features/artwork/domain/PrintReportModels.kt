@@ -187,7 +187,9 @@ enum class SeparationStrategyType {
     CMYK_PROCESS,
     BEST_N_SPOT_HALFTONE,
     FLAT_SPOT_SOLID,
-    EXTENDED_SPOT
+    EXTENDED_SPOT,
+    /** CMYK halftone for the picture plus spot screens for solid colours (mixed_separation). */
+    MIXED_CMYK_SPOT
 }
 
 /**
@@ -208,7 +210,13 @@ data class StrategyEvaluationResult(
     val recommendationReason: String = "",
     val transitionNote: String? = null,
     val notes: String = "",
-    val proofBitmap: Bitmap? = null
+    val proofBitmap: Bitmap? = null,
+    /** MIXED_CMYK_SPOT only: solid colours with their own spot screen. */
+    val spotHexes: List<String> = emptyList(),
+    /** MIXED_CMYK_SPOT only: solid near-black colours printed from the K screen. */
+    val blackFromKHexes: List<String> = emptyList(),
+    /** MIXED_CMYK_SPOT only: a pixel within this ΔE00 of a solid colour prints from its screen. */
+    val solidCoreDeltaE00: Double? = null
 ) {
     val formattedMeanDeltaE00: String get() = String.format("ΔE00 %.2f", meanDeltaE00)
     val formattedPercentile95: String get() = String.format("ΔE00 %.2f", percentile95DeltaE00)

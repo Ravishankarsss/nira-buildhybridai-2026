@@ -432,7 +432,7 @@
   "display_disclaimer": "Rule-of-thumb estimate from public trade sources. Verify on the production floor and with the ink maker's technical data sheet.",
   "change_log": [
     "v2 (15 Nov 2026): added process_inks, garment_mask, white_base, recommendation, resolution and regression_cases after a device test on a real garment photo (white-to-blue gradient logo on a black T-shirt).",
-    "v3 (18 Nov 2026): added shadow_vs_ink and photo_vs_artwork (proposed starting values, Ravi to confirm) after a white T-shirt photo measured fold shadows as print colours. merge_shades_in_photo_hue_within_deg holds the 6 deg from merge_shades_in_photo as a number. Added edge_blend (camera blur and anti-aliasing bands between two inks; proposed starting values, Ravi to confirm). Added small_colours: a colour under the minimum coverage is flagged, not dropped (the magenta eye on the skull print). Added screen_type_mesh_rule (mesh per screen type from mesh_rules; ink figures only where ink_consumption has an entry). Ravi: flat spot 137-156 tpi; mapping verified except highlight white. Added artwork_background. Added edge_blend.keyline_protection (Ravi: black keylines are important) and photo_background (table or floor at the photo edge). Added garment_preview (contrast check and preview chips). Added print_brief (feel tags from the technique texts, method order) and quantity_thresholds (values empty until Ravi gives them)."
+    "v3 (18 Nov 2026): added shadow_vs_ink and photo_vs_artwork (proposed starting values, Ravi to confirm) after a white T-shirt photo measured fold shadows as print colours. merge_shades_in_photo_hue_within_deg holds the 6 deg from merge_shades_in_photo as a number. Added edge_blend (camera blur and anti-aliasing bands between two inks; proposed starting values, Ravi to confirm). Added small_colours: a colour under the minimum coverage is flagged, not dropped (the magenta eye on the skull print). Added screen_type_mesh_rule (mesh per screen type from mesh_rules; ink figures only where ink_consumption has an entry). Ravi: flat spot 137-156 tpi; mapping verified except highlight white. Added artwork_background. Added edge_blend.keyline_protection (Ravi: black keylines are important) and photo_background (table or floor at the photo edge). Added garment_preview (contrast check and preview chips). Added print_brief (feel tags from the technique texts, method order) and quantity_thresholds (values empty until Ravi gives them). Added mixed_separation (CMYK plus spot screens for solid colours; black text from the K screen)."
   ],
   "process_inks": {
     "cyan": "#00AEEF",
@@ -535,6 +535,20 @@
     "capture_guidance": "Fill the frame with the garment. Nothing else in the photo.",
     "confidence": "assumption",
     "note": "Proposed starting values; Ravi to confirm. The centre-box condition keeps a large print that runs off one edge."
+  },
+  "mixed_separation": {
+    "what": "CMYK halftone for the picture plus spot screens for solid colours (text, logos). A near-black solid colour prints from the K screen, so it needs no extra screen.",
+    "offered_when": "CMYK is offered (recommendation.cmyk_min_hue_families) and at least one print colour is solid while others are tonal",
+    "solid_core_de00": 3.0,
+    "solid_min_share": 0.6,
+    "solid_rule": "A print colour is solid when at least solid_min_share of the pixels nearest to it are within solid_core_de00 of it. Pixels within solid_core_de00 of a solid colour print from its spot screen; all other print pixels print from C, M, Y and K.",
+    "black_from_k_max_de00": 10.0,
+    "black_rule": "A solid colour within black_from_k_max_de00 of the process black (process_inks.black) prints from the K screen instead of its own screen.",
+    "prefer_over_cmyk": true,
+    "prefer_reason": "Small solid text built from C, M, Y and K risks misregistration, and the colour-error figures do not include registration. So when CMYK would be recommended and the mixed option is within tolerance (or nothing is), the mixed option is recommended.",
+    "confidence": "assumption",
+    "verified_by_ravi": false,
+    "note": "Proposed 19 Nov 2026; all three numbers are starting values. Ravi to confirm."
   },
   "print_brief": {
     "what": "Four tap questions (garment colour, fibre and fabric, quantity, feel) and one decision card",

@@ -9,6 +9,7 @@ import android.graphics.RectF
 import android.graphics.Typeface
 import com.mos.nira.features.artwork.data.MeshDepositRule
 import com.mos.nira.features.artwork.data.ProcessInksConfig
+import com.mos.nira.features.artwork.data.MixedSeparationRules
 import com.mos.nira.features.artwork.data.SeparationDecisionRules
 import com.mos.nira.features.artwork.domain.FilmPositiveChannel
 import com.mos.nira.features.artwork.domain.InkChannelConsumption
@@ -84,7 +85,9 @@ object SeparationStrategyEngine {
         processInks: ProcessInksConfig,
         decisionRules: SeparationDecisionRules = SeparationDecisionRules(),
         selectedStrategy: SeparationStrategyType = SeparationStrategyType.CMYK_PROCESS,
-        generateProofBitmaps: Boolean = false
+        generateProofBitmaps: Boolean = false,
+        // print_rules.json mixed_separation; without it the mixed option is not offered.
+        mixedRules: MixedSeparationRules? = null
     ): PartBResult {
         val startTime = System.currentTimeMillis()
 
@@ -233,6 +236,30 @@ object SeparationStrategyEngine {
         strategies.add(cmykResult)
 
         // -------------------------------------------------------------
+        // Strategy 3b: Mixed CMYK + spot (mixed_separation)
+        // -------------------------------------------------------------
+        // CMYK for the picture, a spot screen for each solid colour (text, logos), and black
+        // text from the K screen. Offered only where CMYK is offered and the artwork has both
+        // solid and tonal colours.
+        if (mixedRules != null && isTonalRichArtwork) {
+            val solids = solidColours(nonGarmentColors, quantizedPalette, mixedRules.solidCoreDeltaE00, mixedRules.solidMinShare)
+            if (solids.isNotEmpty() && solids.size < nonGarmentColors.size) {
+                strategies.add(
+                    evaluateMixedStrategy(
+                        solids = solids,
+                        rules = mixedRules,
+                        processInks = processInks,
+                        totalPixelCount = totalMaskedCount,
+                        quantizedPalette = quantizedPalette,
+                        isDarkGarment = isDarkGarment,
+                        extraWhiteScreens = cmykExtraWhites,
+                        darkWarning = if (isDarkGarment) "On a dark garment, CMYK needs an underbase white." else null
+                    )
+                )
+            }
+        }
+
+        // -------------------------------------------------------------
         // Strategy 4: Extended Spot Gamut (Top 8 with NNLS mixing)
         // -------------------------------------------------------------
         if (nonGarmentColors.size > bestNCount) {
@@ -272,11 +299,18 @@ object SeparationStrategyEngine {
         }
         val meetsTolerance = candidatesMeetingTolerance.isNotEmpty()
 
-        val bestStrategy = if (meetsTolerance) {
+        val fewestOrLowest = if (meetsTolerance) {
             candidatesMeetingTolerance.minByOrNull { it.screenCount }
         } else {
             candidates.minByOrNull { it.meanDeltaE00 }
         }
+        // mixed_separation.prefer_over_cmyk: small solid text built from C, M, Y and K risks
+        // misregistration, which the colour-error figures do not include.
+        val mixedOption = strategies.find { it.strategyType == SeparationStrategyType.MIXED_CMYK_SPOT }
+        val mixedPreferred = mixedRules?.preferOverCmyk == true && mixedOption != null &&
+            fewestOrLowest?.strategyType == SeparationStrategyType.CMYK_PROCESS &&
+            (!meetsTolerance || (mixedOption.meanDeltaE00 <= qualityTolerance && mixedOption.percentile95DeltaE00 <= qualityToleranceP95))
+        val bestStrategy = if (mixedPreferred) mixedOption else fewestOrLowest
 
         // Say plainly when CMYK was left out by the hue-family rule, so a lower CMYK error
         // is not mistaken for a missed recommendation.
@@ -294,7 +328,9 @@ object SeparationStrategyEngine {
                 )
                 s.copy(
                     isRecommended = true,
-                    recommendationReason = if (meetsTolerance) {
+                    recommendationReason = if (mixedPreferred) {
+                        "Recommended: CMYK for the picture plus a spot screen for each solid colour (${s.screenCount} screens; $figures). Small solid text built from C, M, Y and K risks misregistration (mixed_separation, ${mixedRules?.confidence})."
+                    } else if (meetsTolerance) {
                         "Recommended: fewest screens (${s.screenCount}) within tolerance ($figures; limits $qualityTolerance and $qualityToleranceP95).$cmykNote"
                     } else {
                         "No offered option is within tolerance (limits $qualityTolerance and $qualityToleranceP95). Lowest colour error among the offered options: $figures.$cmykNote"
@@ -349,6 +385,109 @@ object SeparationStrategyEngine {
             families.add((hue / HUE_FAMILY_WIDTH_DEGREES).toInt())
         }
         return families.size
+    }
+
+    /**
+     * mixed_separation: a print colour is solid when at least [minShare] of the pixels nearest to
+     * it are within [coreDe00] of it (text and logos are tight; picture colours are spread out).
+     */
+    fun solidColours(
+        colors: List<MeasuredColor>,
+        quantizedPalette: Map<Int, QuantizedBin>,
+        coreDe00: Double,
+        minShare: Double
+    ): List<MeasuredColor> {
+        if (colors.isEmpty()) return emptyList()
+        val labs = colors.map { it.lab }
+        val assigned = LongArray(colors.size)
+        val core = LongArray(colors.size)
+        for ((_, bin) in quantizedPalette) {
+            val lab = ColorConverter.rgbToLab(bin.r, bin.g, bin.b)
+            var best = 0
+            var bestD = Double.MAX_VALUE
+            for (i in labs.indices) {
+                val d = ColorConverter.deltaE00(lab, labs[i])
+                if (d < bestD) { bestD = d; best = i }
+            }
+            assigned[best] += bin.count.toLong()
+            if (bestD <= coreDe00) core[best] += bin.count.toLong()
+        }
+        return colors.filterIndexed { i, _ -> assigned[i] > 0 && core[i].toDouble() / assigned[i] >= minShare }
+    }
+
+    /** CMYK for the picture plus spot screens for solid colours; near-black solids from K. */
+    private fun evaluateMixedStrategy(
+        solids: List<MeasuredColor>,
+        rules: MixedSeparationRules,
+        processInks: ProcessInksConfig,
+        totalPixelCount: Int,
+        quantizedPalette: Map<Int, QuantizedBin>,
+        isDarkGarment: Boolean,
+        extraWhiteScreens: Int,
+        darkWarning: String?
+    ): StrategyEvaluationResult {
+        val kRgb = ColorConverter.hexToRgb(processInks.blackHex)
+        val kLab = ColorConverter.rgbToLab(kRgb.r, kRgb.g, kRgb.b)
+        val fromK = solids.filter { ColorConverter.deltaE00(it.lab, kLab) <= rules.blackFromKMaxDeltaE00 }
+        val spots = solids.filter { it !in fromK }
+        val cmykHexes = listOf(processInks.cyanHex, processInks.magentaHex, processInks.yellowHex, processInks.blackHex)
+        val cmykAbs = Array(4) { hexToAbsorbance(cmykHexes[it]) }
+
+        var sumDelta = 0.0
+        var countWithin3 = 0
+        val binDeltas = ArrayList<Pair<Double, Int>>(quantizedPalette.size)
+        for ((_, bin) in quantizedPalette) {
+            val lab = ColorConverter.rgbToLab(bin.r, bin.g, bin.b)
+            var nearest: MeasuredColor? = null
+            var nearestD = Double.MAX_VALUE
+            for (s in solids) {
+                val d = ColorConverter.deltaE00(lab, s.lab)
+                if (d < nearestD) { nearestD = d; nearest = s }
+            }
+            val proof = if (nearest != null && nearestD <= rules.solidCoreDeltaE00) {
+                if (nearest in fromK) kRgb else nearest.rgb
+            } else {
+                val amounts = LawsonHansonNnls.solve(cmykAbs, rgbToAbsorbance(bin.r, bin.g, bin.b))
+                val abs = DoubleArray(3)
+                for (j in amounts.indices) {
+                    val c = amounts[j].coerceIn(0.0, 1.0)
+                    abs[0] += c * cmykAbs[j][0]; abs[1] += c * cmykAbs[j][1]; abs[2] += c * cmykAbs[j][2]
+                }
+                absorbanceToRgb(abs)
+            }
+            val dE = ColorConverter.deltaE00(lab, ColorConverter.rgbToLab(proof.r, proof.g, proof.b))
+            sumDelta += dE * bin.count
+            if (dE <= 3.0) countWithin3 += bin.count
+            binDeltas.add(Pair(dE, bin.count))
+        }
+        binDeltas.sortBy { it.first }
+        var acc = 0
+        var p95 = 0.0
+        val target95 = (totalPixelCount * 0.95).toInt()
+        for ((dE, count) in binDeltas) {
+            acc += count
+            if (acc >= target95) { p95 = dE; break }
+        }
+        val spotNames = spots.map { it.nearestShade?.name ?: it.hex }
+        val blackNote = if (fromK.isNotEmpty()) " (black from K)" else ""
+        return StrategyEvaluationResult(
+            strategyType = SeparationStrategyType.MIXED_CMYK_SPOT,
+            name = (if (spots.isEmpty()) "CMYK" else "CMYK + ${spots.size} Spot") + blackNote + if (extraWhiteScreens > 0) " (+ Whites)" else "",
+            screenCount = 4 + spots.size + extraWhiteScreens,
+            inkHexes = cmykHexes + spots.map { it.hex },
+            inkNames = listOf("Cyan", "Magenta", "Yellow", "Black") + spotNames,
+            meanDeltaE00 = if (totalPixelCount > 0) sumDelta / totalPixelCount else 0.0,
+            percentile95DeltaE00 = p95,
+            percentWithinDeltaE3 = if (totalPixelCount > 0) countWithin3 * 100.0 / totalPixelCount else 0.0,
+            darkGarmentWarning = darkWarning,
+            isDarkGarment = isDarkGarment,
+            notes = "CMYK halftone for the picture; ${spots.size} solid colour(s) on their own screens" +
+                (if (fromK.isNotEmpty()) "; ${fromK.size} near-black solid colour(s) from the K screen" else "") +
+                ". Rules: mixed_separation (${rules.confidence}).",
+            spotHexes = spots.map { it.hex },
+            blackFromKHexes = fromK.map { it.hex },
+            solidCoreDeltaE00 = rules.solidCoreDeltaE00
+        )
     }
 
     /**
@@ -675,7 +814,8 @@ object SeparationStrategyEngine {
             ColorConverter.sRgbToLinear(garmentRgb.b)
         )
         // Spot inks are opaque over a dark or coloured garment. Process inks stay transparent.
-        val opaqueModel = partB.opaqueInkModel && chosenStrategyType != SeparationStrategyType.CMYK_PROCESS
+        val opaqueModel = partB.opaqueInkModel && chosenStrategyType != SeparationStrategyType.CMYK_PROCESS &&
+            chosenStrategyType != SeparationStrategyType.MIXED_CMYK_SPOT
 
         if (totalPixels == 0 || pixels.size != totalPixels) {
             return PartCResult(
@@ -754,6 +894,16 @@ object SeparationStrategyEngine {
                     val hex = strategy.inkHexes[i]
                     val name = if (i < strategy.inkNames.size) strategy.inkNames[i] else hex
                     inkSpecs.add(InkSpec(name, hex, ColorConverter.hexToRgb(hex), ScreenType.SPOT_HALFTONE))
+                }
+            }
+            SeparationStrategyType.MIXED_CMYK_SPOT -> {
+                inkSpecs.add(InkSpec("Cyan", processInks.cyanHex, ColorConverter.hexToRgb(processInks.cyanHex), ScreenType.CMYK_PROCESS))
+                inkSpecs.add(InkSpec("Magenta", processInks.magentaHex, ColorConverter.hexToRgb(processInks.magentaHex), ScreenType.CMYK_PROCESS))
+                inkSpecs.add(InkSpec("Yellow", processInks.yellowHex, ColorConverter.hexToRgb(processInks.yellowHex), ScreenType.CMYK_PROCESS))
+                inkSpecs.add(InkSpec("Black", processInks.blackHex, ColorConverter.hexToRgb(processInks.blackHex), ScreenType.CMYK_PROCESS))
+                strategy.spotHexes.forEachIndexed { i, hex ->
+                    val name = strategy.inkNames.getOrNull(4 + i) ?: hex
+                    inkSpecs.add(InkSpec(name, hex, ColorConverter.hexToRgb(hex), ScreenType.FLAT_SPOT))
                 }
             }
             SeparationStrategyType.FLAT_SPOT_SOLID -> {
@@ -862,7 +1012,47 @@ object SeparationStrategyEngine {
 
             val binSolutions = HashMap<Int, SolvedBinData>(quantizedPalette.size)
 
-            if (opaqueModel) {
+            if (chosenStrategyType == SeparationStrategyType.MIXED_CMYK_SPOT) {
+                // Solid colours (within the core ΔE00) print 100% from their spot screen, or from
+                // K for near-black text; every other pixel is a CMYK halftone (absorbance model).
+                val core = strategy.solidCoreDeltaE00 ?: 0.0
+                val solidHexes = strategy.spotHexes + strategy.blackFromKHexes
+                val solidLabs = solidHexes.map { ColorConverter.rgbToLab(ColorConverter.hexToRgb(it)) }
+                val cmykAbs = Array(4) { hexToAbsorbance(coloredInks[it].hex) }
+                val kRgb = coloredInks[3].rgb
+                for ((binKey, bin) in quantizedPalette) {
+                    val lab = ColorConverter.rgbToLab(bin.r, bin.g, bin.b)
+                    var nearest = -1
+                    var nearestD = Double.MAX_VALUE
+                    for (s in solidLabs.indices) {
+                        val d = ColorConverter.deltaE00(lab, solidLabs[s])
+                        if (d < nearestD) { nearestD = d; nearest = s }
+                    }
+                    val amounts = DoubleArray(coloredCount)
+                    val proofRgb: ColorConverter.Rgb
+                    if (nearest >= 0 && nearestD <= core) {
+                        val spotIdx = strategy.spotHexes.indexOf(solidHexes[nearest])
+                        if (spotIdx >= 0 && 4 + spotIdx < coloredCount) {
+                            amounts[4 + spotIdx] = 1.0
+                            proofRgb = coloredInks[4 + spotIdx].rgb
+                        } else {
+                            amounts[3] = 1.0
+                            proofRgb = kRgb
+                        }
+                    } else {
+                        val raw = LawsonHansonNnls.solve(cmykAbs, rgbToAbsorbance(bin.r, bin.g, bin.b))
+                        val abs = DoubleArray(3)
+                        for (j in 0 until 4) {
+                            val c = raw[j].coerceIn(0.0, 1.0)
+                            amounts[j] = c
+                            abs[0] += c * cmykAbs[j][0]; abs[1] += c * cmykAbs[j][1]; abs[2] += c * cmykAbs[j][2]
+                        }
+                        proofRgb = absorbanceToRgb(abs)
+                    }
+                    val proofInt = (0xFF shl 24) or (proofRgb.r shl 16) or (proofRgb.g shl 8) or proofRgb.b
+                    binSolutions[binKey] = SolvedBinData(amounts, proofInt)
+                }
+            } else if (opaqueModel) {
                 // Opaque model in linear RGB, relative to the garment:
                 // sum c_j * (ink_j - garment) = pixel - garment
                 val inkLinears = Array(coloredCount) { ci ->
