@@ -151,6 +151,10 @@ fun SettingsScreen(
         var versionTaps by androidx.compose.runtime.saveable.rememberSaveable { androidx.compose.runtime.mutableIntStateOf(0) }
         AiPrivacySection()
 
+        SettingsSection(stringResource(R.string.rates_title)) {
+            com.mos.nira.features.commercial.FactoryRatesEditor()
+        }
+
         SettingsSection(stringResource(R.string.settings_section_rules)) {
             SettingsRow(stringResource(R.string.settings_rules_version), info.rulesVersion ?: notAvailable)
             SettingsRow(stringResource(R.string.settings_rules_status), info.rulesStatus ?: notAvailable)

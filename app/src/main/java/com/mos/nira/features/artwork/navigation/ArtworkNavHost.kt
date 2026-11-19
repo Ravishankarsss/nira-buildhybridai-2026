@@ -211,7 +211,12 @@ fun ArtworkNavHost(
                         onFabric = { viewModel.setBriefFabric(it) },
                         onQuantity = { viewModel.setBriefQuantity(it) },
                         onFeel = { viewModel.setBriefFeel(it) },
-                        onLoadRules = { viewModel.loadBriefRules() }
+                        onLoadRules = { viewModel.loadBriefRules() },
+                        costDownRules = uiState.costDownRules,
+                        costDownBefore = uiState.costDownBefore,
+                        costDownAfter = uiState.costDownAfter,
+                        onCostDownPreview = { from, into, garment -> viewModel.renderCostDownPreview(from, into, garment) },
+                        onCloseCostDownPreview = { viewModel.clearCostDownPreview() }
                     )
                 },
                 includePhotoEdgeArea = uiState.printJobInputs.includePhotoEdgeArea,
@@ -301,7 +306,12 @@ fun ArtworkNavHost(
                         onFabric = { viewModel.setBriefFabric(it) },
                         onQuantity = { viewModel.setBriefQuantity(it) },
                         onFeel = { viewModel.setBriefFeel(it) },
-                        onLoadRules = { viewModel.loadBriefRules() }
+                        onLoadRules = { viewModel.loadBriefRules() },
+                        costDownRules = uiState.costDownRules,
+                        costDownBefore = uiState.costDownBefore,
+                        costDownAfter = uiState.costDownAfter,
+                        onCostDownPreview = { from, into, garment -> viewModel.renderCostDownPreview(from, into, garment) },
+                        onCloseCostDownPreview = { viewModel.clearCostDownPreview() }
                     )
                 },
                 footer = { Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {

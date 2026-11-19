@@ -432,7 +432,7 @@
   "display_disclaimer": "Rule-of-thumb estimate from public trade sources. Verify on the production floor and with the ink maker's technical data sheet.",
   "change_log": [
     "v2 (15 Nov 2026): added process_inks, garment_mask, white_base, recommendation, resolution and regression_cases after a device test on a real garment photo (white-to-blue gradient logo on a black T-shirt).",
-    "v3 (18 Nov 2026): added shadow_vs_ink and photo_vs_artwork (proposed starting values, Ravi to confirm) after a white T-shirt photo measured fold shadows as print colours. merge_shades_in_photo_hue_within_deg holds the 6 deg from merge_shades_in_photo as a number. Added edge_blend (camera blur and anti-aliasing bands between two inks; proposed starting values, Ravi to confirm). Added small_colours: a colour under the minimum coverage is flagged, not dropped (the magenta eye on the skull print). Added screen_type_mesh_rule (mesh per screen type from mesh_rules; ink figures only where ink_consumption has an entry). Ravi: flat spot 137-156 tpi; mapping verified except highlight white. Added artwork_background. Added edge_blend.keyline_protection (Ravi: black keylines are important) and photo_background (table or floor at the photo edge). Added garment_preview (contrast check and preview chips). Added print_brief (feel tags from the technique texts, method order) and quantity_thresholds (values empty until Ravi gives them). Added mixed_separation (CMYK plus spot screens for solid colours; black text from the K screen). Ravi 19 Nov: quantity is the buyer's order and does not change the method (quantity_changes_method false)."
+    "v3 (18 Nov 2026): added shadow_vs_ink and photo_vs_artwork (proposed starting values, Ravi to confirm) after a white T-shirt photo measured fold shadows as print colours. merge_shades_in_photo_hue_within_deg holds the 6 deg from merge_shades_in_photo as a number. Added edge_blend (camera blur and anti-aliasing bands between two inks; proposed starting values, Ravi to confirm). Added small_colours: a colour under the minimum coverage is flagged, not dropped (the magenta eye on the skull print). Added screen_type_mesh_rule (mesh per screen type from mesh_rules; ink figures only where ink_consumption has an entry). Ravi: flat spot 137-156 tpi; mapping verified except highlight white. Added artwork_background. Added edge_blend.keyline_protection (Ravi: black keylines are important) and photo_background (table or floor at the photo edge). Added garment_preview (contrast check and preview chips). Added print_brief (feel tags from the technique texts, method order) and quantity_thresholds (values empty until Ravi gives them). Added mixed_separation (CMYK plus spot screens for solid colours; black text from the K screen). Ravi 19 Nov: quantity is the buyer's order and does not change the method (quantity_changes_method false). Added cost_down (Cost-Down options; values from Ravi's brief)."
   ],
   "process_inks": {
     "cyan": "#00AEEF",
@@ -535,6 +535,18 @@
     "capture_guidance": "Fill the frame with the garment. Nothing else in the photo.",
     "confidence": "assumption",
     "note": "Proposed starting values; Ravi to confirm. The centre-box condition keeps a large print that runs off one edge."
+  },
+  "cost_down": {
+    "what": "Cost-Down options on the decision card: merge the two closest print colours, switch method at the order quantity, or a light garment (no white underbase)",
+    "close_match_max_de00": 12,
+    "close_match_rule": "Two print colours within close_match_max_de00 (CIEDE2000) are a close match when merged; above it the shift is visible and the buyer must approve it.",
+    "method_switch_min_saving_percent": 5,
+    "method_switch_rule": "Screen vs digital is offered as a Cost-Down only when the other method costs at least method_switch_min_saving_percent less for the order.",
+    "light_garment_rule": "Dropping the white underbase means a light garment: a buyer decision, never the factory's.",
+    "source": "Ravi's brief, 19 Nov 2026",
+    "confidence": "assumption",
+    "verified_by_ravi": false,
+    "note": "Starting values from Ravi's brief; to be confirmed on real jobs."
   },
   "mixed_separation": {
     "what": "CMYK halftone for the picture plus spot screens for solid colours (text, logos). A near-black solid colour prints from the K screen, so it needs no extra screen.",

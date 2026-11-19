@@ -40,6 +40,9 @@ private val SRed = Color(0xFFFF8A80)
 fun CardExplanationSection(
     facts: List<String>,
     methodName: String?,
+    assetPath: String = com.mos.nira.core.ai.CardExplanation.ASSET_PATH,
+    buttonText: String? = null,
+    hintText: String? = null,
     viewModel: CardExplanationViewModel = viewModel(viewModelStoreOwner = activityViewModelStoreOwner())
 ) {
     val requestKey = facts.hashCode().toString()
@@ -47,15 +50,15 @@ fun CardExplanationSection(
     val state by viewModel.state.collectAsState()
 
     Spacer(Modifier.height(14.dp))
-    Text(stringResource(R.string.card_explain_hint), color = SMuted, fontSize = 11.sp, lineHeight = 15.sp)
+    Text(hintText ?: stringResource(R.string.card_explain_hint), color = SMuted, fontSize = 11.sp, lineHeight = 15.sp)
     Spacer(Modifier.height(6.dp))
     val running = state is ReportExplanationState.Running
     Button(
-        onClick = { viewModel.explain(requestKey, facts, methodName) },
+        onClick = { viewModel.explain(requestKey, facts, methodName, assetPath) },
         enabled = !running,
         colors = ButtonDefaults.buttonColors(containerColor = SViolet, contentColor = Color(0xFF0F1526))
     ) {
-        Text(stringResource(if (running) R.string.explain_running else R.string.card_explain_button), fontWeight = FontWeight.Bold)
+        Text(if (running) stringResource(R.string.explain_running) else (buttonText ?: stringResource(R.string.card_explain_button)), fontWeight = FontWeight.Bold)
     }
 
     when (val s = state) {

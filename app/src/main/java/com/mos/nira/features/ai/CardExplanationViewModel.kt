@@ -44,16 +44,17 @@ class CardExplanationViewModel(application: Application) : AndroidViewModel(appl
         if (key != requestKey) _state.value = ReportExplanationState.Idle
     }
 
-    fun explain(requestKey: String, facts: List<String>, methodName: String?) {
+    fun explain(requestKey: String, facts: List<String>, methodName: String?, assetPath: String = CardExplanation.ASSET_PATH) {
         if (_state.value is ReportExplanationState.Running) return
         _state.value = ReportExplanationState.Running(requestKey)
         viewModelScope.launch {
             val app = getApplication<Application>()
             val template = withContext(Dispatchers.IO) {
-                app.assets.open(CardExplanation.ASSET_PATH).bufferedReader().use { it.readText() }
+                app.assets.open(assetPath).bufferedReader().use { it.readText() }
             }
             val prompt = CardExplanation.build(template, facts)
-            withContext(Dispatchers.IO) {
+            // Only the card explanation is saved for the web sample.
+            if (assetPath == CardExplanation.ASSET_PATH) withContext(Dispatchers.IO) {
                 runCatching {
                     val stamp = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm", java.util.Locale.US).format(java.util.Date())
                     File(app.filesDir, CardExplanation.EXPORT_FILE).writeText(CardExplanation.exportJson(facts, prompt, stamp, methodName))

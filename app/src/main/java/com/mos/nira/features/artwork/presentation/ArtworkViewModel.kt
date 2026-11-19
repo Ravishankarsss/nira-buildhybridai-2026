@@ -1,5 +1,6 @@
 package com.mos.nira.features.artwork.presentation
 
+import com.mos.nira.features.artwork.domain.MeasuredColor
 import android.app.Application
 import android.graphics.Bitmap
 import android.net.Uri
@@ -111,7 +112,11 @@ data class ArtworkStudioUiState(
     val briefQuantity: Int? = null,
     val briefFeel: Feel? = null,
     val briefRules: BriefRules? = null,
-    val quantityRules: QuantityRules? = null
+    val quantityRules: QuantityRules? = null,
+    // Cost-Down (print_rules.json cost_down) and its before / after preview on the garment.
+    val costDownRules: com.mos.nira.core.commercial.CostDownRules? = null,
+    val costDownBefore: Bitmap? = null,
+    val costDownAfter: Bitmap? = null
 )
 
 class ArtworkViewModel(application: Application) : AndroidViewModel(application) {
@@ -747,11 +752,12 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
     // ---------- Print brief ----------
 
     fun loadBriefRules() {
-        if (_uiState.value.briefRules != null && _uiState.value.quantityRules != null) return
+        if (_uiState.value.briefRules != null && _uiState.value.quantityRules != null && _uiState.value.costDownRules != null) return
         viewModelScope.launch {
             val brief = printRulesRepository.getBriefRules()
             val quantity = printRulesRepository.getQuantityRules()
-            _uiState.update { it.copy(briefRules = brief, quantityRules = quantity) }
+            val costDown = printRulesRepository.getCostDownRules()
+            _uiState.update { it.copy(briefRules = brief, quantityRules = quantity, costDownRules = costDown) }
         }
     }
 
@@ -817,45 +823,89 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
             }
             val swaps = state.inkSwaps
             val result = withContext(Dispatchers.Default) {
-                val mw = partA.maskWidth
-                val mh = partA.maskHeight
-                val scaled = if (bitmap.width == mw && bitmap.height == mh) bitmap else Bitmap.createScaledBitmap(bitmap, mw, mh, true)
-                val full = IntArray(mw * mh)
-                scaled.getPixels(full, 0, mw, 0, 0, mw, mh)
-                if (scaled != bitmap) scaled.recycle()
-                // Preview size: at most 480 px on the long side.
-                val step = maxOf(1, (maxOf(mw, mh) + 479) / 480)
-                val w = mw / step
-                val h = mh / step
-                val px = IntArray(w * h) { i -> full[(i / w) * step * mw + (i % w) * step] }
-                val pm = BooleanArray(w * h) { i -> mask[(i / w) * step * mw + (i % w) * step] }
-                // A swapped ink: print pixels whose nearest measured colour is that ink.
-                val palette = partA.measuredPalette
-                val nearest = HashMap<Int, String>()
-                val inkFor: (Int, Int) -> Int = { _, p ->
-                    if (swaps.isEmpty() || palette.isEmpty()) p else {
-                        val key = p and 0xFFFFFF
-                        val hex = nearest.getOrPut(key) {
-                            val lab = ColorConverter.rgbToLab((key shr 16) and 0xFF, (key shr 8) and 0xFF, key and 0xFF)
-                            palette.minByOrNull { ColorConverter.deltaE76(lab, it.lab) }!!.hex
-                        }
-                        swaps[hex]?.let { (0xFF shl 24) or (ColorConverter.hexToRgb(it).let { c -> (c.r shl 16) or (c.g shl 8) or c.b }) } ?: p
-                    }
-                }
-                val garment = ColorConverter.hexToRgb(garmentHex)
-                val without = GarmentPreview.render(px, pm, garment, withWhiteBase = false, inkFor = inkFor)
-                val with = GarmentPreview.render(px, pm, garment, withWhiteBase = true, inkFor = inkFor)
-                val inks = palette.map { swaps[it.hex] ?: it.hex }.distinct()
-                Triple(
-                    Bitmap.createBitmap(without, w, h, Bitmap.Config.ARGB_8888),
-                    Bitmap.createBitmap(with, w, h, Bitmap.Config.ARGB_8888),
-                    GarmentPreview.contrastWarnings(inks, garmentHex, rules.contrastMinDeltaL)
-                )
+                val input = previewInput(partA, bitmap, mask)
+                val without = renderPreview(input, swaps, garmentHex, withWhiteBase = false)
+                val with = renderPreview(input, swaps, garmentHex, withWhiteBase = true)
+                val inks = partA.measuredPalette.map { swaps[it.hex] ?: it.hex }.distinct()
+                Triple(without, with, GarmentPreview.contrastWarnings(inks, garmentHex, rules.contrastMinDeltaL))
             }
             _uiState.update {
                 it.copy(previewRules = rules, previewWithoutBase = result.first, previewWithBase = result.second, previewWarnings = result.third)
             }
         }
+    }
+
+    /** The analysed image and print mask at preview size (at most 480 px on the long side). */
+    private class PreviewInput(val px: IntArray, val mask: BooleanArray, val w: Int, val h: Int, val palette: List<MeasuredColor>)
+
+    private fun previewInput(partA: PartAResult, bitmap: Bitmap, mask: BooleanArray): PreviewInput {
+        val mw = partA.maskWidth
+        val mh = partA.maskHeight
+        val scaled = if (bitmap.width == mw && bitmap.height == mh) bitmap else Bitmap.createScaledBitmap(bitmap, mw, mh, true)
+        val full = IntArray(mw * mh)
+        scaled.getPixels(full, 0, mw, 0, 0, mw, mh)
+        if (scaled != bitmap) scaled.recycle()
+        val step = maxOf(1, (maxOf(mw, mh) + 479) / 480)
+        val w = mw / step
+        val h = mh / step
+        val px = IntArray(w * h) { i -> full[(i / w) * step * mw + (i % w) * step] }
+        val pm = BooleanArray(w * h) { i -> mask[(i / w) * step * mw + (i % w) * step] }
+        return PreviewInput(px, pm, w, h, partA.measuredPalette)
+    }
+
+    /** The print on [garmentHex] with the ink model; [swaps] show one measured ink as another. */
+    private fun renderPreview(input: PreviewInput, swaps: Map<String, String>, garmentHex: String, withWhiteBase: Boolean): Bitmap {
+        val nearest = HashMap<Int, String>()
+        val inkFor: (Int, Int) -> Int = { _, p ->
+            if (swaps.isEmpty() || input.palette.isEmpty()) p else {
+                val key = p and 0xFFFFFF
+                val hex = nearest.getOrPut(key) {
+                    val lab = ColorConverter.rgbToLab((key shr 16) and 0xFF, (key shr 8) and 0xFF, key and 0xFF)
+                    input.palette.minByOrNull { ColorConverter.deltaE76(lab, it.lab) }!!.hex
+                }
+                swaps[hex]?.let { (0xFF shl 24) or (ColorConverter.hexToRgb(it).let { c -> (c.r shl 16) or (c.g shl 8) or c.b }) } ?: p
+            }
+        }
+        val out = GarmentPreview.render(input.px, input.mask, ColorConverter.hexToRgb(garmentHex), withWhiteBase, inkFor)
+        return Bitmap.createBitmap(out, input.w, input.h, Bitmap.Config.ARGB_8888)
+    }
+
+    private var costDownJob: Job? = null
+
+    /**
+     * Before / after pictures for a Cost-Down option: the print now, and the print with [fromHex]
+     * shown as [intoHex] (a colour merge) and / or on [afterGarmentHex] (a light garment).
+     */
+    fun renderCostDownPreview(fromHex: String?, intoHex: String?, afterGarmentHex: String?) {
+        costDownJob?.cancel()
+        costDownJob = viewModelScope.launch {
+            val state = _uiState.value
+            val partA = state.partAResult
+            val mask = partA?.printMask
+            val bitmap = state.selectedBitmap
+            val garmentHex = state.previewGarmentHex
+                ?: if (state.printJobInputs.inputKind == InputKind.PHOTO) partA?.garmentProfile?.estimatedHex else null
+            if (partA == null || mask == null || bitmap == null || garmentHex == null || partA.maskWidth <= 0 || partA.maskHeight <= 0) {
+                _uiState.update { it.copy(costDownBefore = null, costDownAfter = null) }
+                return@launch
+            }
+            val swaps = state.inkSwaps
+            val pair = withContext(Dispatchers.Default) {
+                val input = previewInput(partA, bitmap, mask)
+                val dark = state.partBResult?.isDarkGarment == true
+                val before = renderPreview(input, swaps, garmentHex, withWhiteBase = dark)
+                val afterSwaps = if (fromHex != null && intoHex != null) swaps + (fromHex to intoHex) else swaps
+                val afterGarment = afterGarmentHex ?: garmentHex
+                val after = renderPreview(input, afterSwaps, afterGarment, withWhiteBase = dark && afterGarmentHex == null)
+                before to after
+            }
+            _uiState.update { it.copy(costDownBefore = pair.first, costDownAfter = pair.second) }
+        }
+    }
+
+    fun clearCostDownPreview() {
+        costDownJob?.cancel()
+        _uiState.update { it.copy(costDownBefore = null, costDownAfter = null) }
     }
 
     /** True when the file has camera make or exposure information; null when it cannot be read. */

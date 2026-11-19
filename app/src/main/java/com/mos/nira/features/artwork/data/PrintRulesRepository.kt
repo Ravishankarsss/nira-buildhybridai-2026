@@ -263,6 +263,11 @@ class PrintRulesRepository(private val context: Context?) {
         loadJson()?.let { parseSmallColourRules(it) }
     }
 
+    /** "cost_down" from print_rules.json, or null if it is missing or incomplete. */
+    suspend fun getCostDownRules(): com.mos.nira.core.commercial.CostDownRules? = withContext(Dispatchers.IO) {
+        loadJson()?.let { com.mos.nira.core.commercial.PrintCost.parseCostDownRules(it) }
+    }
+
     /** "print_brief" from print_rules.json, or null if it is missing or incomplete. */
     suspend fun getBriefRules(): com.mos.nira.core.advice.BriefRules? = withContext(Dispatchers.IO) {
         loadJson()?.let { com.mos.nira.core.advice.PrintDecision.parseBriefRules(it) }

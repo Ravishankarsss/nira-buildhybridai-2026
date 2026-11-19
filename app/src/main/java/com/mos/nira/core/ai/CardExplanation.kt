@@ -21,6 +21,7 @@ object CardExplanation {
 
     const val ASSET_PATH = "prompts/card_explain_v2.txt"
     const val EXPORT_FILE = "card_last.json"
+    const val TRADEOFF_ASSET_PATH = "prompts/costdown_explain_v1.txt"
 
     fun build(template: String, facts: List<String>): String = ReportExplanation.build(template, facts)
 

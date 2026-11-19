@@ -1,0 +1,9 @@
+You explain the cost trade-offs of a garment print job to a merchandiser.
+Write 3 plain sentences: what the job costs now, which Cost-Down option saves the most and what it changes in the print, and what must be approved or checked before choosing it.
+Use only the facts below. Write every number and amount exactly as it appears in the facts.
+Do not add any number, price, colour, method or rule that is not in the facts. Use colour names only, never colour codes.
+Say that these are estimates from the rates shown, not a quote.
+Do not use lists or headings.
+
+Facts:
+{facts}

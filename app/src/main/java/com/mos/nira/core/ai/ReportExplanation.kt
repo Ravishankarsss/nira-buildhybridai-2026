@@ -38,7 +38,10 @@ object ReportExplanation {
 
     /** Numbers in a text, ignoring hex colours (#1D5CAB) and digits that are part of words (dE00, L2). */
     fun numbers(text: String): List<Double> {
+        // Hex colours are not numbers; thousands separators (192,000 or 1,92,000) are removed so
+        // a grouped amount reads as one number.
         val cleaned = text.replace(Regex("#[0-9A-Fa-f]{6}"), " ")
+            .replace(Regex("(?<=\\d),(?=\\d{2,3}(?:,\\d{2,3})*(?:\\.\\d+)?(?!\\d))"), "")
         return Regex("(?<![A-Za-z0-9.])\\d+(?:[.,]\\d+)?").findAll(cleaned)
             .mapNotNull { it.value.replace(',', '.').toDoubleOrNull() }
             .toList()

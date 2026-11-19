@@ -75,7 +75,16 @@ private fun hexColor(hex: String) = Color(android.graphics.Color.parseColor(hex)
 
 /** The engine's screens (Parts C and D) in the form the decision card needs. */
 fun plannedScreens(partC: PartCResult?, partD: PartDResult?): List<PlannedScreen> =
-    partC?.channels.orEmpty().map { ch ->
+    partC?.channels.orEmpty().filter { true }.let { chans ->
+        // CMYK process screens: all four in CMYK, the first four colour screens in the mixed option.
+        val colourChans = chans.filter { !it.isBaseWhite && it.inkName != "Highlight White" }
+        val processNames = when (partC?.strategyType) {
+            com.mos.nira.features.artwork.domain.SeparationStrategyType.CMYK_PROCESS,
+            com.mos.nira.features.artwork.domain.SeparationStrategyType.MIXED_CMYK_SPOT -> colourChans.take(4).map { it.channelIndex }.toSet()
+            else -> emptySet()
+        }
+        chans.map { ch -> ch to (ch.channelIndex in processNames) }
+    }.map { (ch, process) ->
         val ink = partD?.channels?.firstOrNull { it.channelIndex == ch.channelIndex }?.takeIf { it.inkAvailable }
         PlannedScreen(
             name = ch.inkName,
@@ -85,7 +94,8 @@ fun plannedScreens(partC: PartCResult?, partD: PartDResult?): List<PlannedScreen
             meshConfidence = ch.meshConfidence,
             gramsPerGarment = ink?.inkGramsPerGarment,
             gramsMin = ink?.inkGramsPerGarmentMin,
-            gramsMax = ink?.inkGramsPerGarmentMax
+            gramsMax = ink?.inkGramsPerGarmentMax,
+            isProcess = process
         )
     }
 
@@ -116,6 +126,13 @@ fun PrintDecisionCard(
     onQuantity: (Int?) -> Unit,
     onFeel: (Feel?) -> Unit,
     onLoadRules: () -> Unit,
+    // Order cost and Cost-Down (factory rates on this phone; print_rules.json cost_down).
+    costDownRules: com.mos.nira.core.commercial.CostDownRules? = null,
+    costDownBefore: android.graphics.Bitmap? = null,
+    costDownAfter: android.graphics.Bitmap? = null,
+    onCostDownPreview: (fromHex: String?, intoHex: String?, afterGarmentHex: String?) -> Unit = { _, _, _ -> },
+    onCloseCostDownPreview: () -> Unit = {},
+    extraActions: @Composable () -> Unit = {},
     choicesViewModel: PrintMethodChoicesViewModel = viewModel(viewModelStoreOwner = activityViewModelStoreOwner())
 ) {
     LaunchedEffect(Unit) { onLoadRules() }
@@ -322,14 +339,7 @@ fun PrintDecisionCard(
                     }
                 }
 
-                // Risks from the rules file for the chosen method
-                if (best.advice.risks.isNotEmpty()) {
-                    Spacer(Modifier.height(10.dp))
-                    Text(stringResource(R.string.card_risks), color = DMuted, fontSize = 11.sp)
-                    best.advice.risks.forEach { Text("• $it", color = DWhite, fontSize = 12.sp, lineHeight = 17.sp) }
-                }
-
-                // "Explain this card": AI explains the card's facts (text only, on-device preferred).
+                // The card's facts in plain English (for the AI explanations and the share sheet).
                 val fibreName = fibre?.let {
                     when (it) {
                         Fibre.COTTON_POLY_BLEND -> "cotton/polyester blend"
@@ -339,6 +349,39 @@ fun PrintDecisionCard(
                 val facts = remember(card, contrastWarnings, quantityRules, fibreName) {
                     com.mos.nira.core.ai.CardExplanation.facts(card, contrastWarnings, quantityRules, fibreName)
                 }
+
+                // Order cost and Cost-Down: deterministic, from the factory's own rates.
+                val rates = com.mos.nira.features.commercial.rememberFactoryRates()
+                val cost = remember(card, screens, rates) { com.mos.nira.core.commercial.PrintCost.forCard(card, screens, rates) }
+                val options = remember(card, screens, rates, costDownRules) {
+                    com.mos.nira.core.commercial.PrintCost.costDown(card, screens, rates, costDownRules)
+                }
+                com.mos.nira.features.commercial.OrderCostSection(
+                    cost = cost,
+                    options = options,
+                    rates = rates,
+                    cardFacts = facts,
+                    costDownBefore = costDownBefore,
+                    costDownAfter = costDownAfter,
+                    onPreviewOption = { o ->
+                        when (o.kind) {
+                            com.mos.nira.core.commercial.CostDownKind.MERGE_COLOURS -> onCostDownPreview(o.fromHex, o.intoHex, null)
+                            com.mos.nira.core.commercial.CostDownKind.LIGHT_GARMENT -> onCostDownPreview(null, null, garmentChips?.chips?.firstOrNull { it.first == "white" }?.second)
+                            else -> Unit
+                        }
+                    },
+                    onClosePreview = onCloseCostDownPreview,
+                    extraActions = extraActions
+                )
+
+                // Risks from the rules file for the chosen method
+                if (best.advice.risks.isNotEmpty()) {
+                    Spacer(Modifier.height(10.dp))
+                    Text(stringResource(R.string.card_risks), color = DMuted, fontSize = 11.sp)
+                    best.advice.risks.forEach { Text("• $it", color = DWhite, fontSize = 12.sp, lineHeight = 17.sp) }
+                }
+
+                // "Explain this card": AI explains the card's facts (text only, on-device preferred).
                 com.mos.nira.features.ai.CardExplanationSection(facts, best.advice.name)
             }
             Spacer(Modifier.height(10.dp))

@@ -1,0 +1,10 @@
+{
+  "what": "Sample factory rates for the \"Load sample rates (editable)\" button, so a new install (and a judge) can see an order cost. Every cost shown with these rates is badged \"Sample rates - not a quote\" until the user edits a value.",
+  "source": "Ravi's brief, 19 Nov 2026. Demonstration values only; not market prices and not a quote.",
+  "currency": "₹",
+  "screen_make_cost": 450,
+  "job_setup_cost": 500,
+  "print_run_per_screen": 3.50,
+  "ink_cost_per_kg": 850,
+  "digital_rate_per_pc": 45
+}

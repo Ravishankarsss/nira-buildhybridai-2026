@@ -52,7 +52,9 @@ data class PlannedScreen(
     /** Ink grams per garment from ink_consumption, or null when the rules file has no figure. */
     val gramsPerGarment: Double?,
     val gramsMin: Double?,
-    val gramsMax: Double?
+    val gramsMax: Double?,
+    /** A CMYK process screen (Cyan, Magenta, Yellow, Black): never merged with another colour. */
+    val isProcess: Boolean = false
 )
 
 data class MethodChoice(val advice: TechniqueAdvice, val feelTag: String?, val fitsQuantity: Boolean?)
