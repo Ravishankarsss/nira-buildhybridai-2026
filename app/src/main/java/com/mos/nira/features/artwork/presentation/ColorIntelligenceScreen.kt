@@ -697,7 +697,7 @@ private fun MeasuredPrintColoursCard(
         AlertDialog(
             onDismissRequest = { asking = null },
             title = { Text(stringResource(R.string.small_colour_title)) },
-            text = { Text(c.hex + "  •  " + c.formattedCoverage + "\n\n" + stringResource(R.string.small_colour_body)) },
+            text = { Text(colourName(c.hex) + "  •  " + c.formattedCoverage + "\n\n" + stringResource(R.string.small_colour_body)) },
             confirmButton = {
                 TextButton(onClick = { if (point != null) onAnswerSmallColour(point, true); asking = null }) {
                     Text(stringResource(R.string.small_colour_yes))
@@ -714,7 +714,7 @@ private fun MeasuredPrintColoursCard(
         AlertDialog(
             onDismissRequest = { asking = null },
             title = { Text(stringResource(R.string.edge_blend_confirm_title)) },
-            text = { Text(c.hex + "\n\n" + stringResource(R.string.edge_blend_confirm_body)) },
+            text = { Text(colourName(c.hex) + "\n\n" + stringResource(R.string.edge_blend_confirm_body)) },
             confirmButton = {
                 TextButton(onClick = { onAnswerEdgeBlend(true); asking = null }) {
                     Text(stringResource(R.string.edge_blend_confirm_merge))
@@ -733,7 +733,7 @@ private fun MeasuredPrintColoursCard(
             title = { Text(stringResource(R.string.colour_confirm_title)) },
             text = {
                 Column {
-                    Text(c.hex + "\n\n" + stringResource(R.string.colour_confirm_body))
+                    Text(colourName(c.hex) + "\n\n" + stringResource(R.string.colour_confirm_body))
                     // One answer for every flagged area in the photo, however the colours group.
                     if (colours.count { it.possibleFoldShadow } > 1 || c.uncertainRegionPoints.size > 1) {
                         Spacer(modifier = Modifier.height(8.dp))
@@ -785,7 +785,11 @@ private fun MeasuredPrintColoursCard(
                     )
                     Spacer(modifier = Modifier.width(12.dp))
                     Column {
-                        Text(c.hex, color = TextWhite, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(colourName(c.hex), color = TextWhite, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(c.hex, color = TextMuted, fontSize = 11.sp)
+                        }
                         Text(
                             text = stringResource(R.string.colour_coverage, c.formattedCoverage) +
                                 (c.nearestShade?.let { "  •  ${it.code} ${it.name}" } ?: ""),

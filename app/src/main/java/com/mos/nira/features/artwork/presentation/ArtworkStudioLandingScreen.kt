@@ -1,5 +1,6 @@
 package com.mos.nira.features.artwork.presentation
 
+import com.mos.nira.features.artwork.domain.mainPrintHexes
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -287,7 +288,7 @@ fun RecentAnalysisRow(
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = record.fileName,
+                    text = jobTitle(record.fileName, record.inputKind, record.mainPrintHexes()),
                     color = TextWhite,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,

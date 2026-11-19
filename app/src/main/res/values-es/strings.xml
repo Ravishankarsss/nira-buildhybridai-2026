@@ -346,4 +346,6 @@
     <string name="sep_colour">Color de tinta</string>
     <string name="sep_mesh">Malla</string>
     <string name="sep_coverage">Cobertura de tinta</string>
+    <string name="job_artwork">Diseño · %1$s</string>
+    <string name="job_photo">Foto de prenda · %1$s</string>
 </resources>

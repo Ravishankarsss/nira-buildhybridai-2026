@@ -1,5 +1,6 @@
 package com.mos.nira.features.artwork.presentation
 
+import com.mos.nira.features.artwork.domain.mainPrintHexes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -216,7 +217,7 @@ fun HistoryItemCard(
 
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = record.fileName,
+                        text = jobTitle(record.fileName, record.inputKind, record.mainPrintHexes()),
                         color = TextWhite,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Bold,

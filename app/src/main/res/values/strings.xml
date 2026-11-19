@@ -344,4 +344,6 @@
     <string name="sep_colour">Ink colour</string>
     <string name="sep_mesh">Mesh</string>
     <string name="sep_coverage">Ink coverage of the print</string>
+    <string name="job_artwork">Artwork · %1$s</string>
+    <string name="job_photo">Garment photo · %1$s</string>
 </resources>

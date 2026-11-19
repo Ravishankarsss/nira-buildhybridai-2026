@@ -1,5 +1,6 @@
 package com.mos.nira
 
+import com.mos.nira.features.artwork.domain.mainPrintHexes
 import com.mos.nira.core.image.InputKind
 import android.net.Uri
 import android.os.Bundle
@@ -173,7 +174,9 @@ fun NIRAAppRoot() {
                 NIRADashboard(
                     modifier = Modifier,
                     recent = recent,
-                    latestFileName = DashboardModel.latestAnalysis(saved)?.fileName,
+                    latestFileName = DashboardModel.latestAnalysis(saved)?.let {
+                        com.mos.nira.features.artwork.presentation.jobTitle(it.fileName, it.inputKind, it.mainPrintHexes())
+                    },
                     onAnalyseArtwork = {
                         rootNavController.navigate(RootDestinations.ARTWORK_FLOW)
                     },
@@ -582,7 +585,7 @@ private fun RecentAnalysisCard(item: RecentAnalysisItem, onClick: () -> Unit) {
             Spacer(modifier = Modifier.width(14.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = item.fileName,
+                    text = com.mos.nira.features.artwork.presentation.jobTitle(item.fileName, item.inputKind, item.mainHexes),
                     color = White,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,

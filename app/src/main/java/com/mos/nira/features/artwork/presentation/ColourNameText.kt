@@ -43,6 +43,19 @@ fun colourName(hex: String): String {
     return text.replaceFirstChar { it.titlecase(locale) }
 }
 
+private val CAMERA_NAME = Regex("^(IMG|PXL|DSC|Screenshot)?[_-]?[0-9_ -]{6,}\\.(png|jpe?g|webp)$", RegexOption.IGNORE_CASE)
+
+/**
+ * A readable title for a saved job. A real file name is kept (without its extension); a camera
+ * or gallery number becomes "Artwork · navy, red" or "Garment photo · navy" from its print colours.
+ */
+@Composable
+fun jobTitle(fileName: String, inputKind: String?, mainHexes: List<String>): String {
+    if (!CAMERA_NAME.matches(fileName.trim()) || mainHexes.isEmpty()) return fileName.substringBeforeLast('.')
+    val colours = mainHexes.map { colourName(it).lowercase(LocalConfiguration.current.locales[0]) }.distinct().joinToString(", ")
+    return stringResource(if (inputKind == "PHOTO") R.string.job_photo else R.string.job_artwork, colours)
+}
+
 /** A screen or ink label: its name if it has one, or the colour name when the label is a hex code. */
 @Composable
 fun inkLabel(label: String): String = if (HEX.matches(label)) colourName(label) else label

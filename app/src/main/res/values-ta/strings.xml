@@ -345,4 +345,6 @@
     <string name="sep_colour">மை நிறம்</string>
     <string name="sep_mesh">மெஷ்</string>
     <string name="sep_coverage">அச்சில் மை பரப்பு</string>
+    <string name="job_artwork">கலைப்படைப்பு · %1$s</string>
+    <string name="job_photo">ஆடைப் புகைப்படம் · %1$s</string>
 </resources>

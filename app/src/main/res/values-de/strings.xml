@@ -345,4 +345,6 @@
     <string name="sep_colour">Farbton</string>
     <string name="sep_mesh">Gewebe</string>
     <string name="sep_coverage">Farbdeckung des Drucks</string>
+    <string name="job_artwork">Motiv · %1$s</string>
+    <string name="job_photo">Kleidungsfoto · %1$s</string>
 </resources>

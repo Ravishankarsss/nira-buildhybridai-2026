@@ -344,4 +344,6 @@
     <string name="sep_colour">Màu mực</string>
     <string name="sep_mesh">Lưới</string>
     <string name="sep_coverage">Độ phủ mực</string>
+    <string name="job_artwork">Hình in · %1$s</string>
+    <string name="job_photo">Ảnh áo · %1$s</string>
 </resources>

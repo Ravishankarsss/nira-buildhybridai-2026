@@ -345,4 +345,6 @@
     <string name="sep_colour">কালির রং</string>
     <string name="sep_mesh">মেশ</string>
     <string name="sep_coverage">প্রিন্টে কালির কভারেজ</string>
+    <string name="job_artwork">আর্টওয়ার্ক · %1$s</string>
+    <string name="job_photo">পোশাকের ছবি · %1$s</string>
 </resources>

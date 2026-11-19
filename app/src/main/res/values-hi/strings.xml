@@ -345,4 +345,6 @@
     <string name="sep_colour">स्याही का रंग</string>
     <string name="sep_mesh">मेश</string>
     <string name="sep_coverage">प्रिंट में स्याही का कवरेज</string>
+    <string name="job_artwork">आर्टवर्क · %1$s</string>
+    <string name="job_photo">गारमेंट फ़ोटो · %1$s</string>
 </resources>

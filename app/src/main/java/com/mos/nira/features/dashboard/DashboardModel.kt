@@ -1,6 +1,7 @@
 package com.mos.nira.features.dashboard
 
 import com.mos.nira.features.artwork.domain.ArtworkAnalysisRecord
+import com.mos.nira.features.artwork.domain.mainPrintHexes
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -62,7 +63,9 @@ data class RecentAnalysisItem(
     val dateText: String,
     val colourCount: Int,
     val thumbnailPath: String?,
-    val imageUri: String
+    val imageUri: String,
+    val inputKind: String? = null,
+    val mainHexes: List<String> = emptyList()
 )
 
 object DashboardModel {
@@ -98,7 +101,9 @@ object DashboardModel {
                 dateText = format.format(Date(record.timestamp)),
                 colourCount = record.printColourCount,
                 thumbnailPath = record.thumbnailPath,
-                imageUri = record.imageUri
+                imageUri = record.imageUri,
+                inputKind = record.inputKind,
+                mainHexes = record.mainPrintHexes()
             )
         }
     }

@@ -346,4 +346,6 @@
     <string name="sep_colour">Couleur d\'encre</string>
     <string name="sep_mesh">Maille</string>
     <string name="sep_coverage">Couverture d\'encre</string>
+    <string name="job_artwork">Motif · %1$s</string>
+    <string name="job_photo">Photo de vêtement · %1$s</string>
 </resources>

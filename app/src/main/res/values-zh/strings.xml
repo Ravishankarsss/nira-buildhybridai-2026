@@ -344,4 +344,6 @@
     <string name="sep_colour">油墨颜色</string>
     <string name="sep_mesh">目数</string>
     <string name="sep_coverage">油墨覆盖率</string>
+    <string name="job_artwork">图稿 · %1$s</string>
+    <string name="job_photo">成衣照片 · %1$s</string>
 </resources>

@@ -72,6 +72,10 @@ data class ArtworkMetadata(
 /**
  * Complete record of a local artwork analysis.
  */
+/** The two largest print colours of a saved analysis (garment left out), for its readable title. */
+fun ArtworkAnalysisRecord.mainPrintHexes(): List<String> =
+    palette.filter { !it.isGarmentBase }.sortedByDescending { it.pixelPercentage }.take(2).map { it.hex }
+
 data class ArtworkAnalysisRecord(
     val id: String,
     val fileName: String,
