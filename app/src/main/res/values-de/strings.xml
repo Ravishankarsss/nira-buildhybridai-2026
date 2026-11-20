@@ -465,4 +465,17 @@
     <string name="history_delete_title">Analyse löschen</string>
     <string name="history_delete_body">Analyse für \"%1$s\" löschen? Ihre Farben und Masken werden von diesem Telefon entfernt.</string>
     <string name="history_delete">Löschen</string>
+    <string name="ask_button">✦ NIRA zu diesem Auftrag fragen</string>
+    <string name="ask_title">NIRA fragen</string>
+    <string name="ask_intro">Antworten kommen nur aus den Engine-Fakten dieses Auftrags und den Regeldateien.</string>
+    <string name="ask_placeholder">Frage zu diesem Druckauftrag…</string>
+    <string name="ask_send">Fragen</string>
+    <string name="ask_thinking">NIRA denkt nach…</string>
+    <string name="ask_suggest_why">Warum diese Methode?</string>
+    <string name="ask_suggest_cheaper">Wie wird es günstiger?</string>
+    <string name="ask_suggest_risk">Was kann schiefgehen?</string>
+    <string name="ask_suggest_check">Was vor der Serie prüfen?</string>
+    <string name="ask_held_numbers">NIRA hat diese Antwort zurückgehalten: Sie enthielt Zahlen, die nicht in diesem Auftrag stehen (%1$s). Ändere den Auftrag in NIRA, die Engine rechnet neu.</string>
+    <string name="ask_held_code">NIRA hat diese Antwort zurückgehalten: Sie fügte einen Farbcode hinzu, der nicht in diesem Auftrag steht.</string>
+    <string name="ask_privacy">Nur Text, nie dein Motiv. Zuerst KI auf dem Gerät; die Cloud nur, wenn das Telefon kein Modell hat und der vertrauliche Modus aus ist.</string>
 </resources>

@@ -464,4 +464,17 @@
     <string name="history_delete_title">Delete analysis</string>
     <string name="history_delete_body">Delete the analysis for \"%1$s\"? Its colours and masks are removed from this phone.</string>
     <string name="history_delete">Delete</string>
+    <string name="ask_button">✦ Ask NIRA about this job</string>
+    <string name="ask_title">Ask NIRA</string>
+    <string name="ask_intro">Answers come only from this job\'s engine facts and the rules files.</string>
+    <string name="ask_placeholder">Ask about this print job…</string>
+    <string name="ask_send">Ask</string>
+    <string name="ask_thinking">NIRA is thinking…</string>
+    <string name="ask_suggest_why">Why this method?</string>
+    <string name="ask_suggest_cheaper">How can I make it cheaper?</string>
+    <string name="ask_suggest_risk">What can go wrong?</string>
+    <string name="ask_suggest_check">What must I check before bulk?</string>
+    <string name="ask_held_numbers">NIRA held this answer back: it had numbers that are not in this job (%1$s). Change the job in NIRA and the engine recalculates.</string>
+    <string name="ask_held_code">NIRA held this answer back: it added a colour code that is not in this job.</string>
+    <string name="ask_privacy">Text only, never your artwork. On-device AI first; the cloud only when this phone has no model and Confidential mode is off.</string>
 </resources>

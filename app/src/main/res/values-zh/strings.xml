@@ -464,4 +464,17 @@
     <string name="history_delete_title">删除分析</string>
     <string name="history_delete_body">删除“%1$s”的分析？其颜色和蒙版将从本机移除。</string>
     <string name="history_delete">删除</string>
+    <string name="ask_button">✦ 就此订单询问 NIRA</string>
+    <string name="ask_title">询问 NIRA</string>
+    <string name="ask_intro">回答仅来自此订单的引擎数据和规则文件。</string>
+    <string name="ask_placeholder">询问此印花订单…</string>
+    <string name="ask_send">提问</string>
+    <string name="ask_thinking">NIRA 正在思考…</string>
+    <string name="ask_suggest_why">为什么用这种工艺？</string>
+    <string name="ask_suggest_cheaper">如何降低成本？</string>
+    <string name="ask_suggest_risk">可能出现什么问题？</string>
+    <string name="ask_suggest_check">大货前要检查什么？</string>
+    <string name="ask_held_numbers">NIRA 已拦截此回答：其中有此订单中没有的数字（%1$s）。请在 NIRA 中修改订单，由引擎重新计算。</string>
+    <string name="ask_held_code">NIRA 已拦截此回答：它添加了此订单中没有的颜色代码。</string>
+    <string name="ask_privacy">仅发送文字，从不发送图稿。优先使用本机 AI；仅当手机没有模型且保密模式关闭时才使用云端。</string>
 </resources>

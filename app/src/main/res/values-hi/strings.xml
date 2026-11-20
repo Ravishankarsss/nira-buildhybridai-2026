@@ -465,4 +465,17 @@
     <string name="history_delete_title">विश्लेषण हटाएँ</string>
     <string name="history_delete_body">\"%1$s\" का विश्लेषण हटाएँ? इसके रंग और मास्क इस फ़ोन से हट जाएँगे।</string>
     <string name="history_delete">हटाएँ</string>
+    <string name="ask_button">✦ इस काम के बारे में NIRA से पूछें</string>
+    <string name="ask_title">NIRA से पूछें</string>
+    <string name="ask_intro">जवाब केवल इस काम के इंजन तथ्यों और नियम फ़ाइलों से आते हैं।</string>
+    <string name="ask_placeholder">इस प्रिंट काम के बारे में पूछें…</string>
+    <string name="ask_send">पूछें</string>
+    <string name="ask_thinking">NIRA सोच रहा है…</string>
+    <string name="ask_suggest_why">यह तरीका क्यों?</string>
+    <string name="ask_suggest_cheaper">इसे सस्ता कैसे करें?</string>
+    <string name="ask_suggest_risk">क्या गलत हो सकता है?</string>
+    <string name="ask_suggest_check">बल्क से पहले क्या जाँचें?</string>
+    <string name="ask_held_numbers">NIRA ने यह जवाब रोका: इसमें ऐसे अंक थे जो इस काम में नहीं हैं (%1$s)। NIRA में काम बदलें, इंजन फिर से गणना करेगा।</string>
+    <string name="ask_held_code">NIRA ने यह जवाब रोका: इसमें ऐसा रंग कोड जोड़ा गया जो इस काम में नहीं है।</string>
+    <string name="ask_privacy">केवल टेक्स्ट, आपका artwork कभी नहीं। पहले फ़ोन पर AI; क्लाउड तभी जब फ़ोन में मॉडल न हो और Confidential mode बंद हो।</string>
 </resources>

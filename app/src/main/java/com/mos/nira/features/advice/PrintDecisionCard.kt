@@ -458,6 +458,19 @@ fun PrintDecisionCard(
 
                 // "Explain this card": AI explains the card's facts (text only, on-device preferred).
                 com.mos.nira.features.ai.CardExplanationSection(facts, best.advice.name)
+
+                // Ask NIRA: questions about this job, answered from the same facts plus the order cost.
+                var askOpen by remember { mutableStateOf(false) }
+                Spacer(Modifier.height(8.dp))
+                androidx.compose.material3.OutlinedButton(onClick = { askOpen = true }, modifier = Modifier.fillMaxWidth()) {
+                    Text(stringResource(R.string.ask_button), color = DCyan, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+                }
+                if (askOpen) {
+                    val askFacts = remember(facts, cost, options, rates) {
+                        if (cost?.perPc != null && cost.total != null) facts + com.mos.nira.features.commercial.tradeOffFacts(cost, options, rates) else facts
+                    }
+                    com.mos.nira.features.ai.AskNiraSheet(facts = askFacts, onDismiss = { askOpen = false })
+                }
             }
             Spacer(Modifier.height(10.dp))
             Small(stringResource(R.string.card_disclaimer))

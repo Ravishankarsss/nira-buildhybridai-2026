@@ -466,4 +466,17 @@
     <string name="history_delete_title">Supprimer l\'analyse</string>
     <string name="history_delete_body">Supprimer l\'analyse de \"%1$s\" ? Ses couleurs et masques sont retirés de ce téléphone.</string>
     <string name="history_delete">Supprimer</string>
+    <string name="ask_button">✦ Demander à NIRA sur ce travail</string>
+    <string name="ask_title">Demander à NIRA</string>
+    <string name="ask_intro">Les réponses viennent uniquement des données moteur de ce travail et des fichiers de règles.</string>
+    <string name="ask_placeholder">Posez une question sur ce travail…</string>
+    <string name="ask_send">Demander</string>
+    <string name="ask_thinking">NIRA réfléchit…</string>
+    <string name="ask_suggest_why">Pourquoi cette méthode ?</string>
+    <string name="ask_suggest_cheaper">Comment réduire le coût ?</string>
+    <string name="ask_suggest_risk">Qu\'est-ce qui peut mal tourner ?</string>
+    <string name="ask_suggest_check">Que vérifier avant la production ?</string>
+    <string name="ask_held_numbers">NIRA a retenu cette réponse : elle contenait des nombres absents de ce travail (%1$s). Modifiez le travail dans NIRA et le moteur recalcule.</string>
+    <string name="ask_held_code">NIRA a retenu cette réponse : elle ajoutait un code couleur absent de ce travail.</string>
+    <string name="ask_privacy">Texte uniquement, jamais votre visuel. IA sur l\'appareil d\'abord ; le cloud seulement si le téléphone n\'a pas de modèle et que le mode confidentiel est désactivé.</string>
 </resources>

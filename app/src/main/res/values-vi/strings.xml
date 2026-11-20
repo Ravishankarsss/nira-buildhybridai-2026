@@ -464,4 +464,17 @@
     <string name="history_delete_title">Xóa phân tích</string>
     <string name="history_delete_body">Xóa phân tích của \"%1$s\"? Màu và mặt nạ của nó sẽ bị xóa khỏi điện thoại này.</string>
     <string name="history_delete">Xóa</string>
+    <string name="ask_button">✦ Hỏi NIRA về đơn này</string>
+    <string name="ask_title">Hỏi NIRA</string>
+    <string name="ask_intro">Câu trả lời chỉ lấy từ dữ liệu engine của đơn này và các tệp quy tắc.</string>
+    <string name="ask_placeholder">Hỏi về đơn in này…</string>
+    <string name="ask_send">Hỏi</string>
+    <string name="ask_thinking">NIRA đang suy nghĩ…</string>
+    <string name="ask_suggest_why">Vì sao chọn cách này?</string>
+    <string name="ask_suggest_cheaper">Làm sao để rẻ hơn?</string>
+    <string name="ask_suggest_risk">Điều gì có thể sai?</string>
+    <string name="ask_suggest_check">Cần kiểm tra gì trước khi sản xuất?</string>
+    <string name="ask_held_numbers">NIRA đã giữ lại câu trả lời này: có số không có trong đơn này (%1$s). Hãy sửa đơn trong NIRA để engine tính lại.</string>
+    <string name="ask_held_code">NIRA đã giữ lại câu trả lời này: nó thêm mã màu không có trong đơn này.</string>
+    <string name="ask_privacy">Chỉ văn bản, không bao giờ gửi hình in. Ưu tiên AI trên máy; chỉ dùng cloud khi máy không có mô hình và chế độ bảo mật đang tắt.</string>
 </resources>
