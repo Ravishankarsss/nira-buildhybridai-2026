@@ -420,4 +420,20 @@
     <string name="pvg_close">%1$s: कपड़े जितना ही हल्का — मुश्किल से दिखेगा</string>
     <string name="pvg_source">रवि का नियम</string>
     <string name="error_out_of_memory">यह फ़ोटो इस फ़ोन की मेमोरी के लिए बहुत बड़ी है। दूसरे ऐप बंद करके फिर कोशिश करें, या थोड़ा दूर से फ़ोटो लें।</string>
+    <string name="picker_more">और रंग</string>
+    <string name="picker_title">गारमेंट का रंग</string>
+    <string name="picker_note">अनुमानित रंग। सटीक मेल के लिए गारमेंट की फ़ोटो लेकर उस पर टैप करें, या रंग कोड लिखें।</string>
+    <string name="picker_advanced">रंग कोड लिखें (उन्नत)</string>
+    <string name="garment_off_white">ऑफ़-व्हाइट</string>
+    <string name="garment_heather_grey">हीदर ग्रे</string>
+    <string name="garment_charcoal">चारकोल</string>
+    <string name="garment_royal_blue">रॉयल ब्लू</string>
+    <string name="garment_sky_blue">आसमानी नीला</string>
+    <string name="garment_turquoise">फ़िरोज़ी</string>
+    <string name="garment_bottle_green">बॉटल ग्रीन</string>
+    <string name="garment_khaki">ख़ाकी</string>
+    <string name="garment_beige">बेज</string>
+    <string name="garment_mustard">सरसों पीला</string>
+    <string name="garment_maroon">मैरून</string>
+    <string name="garment_lavender">लैवेंडर</string>
 </resources>

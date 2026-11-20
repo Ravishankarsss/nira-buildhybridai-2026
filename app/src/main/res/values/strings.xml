@@ -419,4 +419,20 @@
     <string name="pvg_close">%1$s: about as light as the fabric — hard to see</string>
     <string name="pvg_source">Ravi\'s rule</string>
     <string name="error_out_of_memory">This photo is too large for this phone\'s memory. Close other apps and try again, or take the photo a little further away.</string>
+    <string name="picker_more">More colours</string>
+    <string name="picker_title">Garment colour</string>
+    <string name="picker_note">Approximate colours. For an exact match, photograph the garment and tap it, or type its colour code.</string>
+    <string name="picker_advanced">Type a colour code (advanced)</string>
+    <string name="garment_off_white">Off-white</string>
+    <string name="garment_heather_grey">Heather grey</string>
+    <string name="garment_charcoal">Charcoal</string>
+    <string name="garment_royal_blue">Royal blue</string>
+    <string name="garment_sky_blue">Sky blue</string>
+    <string name="garment_turquoise">Turquoise</string>
+    <string name="garment_bottle_green">Bottle green</string>
+    <string name="garment_khaki">Khaki</string>
+    <string name="garment_beige">Beige</string>
+    <string name="garment_mustard">Mustard</string>
+    <string name="garment_maroon">Maroon</string>
+    <string name="garment_lavender">Lavender</string>
 </resources>

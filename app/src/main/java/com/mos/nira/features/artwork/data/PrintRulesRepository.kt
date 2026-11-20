@@ -142,7 +142,9 @@ data class GarmentPreviewRules(
     val chips: List<Pair<String, String>>,
     val contrastMinDeltaL: Double,
     val swapColours: List<Pair<String, String>>,
-    val confidence: String
+    val confidence: String,
+    /** "More colours": garment colours by name (display swatches). Empty if the file has none. */
+    val namedColours: List<Pair<String, String>> = emptyList()
 )
 
 /** print_rules.json "mixed_separation": CMYK for the picture plus spot screens for solid colours. No defaults. */
@@ -395,7 +397,8 @@ class PrintRulesRepository(private val context: Context?) {
                 chips = pairs(r.getJSONObject("chips")),
                 contrastMinDeltaL = r.getDouble("contrast_min_delta_L"),
                 swapColours = pairs(r.getJSONObject("swap_colours")),
-                confidence = r.getString("confidence")
+                confidence = r.getString("confidence"),
+                namedColours = r.optJSONObject("named_colours")?.let { pairs(it) } ?: emptyList()
             )
         } catch (e: Exception) {
             null

@@ -420,4 +420,20 @@
     <string name="pvg_close">%1$s: কাপড়ের প্রায় সমান হালকা — কম দেখা যাবে</string>
     <string name="pvg_source">রবির নিয়ম</string>
     <string name="error_out_of_memory">এই ফোনের মেমরির জন্য ছবিটি খুব বড়। অন্য অ্যাপ বন্ধ করে আবার চেষ্টা করুন, বা একটু দূর থেকে ছবি তুলুন।</string>
+    <string name="picker_more">আরও রং</string>
+    <string name="picker_title">পোশাকের রং</string>
+    <string name="picker_note">আনুমানিক রং। হুবহু মিলের জন্য পোশাকের ছবি তুলে তাতে ট্যাপ করুন, বা রঙের কোড লিখুন।</string>
+    <string name="picker_advanced">রঙের কোড লিখুন (উন্নত)</string>
+    <string name="garment_off_white">অফ-হোয়াইট</string>
+    <string name="garment_heather_grey">হিদার গ্রে</string>
+    <string name="garment_charcoal">চারকোল</string>
+    <string name="garment_royal_blue">রয়্যাল ব্লু</string>
+    <string name="garment_sky_blue">আকাশি নীল</string>
+    <string name="garment_turquoise">ফিরোজা</string>
+    <string name="garment_bottle_green">বোতল সবুজ</string>
+    <string name="garment_khaki">খাকি</string>
+    <string name="garment_beige">বেইজ</string>
+    <string name="garment_mustard">সরষে হলুদ</string>
+    <string name="garment_maroon">মেরুন</string>
+    <string name="garment_lavender">ল্যাভেন্ডার</string>
 </resources>

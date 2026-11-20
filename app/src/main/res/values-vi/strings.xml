@@ -419,4 +419,20 @@
     <string name="pvg_close">%1$s: sáng gần bằng vải — khó thấy</string>
     <string name="pvg_source">quy tắc của Ravi</string>
     <string name="error_out_of_memory">Ảnh này quá lớn so với bộ nhớ của điện thoại. Hãy đóng ứng dụng khác rồi thử lại, hoặc chụp xa hơn một chút.</string>
+    <string name="picker_more">Thêm màu</string>
+    <string name="picker_title">Màu áo</string>
+    <string name="picker_note">Màu gần đúng. Để đúng màu, hãy chụp áo rồi chạm vào, hoặc nhập mã màu.</string>
+    <string name="picker_advanced">Nhập mã màu (nâng cao)</string>
+    <string name="garment_off_white">Trắng ngà</string>
+    <string name="garment_heather_grey">Xám melange</string>
+    <string name="garment_charcoal">Xám than</string>
+    <string name="garment_royal_blue">Xanh hoàng gia</string>
+    <string name="garment_sky_blue">Xanh da trời</string>
+    <string name="garment_turquoise">Xanh ngọc</string>
+    <string name="garment_bottle_green">Xanh chai</string>
+    <string name="garment_khaki">Kaki</string>
+    <string name="garment_beige">Be</string>
+    <string name="garment_mustard">Vàng mù tạt</string>
+    <string name="garment_maroon">Đỏ đô</string>
+    <string name="garment_lavender">Tím oải hương</string>
 </resources>

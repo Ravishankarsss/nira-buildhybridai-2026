@@ -77,19 +77,12 @@ fun GarmentPreviewCard(
 ) {
     if (rules == null) return
     var customOpen by remember { mutableStateOf(false) }
-    var customText by remember { mutableStateOf("#") }
     if (customOpen) {
-        val valid = Regex("^#[0-9A-Fa-f]{6}$").matches(customText.trim())
-        AlertDialog(
-            onDismissRequest = { customOpen = false },
-            title = { Text(stringResource(R.string.preview_custom_title)) },
-            text = { OutlinedTextField(value = customText, onValueChange = { customText = it }, singleLine = true) },
-            confirmButton = {
-                TextButton(enabled = valid, onClick = { onGarment(customText.trim().uppercase()); customOpen = false }) {
-                    Text(stringResource(R.string.preview_ok))
-                }
-            },
-            dismissButton = { TextButton(onClick = { customOpen = false }) { Text(stringResource(R.string.preview_cancel)) } }
+        GarmentColourPicker(
+            colours = rules.namedColours.ifEmpty { rules.chips },
+            current = garmentHex,
+            onPick = { onGarment(it) },
+            onDismiss = { customOpen = false }
         )
     }
 
@@ -122,8 +115,8 @@ fun GarmentPreviewCard(
                 }
                 FilterChip(
                     selected = garmentHex != null && rules.chips.none { it.second.equals(garmentHex, ignoreCase = true) },
-                    onClick = { customText = garmentHex ?: "#"; customOpen = true },
-                    label = { Text(stringResource(R.string.preview_custom), fontSize = 12.sp, maxLines = 1, softWrap = false) }
+                    onClick = { customOpen = true },
+                    label = { Text(stringResource(R.string.picker_more), fontSize = 12.sp, maxLines = 1, softWrap = false) }
                 )
             }
 

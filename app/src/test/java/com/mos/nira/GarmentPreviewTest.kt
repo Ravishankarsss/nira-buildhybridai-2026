@@ -20,6 +20,13 @@ class GarmentPreviewTest {
     }
 
     @Test
+    fun namedGarmentColoursLoadAndAreValid() {
+        assertEquals(24, rules.namedColours.size)
+        assertTrue(rules.namedColours.all { Regex("^#[0-9A-Fa-f]{6}$").matches(it.second) })
+        assertTrue(rules.namedColours.map { it.first }.containsAll(listOf("heather_grey", "charcoal", "maroon", "bottle_green")))
+    }
+
+    @Test
     fun missingSectionGivesNull() {
         assertEquals(null, PrintRulesRepository.parseGarmentPreviewRules(org.json.JSONObject("{}")))
     }

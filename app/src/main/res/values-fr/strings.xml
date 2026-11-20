@@ -421,4 +421,20 @@
     <string name="pvg_close">%1$s : presque aussi clair que le tissu — peu visible</string>
     <string name="pvg_source">règle de Ravi</string>
     <string name="error_out_of_memory">Cette photo est trop grande pour la mémoire de ce téléphone. Fermez d\'autres applis et réessayez, ou prenez la photo un peu plus loin.</string>
+    <string name="picker_more">Plus de couleurs</string>
+    <string name="picker_title">Couleur du vêtement</string>
+    <string name="picker_note">Couleurs approximatives. Pour la teinte exacte, photographiez le vêtement et touchez-le, ou saisissez son code couleur.</string>
+    <string name="picker_advanced">Saisir un code couleur (avancé)</string>
+    <string name="garment_off_white">Blanc cassé</string>
+    <string name="garment_heather_grey">Gris chiné</string>
+    <string name="garment_charcoal">Anthracite</string>
+    <string name="garment_royal_blue">Bleu roi</string>
+    <string name="garment_sky_blue">Bleu ciel</string>
+    <string name="garment_turquoise">Turquoise</string>
+    <string name="garment_bottle_green">Vert bouteille</string>
+    <string name="garment_khaki">Kaki</string>
+    <string name="garment_beige">Beige</string>
+    <string name="garment_mustard">Moutarde</string>
+    <string name="garment_maroon">Bordeaux</string>
+    <string name="garment_lavender">Lavande</string>
 </resources>

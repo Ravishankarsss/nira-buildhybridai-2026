@@ -420,4 +420,20 @@
     <string name="pvg_close">%1$s: துணியின் அதே ஒளிர்வு — தெரிவது கடினம்</string>
     <string name="pvg_source">ரவியின் விதி</string>
     <string name="error_out_of_memory">இந்த போனின் நினைவகத்துக்கு இந்தப் புகைப்படம் மிகப் பெரியது. மற்ற செயலிகளை மூடிவிட்டு மீண்டும் முயலவும், அல்லது சற்றுத் தள்ளி நின்று எடுக்கவும்.</string>
+    <string name="picker_more">மேலும் நிறங்கள்</string>
+    <string name="picker_title">ஆடை நிறம்</string>
+    <string name="picker_note">தோராயமான நிறங்கள். சரியான பொருத்தத்துக்கு ஆடையைப் புகைப்படம் எடுத்துத் தொடவும், அல்லது நிறக் குறியீட்டை உள்ளிடவும்.</string>
+    <string name="picker_advanced">நிறக் குறியீட்டை உள்ளிடு (மேம்பட்டது)</string>
+    <string name="garment_off_white">வெண்மை கலந்த</string>
+    <string name="garment_heather_grey">ஹெதர் சாம்பல்</string>
+    <string name="garment_charcoal">கரி சாம்பல்</string>
+    <string name="garment_royal_blue">ராயல் நீலம்</string>
+    <string name="garment_sky_blue">வான நீலம்</string>
+    <string name="garment_turquoise">டர்கொய்ஸ்</string>
+    <string name="garment_bottle_green">பாட்டில் பச்சை</string>
+    <string name="garment_khaki">காக்கி</string>
+    <string name="garment_beige">பீஜ்</string>
+    <string name="garment_mustard">கடுகு மஞ்சள்</string>
+    <string name="garment_maroon">மெரூன்</string>
+    <string name="garment_lavender">லாவெண்டர்</string>
 </resources>

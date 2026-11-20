@@ -419,4 +419,20 @@
     <string name="pvg_close">%1$s：与面料明度接近 — 不易看清</string>
     <string name="pvg_source">Ravi 的规则</string>
     <string name="error_out_of_memory">这张照片对本手机的内存来说太大。请关闭其他应用后重试，或稍远一点拍摄。</string>
+    <string name="picker_more">更多颜色</string>
+    <string name="picker_title">成衣颜色</string>
+    <string name="picker_note">近似颜色。如需准确颜色，请拍摄成衣并点按，或输入颜色代码。</string>
+    <string name="picker_advanced">输入颜色代码（高级）</string>
+    <string name="garment_off_white">米白</string>
+    <string name="garment_heather_grey">麻灰</string>
+    <string name="garment_charcoal">炭灰</string>
+    <string name="garment_royal_blue">宝蓝</string>
+    <string name="garment_sky_blue">天蓝</string>
+    <string name="garment_turquoise">青绿</string>
+    <string name="garment_bottle_green">墨绿</string>
+    <string name="garment_khaki">卡其</string>
+    <string name="garment_beige">米色</string>
+    <string name="garment_mustard">芥末黄</string>
+    <string name="garment_maroon">酒红</string>
+    <string name="garment_lavender">薰衣草紫</string>
 </resources>

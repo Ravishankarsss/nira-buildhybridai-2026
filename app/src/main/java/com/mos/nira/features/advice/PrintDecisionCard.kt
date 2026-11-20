@@ -158,6 +158,7 @@ fun PrintDecisionCard(
             Text(stringResource(R.string.brief_hint), color = DMuted, fontSize = 12.sp, lineHeight = 17.sp)
 
             // 1. Garment colour
+            var pickerOpen by remember { mutableStateOf(false) }
             Question(stringResource(R.string.brief_q_garment))
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 if (isPhoto && measuredFabricHex != null) {
@@ -175,8 +176,22 @@ fun PrintDecisionCard(
                 if (garmentHex != null && garmentChips?.chips?.none { it.second.equals(garmentHex, true) } == true &&
                     !garmentHex.equals(measuredFabricHex, true)
                 ) {
-                    Chip(com.mos.nira.features.artwork.presentation.colourName(garmentHex), true, garmentHex) {}
+                    val named = garmentChips.namedColours.firstOrNull { it.second.equals(garmentHex, true) }
+                    Chip(
+                        named?.let { com.mos.nira.features.artwork.presentation.garmentColourName(it.first, it.second) }
+                            ?: com.mos.nira.features.artwork.presentation.colourName(garmentHex),
+                        true, garmentHex
+                    ) { pickerOpen = true }
                 }
+                Chip(stringResource(R.string.picker_more), false) { pickerOpen = true }
+            }
+            if (pickerOpen && garmentChips != null) {
+                com.mos.nira.features.artwork.presentation.GarmentColourPicker(
+                    colours = garmentChips.namedColours.ifEmpty { garmentChips.chips },
+                    current = garmentHex,
+                    onPick = { onGarment(it) },
+                    onDismiss = { pickerOpen = false }
+                )
             }
 
             // 2. Fibre and fabric

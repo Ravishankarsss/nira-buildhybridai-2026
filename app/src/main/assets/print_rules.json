@@ -607,6 +607,15 @@
     "contrast_min_delta_L": 30,
     "contrast_rule": "an ink whose lightness differs from the garment's by less than contrast_min_delta_L is hard to see; warn and offer a one-tap swap",
     "swap_colours": {"white": "#FFFFFF", "cream": "#F2E8D5"},
+    "named_colours": {
+      "white": "#FFFFFF", "off_white": "#F5F1E6", "cream": "#F2E8D5", "light_grey": "#D3D3D3",
+      "heather_grey": "#B5B5B0", "charcoal": "#3C3C3C", "black": "#000000", "navy": "#001F3F",
+      "royal_blue": "#1D4CA8", "sky_blue": "#87BCE0", "turquoise": "#2BB5B5", "bottle_green": "#0B4D2C",
+      "olive": "#6B6B2E", "khaki": "#B8A77A", "beige": "#D9C8A8", "mustard": "#D4A017",
+      "yellow": "#F4D03F", "orange": "#E8731B", "red": "#C62828", "maroon": "#6B1B2A",
+      "pink": "#F4A6C0", "lavender": "#B9A8DA", "purple": "#5B2C83", "brown": "#5C3A21"
+    },
+    "named_colours_note": "Display swatches for choosing a garment colour by name (\"More colours\"). Approximate, not measured fabric colours; for an exact colour photograph the garment and tap it, or type its code.",
     "confidence": "assumption",
     "verified_by_ravi": false,
     "note": "Proposed 18 Nov 2026; the contrast limit 30 and the cream colour are starting values; Ravi to confirm."

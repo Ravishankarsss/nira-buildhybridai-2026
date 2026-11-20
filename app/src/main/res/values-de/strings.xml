@@ -420,4 +420,20 @@
     <string name="pvg_close">%1$s: etwa so hell wie der Stoff — schwer zu sehen</string>
     <string name="pvg_source">Ravis Regel</string>
     <string name="error_out_of_memory">Dieses Foto ist zu groß für den Speicher dieses Telefons. Schließen Sie andere Apps und versuchen Sie es erneut, oder fotografieren Sie etwas weiter weg.</string>
+    <string name="picker_more">Weitere Farben</string>
+    <string name="picker_title">Farbe des Teils</string>
+    <string name="picker_note">Ungefähre Farben. Für die genaue Farbe das Teil fotografieren und antippen oder den Farbcode eingeben.</string>
+    <string name="picker_advanced">Farbcode eingeben (erweitert)</string>
+    <string name="garment_off_white">Naturweiß</string>
+    <string name="garment_heather_grey">Graumeliert</string>
+    <string name="garment_charcoal">Anthrazit</string>
+    <string name="garment_royal_blue">Königsblau</string>
+    <string name="garment_sky_blue">Himmelblau</string>
+    <string name="garment_turquoise">Türkis</string>
+    <string name="garment_bottle_green">Flaschengrün</string>
+    <string name="garment_khaki">Khaki</string>
+    <string name="garment_beige">Beige</string>
+    <string name="garment_mustard">Senfgelb</string>
+    <string name="garment_maroon">Weinrot</string>
+    <string name="garment_lavender">Lavendel</string>
 </resources>
