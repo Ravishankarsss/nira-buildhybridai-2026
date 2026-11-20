@@ -22,11 +22,12 @@ object RootDestinations {
     const val GARMENT_CAMERA = "garment_camera"
     const val SETTINGS = "settings"
 
-    // Not built yet. Do not add to BUILT until the screen exists.
     const val TECHNIQUE_LIBRARY = "technique_library"
+
+    // Not built as a screen: Ask NIRA is on each job's decision card. Do not add to BUILT.
     const val ASK_NIRA = "ask_nira"
 
-    val BUILT: Set<String> = setOf(DASHBOARD, ARTWORK_FLOW, ARTWORK_FLOW_AT, GARMENT_CAMERA, SETTINGS)
+    val BUILT: Set<String> = setOf(DASHBOARD, ARTWORK_FLOW, ARTWORK_FLOW_AT, GARMENT_CAMERA, SETTINGS, TECHNIQUE_LIBRARY)
 
     fun artworkFlowAt(start: String): String = "$ARTWORK_FLOW_AT/$start"
 }

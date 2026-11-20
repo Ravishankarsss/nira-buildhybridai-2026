@@ -197,8 +197,9 @@ fun NIRAAppRoot() {
                             }
                             WorkspaceCard.SHADE_LIBRARY ->
                                 rootNavController.navigate(RootDestinations.artworkFlowAt(ArtworkStart.SHADE_LIBRARY))
-                            // Not built yet: these cards are never shown (see RootDestinations.BUILT).
-                            WorkspaceCard.TECHNIQUE_LIBRARY, WorkspaceCard.ASK_NIRA -> Unit
+                            WorkspaceCard.TECHNIQUE_LIBRARY -> rootNavController.navigate(RootDestinations.TECHNIQUE_LIBRARY)
+                            // Not a screen of its own: Ask NIRA lives on each job's decision card (see RootDestinations.BUILT).
+                            WorkspaceCard.ASK_NIRA -> Unit
                         }
                     },
                     onOpenRecent = { id ->
@@ -236,6 +237,10 @@ fun NIRAAppRoot() {
                     },
                     onBack = { rootNavController.popBackStack() },
                 )
+            }
+
+            composable(RootDestinations.TECHNIQUE_LIBRARY) {
+                com.mos.nira.features.library.TechniqueLibraryScreen(onBack = { rootNavController.popBackStack() })
             }
 
             composable(RootDestinations.SETTINGS) {

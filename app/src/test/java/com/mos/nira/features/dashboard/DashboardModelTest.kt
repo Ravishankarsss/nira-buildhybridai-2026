@@ -129,11 +129,10 @@ class DashboardModelTest {
         assertTrue(tabs.all { it.route in RootDestinations.BUILT })
 
         // Built today.
-        assertEquals(listOf(WorkspaceCard.PRINT_REPORT, WorkspaceCard.SHADE_LIBRARY), cards)
+        assertEquals(listOf(WorkspaceCard.PRINT_REPORT, WorkspaceCard.SHADE_LIBRARY, WorkspaceCard.TECHNIQUE_LIBRARY), cards)
         assertEquals(listOf(BottomTab.HOME, BottomTab.ARTWORK, BottomTab.SETTINGS), tabs)
 
-        // Not built yet, so hidden. Lab and Profile no longer exist as tabs.
-        assertFalse(WorkspaceCard.TECHNIQUE_LIBRARY in cards)
+        // Not a screen of its own, so hidden. Lab and Profile no longer exist as tabs.
         assertFalse(WorkspaceCard.ASK_NIRA in cards)
         assertFalse(BottomTab.ASK_NIRA in tabs)
         assertEquals(setOf("HOME", "ARTWORK", "ASK_NIRA", "SETTINGS"), BottomTab.values().map { it.name }.toSet())
@@ -154,7 +153,8 @@ class DashboardModelTest {
             RootDestinations.ARTWORK_FLOW to "ARTWORK_FLOW",
             RootDestinations.ARTWORK_FLOW_AT to "ARTWORK_FLOW_AT",
             RootDestinations.GARMENT_CAMERA to "GARMENT_CAMERA",
-            RootDestinations.SETTINGS to "SETTINGS"
+            RootDestinations.SETTINGS to "SETTINGS",
+            RootDestinations.TECHNIQUE_LIBRARY to "TECHNIQUE_LIBRARY"
         )
         assertEquals("update this test when BUILT changes", RootDestinations.BUILT, names.keys)
         for ((_, constant) in names) {
@@ -165,7 +165,6 @@ class DashboardModelTest {
         }
         // Routes that are not built must not be registered or linked.
         assertFalse(mainActivity.contains("composable(RootDestinations.ASK_NIRA"))
-        assertFalse(mainActivity.contains("composable(RootDestinations.TECHNIQUE_LIBRARY"))
     }
 
     @Test
