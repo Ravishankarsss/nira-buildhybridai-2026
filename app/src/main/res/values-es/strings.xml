@@ -449,4 +449,21 @@
     <string name="res_warn_body">%1$.1f px por cm (unos %2$d dpi) con %3$.0f cm de ancho de impresión. Las líneas finas y el texto pequeño necesitan %4$.0f px por cm (unos %5$d dpi).</string>
     <string name="res_warn_fix_artwork">Para este tamaño, pide al comprador un diseño de al menos %1$d px de ancho o un archivo vectorial (AI, PDF, SVG). Los colores y áreas de abajo sí están medidos.</string>
     <string name="res_warn_fix_photo">Vuelve a fotografiar más cerca para que la impresión llene el encuadre, o pide el diseño original. Los colores y áreas de abajo sí están medidos.</string>
+    <string name="studio_title">ESTUDIO DE DISEÑO</string>
+    <string name="studio_subtitle">COLOR Y SEPARACIÓN</string>
+    <string name="studio_import_label">IMPORTAR DISEÑO DE PRENDA</string>
+    <string name="studio_import_headline">Lee los colores y\nplanifica las pantallas.</string>
+    <string name="studio_supported">JPEG, PNG o WebP. Los archivos grandes dan más detalle.</string>
+    <string name="studio_select_button">Elegir diseño de la galería  →</string>
+    <string name="studio_recent">ANÁLISIS RECIENTES</string>
+    <string name="studio_view_all">Ver todo (%1$d)</string>
+    <string name="studio_empty_title">Aún no hay diseños analizados</string>
+    <string name="studio_empty_body">Elige un diseño o archivo de impresión. NIRA mide sus colores, área de impresión y pantallas en este teléfono.</string>
+    <string name="history_back">← Estudio</string>
+    <string name="history_title">ANÁLISIS GUARDADOS (%1$d)</string>
+    <string name="history_empty_title">Aún no hay análisis guardados</string>
+    <string name="history_empty_body">Cada análisis se guarda en este teléfono al procesar un diseño.</string>
+    <string name="history_delete_title">Eliminar análisis</string>
+    <string name="history_delete_body">¿Eliminar el análisis de \"%1$s\"? Sus colores y máscaras se borran de este teléfono.</string>
+    <string name="history_delete">Eliminar</string>
 </resources>

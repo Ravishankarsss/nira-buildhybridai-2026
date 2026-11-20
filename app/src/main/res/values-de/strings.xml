@@ -448,4 +448,21 @@
     <string name="res_warn_body">%1$.1f px pro cm (etwa %2$d dpi) bei %3$.0f cm Druckbreite. Feine Linien und kleine Schrift brauchen %4$.0f px pro cm (etwa %5$d dpi).</string>
     <string name="res_warn_fix_artwork">Für diese Größe beim Kunden ein Motiv mit mindestens %1$d px Breite oder eine Vektordatei (AI, PDF, SVG) anfordern. Farben und Flächen unten sind trotzdem gemessen.</string>
     <string name="res_warn_fix_photo">Näher fotografieren, damit der Druck das Bild füllt, oder das Originalmotiv anfordern. Farben und Flächen unten sind trotzdem gemessen.</string>
+    <string name="studio_title">MOTIV-STUDIO</string>
+    <string name="studio_subtitle">FARBE UND SEPARATION</string>
+    <string name="studio_import_label">MOTIV IMPORTIEREN</string>
+    <string name="studio_import_headline">Farben lesen und\nSiebe planen.</string>
+    <string name="studio_supported">JPEG, PNG oder WebP. Größere Dateien zeigen mehr Details.</string>
+    <string name="studio_select_button">Motiv aus der Galerie wählen  →</string>
+    <string name="studio_recent">LETZTE ANALYSEN</string>
+    <string name="studio_view_all">Alle anzeigen (%1$d)</string>
+    <string name="studio_empty_title">Noch kein Motiv analysiert</string>
+    <string name="studio_empty_body">Wähle ein Design oder eine Druckdatei. NIRA misst Farben, Druckfläche und Siebe auf diesem Telefon.</string>
+    <string name="history_back">← Studio</string>
+    <string name="history_title">GESPEICHERTE ANALYSEN (%1$d)</string>
+    <string name="history_empty_title">Noch keine gespeicherten Analysen</string>
+    <string name="history_empty_body">Jede Analyse wird beim Verarbeiten auf diesem Telefon gespeichert.</string>
+    <string name="history_delete_title">Analyse löschen</string>
+    <string name="history_delete_body">Analyse für \"%1$s\" löschen? Ihre Farben und Masken werden von diesem Telefon entfernt.</string>
+    <string name="history_delete">Löschen</string>
 </resources>

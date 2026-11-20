@@ -1,5 +1,8 @@
 package com.mos.nira.features.artwork.presentation
 
+import androidx.compose.ui.res.pluralStringResource
+import com.mos.nira.R
+import androidx.compose.ui.res.stringResource
 import com.mos.nira.features.artwork.domain.mainPrintHexes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -66,11 +69,11 @@ fun AnalysisHistoryScreen(
         AlertDialog(
             onDismissRequest = { recordToDelete = null },
             title = {
-                Text(text = "Delete Analysis", color = TextWhite, fontWeight = FontWeight.Bold)
+                Text(text = stringResource(R.string.history_delete_title), color = TextWhite, fontWeight = FontWeight.Bold)
             },
             text = {
                 Text(
-                    text = "Are you sure you want to delete the analysis for \"${record.fileName}\"? This will remove stored palettes and cached masks.",
+                    text = stringResource(R.string.history_delete_body, record.fileName),
                     color = TextMuted,
                     fontSize = 13.sp
                 )
@@ -82,12 +85,12 @@ fun AnalysisHistoryScreen(
                         recordToDelete = null
                     }
                 ) {
-                    Text("Delete", color = Color(0xFFFF5252), fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.history_delete), color = Color(0xFFFF5252), fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { recordToDelete = null }) {
-                    Text("Cancel", color = TextWhite)
+                    Text(stringResource(R.string.preview_cancel), color = TextWhite)
                 }
             },
             containerColor = CardBg,
@@ -113,11 +116,11 @@ fun AnalysisHistoryScreen(
                 onClick = onBack,
                 shape = RoundedCornerShape(10.dp)
             ) {
-                Text("← Studio", color = TextWhite)
+                Text(stringResource(R.string.history_back), color = TextWhite)
             }
 
             Text(
-                text = "SAVED ANALYSES (${savedAnalyses.size})",
+                text = stringResource(R.string.history_title, savedAnalyses.size),
                 color = Cyan,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Bold,
@@ -138,14 +141,14 @@ fun AnalysisHistoryScreen(
                     Text("◈", color = TextMuted, fontSize = 40.sp)
                     Spacer(modifier = Modifier.height(10.dp))
                     Text(
-                        text = "No saved analyses found",
+                        text = stringResource(R.string.history_empty_title),
                         color = TextWhite,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "Analyses will be saved locally when you process artwork.",
+                        text = stringResource(R.string.history_empty_body),
                         color = TextMuted,
                         fontSize = 12.sp
                     )
@@ -225,7 +228,7 @@ fun HistoryItemCard(
                     )
                     Spacer(modifier = Modifier.height(3.dp))
                     Text(
-                        text = "${record.width} × ${record.height} px  •  ${record.printColourCount} colors",
+                        text = "${record.width} × ${record.height} px  •  " + pluralStringResource(R.plurals.recent_colour_count, record.printColourCount, record.printColourCount),
                         color = Cyan,
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Medium
@@ -238,7 +241,7 @@ fun HistoryItemCard(
                 }
 
                 TextButton(onClick = onDelete) {
-                    Text("Delete", color = Color(0xFFFF6E6E), fontSize = 12.sp)
+                    Text(stringResource(R.string.history_delete), color = Color(0xFFFF6E6E), fontSize = 12.sp)
                 }
             }
 

@@ -30,8 +30,8 @@
     <string name="recent_empty_title">திட்டங்கள் எதுவும் இல்லை</string>
     <string name="recent_empty_message">உங்கள் artwork ஆய்வுகள் இங்கே தோன்றும்.</string>
     <plurals name="recent_colour_count">
-        <item quantity="one">%1$d colour</item>
-        <item quantity="other">%1$d colours</item>
+        <item quantity="one">%1$d நிறம்</item>
+        <item quantity="other">%1$d நிறங்கள்</item>
     </plurals>
     <string name="section_coming_soon">COMING SOON</string>
     <string name="soon_recipe_lab">Recipe Lab</string>
@@ -448,4 +448,21 @@
     <string name="res_warn_body">%3$.0f செ.மீ அச்சு அகலத்தில் ஒரு செ.மீக்கு %1$.1f px (சுமார் %2$d dpi). மெல்லிய கோடுகள் மற்றும் சிறிய எழுத்துகளுக்கு ஒரு செ.மீக்கு %4$.0f px (சுமார் %5$d dpi) தேவை.</string>
     <string name="res_warn_fix_artwork">இந்த அளவுக்கு, குறைந்தது %1$d px அகலமுள்ள artwork அல்லது vector ஃபைலை (AI, PDF, SVG) வாங்குபவரிடம் கேளுங்கள். கீழே உள்ள நிறங்களும் பரப்பளவும் அளக்கப்பட்டுள்ளன.</string>
     <string name="res_warn_fix_photo">அச்சு முழு சட்டத்தையும் நிரப்பும்படி அருகில் சென்று மீண்டும் புகைப்படம் எடுங்கள், அல்லது அசல் artwork-ஐக் கேளுங்கள். கீழே உள்ள நிறங்களும் பரப்பளவும் அளக்கப்பட்டுள்ளன.</string>
+    <string name="studio_title">ARTWORK ஸ்டுடியோ</string>
+    <string name="studio_subtitle">நிறம் மற்றும் பிரிப்பு</string>
+    <string name="studio_import_label">ஆடை ARTWORK-ஐ இறக்கு</string>
+    <string name="studio_import_headline">நிறங்களைப் படித்து\nஸ்கிரீன்களைத் திட்டமிடு.</string>
+    <string name="studio_supported">JPEG, PNG அல்லது WebP. பெரிய ஃபைலில் விவரம் தெளிவாக இருக்கும்.</string>
+    <string name="studio_select_button">Gallery-இலிருந்து artwork தேர்ந்தெடு  →</string>
+    <string name="studio_recent">சமீபத்திய ஆய்வுகள்</string>
+    <string name="studio_view_all">அனைத்தும் (%1$d)</string>
+    <string name="studio_empty_title">இன்னும் எந்த artwork-உம் ஆய்வு செய்யப்படவில்லை</string>
+    <string name="studio_empty_body">ஒரு டிசைன் அல்லது அச்சு ஃபைலைத் தேர்ந்தெடுக்கவும். NIRA அதன் நிறங்கள், அச்சுப் பரப்பு மற்றும் ஸ்கிரீன்களை இந்த மொபைலிலேயே அளக்கும்.</string>
+    <string name="history_back">← ஸ்டுடியோ</string>
+    <string name="history_title">சேமித்த ஆய்வுகள் (%1$d)</string>
+    <string name="history_empty_title">இன்னும் சேமித்த ஆய்வுகள் இல்லை</string>
+    <string name="history_empty_body">Artwork-ஐ ஆய்வு செய்யும்போது ஒவ்வொரு ஆய்வும் இந்த மொபைலில் சேமிக்கப்படும்.</string>
+    <string name="history_delete_title">ஆய்வை நீக்கு</string>
+    <string name="history_delete_body">\"%1$s\" ஆய்வை நீக்கவா? அதன் நிறங்களும் மாஸ்க்குகளும் இந்த மொபைலிலிருந்து நீக்கப்படும்.</string>
+    <string name="history_delete">நீக்கு</string>
 </resources>

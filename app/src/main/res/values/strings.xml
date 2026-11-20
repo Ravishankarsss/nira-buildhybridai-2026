@@ -447,4 +447,21 @@
     <string name="res_warn_body">%1$.1f px per cm (about %2$d dpi) at %3$.0f cm print width. Fine lines and small text need %4$.0f px per cm (about %5$d dpi).</string>
     <string name="res_warn_fix_artwork">For this size, ask the buyer for artwork at least %1$d px wide, or a vector file (AI, PDF, SVG). Colours and areas below are still measured.</string>
     <string name="res_warn_fix_photo">Retake the photo closer so the print fills the frame, or ask for the original artwork. Colours and areas below are still measured.</string>
+    <string name="studio_title">ARTWORK STUDIO</string>
+    <string name="studio_subtitle">COLOUR AND SEPARATION</string>
+    <string name="studio_import_label">IMPORT GARMENT ARTWORK</string>
+    <string name="studio_import_headline">Read the colours and\nplan the screens.</string>
+    <string name="studio_supported">JPEG, PNG or WebP. Larger files give better detail.</string>
+    <string name="studio_select_button">Choose artwork from the gallery  →</string>
+    <string name="studio_recent">RECENT ANALYSES</string>
+    <string name="studio_view_all">View all (%1$d)</string>
+    <string name="studio_empty_title">No artwork analysed yet</string>
+    <string name="studio_empty_body">Choose a design or print file. NIRA measures its colours, print area and screens on this phone.</string>
+    <string name="history_back">← Studio</string>
+    <string name="history_title">SAVED ANALYSES (%1$d)</string>
+    <string name="history_empty_title">No saved analyses yet</string>
+    <string name="history_empty_body">Each analysis is saved on this phone when you process artwork.</string>
+    <string name="history_delete_title">Delete analysis</string>
+    <string name="history_delete_body">Delete the analysis for \"%1$s\"? Its colours and masks are removed from this phone.</string>
+    <string name="history_delete">Delete</string>
 </resources>

@@ -447,4 +447,21 @@
     <string name="res_warn_body">印花宽度 %3$.0f 厘米时为每厘米 %1$.1f 像素（约 %2$d dpi）。细线和小字需要每厘米 %4$.0f 像素（约 %5$d dpi）。</string>
     <string name="res_warn_fix_artwork">此尺寸请向买家索取宽度至少 %1$d 像素的图稿或矢量文件（AI、PDF、SVG）。下方的颜色和面积仍已测量。</string>
     <string name="res_warn_fix_photo">请靠近重拍，让印花填满画面，或索取原始图稿。下方的颜色和面积仍已测量。</string>
+    <string name="studio_title">图稿工作室</string>
+    <string name="studio_subtitle">颜色与分色</string>
+    <string name="studio_import_label">导入服装图稿</string>
+    <string name="studio_import_headline">读取颜色，\n规划网版。</string>
+    <string name="studio_supported">JPEG、PNG 或 WebP。文件越大细节越好。</string>
+    <string name="studio_select_button">从相册选择图稿  →</string>
+    <string name="studio_recent">最近分析</string>
+    <string name="studio_view_all">查看全部 (%1$d)</string>
+    <string name="studio_empty_title">尚未分析任何图稿</string>
+    <string name="studio_empty_body">选择一个设计或印花文件。NIRA 在本机测量其颜色、印花面积和网版。</string>
+    <string name="history_back">← 工作室</string>
+    <string name="history_title">已保存的分析 (%1$d)</string>
+    <string name="history_empty_title">暂无已保存的分析</string>
+    <string name="history_empty_body">处理图稿时，每次分析都会保存在本机。</string>
+    <string name="history_delete_title">删除分析</string>
+    <string name="history_delete_body">删除“%1$s”的分析？其颜色和蒙版将从本机移除。</string>
+    <string name="history_delete">删除</string>
 </resources>

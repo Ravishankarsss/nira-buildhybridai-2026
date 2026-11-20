@@ -449,4 +449,21 @@
     <string name="res_warn_body">%1$.1f px par cm (environ %2$d dpi) pour %3$.0f cm de largeur d\'impression. Les traits fins et petits textes demandent %4$.0f px par cm (environ %5$d dpi).</string>
     <string name="res_warn_fix_artwork">Pour cette taille, demandez au client un visuel d\'au moins %1$d px de large ou un fichier vectoriel (AI, PDF, SVG). Les couleurs et surfaces ci-dessous sont quand même mesurées.</string>
     <string name="res_warn_fix_photo">Reprenez la photo de plus près pour que l\'impression remplisse le cadre, ou demandez le visuel original. Les couleurs et surfaces ci-dessous sont quand même mesurées.</string>
+    <string name="studio_title">STUDIO VISUEL</string>
+    <string name="studio_subtitle">COULEUR ET SÉPARATION</string>
+    <string name="studio_import_label">IMPORTER UN VISUEL</string>
+    <string name="studio_import_headline">Lire les couleurs et\nplanifier les écrans.</string>
+    <string name="studio_supported">JPEG, PNG ou WebP. Un fichier plus grand donne plus de détails.</string>
+    <string name="studio_select_button">Choisir un visuel dans la galerie  →</string>
+    <string name="studio_recent">ANALYSES RÉCENTES</string>
+    <string name="studio_view_all">Tout voir (%1$d)</string>
+    <string name="studio_empty_title">Aucun visuel analysé pour l\'instant</string>
+    <string name="studio_empty_body">Choisissez un design ou un fichier d\'impression. NIRA mesure ses couleurs, sa surface et ses écrans sur ce téléphone.</string>
+    <string name="history_back">← Studio</string>
+    <string name="history_title">ANALYSES ENREGISTRÉES (%1$d)</string>
+    <string name="history_empty_title">Aucune analyse enregistrée</string>
+    <string name="history_empty_body">Chaque analyse est enregistrée sur ce téléphone lors du traitement.</string>
+    <string name="history_delete_title">Supprimer l\'analyse</string>
+    <string name="history_delete_body">Supprimer l\'analyse de \"%1$s\" ? Ses couleurs et masques sont retirés de ce téléphone.</string>
+    <string name="history_delete">Supprimer</string>
 </resources>

@@ -448,4 +448,21 @@
     <string name="res_warn_body">%3$.0f सेमी प्रिंट चौड़ाई पर %1$.1f px प्रति सेमी (लगभग %2$d dpi)। बारीक रेखाओं और छोटे अक्षरों के लिए %4$.0f px प्रति सेमी (लगभग %5$d dpi) चाहिए।</string>
     <string name="res_warn_fix_artwork">इस आकार के लिए खरीदार से कम से कम %1$d px चौड़ा artwork या vector फ़ाइल (AI, PDF, SVG) माँगें। नीचे के रंग और क्षेत्र फिर भी मापे गए हैं।</string>
     <string name="res_warn_fix_photo">प्रिंट पूरे फ्रेम में आए, इसके लिए पास से फिर फ़ोटो लें, या मूल artwork माँगें। नीचे के रंग और क्षेत्र फिर भी मापे गए हैं।</string>
+    <string name="studio_title">ARTWORK स्टूडियो</string>
+    <string name="studio_subtitle">रंग और सेपरेशन</string>
+    <string name="studio_import_label">गारमेंट ARTWORK लाएँ</string>
+    <string name="studio_import_headline">रंग पढ़ें और\nस्क्रीन की योजना बनाएँ।</string>
+    <string name="studio_supported">JPEG, PNG या WebP। बड़ी फ़ाइल में बारीकी बेहतर आती है।</string>
+    <string name="studio_select_button">गैलरी से artwork चुनें  →</string>
+    <string name="studio_recent">हाल के विश्लेषण</string>
+    <string name="studio_view_all">सभी देखें (%1$d)</string>
+    <string name="studio_empty_title">अभी तक कोई artwork विश्लेषित नहीं</string>
+    <string name="studio_empty_body">कोई डिज़ाइन या प्रिंट फ़ाइल चुनें। NIRA इसी फ़ोन पर उसके रंग, प्रिंट क्षेत्र और स्क्रीन मापता है।</string>
+    <string name="history_back">← स्टूडियो</string>
+    <string name="history_title">सहेजे गए विश्लेषण (%1$d)</string>
+    <string name="history_empty_title">अभी कोई सहेजा गया विश्लेषण नहीं</string>
+    <string name="history_empty_body">Artwork प्रोसेस करने पर हर विश्लेषण इसी फ़ोन पर सहेजा जाता है।</string>
+    <string name="history_delete_title">विश्लेषण हटाएँ</string>
+    <string name="history_delete_body">\"%1$s\" का विश्लेषण हटाएँ? इसके रंग और मास्क इस फ़ोन से हट जाएँगे।</string>
+    <string name="history_delete">हटाएँ</string>
 </resources>

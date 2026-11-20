@@ -447,4 +447,21 @@
     <string name="res_warn_body">%1$.1f px mỗi cm (khoảng %2$d dpi) với chiều rộng in %3$.0f cm. Nét mảnh và chữ nhỏ cần %4$.0f px mỗi cm (khoảng %5$d dpi).</string>
     <string name="res_warn_fix_artwork">Với kích thước này, hãy xin người mua hình in rộng ít nhất %1$d px hoặc tệp vector (AI, PDF, SVG). Màu và diện tích bên dưới vẫn được đo.</string>
     <string name="res_warn_fix_photo">Chụp lại gần hơn để hình in lấp đầy khung, hoặc xin hình in gốc. Màu và diện tích bên dưới vẫn được đo.</string>
+    <string name="studio_title">XƯỞNG HÌNH IN</string>
+    <string name="studio_subtitle">MÀU VÀ TÁCH MÀU</string>
+    <string name="studio_import_label">NHẬP HÌNH IN</string>
+    <string name="studio_import_headline">Đọc màu và\nlên kế hoạch khung in.</string>
+    <string name="studio_supported">JPEG, PNG hoặc WebP. Tệp lớn hơn cho chi tiết tốt hơn.</string>
+    <string name="studio_select_button">Chọn hình in từ thư viện  →</string>
+    <string name="studio_recent">PHÂN TÍCH GẦN ĐÂY</string>
+    <string name="studio_view_all">Xem tất cả (%1$d)</string>
+    <string name="studio_empty_title">Chưa phân tích hình in nào</string>
+    <string name="studio_empty_body">Chọn một thiết kế hoặc tệp in. NIRA đo màu, diện tích in và khung in ngay trên điện thoại này.</string>
+    <string name="history_back">← Xưởng</string>
+    <string name="history_title">PHÂN TÍCH ĐÃ LƯU (%1$d)</string>
+    <string name="history_empty_title">Chưa có phân tích đã lưu</string>
+    <string name="history_empty_body">Mỗi phân tích được lưu trên điện thoại này khi bạn xử lý hình in.</string>
+    <string name="history_delete_title">Xóa phân tích</string>
+    <string name="history_delete_body">Xóa phân tích của \"%1$s\"? Màu và mặt nạ của nó sẽ bị xóa khỏi điện thoại này.</string>
+    <string name="history_delete">Xóa</string>
 </resources>

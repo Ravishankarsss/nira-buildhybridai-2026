@@ -448,4 +448,21 @@
     <string name="res_warn_body">%3$.0f সেমি প্রিন্ট প্রস্থে প্রতি সেমিতে %1$.1f px (প্রায় %2$d dpi)। সূক্ষ্ম রেখা ও ছোট লেখার জন্য প্রতি সেমিতে %4$.0f px (প্রায় %5$d dpi) দরকার।</string>
     <string name="res_warn_fix_artwork">এই মাপের জন্য ক্রেতার কাছে অন্তত %1$d px চওড়া artwork বা vector ফাইল (AI, PDF, SVG) চান। নিচের রং ও এলাকা তবুও মাপা হয়েছে।</string>
     <string name="res_warn_fix_photo">প্রিন্ট যেন পুরো ফ্রেম ভরে, তাই কাছ থেকে আবার ছবি তুলুন, বা আসল artwork চান। নিচের রং ও এলাকা তবুও মাপা হয়েছে।</string>
+    <string name="studio_title">ARTWORK স্টুডিও</string>
+    <string name="studio_subtitle">রং ও সেপারেশন</string>
+    <string name="studio_import_label">পোশাকের ARTWORK আনুন</string>
+    <string name="studio_import_headline">রং পড়ুন এবং\nস্ক্রিন পরিকল্পনা করুন।</string>
+    <string name="studio_supported">JPEG, PNG বা WebP। বড় ফাইলে খুঁটিনাটি ভালো আসে।</string>
+    <string name="studio_select_button">গ্যালারি থেকে artwork বেছে নিন  →</string>
+    <string name="studio_recent">সাম্প্রতিক বিশ্লেষণ</string>
+    <string name="studio_view_all">সব দেখুন (%1$d)</string>
+    <string name="studio_empty_title">এখনো কোনো artwork বিশ্লেষণ হয়নি</string>
+    <string name="studio_empty_body">একটি ডিজাইন বা প্রিন্ট ফাইল বেছে নিন। NIRA এই ফোনেই তার রং, প্রিন্ট এলাকা ও স্ক্রিন মাপে।</string>
+    <string name="history_back">← স্টুডিও</string>
+    <string name="history_title">সংরক্ষিত বিশ্লেষণ (%1$d)</string>
+    <string name="history_empty_title">এখনো কোনো সংরক্ষিত বিশ্লেষণ নেই</string>
+    <string name="history_empty_body">Artwork প্রসেস করলে প্রতিটি বিশ্লেষণ এই ফোনে সংরক্ষিত হয়।</string>
+    <string name="history_delete_title">বিশ্লেষণ মুছুন</string>
+    <string name="history_delete_body">\"%1$s\" এর বিশ্লেষণ মুছবেন? এর রং ও মাস্ক এই ফোন থেকে মুছে যাবে।</string>
+    <string name="history_delete">মুছুন</string>
 </resources>

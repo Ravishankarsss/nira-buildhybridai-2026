@@ -1,5 +1,8 @@
 package com.mos.nira.features.artwork.presentation
 
+import androidx.compose.ui.res.pluralStringResource
+import com.mos.nira.R
+import androidx.compose.ui.res.stringResource
 import com.mos.nira.features.artwork.domain.mainPrintHexes
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -85,14 +88,14 @@ fun ArtworkStudioLandingScreen(
             ) {
                 Column {
                     Text(
-                        text = "ARTWORK STUDIO",
+                        text = stringResource(R.string.studio_title),
                         color = TextWhite,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.ExtraBold,
                         letterSpacing = 2.sp
                     )
                     Text(
-                        text = "INTELLIGENT COLOR & SEPARATION",
+                        text = stringResource(R.string.studio_subtitle),
                         color = Violet,
                         fontSize = 11.sp,
                         letterSpacing = 1.5.sp,
@@ -125,7 +128,7 @@ fun ArtworkStudioLandingScreen(
                 ) {
                     Column {
                         Text(
-                            text = "IMPORT GARMENT ARTWORK",
+                            text = stringResource(R.string.studio_import_label),
                             color = Cyan,
                             fontSize = 11.sp,
                             letterSpacing = 1.sp,
@@ -135,7 +138,7 @@ fun ArtworkStudioLandingScreen(
                         Spacer(modifier = Modifier.height(12.dp))
 
                         Text(
-                            text = "Analyze palette &\ncolor separations.",
+                            text = stringResource(R.string.studio_import_headline),
                             color = TextWhite,
                             fontSize = 22.sp,
                             lineHeight = 28.sp,
@@ -145,7 +148,7 @@ fun ArtworkStudioLandingScreen(
                         Spacer(modifier = Modifier.height(8.dp))
 
                         Text(
-                            text = "Supported: JPEG, PNG, WebP (high-res supported)",
+                            text = stringResource(R.string.studio_supported),
                             color = TextMuted,
                             fontSize = 12.sp
                         )
@@ -160,7 +163,7 @@ fun ArtworkStudioLandingScreen(
                             ),
                             shape = RoundedCornerShape(14.dp)
                         ) {
-                            Text("Select Artwork from Gallery  →", fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.studio_select_button), fontWeight = FontWeight.Bold)
                         }
                     }
                 }
@@ -176,7 +179,7 @@ fun ArtworkStudioLandingScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "RECENT ANALYSES",
+                    text = stringResource(R.string.studio_recent),
                     color = TextMuted,
                     fontSize = 12.sp,
                     letterSpacing = 1.5.sp,
@@ -185,7 +188,7 @@ fun ArtworkStudioLandingScreen(
 
                 if (recentAnalyses.isNotEmpty()) {
                     Text(
-                        text = "View All (${recentAnalyses.size})",
+                        text = stringResource(R.string.studio_view_all, recentAnalyses.size),
                         color = Cyan,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
@@ -215,14 +218,14 @@ fun ArtworkStudioLandingScreen(
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "No artwork analyzed yet",
+                            text = stringResource(R.string.studio_empty_title),
                             color = TextWhite,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.SemiBold
                         )
                         Spacer(modifier = Modifier.height(6.dp))
                         Text(
-                            text = "Select any design or print file to inspect dominant colors, CIE Lab values and layer masks.",
+                            text = stringResource(R.string.studio_empty_body),
                             color = TextMuted,
                             fontSize = 13.sp,
                             lineHeight = 18.sp,
@@ -296,7 +299,7 @@ fun RecentAnalysisRow(
                 )
                 Spacer(modifier = Modifier.height(3.dp))
                 Text(
-                    text = "${record.width} × ${record.height} px  •  ${record.printColourCount} colors",
+                    text = "${record.width} × ${record.height} px  •  " + pluralStringResource(R.plurals.recent_colour_count, record.printColourCount, record.printColourCount),
                     color = Cyan,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium
