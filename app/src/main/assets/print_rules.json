@@ -678,6 +678,109 @@
     "confidence": "assumption",
     "note": "Proposed starting values; tune on real photos; Ravi to confirm. plateau_min_px and plateau_ratio_tolerance hold the 2 and 0.1 from plateau_keep_rule as numbers."
   },
+  "strike_off_check": {
+    "what": "Strike-off check: the printed sample photographed on a phone, each print colour compared with the approved standard (CIEDE2000). A first-pass floor screening tool, not a spectrophotometer lab report.",
+    "source": "S Ravi Shankar, 20 Nov 2026",
+    "verified_by_ravi": true,
+    "color_metric": "CIEDE2000",
+    "v1_active_rules": {
+      "color_limits": {
+        "apply_same_for_all": true,
+        "thresholds_delta_e": {
+          "pass_max": 2.0,
+          "check_max": 4.0,
+          "fail_above": 4.0
+        },
+        "threshold_rule": "dE00 <= pass_max is Pass; pass_max < dE00 <= check_max is Check; dE00 > fail_above is Fail.",
+        "why_not_1_0": "Lab spectrophotometers use about 1.0 to 1.5; on a phone camera, knit texture, shadows and auto-processing add about 1.0 to 1.5 of noise, so Pass is 2.0 to avoid constant false fails.",
+        "visual_check_flags": {
+          "colors": [
+            "pure_white",
+            "pure_black"
+          ],
+          "action": "recommend_visual_check",
+          "reason": "Phone cameras struggle with glare, opacity, and light reflection on pure white and black."
+        }
+      },
+      "capture_protocol": {
+        "preferred_lighting": "D65_light_box",
+        "fallback_lighting": "indirect_daylight",
+        "avoid_lighting": [
+          "factory_tube_light"
+        ],
+        "white_balance_reference": {
+          "enabled": true,
+          "reference_object": "plain_matte_white_paper",
+          "placement": "flat_next_to_print",
+          "avoid_glossy": true
+        }
+      },
+      "comparison_standards": {
+        "mode": "both",
+        "initial_strike_off": "approved_artwork_file",
+        "bulk_and_rechecks": "approved_golden_sample_photo"
+      },
+      "enabled_checks": {
+        "color": true,
+        "print_size": false,
+        "registration": false,
+        "missing_ink_or_pinholes": false
+      }
+    },
+    "v2_placeholders": {
+      "note": "Not used by the app until enabled is set to true.",
+      "print_method_overrides": {
+        "enabled": false,
+        "methods": {
+          "screen": {
+            "delta_e_buffer": 0.0
+          },
+          "digital": {
+            "delta_e_buffer": 0.0
+          },
+          "discharge": {
+            "delta_e_buffer_range": [
+              0.5,
+              1.0
+            ],
+            "default_delta_e_buffer": 0.75,
+            "note": "Buffer accounts for natural discharge shade variation across fabric lots."
+          }
+        }
+      },
+      "buyer_tiers": {
+        "enabled": false,
+        "default_tier": "standard",
+        "tiers": {
+          "standard": {
+            "pass_max": 2.0,
+            "check_max": 4.0,
+            "fail_above": 4.0
+          },
+          "strict": {
+            "pass_max": 1.5,
+            "check_max": 3.0,
+            "fail_above": 3.0
+          }
+        }
+      },
+      "additional_checks": {
+        "enabled": false,
+        "print_size_tolerance_cm": {
+          "chest_or_small": 0.5,
+          "large_print": 1.0
+        },
+        "registration_tolerance_mm": {
+          "min": 0.5,
+          "max": 1.0
+        },
+        "missing_ink_or_pinholes": {
+          "policy": "always_fail",
+          "max_allowed": 0
+        }
+      }
+    }
+  },
   "regression_cases": [
     {
       "id": "gradient_logo_on_dark_garment",
