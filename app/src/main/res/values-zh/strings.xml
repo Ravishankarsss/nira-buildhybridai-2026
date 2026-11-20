@@ -400,7 +400,7 @@
     <string name="costdown_explain_hint">AI 根据上面的确切数字解释各方案，尽可能在本手机上运行。含有此处没有的数字的回答不会显示。</string>
     <string name="sheet_button">分享单</string>
     <string name="sheet_share">分享</string>
-    <string name="sheet_buyer_toggle">买家报价（英文）</string>
+    <string name="sheet_buyer_toggle">买家报价</string>
     <string name="sheet_floor_toggle">车间作业单（泰米尔语）</string>
     <string name="sheet_making">正在生成…</string>
     <string name="sheet_buyer_title">印花决策 — 买家报价</string>
@@ -524,4 +524,11 @@
     <string name="lib_params">参数（数值 · 可信度）</string>
     <string name="lib_risks">风险</string>
     <string name="lib_source">来源</string>
+    <string name="sheet_language">买家语言：</string>
+    <string name="sheet_translate_button">✦ 翻译规则文字（AI）</string>
+    <string name="sheet_translating">正在翻译…</string>
+    <string name="sheet_translate_hint">标签已是该语言。风险和工序来自英文规则文件；AI 可以翻译，只有每个数字保持不变的行才会使用。</string>
+    <string name="sheet_translate_result">已翻译 %2$d 条规则文字中的 %1$d 条；%3$d 条保留英文（数字检查）。</string>
+    <string name="sheet_translate_failed">AI 回复无法使用；规则文字保留英文。</string>
+    <string name="sheet_ai_note">规则文字由 AI 翻译，每个数字均已核对；以英文规则文件为准。</string>
 </resources>

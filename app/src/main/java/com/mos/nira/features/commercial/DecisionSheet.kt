@@ -41,9 +41,11 @@ data class SheetData(
 )
 
 /**
- * The one-tap Print Decision Sheet: a single image for WhatsApp or email, as a Buyer Quote
- * (English) or a Floor Job Sheet (Tamil). Drawn on the phone from the decision card; no AI and no
- * colour codes. Texts that come from the rules files (method names, risks, steps) stay as written.
+ * The one-tap Print Decision Sheet: a single image for WhatsApp or email, as a Buyer Quote (in the
+ * buyer's language) or a Floor Job Sheet (Tamil). Drawn on the phone from the decision card; no
+ * colour codes. Labels use the app's own translations. Rules-file texts (risks, steps) stay as
+ * written unless the user asks for an AI translation, which is used line by line only when it
+ * keeps every number (SheetTranslation). Method names stay as written.
  */
 object DecisionSheet {
 
@@ -127,9 +129,16 @@ object DecisionSheet {
 
     private fun f2(v: Double) = String.format(Locale.US, "%.2f", v)
 
-    /** Draws the sheet. [floor] = Floor Job Sheet in Tamil; otherwise Buyer Quote in English. */
-    fun render(ctx: Context, d: SheetData, floor: Boolean): Bitmap {
-        val c = localized(ctx, if (floor) "ta" else "en")
+    /** The languages a Buyer Quote can be drawn in: the app's own translations. */
+    val LANGUAGES = listOf("en", "hi", "ta", "bn", "zh", "vi", "es", "fr", "de")
+
+    /**
+     * Draws the sheet. [floor] = Floor Job Sheet (Tamil); otherwise a Buyer Quote in [language].
+     * [translated] maps rules-file English texts to checked AI translations; others stay English.
+     */
+    fun render(ctx: Context, d: SheetData, floor: Boolean, language: String = "en", translated: Map<String, String> = emptyMap()): Bitmap {
+        val c = localized(ctx, if (floor) "ta" else language)
+        fun tr(s: String) = translated[s] ?: s
         val card = d.card
         val best = card.best ?: error("no method")
         val bmp = Bitmap.createBitmap(W, 5200, Bitmap.Config.ARGB_8888)
@@ -193,7 +202,7 @@ object DecisionSheet {
         // Method
         section(c.getString(R.string.card_method))
         text(best.advice.name, 36f, ink, bold = true, gapAfter = 4f)
-        if (best.advice.whatItIs.isNotBlank()) text(best.advice.whatItIs, 26f, muted, gapAfter = 4f)
+        if (best.advice.whatItIs.isNotBlank()) text(tr(best.advice.whatItIs), 26f, muted, gapAfter = 4f)
         text(c.getString(if (best.advice.verifiedByRavi) R.string.card_verified else R.string.card_not_verified), 24f, if (best.advice.verifiedByRavi) green else amber)
 
         // Screens
@@ -201,8 +210,8 @@ object DecisionSheet {
         val q = a.quantity
         if (card.baseSource == BaseSource.DIGITAL) {
             val n = best.advice.screens
-            text(if (n != null && n > 0) c.getString(R.string.card_screens_value, n, best.advice.screensDetail ?: "") else c.getString(R.string.card_screens_digital), 28f)
-            best.advice.processSteps.forEachIndexed { i, s -> text("${i + 1}. $s", 26f, gapAfter = 4f) }
+            text(if (n != null && n > 0) c.getString(R.string.card_screens_value, n, best.advice.screensDetail?.let(::tr) ?: "") else c.getString(R.string.card_screens_digital), 28f)
+            best.advice.processSteps.forEachIndexed { i, s -> text("${i + 1}. ${tr(s)}", 26f, gapAfter = 4f) }
         } else {
             card.screens.forEach { s ->
                 val inkKg = s.gramsPerGarment?.let { g -> q?.let { qq -> String.format(Locale.US, "%.2f", g * qq / 1000.0) } }
@@ -241,19 +250,20 @@ object DecisionSheet {
         // Risks and the honest close
         if (best.advice.risks.isNotEmpty()) {
             section(c.getString(R.string.card_risks))
-            best.advice.risks.forEach { text("• $it", 26f, gapAfter = 4f) }
+            best.advice.risks.forEach { text("• ${tr(it)}", 26f, gapAfter = 4f) }
         }
         rule()
         text(c.getString(R.string.card_disclaimer), 26f, amber, bold = true)
+        if (translated.isNotEmpty()) text(c.getString(R.string.sheet_ai_note), 22f, muted, gapAfter = 4f)
         text(c.getString(R.string.sheet_footer), 22f, muted, gapAfter = 0f)
         y += PAD
         return Bitmap.createBitmap(bmp, 0, 0, W, y.toInt().coerceAtMost(bmp.height))
     }
 
     /** Saves the sheet in the app's cache and opens the Android share sheet. */
-    fun share(ctx: Context, sheet: Bitmap, floor: Boolean) {
+    fun share(ctx: Context, sheet: Bitmap, floor: Boolean, language: String = "en") {
         val dir = File(ctx.cacheDir, "exports").apply { mkdirs() }
-        val file = File(dir, "NIRA_Decision_Sheet_${if (floor) "floor_ta" else "buyer_en"}.png")
+        val file = File(dir, "NIRA_Decision_Sheet_${if (floor) "floor_ta" else "buyer_$language"}.png")
         FileOutputStream(file).use { sheet.compress(Bitmap.CompressFormat.PNG, 100, it) }
         val uri = FileProvider.getUriForFile(ctx, "${ctx.packageName}.fileprovider", file)
         val intent = Intent(Intent.ACTION_SEND).apply {

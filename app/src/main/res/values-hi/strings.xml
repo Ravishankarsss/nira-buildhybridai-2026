@@ -401,7 +401,7 @@
     <string name="costdown_explain_hint">AI ऊपर के सटीक अंकों से विकल्प समझाता है; हो सके तो इसी फ़ोन पर। यहाँ न दिखाए गए अंक वाला उत्तर नहीं दिखाया जाता।</string>
     <string name="sheet_button">शेयर शीट</string>
     <string name="sheet_share">शेयर करें</string>
-    <string name="sheet_buyer_toggle">खरीदार कोट (अंग्रेज़ी)</string>
+    <string name="sheet_buyer_toggle">खरीदार कोट</string>
     <string name="sheet_floor_toggle">फ़्लोर जॉब शीट (तमिल)</string>
     <string name="sheet_making">शीट तैयार हो रही है…</string>
     <string name="sheet_buyer_title">प्रिंट निर्णय — खरीदार कोट</string>
@@ -525,4 +525,11 @@
     <string name="lib_params">पैरामीटर (मान · भरोसा)</string>
     <string name="lib_risks">जोखिम</string>
     <string name="lib_source">स्रोत</string>
+    <string name="sheet_language">खरीदार की भाषा:</string>
+    <string name="sheet_translate_button">✦ नियम टेक्स्ट का अनुवाद करें (AI)</string>
+    <string name="sheet_translating">अनुवाद हो रहा है…</string>
+    <string name="sheet_translate_hint">लेबल पहले से इस भाषा में हैं। जोखिम और प्रक्रिया के चरण नियम फ़ाइल में अंग्रेज़ी में हैं; AI उनका अनुवाद कर सकता है, और कोई पंक्ति तभी उपयोग होती है जब हर अंक वही रहे।</string>
+    <string name="sheet_translate_result">%2$d में से %1$d नियम टेक्स्ट अनूदित; %3$d अंग्रेज़ी में रखे गए (अंक जाँच)।</string>
+    <string name="sheet_translate_failed">AI का जवाब उपयोग नहीं हो सका; नियम टेक्स्ट अंग्रेज़ी में रहेंगे।</string>
+    <string name="sheet_ai_note">नियम टेक्स्ट AI से अनूदित, हर अंक जाँचा गया; अंग्रेज़ी नियम फ़ाइल ही आधार है।</string>
 </resources>

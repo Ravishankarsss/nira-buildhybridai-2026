@@ -401,7 +401,7 @@
     <string name="costdown_explain_hint">AI ওপরের ঠিক সংখ্যা থেকে উপায়গুলো বোঝায়; সম্ভব হলে এই ফোনেই। এখানে নেই এমন সংখ্যা থাকলে উত্তর দেখানো হয় না।</string>
     <string name="sheet_button">শেয়ার শিট</string>
     <string name="sheet_share">শেয়ার করুন</string>
-    <string name="sheet_buyer_toggle">ক্রেতার কোট (ইংরেজি)</string>
+    <string name="sheet_buyer_toggle">ক্রেতার কোট</string>
     <string name="sheet_floor_toggle">ফ্লোর জব শিট (তামিল)</string>
     <string name="sheet_making">শিট তৈরি হচ্ছে…</string>
     <string name="sheet_buyer_title">প্রিন্ট সিদ্ধান্ত — ক্রেতার কোট</string>
@@ -525,4 +525,11 @@
     <string name="lib_params">প্যারামিটার (মান · আস্থা)</string>
     <string name="lib_risks">ঝুঁকি</string>
     <string name="lib_source">উৎস</string>
+    <string name="sheet_language">ক্রেতার ভাষা:</string>
+    <string name="sheet_translate_button">✦ নিয়মের লেখা অনুবাদ করুন (AI)</string>
+    <string name="sheet_translating">অনুবাদ হচ্ছে…</string>
+    <string name="sheet_translate_hint">লেবেলগুলো আগে থেকেই এই ভাষায়। ঝুঁকি ও ধাপগুলো নিয়ম ফাইলে ইংরেজিতে; AI অনুবাদ করতে পারে, এবং প্রতিটি সংখ্যা একই থাকলে তবেই লাইনটি ব্যবহার হয়।</string>
+    <string name="sheet_translate_result">%2$dটির মধ্যে %1$dটি নিয়মের লেখা অনূদিত; %3$dটি ইংরেজিতে রাখা হয়েছে (সংখ্যা যাচাই)।</string>
+    <string name="sheet_translate_failed">AI-এর উত্তর ব্যবহার করা যায়নি; নিয়মের লেখা ইংরেজিতেই থাকবে।</string>
+    <string name="sheet_ai_note">নিয়মের লেখা AI দিয়ে অনূদিত, প্রতিটি সংখ্যা যাচাই করা; ইংরেজি নিয়ম ফাইলই মূল সূত্র।</string>
 </resources>

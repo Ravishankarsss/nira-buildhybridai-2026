@@ -401,7 +401,7 @@
     <string name="costdown_explain_hint">மேலே உள்ள சரியான எண்களிலிருந்து AI வழிகளை விளக்குகிறது; முடிந்தால் இந்த போனிலேயே. இங்கு இல்லாத எண் கொண்ட பதில் காட்டப்படாது.</string>
     <string name="sheet_button">பகிர்வுத் தாள்</string>
     <string name="sheet_share">பகிர்</string>
-    <string name="sheet_buyer_toggle">வாங்குபவர் மேற்கோள் (ஆங்கிலம்)</string>
+    <string name="sheet_buyer_toggle">வாங்குபவர் மேற்கோள்</string>
     <string name="sheet_floor_toggle">தள வேலைத் தாள் (தமிழ்)</string>
     <string name="sheet_making">தாள் தயாராகிறது…</string>
     <string name="sheet_buyer_title">அச்சு முடிவு — வாங்குபவர் மேற்கோள்</string>
@@ -525,4 +525,11 @@
     <string name="lib_params">அளவுருக்கள் (மதிப்பு · நம்பகத்தன்மை)</string>
     <string name="lib_risks">அபாயங்கள்</string>
     <string name="lib_source">ஆதாரம்</string>
+    <string name="sheet_language">வாங்குபவரின் மொழி:</string>
+    <string name="sheet_translate_button">✦ விதி உரைகளை மொழிபெயர் (AI)</string>
+    <string name="sheet_translating">மொழிபெயர்க்கிறது…</string>
+    <string name="sheet_translate_hint">தலைப்புகள் ஏற்கனவே இந்த மொழியில் உள்ளன. அபாயங்களும் படிகளும் விதிக் கோப்பில் ஆங்கிலத்தில் உள்ளன; AI மொழிபெயர்க்கும், ஒவ்வொரு எண்ணும் மாறாமல் இருந்தால் மட்டுமே அந்த வரி பயன்படுத்தப்படும்.</string>
+    <string name="sheet_translate_result">%2$d விதி உரைகளில் %1$d மொழிபெயர்க்கப்பட்டன; %3$d ஆங்கிலத்திலேயே (எண் சோதனை).</string>
+    <string name="sheet_translate_failed">AI பதிலைப் பயன்படுத்த முடியவில்லை; விதி உரைகள் ஆங்கிலத்திலேயே இருக்கும்.</string>
+    <string name="sheet_ai_note">விதி உரைகள் AI மூலம் மொழிபெயர்க்கப்பட்டன, ஒவ்வொரு எண்ணும் சோதிக்கப்பட்டது; ஆங்கில விதிக் கோப்பே ஆதாரம்.</string>
 </resources>

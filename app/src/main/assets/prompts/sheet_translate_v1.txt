@@ -1,0 +1,9 @@
+Translate each garment-printing text below from English into {language}, for a factory print sheet.
+Rules:
+- Keep every number exactly as written. Keep units (cm, g, kg, °C, tpi, gsm) as written.
+- Keep print trade words that the floor uses in English (for example: discharge, plastisol, DTG, DTF, mesh, strike-off) if there is no common {language} word.
+- Do not add, remove or explain anything. One translation per text, in the same order.
+Reply with a JSON array of strings only, the same length as the input.
+
+Input (JSON array):
+{texts}

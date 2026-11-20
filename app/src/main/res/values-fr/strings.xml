@@ -402,7 +402,7 @@
     <string name="costdown_explain_hint">L\'IA explique les options avec les chiffres exacts ci-dessus, sur ce téléphone si possible. Une réponse avec un nombre absent ici n\'est pas affichée.</string>
     <string name="sheet_button">Fiche à partager</string>
     <string name="sheet_share">Partager</string>
-    <string name="sheet_buyer_toggle">Devis acheteur (anglais)</string>
+    <string name="sheet_buyer_toggle">Devis acheteur</string>
     <string name="sheet_floor_toggle">Fiche d\'atelier (tamoul)</string>
     <string name="sheet_making">Préparation de la fiche…</string>
     <string name="sheet_buyer_title">Décision d\'impression — Devis</string>
@@ -526,4 +526,11 @@
     <string name="lib_params">Paramètres (valeur · fiabilité)</string>
     <string name="lib_risks">Risques</string>
     <string name="lib_source">Source</string>
+    <string name="sheet_language">Langue de l\'acheteur :</string>
+    <string name="sheet_translate_button">✦ Traduire les textes de règles (IA)</string>
+    <string name="sheet_translating">Traduction…</string>
+    <string name="sheet_translate_hint">Les libellés sont déjà dans cette langue. Les risques et étapes viennent du fichier de règles en anglais ; l\'IA peut les traduire, et une ligne n\'est utilisée que si chaque nombre reste identique.</string>
+    <string name="sheet_translate_result">%1$d textes de règles sur %2$d traduits ; %3$d gardés en anglais (contrôle des nombres).</string>
+    <string name="sheet_translate_failed">La réponse de l\'IA n\'est pas utilisable ; les textes de règles restent en anglais.</string>
+    <string name="sheet_ai_note">Textes de règles traduits par IA, chaque nombre vérifié ; le fichier de règles anglais fait foi.</string>
 </resources>

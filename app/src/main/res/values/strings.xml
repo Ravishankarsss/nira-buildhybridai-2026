@@ -400,7 +400,7 @@
     <string name="costdown_explain_hint">AI explains the options from the exact numbers above, on this phone when possible. An answer with a number not shown here is not shown.</string>
     <string name="sheet_button">Share Sheet</string>
     <string name="sheet_share">Share</string>
-    <string name="sheet_buyer_toggle">Buyer Quote (English)</string>
+    <string name="sheet_buyer_toggle">Buyer Quote</string>
     <string name="sheet_floor_toggle">Floor Job Sheet (Tamil)</string>
     <string name="sheet_making">Preparing the sheet…</string>
     <string name="sheet_buyer_title">Print Decision — Buyer Quote</string>
@@ -524,4 +524,11 @@
     <string name="lib_params">Parameters (value · confidence)</string>
     <string name="lib_risks">Risks</string>
     <string name="lib_source">Source</string>
+    <string name="sheet_language">Buyer\'s language:</string>
+    <string name="sheet_translate_button">✦ Translate the rule texts (AI)</string>
+    <string name="sheet_translating">Translating…</string>
+    <string name="sheet_translate_hint">Labels are already in this language. Risks and process steps come from the rules file in English; AI can translate them, and a line is used only if every number stays the same.</string>
+    <string name="sheet_translate_result">%1$d of %2$d rule texts translated; %3$d kept in English (number check).</string>
+    <string name="sheet_translate_failed">The AI reply could not be used; rule texts stay in English.</string>
+    <string name="sheet_ai_note">Rule texts translated by AI with every number checked; the English rules file is the reference.</string>
 </resources>

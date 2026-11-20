@@ -402,7 +402,7 @@
     <string name="costdown_explain_hint">La IA explica las opciones con los números exactos de arriba, en este teléfono si es posible. No se muestra una respuesta con un número que no esté aquí.</string>
     <string name="sheet_button">Hoja para compartir</string>
     <string name="sheet_share">Compartir</string>
-    <string name="sheet_buyer_toggle">Cotización comprador (inglés)</string>
+    <string name="sheet_buyer_toggle">Cotización comprador</string>
     <string name="sheet_floor_toggle">Hoja de taller (tamil)</string>
     <string name="sheet_making">Preparando la hoja…</string>
     <string name="sheet_buyer_title">Decisión de impresión — Cotización</string>
@@ -526,4 +526,11 @@
     <string name="lib_params">Parámetros (valor · confianza)</string>
     <string name="lib_risks">Riesgos</string>
     <string name="lib_source">Fuente</string>
+    <string name="sheet_language">Idioma del comprador:</string>
+    <string name="sheet_translate_button">✦ Traducir los textos de reglas (IA)</string>
+    <string name="sheet_translating">Traduciendo…</string>
+    <string name="sheet_translate_hint">Las etiquetas ya están en este idioma. Los riesgos y pasos vienen del archivo de reglas en inglés; la IA puede traducirlos, y una línea solo se usa si cada número queda igual.</string>
+    <string name="sheet_translate_result">%1$d de %2$d textos de reglas traducidos; %3$d se quedan en inglés (control de números).</string>
+    <string name="sheet_translate_failed">No se pudo usar la respuesta de la IA; los textos de reglas quedan en inglés.</string>
+    <string name="sheet_ai_note">Textos de reglas traducidos por IA con cada número comprobado; la referencia es el archivo de reglas en inglés.</string>
 </resources>

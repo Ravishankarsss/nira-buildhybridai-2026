@@ -401,7 +401,7 @@
     <string name="costdown_explain_hint">Die KI erklärt die Möglichkeiten mit den genauen Zahlen oben, wenn möglich auf diesem Telefon. Eine Antwort mit einer Zahl, die hier fehlt, wird nicht gezeigt.</string>
     <string name="sheet_button">Blatt teilen</string>
     <string name="sheet_share">Teilen</string>
-    <string name="sheet_buyer_toggle">Käuferangebot (Englisch)</string>
+    <string name="sheet_buyer_toggle">Käuferangebot</string>
     <string name="sheet_floor_toggle">Werkstattblatt (Tamil)</string>
     <string name="sheet_making">Blatt wird erstellt…</string>
     <string name="sheet_buyer_title">Druckentscheidung — Angebot</string>
@@ -525,4 +525,11 @@
     <string name="lib_params">Parameter (Wert · Verlässlichkeit)</string>
     <string name="lib_risks">Risiken</string>
     <string name="lib_source">Quelle</string>
+    <string name="sheet_language">Sprache des Kunden:</string>
+    <string name="sheet_translate_button">✦ Regeltexte übersetzen (KI)</string>
+    <string name="sheet_translating">Wird übersetzt…</string>
+    <string name="sheet_translate_hint">Die Beschriftungen sind schon in dieser Sprache. Risiken und Arbeitsschritte stehen englisch in der Regeldatei; die KI kann sie übersetzen, und eine Zeile wird nur genutzt, wenn jede Zahl gleich bleibt.</string>
+    <string name="sheet_translate_result">%1$d von %2$d Regeltexten übersetzt; %3$d auf Englisch belassen (Zahlenprüfung).</string>
+    <string name="sheet_translate_failed">Die KI-Antwort war nicht verwendbar; die Regeltexte bleiben englisch.</string>
+    <string name="sheet_ai_note">Regeltexte von KI übersetzt, jede Zahl geprüft; maßgeblich ist die englische Regeldatei.</string>
 </resources>

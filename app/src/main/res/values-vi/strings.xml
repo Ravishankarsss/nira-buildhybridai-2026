@@ -400,7 +400,7 @@
     <string name="costdown_explain_hint">AI giải thích các cách từ đúng các số ở trên, trên điện thoại này nếu được. Câu trả lời có số không có ở đây sẽ không hiển thị.</string>
     <string name="sheet_button">Phiếu chia sẻ</string>
     <string name="sheet_share">Chia sẻ</string>
-    <string name="sheet_buyer_toggle">Báo giá người mua (tiếng Anh)</string>
+    <string name="sheet_buyer_toggle">Báo giá người mua</string>
     <string name="sheet_floor_toggle">Phiếu xưởng (tiếng Tamil)</string>
     <string name="sheet_making">Đang tạo phiếu…</string>
     <string name="sheet_buyer_title">Quyết định in — Báo giá</string>
@@ -524,4 +524,11 @@
     <string name="lib_params">Thông số (giá trị · độ tin cậy)</string>
     <string name="lib_risks">Rủi ro</string>
     <string name="lib_source">Nguồn</string>
+    <string name="sheet_language">Ngôn ngữ của người mua:</string>
+    <string name="sheet_translate_button">✦ Dịch văn bản quy tắc (AI)</string>
+    <string name="sheet_translating">Đang dịch…</string>
+    <string name="sheet_translate_hint">Nhãn đã ở ngôn ngữ này. Rủi ro và các bước lấy từ tệp quy tắc bằng tiếng Anh; AI có thể dịch, và một dòng chỉ được dùng khi mọi con số giữ nguyên.</string>
+    <string name="sheet_translate_result">Đã dịch %1$d trên %2$d văn bản quy tắc; %3$d giữ tiếng Anh (kiểm tra số).</string>
+    <string name="sheet_translate_failed">Không dùng được câu trả lời của AI; văn bản quy tắc giữ tiếng Anh.</string>
+    <string name="sheet_ai_note">Văn bản quy tắc do AI dịch, mọi con số đã kiểm tra; tệp quy tắc tiếng Anh là bản gốc.</string>
 </resources>
