@@ -73,19 +73,38 @@ fun FactoryRatesEditor(modifier: Modifier = Modifier) {
                 Text(stringResource(R.string.rates_clear), fontSize = 12.sp, color = RMuted)
             }
         }
-        OutlinedTextField(
-            value = rates.currency,
-            onValueChange = { put(rates.copy(currency = it.take(4))) },
-            label = { Text(stringResource(R.string.rates_currency)) },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth()
-        )
+        CurrencyField(rates.currency) { code -> put(rates.copy(currency = code)) }
         NumberField(resetKey, stringResource(R.string.rates_screen), rates.screenMakeCost) { put(rates.copy(screenMakeCost = it)) }
         NumberField(resetKey, stringResource(R.string.rates_setup), rates.jobSetupCost) { put(rates.copy(jobSetupCost = it)) }
         NumberField(resetKey, stringResource(R.string.rates_run), rates.printRunPerScreen) { put(rates.copy(printRunPerScreen = it)) }
         NumberField(resetKey, stringResource(R.string.rates_ink), rates.inkCostPerKg) { put(rates.copy(inkCostPerKg = it)) }
         NumberField(resetKey, stringResource(R.string.rates_digital), rates.digitalRatePerPc) { put(rates.copy(digitalRatePerPc = it)) }
         Spacer(Modifier.height(4.dp))
+    }
+}
+
+/** A list of world currencies with their names in the phone's language. */
+@Composable
+private fun CurrencyField(code: String, onPick: (String) -> Unit) {
+    val locale = androidx.compose.ui.platform.LocalConfiguration.current.locales[0]
+    var open by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
+    val M = com.mos.nira.core.commercial.Money
+    fun label(c: String) = M.symbol(c) + "  " + M.displayName(c, locale) + " (" + c + ")"
+    androidx.compose.foundation.layout.Box {
+        OutlinedButton(onClick = { open = true }, modifier = Modifier.fillMaxWidth()) {
+            Text(
+                stringResource(R.string.rates_currency) + ": " + (if (code.isBlank()) "—" else label(code)),
+                fontSize = 13.sp, color = RCyan
+            )
+        }
+        androidx.compose.material3.DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
+            M.codes.forEach { c ->
+                androidx.compose.material3.DropdownMenuItem(
+                    text = { Text(label(c), fontSize = 13.sp) },
+                    onClick = { onPick(c); open = false }
+                )
+            }
+        }
     }
 }
 

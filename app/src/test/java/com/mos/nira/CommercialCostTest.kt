@@ -161,7 +161,7 @@ class CommercialCostTest {
     @Test
     fun sampleRatesFileMatchesTheBrief() {
         val j = JSONObject(listOf(File("src/main/assets/sample_factory_rates.json"), File("app/src/main/assets/sample_factory_rates.json")).first { it.exists() }.readText())
-        assertEquals("₹", j.getString("currency"))
+        assertEquals("INR", j.getString("currency"))
         assertEquals(450.0, j.getDouble("screen_make_cost"), 0.0)
         assertEquals(45.0, j.getDouble("digital_rate_per_pc"), 0.0)
     }

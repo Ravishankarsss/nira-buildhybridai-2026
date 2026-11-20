@@ -47,12 +47,11 @@ import com.mos.nira.core.commercial.CostMethod
 import com.mos.nira.core.commercial.CostResult
 import com.mos.nira.core.commercial.FactoryRates
 import com.mos.nira.core.commercial.Missing
+import com.mos.nira.core.commercial.Money as M
 import com.mos.nira.features.ai.CardExplanationSection
 import com.mos.nira.features.ai.CardExplanationViewModel
 import com.mos.nira.features.ai.activityViewModelStoreOwner
 import com.mos.nira.features.artwork.presentation.colourName
-import java.text.NumberFormat
-import java.util.Locale
 
 private val CInner = Color(0xFF0F1526)
 private val CWhite = Color(0xFFF5F6FF)
@@ -63,15 +62,10 @@ private val CAmber = Color(0xFFFFC870)
 private val CGreen = Color(0xFF7BE0A0)
 
 /** Money in the factory's currency: Indian grouping for ₹ (1,92,000), the phone's grouping otherwise. */
-fun money(rates: FactoryRates, v: Double, decimals: Int): String {
-    val nf = NumberFormat.getNumberInstance(if (rates.currency == "₹") Locale("en", "IN") else Locale.getDefault())
-    nf.minimumFractionDigits = decimals
-    nf.maximumFractionDigits = decimals
-    return rates.currency + nf.format(v)
-}
+fun money(rates: FactoryRates, v: Double, decimals: Int): String =
+    com.mos.nira.core.commercial.Money.format(rates.currency, v, decimals)
 
-/** Plain numbers for the AI facts (no grouping), so the number check can match them exactly. */
-private fun plain(v: Double, decimals: Int) = String.format(Locale.US, "%.${decimals}f", v)
+
 
 @Composable
 private fun missingText(m: Missing, result: CostResult): String = when (m) {
@@ -283,7 +277,8 @@ private fun optionBadge(o: CostDownOption): Pair<String, Color>? = when (o.kind)
 /** English facts for "Explain trade-off": the engine's exact before / after numbers, no codes. */
 fun tradeOffFacts(cost: CostResult, options: List<CostDownOption>, rates: FactoryRates): List<String> = buildList {
     val src = if (rates.isSample) "sample rates, not a quote" else "the factory's own rates"
-    add("Order cost now: ${rates.currency}${plain(cost.perPc!!, 2)} per piece, ${rates.currency}${plain(cost.total!!, 0)} for ${cost.quantity} pieces (${src}).")
+    val c = rates.currency
+    add("Order cost now: ${M.plain(c, cost.perPc!!, 2)} per piece, ${M.plain(c, cost.total!!, 0)} for ${cost.quantity} pieces (${src}).")
     options.forEach { o ->
         val what = when (o.kind) {
             CostDownKind.MERGE_COLOURS -> "Merge the ${com.mos.nira.core.image.ColourName.english(o.fromHex ?: "")} screen into the " +
@@ -293,6 +288,6 @@ fun tradeOffFacts(cost: CostResult, options: List<CostDownOption>, rates: Factor
                 " for ${o.after.quantity} pieces" + (o.breakEvenQty?.let { " (break-even at $it pieces)" } ?: "")
             CostDownKind.LIGHT_GARMENT -> "Print on a light garment and drop the white underbase screen (a buyer decision: the garment colour changes)"
         }
-        add("Cost-Down option: $what. New cost ${rates.currency}${plain(o.after.perPc ?: 0.0, 2)} per piece; saves ${rates.currency}${plain(o.savingPerPc, 2)} per piece and ${rates.currency}${plain(o.savingTotal, 0)} on the order.")
+        add("Cost-Down option: $what. New cost ${M.plain(c, o.after.perPc ?: 0.0, 2)} per piece; saves ${M.plain(c, o.savingPerPc, 2)} per piece and ${M.plain(c, o.savingTotal, 0)} on the order.")
     }
 }

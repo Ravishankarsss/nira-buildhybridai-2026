@@ -24,7 +24,7 @@ object FactoryRatesStore {
         val p = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
         fun d(key: String) = p.getString(key, null)?.toDoubleOrNull()
         _rates.value = FactoryRates(
-            currency = p.getString("currency", "") ?: "",
+            currency = com.mos.nira.core.commercial.Money.normalise(p.getString("currency", "") ?: ""),
             screenMakeCost = d("screen_make_cost"),
             jobSetupCost = d("job_setup_cost"),
             printRunPerScreen = d("print_run_per_screen"),
