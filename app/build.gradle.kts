@@ -1,7 +1,17 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.services)
+}
+
+// Judge build (docs/JUDGE_ACCESS_PLAN.md, route A): the App Check debug token registered for the
+// judge app comes from judge.properties in the project folder. That file is git-ignored; the token
+// never goes into the repository.
+val judgeProps = Properties().apply {
+    val f = rootProject.file("judge.properties")
+    if (f.exists()) f.inputStream().use { load(it) }
 }
 
 android {
@@ -18,9 +28,23 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        // Empty in every build except "judge".
+        buildConfigField("String", "JUDGE_APP_CHECK_TOKEN", "\"\"")
+        manifestPlaceholders["appLabel"] = "@string/app_name"
     }
 
     buildTypes {
+        // ./gradlew :app:assembleJudge -> NIRA judge (com.mos.nira.judge), installs beside NIRA.
+        create("judge") {
+            initWith(getByName("release"))
+            applicationIdSuffix = ".judge"
+            versionNameSuffix = "-judge"
+            signingConfig = signingConfigs.getByName("debug")
+            isDebuggable = false
+            matchingFallbacks += listOf("release")
+            buildConfigField("String", "JUDGE_APP_CHECK_TOKEN", "\"${judgeProps.getProperty("appCheckToken", "")}\"")
+            manifestPlaceholders["appLabel"] = "NIRA judge"
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(

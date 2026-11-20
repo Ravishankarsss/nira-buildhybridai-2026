@@ -31,3 +31,7 @@ web/firebase-config.js
 
 # Android Studio device selection (contains the phone serial number)
 .idea/deploymentTargetSelector.xml
+# Judge build: the App Check debug token for the judge app (never commit)
+judge.properties
+# Firebase CLI cache
+.firebase/

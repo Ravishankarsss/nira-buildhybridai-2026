@@ -26,8 +26,8 @@ import com.mos.nira.BuildConfig
  */
 object AppCheckDebugToken {
 
-    private const val PREFS_TEMPLATE = "com.google.firebase.appcheck.debug.store.%s"
-    private const val DEBUG_SECRET_KEY = "com.google.firebase.appcheck.debug.DEBUG_SECRET"
+    const val PREFS_TEMPLATE = "com.google.firebase.appcheck.debug.store.%s"
+    const val DEBUG_SECRET_KEY = "com.google.firebase.appcheck.debug.DEBUG_SECRET"
 
     /** The debug token, or null if this is a release build or the SDK has not created it yet. */
     fun read(context: Context): String? {

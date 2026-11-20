@@ -9,3 +9,8 @@ export const firebaseConfig = {
   messagingSenderId: "",
   appId: "",
 };
+
+// App Check for the hosted page: the reCAPTCHA Enterprise site key (Google Cloud console >
+// Security > reCAPTCHA Enterprise > Keys). A site key is public; it only works on the domains
+// listed for it. Leave empty for localhost, which uses the debug provider.
+export const recaptchaEnterpriseSiteKey = "";

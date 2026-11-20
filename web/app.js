@@ -3,7 +3,7 @@
 // Firebase JS SDK 13.2.0 from the official Firebase CDN (on-device inference needs 12.5.0 or later).
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
-import { initializeAppCheck, CustomProvider } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app-check.js";
+import { initializeAppCheck, CustomProvider, ReCaptchaEnterpriseProvider } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app-check.js";
 import {
   getAI,
   getGenerativeModel,
@@ -28,9 +28,10 @@ function showSetupError(message) {
 // ---------------------------------------------------------------- Firebase set-up
 
 let firebaseConfig;
+let recaptchaEnterpriseSiteKey = "";
 try {
   // Git-ignored file. Copy firebase-config.example.js and fill it in (see docs/WEB_SETUP.md).
-  ({ firebaseConfig } = await import("./firebase-config.js"));
+  ({ firebaseConfig, recaptchaEnterpriseSiteKey = "" } = await import("./firebase-config.js"));
 } catch (e) {
   showSetupError("web/firebase-config.js is missing. See docs/WEB_SETUP.md, step 2.");
   throw e;
@@ -38,19 +39,26 @@ try {
 
 const isLocalhost = ["localhost", "127.0.0.1"].includes(location.hostname);
 
-// App Check before any AI request. Debug provider on localhost only: the SDK prints the
-// debug token in the DevTools console; register it in the Firebase console.
-// No production web provider is set up yet, so outside localhost requests are refused.
+// App Check before any AI request.
+// - localhost: the debug provider; the SDK prints the debug token in the DevTools console and it
+//   is registered in the Firebase console.
+// - the hosted page: reCAPTCHA Enterprise (invisible, score based). Without a site key in
+//   firebase-config.js, requests are refused rather than sent unprotected.
 if (isLocalhost) {
   self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
 }
 const app = initializeApp(firebaseConfig);
 initializeAppCheck(app, {
-  provider: new CustomProvider({
-    getToken: () => Promise.reject(new Error("No production App Check provider is set up for the web yet.")),
-  }),
+  provider: (!isLocalhost && recaptchaEnterpriseSiteKey)
+    ? new ReCaptchaEnterpriseProvider(recaptchaEnterpriseSiteKey)
+    : new CustomProvider({
+        getToken: () => Promise.reject(new Error("No App Check provider: run on localhost, or add the reCAPTCHA Enterprise site key.")),
+      }),
   isTokenAutoRefreshEnabled: true,
 });
+if (!isLocalhost && !recaptchaEnterpriseSiteKey) {
+  showSetupError("This page needs the reCAPTCHA Enterprise site key in web/firebase-config.js (see docs/WEB_SETUP.md).");
+}
 
 const ai = getAI(app, { backend: new GoogleAIBackend() });
 

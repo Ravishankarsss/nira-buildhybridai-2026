@@ -3,6 +3,7 @@ package com.mos.nira
 import android.app.Application
 import android.content.pm.ApplicationInfo
 import com.google.firebase.Firebase
+import com.google.firebase.FirebaseApp
 import com.google.firebase.appcheck.appCheck
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
 import com.google.firebase.initialize
@@ -25,7 +26,19 @@ class NiraApplication : Application() {
         Firebase.initialize(context = this)
 
         val isDebuggable = (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
-        if (isDebuggable) {
+        val judgeToken = BuildConfig.JUDGE_APP_CHECK_TOKEN
+        if (judgeToken.isNotBlank()) {
+            // Judge build (route A): put the token registered for the judge app where the debug
+            // provider keeps its secret, before App Check starts. The token is never logged.
+            val prefs = getSharedPreferences(
+                String.format(com.mos.nira.core.ai.AppCheckDebugToken.PREFS_TEMPLATE, FirebaseApp.getInstance().persistenceKey),
+                MODE_PRIVATE
+            )
+            if (prefs.getString(com.mos.nira.core.ai.AppCheckDebugToken.DEBUG_SECRET_KEY, null) != judgeToken) {
+                prefs.edit().putString(com.mos.nira.core.ai.AppCheckDebugToken.DEBUG_SECRET_KEY, judgeToken).commit()
+            }
+        }
+        if (isDebuggable || judgeToken.isNotBlank()) {
             Firebase.appCheck.installAppCheckProviderFactory(
                 DebugAppCheckProviderFactory.getInstance(),
             )
