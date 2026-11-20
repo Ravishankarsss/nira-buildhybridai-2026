@@ -298,9 +298,14 @@ object PrintAreaAndPaletteEngine {
         val pixelsPerCm = boxWidthPx.toDouble() / printWidthCm
         // Limit comes from print_rules.json (resolution.px_per_cm_min_for_fine_detail).
         val lowResolutionWarning = if (pixelsPerCm < decisionRules.minResolutionPxPerCm) {
+            // The fix differs: a photo can be retaken; an artwork file needs a larger export.
+            val fix = if (inputs.inputKind == InputKind.PHOTO)
+                "Retake closer so the print fills the frame, or supply the original artwork."
+            else
+                "Ask for the original artwork at a larger size, or a vector file."
             String.format(
                 java.util.Locale.US,
-                "Resolution on the print box is %.1f px/cm (below %.0f px/cm). Fine lines and small text cannot be trusted. Retake closer so the print fills the frame, or supply the original artwork.",
+                "Resolution on the print box is %.1f px/cm (below %.0f px/cm). Fine lines and small text cannot be trusted. $fix",
                 pixelsPerCm,
                 decisionRules.minResolutionPxPerCm
             )
