@@ -675,4 +675,19 @@
     <string name="feat_deep">விரிவான அறிக்கை</string>
     <string name="feat_translate">தாள் மொழிபெயர்ப்பு</string>
     <string name="feat_other">மற்றவை</string>
+    <string name="home_ask_title">✦ NIRA-விடம் எதையும் கேள்</string>
+    <string name="home_ask_hint">உங்கள் வேலைகள், அச்சு முறைகள், இந்த மொபைலின் AI. தட்டச்சு செய்யுங்கள் அல்லது பேசுங்கள்.</string>
+    <string name="home_ask_intro">பதில்கள் உங்கள் சேமித்த வேலைகள், NIRA விதிக் கோப்புகள் மற்றும் இந்த மொபைலிலிருந்து மட்டுமே. ஒவ்வொரு வேலையின் முறையையும் NIRA engine தான் முடிவு செய்கிறது.</string>
+    <string name="home_ask_s1">என் வேலைகளில் எது ஒரு துண்டுக்கு அதிக செலவு?</string>
+    <string name="home_ask_s2">நைலானில் எதை அச்சிடலாம்?</string>
+    <string name="home_ask_s3">என் சமீபத்திய வேலையைத் திற</string>
+    <string name="home_ask_s4">இந்த மொபைலில் எவ்வளவு AI இயங்கியது?</string>
+    <string name="act_open_job">வேலை திறக்கப்பட்டது: %1$s</string>
+    <string name="act_open_library">"%1$s" தேடலுடன் அச்சு முறை நூலகம் திறக்கப்பட்டது</string>
+    <string name="act_new_photo">புதிய வேலைக்கு கேமரா திறக்கப்பட்டது</string>
+    <string name="act_new_artwork">புதிய வேலைக்கு gallery திறக்கப்பட்டது</string>
+    <string name="act_open_activity">AI செயல்பாடு திறக்கப்பட்டது</string>
+    <string name="act_open_settings">Settings திறக்கப்பட்டது</string>
+    <string name="home_ask_placeholder">உங்கள் வேலைகள், அச்சு முறைகள், AI பற்றி NIRA-விடம் கேளுங்கள்…</string>
+    <string name="home_voice_privacy">குரல்: உங்கள் பதிவு cloud AI-க்கு (Firebase) செல்லும்; அது கேள்வியை எழுதி NIRA தகவல்களிலிருந்து பதில் தரும். Confidential mode-இல் அனுப்பப்படாது.</string>
 </resources>

@@ -56,14 +56,14 @@ private val LAmber = Color(0xFFFFC566)
 
 /** Every print technique in print_techniques.json, searchable, shown as the file writes it. */
 @Composable
-fun TechniqueLibraryScreen(onBack: () -> Unit) {
+fun TechniqueLibraryScreen(onBack: () -> Unit, initialQuery: String = "") {
     val context = LocalContext.current
     val library by produceState<TechniqueLibrary.Library?>(initialValue = null) {
         value = withContext(Dispatchers.IO) {
             TechniqueLibrary.parse(context.assets.open("print_techniques.json").bufferedReader().use { it.readText() })
         }
     }
-    var query by rememberSaveable { mutableStateOf("") }
+    var query by rememberSaveable { mutableStateOf(initialQuery) }
     var group by rememberSaveable { mutableStateOf<String?>(null) }
     var open by rememberSaveable { mutableStateOf<String?>(null) }
 

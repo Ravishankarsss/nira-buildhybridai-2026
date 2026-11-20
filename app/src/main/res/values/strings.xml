@@ -674,4 +674,19 @@
     <string name="feat_deep">Deep report</string>
     <string name="feat_translate">Sheet translation</string>
     <string name="feat_other">Other</string>
+    <string name="home_ask_title">✦ Ask NIRA anything</string>
+    <string name="home_ask_hint">Your jobs, print techniques and AI on this phone. Type or talk.</string>
+    <string name="home_ask_intro">Answers come only from your saved jobs, NIRA\'s rules files and this phone. NIRA\'s engine still decides each job\'s method.</string>
+    <string name="home_ask_s1">Which of my jobs costs the most per piece?</string>
+    <string name="home_ask_s2">What can I print on nylon?</string>
+    <string name="home_ask_s3">Open my latest job</string>
+    <string name="home_ask_s4">How much AI ran on this phone?</string>
+    <string name="act_open_job">Opened the job: %1$s</string>
+    <string name="act_open_library">Opened the technique library on "%1$s"</string>
+    <string name="act_new_photo">Opened the camera for a new job</string>
+    <string name="act_new_artwork">Opened the gallery for a new job</string>
+    <string name="act_open_activity">Opened AI activity</string>
+    <string name="act_open_settings">Opened Settings</string>
+    <string name="home_ask_placeholder">Ask NIRA about your jobs, techniques, AI…</string>
+    <string name="home_voice_privacy">Voice: your recording goes to the cloud AI (Firebase), which writes your question down and answers from NIRA\'s facts. Not sent in Confidential mode.</string>
 </resources>

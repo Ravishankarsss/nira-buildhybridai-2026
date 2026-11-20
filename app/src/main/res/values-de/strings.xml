@@ -675,4 +675,19 @@
     <string name="feat_deep">Ausführlicher Bericht</string>
     <string name="feat_translate">Blatt-Übersetzung</string>
     <string name="feat_other">Sonstiges</string>
+    <string name="home_ask_title">✦ Frag NIRA alles</string>
+    <string name="home_ask_hint">Deine Aufträge, Drucktechniken und die KI auf diesem Telefon. Tippen oder sprechen.</string>
+    <string name="home_ask_intro">Antworten kommen nur aus deinen gespeicherten Aufträgen, NIRAs Regeldateien und diesem Telefon. Die Methode jedes Auftrags entscheidet weiter NIRAs Engine.</string>
+    <string name="home_ask_s1">Welcher meiner Aufträge kostet pro Stück am meisten?</string>
+    <string name="home_ask_s2">Was kann ich auf Nylon drucken?</string>
+    <string name="home_ask_s3">Öffne meinen neuesten Auftrag</string>
+    <string name="home_ask_s4">Wie viel KI lief auf diesem Telefon?</string>
+    <string name="act_open_job">Auftrag geöffnet: %1$s</string>
+    <string name="act_open_library">Technikbibliothek mit „%1$s" geöffnet</string>
+    <string name="act_new_photo">Kamera für einen neuen Auftrag geöffnet</string>
+    <string name="act_new_artwork">Galerie für einen neuen Auftrag geöffnet</string>
+    <string name="act_open_activity">KI-Aktivität geöffnet</string>
+    <string name="act_open_settings">Einstellungen geöffnet</string>
+    <string name="home_ask_placeholder">Frag NIRA zu Aufträgen, Techniken, KI…</string>
+    <string name="home_voice_privacy">Sprache: Deine Aufnahme geht an die Cloud-KI (Firebase), die die Frage aufschreibt und aus NIRAs Fakten antwortet. Im vertraulichen Modus wird nichts gesendet.</string>
 </resources>

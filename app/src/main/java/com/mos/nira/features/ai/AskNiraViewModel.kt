@@ -63,7 +63,7 @@ class AskNiraViewModel(application: Application) : AndroidViewModel(application)
 
     val running: Boolean get() = _messages.value.any { it.result == null && !it.blocked }
 
-    fun ask(question: String, facts: List<String>, actionContext: NiraActions.Context?) {
+    fun ask(question: String, facts: List<String>, actionContext: NiraActions.Context?, promptPath: String = AskNira.ASSET_PATH) {
         val q = question.trim()
         if (q.isEmpty() || running) return
         // Only answers that passed the checks go back as context.
@@ -73,7 +73,7 @@ class AskNiraViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch {
             val app = getApplication<Application>()
             val template = withContext(Dispatchers.IO) {
-                app.assets.open(AskNira.ASSET_PATH).bufferedReader().use { it.readText() }
+                app.assets.open(promptPath).bufferedReader().use { it.readText() }
             }
             val prompt = AskNira.build(template, facts, history, q, lists(actionContext))
             val onDevice = repository.checkOnDeviceStatus() == "available"
@@ -112,7 +112,7 @@ class AskNiraViewModel(application: Application) : AndroidViewModel(application)
      * answers from the facts. Never sent in Confidential mode (the on-device model has no audio).
      * The same checks run on the written-down question and the answer.
      */
-    fun askVoice(audio: ByteArray, mimeType: String, facts: List<String>, pendingLabel: String, actionContext: NiraActions.Context?) {
+    fun askVoice(audio: ByteArray, mimeType: String, facts: List<String>, pendingLabel: String, actionContext: NiraActions.Context?, promptPath: String = AskNira.VOICE_ASSET_PATH) {
         if (running || audio.isEmpty()) return
         val history = history()
         _messages.update { it + AskMessage(pendingLabel, voice = true) }
@@ -122,7 +122,7 @@ class AskNiraViewModel(application: Application) : AndroidViewModel(application)
             val done = if (AiSettings.confidentialMode.value) {
                 AskMessage(pendingLabel, blocked = true, voice = true)
             } else {
-                val template = withContext(Dispatchers.IO) { app.assets.open(AskNira.VOICE_ASSET_PATH).bufferedReader().use { it.readText() } }
+                val template = withContext(Dispatchers.IO) { app.assets.open(promptPath).bufferedReader().use { it.readText() } }
                 val result = repository.generateWithAudio(AskNira.buildVoice(template, facts, history, lists(actionContext)), audio, mimeType, com.mos.nira.core.ai.HybridMode.ONLY_IN_CLOUD)
                 val reply = result.text?.let { NiraActions.parseReply(it) }
                 val heard = reply?.question
@@ -142,7 +142,7 @@ class AskNiraViewModel(application: Application) : AndroidViewModel(application)
     }
 
     private fun lists(c: NiraActions.Context?): Map<String, String> =
-        c?.let { NiraActions.promptLists(it) } ?: mapOf("{inks}" to "(none)", "{colours}" to "(none)", "{fibres}" to "(none)", "{fabrics}" to "(none)", "{languages}" to "(none)")
+        c?.let { NiraActions.promptLists(it) } ?: mapOf("{inks}" to "(none)", "{colours}" to "(none)", "{fibres}" to "(none)", "{fabrics}" to "(none)", "{languages}" to "(none)", "{jobs}" to "(none)")
 
     /** Actions are run only when the answer itself passed the checks. */
     private fun actionsOf(reply: NiraActions.Reply, c: NiraActions.Context?, question: String): List<NiraActions.Proposed> =

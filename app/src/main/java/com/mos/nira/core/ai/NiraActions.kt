@@ -21,6 +21,12 @@ object NiraActions {
         data class SetFabric(val fabric: String) : Action
         data class SetFeel(val feel: String) : Action
         data class OpenSheet(val language: String) : Action
+        // Home actions (Ask NIRA on Home).
+        data class OpenJob(val id: String, val name: String) : Action
+        data class OpenLibrary(val query: String) : Action
+        data class NewJob(val photo: Boolean) : Action
+        data object OpenAiActivity : Action
+        data object OpenSettings : Action
     }
 
     /** Why a proposed action was not run. */
@@ -35,7 +41,9 @@ object NiraActions {
         /** Named garment colours: key -> hex (print_rules.json garment_preview.named_colours). */
         val colours: List<Pair<String, String>>,
         val fabrics: List<String>,
-        val languages: List<String>
+        val languages: List<String>,
+        /** Home: the saved jobs the user can open, id -> name as the facts write it. */
+        val jobs: List<Pair<String, String>> = emptyList()
     ) {
         /** "navy" -> its hex, from the job's own inks. */
         val inkNames: List<Pair<String, String>> get() = inkHexes.map { ColourName.english(it).lowercase() to it }.distinctBy { it.first }
@@ -51,7 +59,8 @@ object NiraActions {
         "{colours}" to c.colours.joinToString(", ") { it.first.replace('_', ' ') },
         "{fibres}" to FIBRES.joinToString(", ") { it.replace('_', ' ') },
         "{fabrics}" to c.fabrics.joinToString(", ") { it.replace('_', ' ') },
-        "{languages}" to c.languages.joinToString(", ")
+        "{languages}" to c.languages.joinToString(", "),
+        "{jobs}" to c.jobs.joinToString("; ") { it.second }.ifBlank { "(none)" }
     )
 
     fun validate(arr: JSONArray?, c: Context, question: String): List<Proposed> {
@@ -85,6 +94,21 @@ object NiraActions {
                 "set_fabric" -> if (s("fabric") in c.fabrics) Action.SetFabric(s("fabric")) to null else null to Reject.BAD_VALUE
                 "set_feel" -> if (s("feel") in FEELS) Action.SetFeel(s("feel")) to null else null to Reject.BAD_VALUE
                 "open_sheet" -> if (s("language") in c.languages) Action.OpenSheet(s("language")) to null else null to Reject.BAD_VALUE
+                "open_job" -> {
+                    val want = o.optString("job").trim().lowercase()
+                    c.jobs.firstOrNull { it.second.lowercase() == want }?.let { Action.OpenJob(it.first, it.second) to null } ?: (null to Reject.BAD_VALUE)
+                }
+                "open_library" -> {
+                    val q = o.optString("search").trim()
+                    if (q.isNotEmpty() && q.length <= 40) Action.OpenLibrary(q) to null else null to Reject.BAD_VALUE
+                }
+                "new_job" -> when (s("from")) {
+                    "artwork" -> Action.NewJob(photo = false) to null
+                    "photo" -> Action.NewJob(photo = true) to null
+                    else -> null to Reject.BAD_VALUE
+                }
+                "open_ai_activity" -> Action.OpenAiActivity to null
+                "open_settings" -> Action.OpenSettings to null
                 else -> null to Reject.UNKNOWN_TYPE
             }
             Proposed(o, result.first, result.second)

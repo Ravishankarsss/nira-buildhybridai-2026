@@ -674,4 +674,19 @@
     <string name="feat_deep">Báo cáo chi tiết</string>
     <string name="feat_translate">Dịch phiếu</string>
     <string name="feat_other">Khác</string>
+    <string name="home_ask_title">✦ Hỏi NIRA bất cứ điều gì</string>
+    <string name="home_ask_hint">Các đơn của bạn, kỹ thuật in và AI trên điện thoại này. Gõ hoặc nói.</string>
+    <string name="home_ask_intro">Câu trả lời chỉ lấy từ các đơn đã lưu, tệp quy tắc của NIRA và điện thoại này. Phương pháp của mỗi đơn vẫn do engine của NIRA quyết định.</string>
+    <string name="home_ask_s1">Đơn nào của tôi tốn nhất mỗi chiếc?</string>
+    <string name="home_ask_s2">Có thể in gì trên nylon?</string>
+    <string name="home_ask_s3">Mở đơn mới nhất của tôi</string>
+    <string name="home_ask_s4">Điện thoại này đã chạy bao nhiêu AI?</string>
+    <string name="act_open_job">Đã mở đơn: %1$s</string>
+    <string name="act_open_library">Đã mở thư viện kỹ thuật với "%1$s"</string>
+    <string name="act_new_photo">Đã mở máy ảnh cho đơn mới</string>
+    <string name="act_new_artwork">Đã mở thư viện ảnh cho đơn mới</string>
+    <string name="act_open_activity">Đã mở hoạt động AI</string>
+    <string name="act_open_settings">Đã mở Cài đặt</string>
+    <string name="home_ask_placeholder">Hỏi NIRA về đơn, kỹ thuật, AI…</string>
+    <string name="home_voice_privacy">Giọng nói: bản ghi được gửi tới AI đám mây (Firebase), AI ghi lại câu hỏi và trả lời từ dữ liệu của NIRA. Không gửi khi bật chế độ bảo mật.</string>
 </resources>

@@ -676,4 +676,19 @@
     <string name="feat_deep">Informe detallado</string>
     <string name="feat_translate">Traducción de la hoja</string>
     <string name="feat_other">Otro</string>
+    <string name="home_ask_title">✦ Pregunta a NIRA lo que sea</string>
+    <string name="home_ask_hint">Tus trabajos, técnicas de impresión y la IA de este teléfono. Escribe o habla.</string>
+    <string name="home_ask_intro">Las respuestas salen solo de tus trabajos guardados, los archivos de reglas de NIRA y este teléfono. El método de cada trabajo lo sigue decidiendo el motor de NIRA.</string>
+    <string name="home_ask_s1">¿Cuál de mis trabajos cuesta más por pieza?</string>
+    <string name="home_ask_s2">¿Qué puedo imprimir en nailon?</string>
+    <string name="home_ask_s3">Abre mi último trabajo</string>
+    <string name="home_ask_s4">¿Cuánta IA se usó en este teléfono?</string>
+    <string name="act_open_job">Trabajo abierto: %1$s</string>
+    <string name="act_open_library">Biblioteca de técnicas abierta con «%1$s»</string>
+    <string name="act_new_photo">Cámara abierta para un trabajo nuevo</string>
+    <string name="act_new_artwork">Galería abierta para un trabajo nuevo</string>
+    <string name="act_open_activity">Actividad de IA abierta</string>
+    <string name="act_open_settings">Ajustes abiertos</string>
+    <string name="home_ask_placeholder">Pregunta a NIRA por tus trabajos, técnicas, IA…</string>
+    <string name="home_voice_privacy">Voz: tu grabación va a la IA en la nube (Firebase), que escribe la pregunta y responde con los datos de NIRA. No se envía en modo confidencial.</string>
 </resources>

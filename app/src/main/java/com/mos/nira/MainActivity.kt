@@ -171,6 +171,66 @@ fun NIRAAppRoot() {
 
                 val saved = savedAnalyses
                 val homeContext = androidx.compose.ui.platform.LocalContext.current
+                var homeAskOpen by remember { mutableStateOf(false) }
+                if (homeAskOpen) {
+                    // Ask NIRA on Home: facts from the saved jobs, the techniques file, AI activity and the rates.
+                    val library by androidx.compose.runtime.produceState<com.mos.nira.core.advice.TechniqueLibrary.Library?>(null) {
+                        value = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                            com.mos.nira.core.advice.TechniqueLibrary.parse(homeContext.assets.open("print_techniques.json").bufferedReader().use { it.readText() })
+                        }
+                    }
+                    LaunchedEffect(Unit) { com.mos.nira.core.ai.AiActivityLog.load(homeContext); com.mos.nira.features.commercial.FactoryRatesStore.load(homeContext) }
+                    val activity by com.mos.nira.core.ai.AiActivityLog.entries.collectAsState()
+                    val rates by com.mos.nira.features.commercial.FactoryRatesStore.rates.collectAsState()
+                    val summaries = remember(saved) { com.mos.nira.features.dashboard.JobSummaryStore.all(homeContext) }
+                    val facts = remember(saved, summaries, library, activity, rates) {
+                        com.mos.nira.core.ai.HomeFacts.build(
+                            saved, summaries, library, com.mos.nira.core.ai.AiActivityLog.totals(activity),
+                            ratesSet = !rates.isEmpty, ratesSample = rates.isSample, currency = rates.currency
+                        )
+                    }
+                    val homeContextActions = remember(saved) {
+                        com.mos.nira.core.ai.NiraActions.Context(emptyList(), emptyList(), emptyList(), emptyList(), jobs = com.mos.nira.core.ai.HomeFacts.jobs(saved))
+                    }
+                    com.mos.nira.features.ai.AskNiraSheet(
+                        jobKey = "home",
+                        facts = facts,
+                        actionContext = homeContextActions,
+                        onActions = { actions ->
+                            actions.forEach { a ->
+                                when (a) {
+                                    is com.mos.nira.core.ai.NiraActions.Action.OpenJob -> saved.firstOrNull { it.id == a.id }?.let { record ->
+                                        homeAskOpen = false
+                                        artworkViewModel.openAnalysisRecord(record)
+                                        rootNavController.navigate(RootDestinations.artworkFlowAt(ArtworkStart.JOB))
+                                    }
+                                    is com.mos.nira.core.ai.NiraActions.Action.OpenLibrary -> {
+                                        homeAskOpen = false
+                                        rootNavController.navigate(RootDestinations.TECHNIQUE_LIBRARY + "?q=" + android.net.Uri.encode(a.query))
+                                    }
+                                    is com.mos.nira.core.ai.NiraActions.Action.NewJob -> {
+                                        homeAskOpen = false
+                                        rootNavController.navigate(if (a.photo) RootDestinations.GARMENT_CAMERA else RootDestinations.ARTWORK_FLOW)
+                                    }
+                                    com.mos.nira.core.ai.NiraActions.Action.OpenAiActivity -> { homeAskOpen = false; rootNavController.navigate(RootDestinations.AI_ACTIVITY) }
+                                    com.mos.nira.core.ai.NiraActions.Action.OpenSettings -> { homeAskOpen = false; rootNavController.navigate(RootDestinations.SETTINGS) }
+                                    else -> Unit
+                                }
+                            }
+                            null
+                        },
+                        onDismiss = { homeAskOpen = false },
+                        textPrompt = com.mos.nira.core.ai.HomeFacts.TEXT_PROMPT,
+                        voicePrompt = com.mos.nira.core.ai.HomeFacts.VOICE_PROMPT,
+                        suggestions = listOf(
+                            stringResource(R.string.home_ask_s1), stringResource(R.string.home_ask_s2),
+                            stringResource(R.string.home_ask_s3), stringResource(R.string.home_ask_s4)
+                        ),
+                        intro = stringResource(R.string.home_ask_intro),
+                        placeholder = stringResource(R.string.home_ask_placeholder),
+                        voicePrivacy = stringResource(R.string.home_voice_privacy)
+                    )
+                }
                 val recent = remember(saved) {
                     DashboardModel.recentAnalyses(saved, summaries = com.mos.nira.features.dashboard.JobSummaryStore.all(homeContext))
                 }
@@ -213,6 +273,7 @@ fun NIRAAppRoot() {
                     },
                     onSeeAll = { rootNavController.navigate(RootDestinations.ARTWORK_FLOW) },
                     onOpenAiActivity = { rootNavController.navigate(RootDestinations.AI_ACTIVITY) },
+                    onAskNira = { homeAskOpen = true },
                 )
             }
 
@@ -248,8 +309,13 @@ fun NIRAAppRoot() {
                 com.mos.nira.features.ai.AiActivityScreen(onBack = { rootNavController.popBackStack() })
             }
 
-            composable(RootDestinations.TECHNIQUE_LIBRARY) {
-                com.mos.nira.features.library.TechniqueLibraryScreen(onBack = { rootNavController.popBackStack() })
+            composable(RootDestinations.TECHNIQUE_LIBRARY + "?q={q}",
+                arguments = listOf(androidx.navigation.navArgument("q") { defaultValue = "" })
+            ) { entry ->
+                com.mos.nira.features.library.TechniqueLibraryScreen(
+                    onBack = { rootNavController.popBackStack() },
+                    initialQuery = entry.arguments?.getString("q").orEmpty()
+                )
             }
 
             composable(RootDestinations.SETTINGS) {
@@ -273,6 +339,7 @@ fun NIRADashboard(
     onOpenRecent: (String) -> Unit = {},
     onSeeAll: () -> Unit = {},
     onOpenAiActivity: () -> Unit = {},
+    onAskNira: () -> Unit = {},
 ) {
     val homeContext = androidx.compose.ui.platform.LocalContext.current
     LaunchedEffect(Unit) { com.mos.nira.core.ai.AiSettings.load(homeContext) }
@@ -377,6 +444,23 @@ fun NIRADashboard(
                     StartChoice("◉", stringResource(R.string.home_start_photo), Cyan, Modifier.weight(1f)) { showPhotoSource = true }
                 }
             }
+        }
+
+        // Ask NIRA anything: the centre of Home (text or voice, about all your jobs).
+        Spacer(modifier = Modifier.height(12.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp))
+                .background(Brush.linearGradient(listOf(Color(0xFF1F3A4A), Color(0xFF17283A))))
+                .clickable(onClick = onAskNira).padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text("✦", color = Cyan, fontSize = 28.sp, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.width(14.dp))
+            Column(Modifier.weight(1f)) {
+                Text(stringResource(R.string.home_ask_title), color = White, fontSize = 17.sp, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.home_ask_hint), color = Muted, fontSize = 12.sp, lineHeight = 16.sp)
+            }
+            Text("🎤", fontSize = 22.sp)
         }
 
         // Tools in one row.

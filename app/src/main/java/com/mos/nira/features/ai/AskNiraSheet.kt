@@ -95,8 +95,15 @@ fun AskNiraSheet(
     facts: List<String>,
     actionContext: NiraActions.Context?,
     /** Runs checked actions and returns how to undo them. */
-    onActions: (List<NiraActions.Action>) -> (() -> Unit),
+    onActions: (List<NiraActions.Action>) -> (() -> Unit)?,
     onDismiss: () -> Unit,
+    /** Home uses its own prompts, suggestions and intro; a job uses the defaults. */
+    textPrompt: String = AskNira.ASSET_PATH,
+    voicePrompt: String = AskNira.VOICE_ASSET_PATH,
+    suggestions: List<String>? = null,
+    intro: String? = null,
+    placeholder: String? = null,
+    voicePrivacy: String? = null,
     viewModel: AskNiraViewModel = viewModel(viewModelStoreOwner = activityViewModelStoreOwner())
 ) {
     LaunchedEffect(jobKey) { viewModel.openJob(jobKey) }
@@ -105,7 +112,7 @@ fun AskNiraSheet(
     var input by rememberSaveable { mutableStateOf("") }
     val listState = rememberLazyListState()
     LaunchedEffect(messages.size, running) { if (messages.isNotEmpty()) listState.animateScrollToItem(messages.lastIndex) }
-    val send = { q: String -> if (q.isNotBlank() && !running) { viewModel.ask(q, facts, actionContext); input = "" } }
+    val send = { q: String -> if (q.isNotBlank() && !running) { viewModel.ask(q, facts, actionContext, textPrompt); input = "" } }
 
     // ---------- Read-aloud (Android's own text-to-speech; Ravi's option A) ----------
     val context = LocalContext.current
@@ -140,7 +147,7 @@ fun AskNiraSheet(
         listening = false
         val ok = runCatching { r.stop() }.isSuccess
         r.release()
-        if (send && ok && audioFile.length() > 0) viewModel.askVoice(audioFile.readBytes(), "audio/mp4", facts, pendingLabel, actionContext)
+        if (send && ok && audioFile.length() > 0) viewModel.askVoice(audioFile.readBytes(), "audio/mp4", facts, pendingLabel, actionContext, voicePrompt)
         audioFile.delete()
     }
 
@@ -204,7 +211,7 @@ fun AskNiraSheet(
         handledUpTo = i + 1
         if (m.hold == null) {
             val actions = m.actions.mapNotNull { it.action }
-            if (actions.isNotEmpty()) undos[i] = onActions(actions)
+            if (actions.isNotEmpty()) onActions(actions)?.let { undos[i] = it }
         }
         if (m.voice && m.hold == null && m.answer != null) speak(i, m.answer)
         if (conversation) awaitingNext = true
@@ -225,7 +232,7 @@ fun AskNiraSheet(
     ) {
         Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp).navigationBarsPadding().imePadding()) {
             Text(stringResource(R.string.ask_title), color = KWhite, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-            Text(stringResource(R.string.ask_intro), color = KMuted, fontSize = 12.sp, lineHeight = 16.sp)
+            Text(intro ?: stringResource(R.string.ask_intro), color = KMuted, fontSize = 12.sp, lineHeight = 16.sp)
             Spacer(Modifier.height(10.dp))
 
             LazyColumn(
@@ -249,8 +256,8 @@ fun AskNiraSheet(
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     // The action chip names the job's first ink, so the request is clear.
                     val firstInk = actionContext?.inkHexes?.firstOrNull()?.let { com.mos.nira.features.artwork.presentation.colourName(it).lowercase() }
-                    val chips = listOf(R.string.ask_suggest_why, R.string.ask_suggest_cheaper, R.string.ask_suggest_risk, R.string.ask_suggest_check)
-                        .map { stringResource(it) } + listOfNotNull(firstInk?.let { stringResource(R.string.ask_suggest_action, it) })
+                    val chips = suggestions ?: (listOf(R.string.ask_suggest_why, R.string.ask_suggest_cheaper, R.string.ask_suggest_risk, R.string.ask_suggest_check)
+                        .map { stringResource(it) } + listOfNotNull(firstInk?.let { stringResource(R.string.ask_suggest_action, it) }))
                     chips.forEach { q ->
                         AssistChip(
                             onClick = { send(q) },
@@ -267,7 +274,7 @@ fun AskNiraSheet(
                     value = input,
                     onValueChange = { input = it.take(300) },
                     modifier = Modifier.weight(1f),
-                    placeholder = { Text(stringResource(R.string.ask_placeholder), fontSize = 13.sp) },
+                    placeholder = { Text(placeholder ?: stringResource(R.string.ask_placeholder), fontSize = 13.sp) },
                     maxLines = 3,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
                     keyboardActions = KeyboardActions(onSend = { send(input) }),
@@ -312,7 +319,7 @@ fun AskNiraSheet(
             }
             if (ended) Text(stringResource(R.string.ask_talk_ended), color = KMuted, fontSize = 11.sp)
             voiceNote?.let { Text(stringResource(it), color = KAmber, fontSize = 11.sp, lineHeight = 15.sp) }
-            Text(stringResource(R.string.ask_voice_privacy), color = KMuted, fontSize = 10.sp, lineHeight = 13.sp)
+            Text(voicePrivacy ?: stringResource(R.string.ask_voice_privacy), color = KMuted, fontSize = 10.sp, lineHeight = 13.sp)
             Text(stringResource(R.string.ask_privacy), color = KMuted, fontSize = 10.sp, lineHeight = 13.sp, modifier = Modifier.padding(vertical = 6.dp))
         }
     }
@@ -327,6 +334,11 @@ private fun actionText(a: NiraActions.Action): String = when (a) {
     is NiraActions.Action.SetFabric -> stringResource(R.string.act_fabric, com.mos.nira.features.advice.fabricLabel(a.fabric))
     is NiraActions.Action.SetFeel -> stringResource(R.string.act_feel, com.mos.nira.core.ai.BriefReader.feel(a.feel)?.let { com.mos.nira.features.advice.feelLabel(it) } ?: a.feel)
     is NiraActions.Action.OpenSheet -> stringResource(R.string.act_sheet, java.util.Locale(a.language).let { it.getDisplayLanguage(it) })
+    is NiraActions.Action.OpenJob -> stringResource(R.string.act_open_job, a.name)
+    is NiraActions.Action.OpenLibrary -> stringResource(R.string.act_open_library, a.query)
+    is NiraActions.Action.NewJob -> stringResource(if (a.photo) R.string.act_new_photo else R.string.act_new_artwork)
+    NiraActions.Action.OpenAiActivity -> stringResource(R.string.act_open_activity)
+    NiraActions.Action.OpenSettings -> stringResource(R.string.act_open_settings)
 }
 
 @Composable

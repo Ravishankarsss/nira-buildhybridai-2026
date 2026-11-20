@@ -615,6 +615,8 @@ fun PrintDecisionCard(
                                         sheetLanguage = a.language
                                         sheetOpen = true
                                     }
+                                    // Home actions are not offered on a job.
+                                    else -> Unit
                                 }
                             }
                             val run: () -> Unit = { undo.asReversed().forEach { it() } }

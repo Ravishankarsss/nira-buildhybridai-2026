@@ -675,4 +675,19 @@
     <string name="feat_deep">বিস্তারিত রিপোর্ট</string>
     <string name="feat_translate">শিট অনুবাদ</string>
     <string name="feat_other">অন্যান্য</string>
+    <string name="home_ask_title">✦ NIRA-কে যা খুশি জিজ্ঞাসা করুন</string>
+    <string name="home_ask_hint">আপনার কাজ, প্রিন্ট পদ্ধতি এবং এই ফোনের AI। লিখুন বা বলুন।</string>
+    <string name="home_ask_intro">উত্তর আসে শুধু আপনার সংরক্ষিত কাজ, NIRA-র নিয়ম ফাইল ও এই ফোন থেকে। প্রতিটি কাজের পদ্ধতি NIRA-র ইঞ্জিনই ঠিক করে।</string>
+    <string name="home_ask_s1">আমার কোন কাজের প্রতি পিস খরচ সবচেয়ে বেশি?</string>
+    <string name="home_ask_s2">নাইলনে কী প্রিন্ট করা যায়?</string>
+    <string name="home_ask_s3">আমার সর্বশেষ কাজ খুলুন</string>
+    <string name="home_ask_s4">এই ফোনে কত AI চলেছে?</string>
+    <string name="act_open_job">কাজ খোলা হয়েছে: %1$s</string>
+    <string name="act_open_library">"%1$s" খোঁজসহ পদ্ধতি লাইব্রেরি খোলা হয়েছে</string>
+    <string name="act_new_photo">নতুন কাজের জন্য ক্যামেরা খোলা হয়েছে</string>
+    <string name="act_new_artwork">নতুন কাজের জন্য গ্যালারি খোলা হয়েছে</string>
+    <string name="act_open_activity">AI কার্যকলাপ খোলা হয়েছে</string>
+    <string name="act_open_settings">Settings খোলা হয়েছে</string>
+    <string name="home_ask_placeholder">আপনার কাজ, পদ্ধতি, AI নিয়ে NIRA-কে জিজ্ঞাসা করুন…</string>
+    <string name="home_voice_privacy">কণ্ঠ: আপনার রেকর্ডিং ক্লাউড AI-তে (Firebase) যায়, যা প্রশ্নটি লিখে NIRA-র তথ্য থেকে উত্তর দেয়। Confidential mode-এ পাঠানো হয় না।</string>
 </resources>
