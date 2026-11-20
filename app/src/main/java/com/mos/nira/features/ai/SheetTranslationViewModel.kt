@@ -55,8 +55,12 @@ class SheetTranslationViewModel(application: Application) : AndroidViewModel(app
             )) {
                 is AiRoute.Run -> {
                     val result = repository.generate(prompt, image = null, mode = route.mode)
-                    AiSettings.record(app, result, imageAttached = false)
-                    SheetTranslateState.Done(key, result, result.text?.let { SheetTranslation.parse(it, texts) })
+                    val parsed = result.text?.let { SheetTranslation.parse(it, texts) }
+                    AiSettings.record(
+                        app, result, imageAttached = false, feature = com.mos.nira.core.ai.AiFeature.SHEET_TRANSLATE,
+                        held = parsed == null || parsed.rejected.isNotEmpty()
+                    )
+                    SheetTranslateState.Done(key, result, parsed)
                 }
                 else -> SheetTranslateState.Blocked(key)
             }

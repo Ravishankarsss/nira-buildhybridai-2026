@@ -648,4 +648,31 @@
         <item quantity="other">%1$d Farben prüfen (Schatten, Kante oder Fleck)</item>
     </plurals>
     <string name="card_explain_hint_short">Die KI erklärt diese Karte in einfachen Worten (nur Text; Zahlen geprüft).</string>
+    <string name="act_log_title">KI-Aktivität</string>
+    <string name="act_log_intro">Jede KI-Anfrage auf diesem Telefon, wie das Firebase SDK sie meldete. Kein Motiv, Prompt oder Antworttext wird hier gespeichert.</string>
+    <string name="act_log_on_device">auf dem Gerät</string>
+    <string name="act_log_cloud">in der Cloud</string>
+    <string name="act_log_held">von NIRAs Prüfung zurückgehalten</string>
+    <string name="act_log_failed">nicht beantwortet</string>
+    <string name="act_log_sent">An die Cloud gesendete Bilder: %1$d · Sprachclips: %2$d</string>
+    <string name="act_log_confidential_on">Vertraulicher Modus: an</string>
+    <string name="act_log_confidential_off">Vertraulicher Modus: aus</string>
+    <string name="act_log_empty">Noch keine KI-Anfragen. NIRA fragen, Erklären oder Mit KI lesen erscheinen hier.</string>
+    <string name="act_log_clear">Liste leeren</string>
+    <string name="act_log_not_answered">nicht beantwortet</string>
+    <string name="act_log_image">Bild gesendet</string>
+    <string name="act_log_voice">Sprache gesendet</string>
+    <string name="act_log_passed">✓ geprüft</string>
+    <string name="act_log_held_one">zurückgehalten</string>
+    <string name="act_log_failed_one">fehlgeschlagen</string>
+    <string name="feat_ask">NIRA fragen</string>
+    <string name="feat_ask_voice">NIRA per Sprache fragen</string>
+    <string name="feat_explain">Karte erklären</string>
+    <string name="feat_costdown">Cost-Down-Erklärung</string>
+    <string name="feat_artwork_read">KI-Lesung des Motivs</string>
+    <string name="feat_brief">Briefing-Leser</string>
+    <string name="feat_report">Berichtserklärung</string>
+    <string name="feat_deep">Ausführlicher Bericht</string>
+    <string name="feat_translate">Blatt-Übersetzung</string>
+    <string name="feat_other">Sonstiges</string>
 </resources>

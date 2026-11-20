@@ -69,11 +69,15 @@ class CardExplanationViewModel(application: Application) : AndroidViewModel(appl
             )) {
                 is AiRoute.Run -> {
                     val result = repository.generate(prompt, image = null, mode = route.mode)
-                    AiSettings.record(app, result, imageAttached = false)
                     val text = result.text
                     val unverified = text?.let { ReportExplanation.unverifiedNumbers(it, facts) } ?: emptyList()
                     val missing = text?.let { CardExplanation.missingMethodWords(it, methodName) } ?: emptyList()
                     val code = text?.let { CardExplanation.hasColourCode(it) } ?: false
+                    AiSettings.record(
+                        app, result, imageAttached = false,
+                        feature = if (assetPath == CardExplanation.ASSET_PATH) com.mos.nira.core.ai.AiFeature.EXPLAIN_CARD else com.mos.nira.core.ai.AiFeature.COST_DOWN,
+                        held = unverified.isNotEmpty() || missing.isNotEmpty() || code
+                    )
                     _state.value = ReportExplanationState.Done(requestKey, facts, result, unverified, missing, code)
                 }
                 else -> _state.value = ReportExplanationState.Blocked(requestKey, facts)

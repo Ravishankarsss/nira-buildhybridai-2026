@@ -648,4 +648,31 @@
         <item quantity="other">%1$dটি রং যাচাই করুন (ছায়া, কিনারা বা দাগ)</item>
     </plurals>
     <string name="card_explain_hint_short">AI এই কার্ড সহজ ভাষায় বোঝায় (শুধু লেখা; সংখ্যা যাচাই করা হয়)।</string>
+    <string name="act_log_title">AI কার্যকলাপ</string>
+    <string name="act_log_intro">এই ফোনে প্রতিটি AI অনুরোধ, Firebase SDK যেমন জানিয়েছে। এখানে artwork, prompt বা উত্তরের লেখা রাখা হয় না।</string>
+    <string name="act_log_on_device">ফোনে</string>
+    <string name="act_log_cloud">ক্লাউডে</string>
+    <string name="act_log_held">NIRA-র যাচাই আটকেছে</string>
+    <string name="act_log_failed">উত্তর নেই</string>
+    <string name="act_log_sent">ক্লাউডে পাঠানো ছবি: %1$d · কণ্ঠ ক্লিপ: %2$d</string>
+    <string name="act_log_confidential_on">Confidential mode: চালু</string>
+    <string name="act_log_confidential_off">Confidential mode: বন্ধ</string>
+    <string name="act_log_empty">এখনো কোনো AI অনুরোধ নেই। NIRA-কে জিজ্ঞাসা, ব্যাখ্যা বা AI দিয়ে পড়া এখানে দেখাবে।</string>
+    <string name="act_log_clear">তালিকা মুছুন</string>
+    <string name="act_log_not_answered">উত্তর নেই</string>
+    <string name="act_log_image">ছবি পাঠানো</string>
+    <string name="act_log_voice">কণ্ঠ পাঠানো</string>
+    <string name="act_log_passed">✓ যাচাই করা</string>
+    <string name="act_log_held_one">আটকানো</string>
+    <string name="act_log_failed_one">ব্যর্থ</string>
+    <string name="feat_ask">NIRA-কে জিজ্ঞাসা</string>
+    <string name="feat_ask_voice">কণ্ঠে NIRA-কে জিজ্ঞাসা</string>
+    <string name="feat_explain">এই কার্ড ব্যাখ্যা</string>
+    <string name="feat_costdown">Cost-Down ব্যাখ্যা</string>
+    <string name="feat_artwork_read">Artwork-এর AI পাঠ</string>
+    <string name="feat_brief">ক্রেতার ব্রিফ রিডার</string>
+    <string name="feat_report">রিপোর্ট ব্যাখ্যা</string>
+    <string name="feat_deep">বিস্তারিত রিপোর্ট</string>
+    <string name="feat_translate">শিট অনুবাদ</string>
+    <string name="feat_other">অন্যান্য</string>
 </resources>

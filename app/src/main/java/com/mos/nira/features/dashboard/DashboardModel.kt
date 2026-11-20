@@ -23,11 +23,12 @@ object RootDestinations {
     const val SETTINGS = "settings"
 
     const val TECHNIQUE_LIBRARY = "technique_library"
+    const val AI_ACTIVITY = "ai_activity"
 
     // Not built as a screen: Ask NIRA is on each job's decision card. Do not add to BUILT.
     const val ASK_NIRA = "ask_nira"
 
-    val BUILT: Set<String> = setOf(DASHBOARD, ARTWORK_FLOW, ARTWORK_FLOW_AT, GARMENT_CAMERA, SETTINGS, TECHNIQUE_LIBRARY)
+    val BUILT: Set<String> = setOf(DASHBOARD, ARTWORK_FLOW, ARTWORK_FLOW_AT, GARMENT_CAMERA, SETTINGS, TECHNIQUE_LIBRARY, AI_ACTIVITY)
 
     fun artworkFlowAt(start: String): String = "$ARTWORK_FLOW_AT/$start"
 }

@@ -79,8 +79,8 @@ class ReportExplanationViewModel(application: Application) : AndroidViewModel(ap
                 is AiRoute.Run -> {
                     // Text only: no image is attached to this request.
                     val result = repository.generate(ReportExplanation.build(template, facts), image = null, mode = route.mode)
-                    AiSettings.record(app, result, imageAttached = false)
                     val unverified = result.text?.let { ReportExplanation.unverifiedNumbers(it, facts) } ?: emptyList()
+                    AiSettings.record(app, result, imageAttached = false, feature = com.mos.nira.core.ai.AiFeature.REPORT_EXPLAIN, held = unverified.isNotEmpty())
                     _state.value = ReportExplanationState.Done(requestKey, facts, result, unverified)
                 }
                 else -> _state.value = ReportExplanationState.Blocked(requestKey, facts)

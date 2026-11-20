@@ -649,4 +649,31 @@
         <item quantity="other">%1$d colores necesitan revisión (sombra, borde o mota)</item>
     </plurals>
     <string name="card_explain_hint_short">La IA explica esta tarjeta con palabras sencillas (solo texto; números comprobados).</string>
+    <string name="act_log_title">Actividad de IA</string>
+    <string name="act_log_intro">Cada solicitud de IA en este teléfono, tal como la informó el SDK de Firebase. Aquí no se guarda diseño, prompt ni texto de respuesta.</string>
+    <string name="act_log_on_device">en el teléfono</string>
+    <string name="act_log_cloud">en la nube</string>
+    <string name="act_log_held">retenidas por los controles de NIRA</string>
+    <string name="act_log_failed">sin respuesta</string>
+    <string name="act_log_sent">Imágenes enviadas a la nube: %1$d · clips de voz: %2$d</string>
+    <string name="act_log_confidential_on">Modo confidencial: activo</string>
+    <string name="act_log_confidential_off">Modo confidencial: apagado</string>
+    <string name="act_log_empty">Aún no hay solicitudes de IA. Preguntar a NIRA, Explicar o Leer con IA aparecerán aquí.</string>
+    <string name="act_log_clear">Vaciar la lista</string>
+    <string name="act_log_not_answered">sin respuesta</string>
+    <string name="act_log_image">imagen enviada</string>
+    <string name="act_log_voice">voz enviada</string>
+    <string name="act_log_passed">✓ comprobado</string>
+    <string name="act_log_held_one">retenido</string>
+    <string name="act_log_failed_one">falló</string>
+    <string name="feat_ask">Preguntar a NIRA</string>
+    <string name="feat_ask_voice">Preguntar a NIRA por voz</string>
+    <string name="feat_explain">Explicar esta tarjeta</string>
+    <string name="feat_costdown">Explicación de Cost-Down</string>
+    <string name="feat_artwork_read">Lectura IA del diseño</string>
+    <string name="feat_brief">Lector de pedidos</string>
+    <string name="feat_report">Explicación del informe</string>
+    <string name="feat_deep">Informe detallado</string>
+    <string name="feat_translate">Traducción de la hoja</string>
+    <string name="feat_other">Otro</string>
 </resources>

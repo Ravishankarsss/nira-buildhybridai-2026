@@ -212,6 +212,7 @@ fun NIRAAppRoot() {
                         }
                     },
                     onSeeAll = { rootNavController.navigate(RootDestinations.ARTWORK_FLOW) },
+                    onOpenAiActivity = { rootNavController.navigate(RootDestinations.AI_ACTIVITY) },
                 )
             }
 
@@ -243,6 +244,10 @@ fun NIRAAppRoot() {
                 )
             }
 
+            composable(RootDestinations.AI_ACTIVITY) {
+                com.mos.nira.features.ai.AiActivityScreen(onBack = { rootNavController.popBackStack() })
+            }
+
             composable(RootDestinations.TECHNIQUE_LIBRARY) {
                 com.mos.nira.features.library.TechniqueLibraryScreen(onBack = { rootNavController.popBackStack() })
             }
@@ -267,6 +272,7 @@ fun NIRADashboard(
     onOpenCard: (WorkspaceCard) -> Unit = {},
     onOpenRecent: (String) -> Unit = {},
     onSeeAll: () -> Unit = {},
+    onOpenAiActivity: () -> Unit = {},
 ) {
     val homeContext = androidx.compose.ui.platform.LocalContext.current
     LaunchedEffect(Unit) { com.mos.nira.core.ai.AiSettings.load(homeContext) }
@@ -437,7 +443,7 @@ fun NIRADashboard(
         // Hybrid AI on this phone: the real counts NIRA keeps (Settings has the details).
         Spacer(modifier = Modifier.height(22.dp))
         Row(
-            modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(CardColor).padding(14.dp),
+            modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(CardColor).clickable(onClick = onOpenAiActivity).padding(14.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text("✦", color = Violet, fontSize = 20.sp, fontWeight = FontWeight.Bold)
@@ -449,6 +455,7 @@ fun NIRADashboard(
                     color = Muted, fontSize = 12.sp, lineHeight = 16.sp,
                 )
             }
+            Text("›", color = Cyan, fontSize = 22.sp)
         }
 
         Spacer(modifier = Modifier.height(28.dp))

@@ -647,4 +647,31 @@
         <item quantity="other">%1$d colours need your check (shadow, edge or speck)</item>
     </plurals>
     <string name="card_explain_hint_short">AI explains this card in plain words (text only; numbers checked).</string>
+    <string name="act_log_title">AI activity</string>
+    <string name="act_log_intro">Every AI request on this phone, as the Firebase SDK reported it. No artwork, prompt or answer text is kept here.</string>
+    <string name="act_log_on_device">on this phone</string>
+    <string name="act_log_cloud">in the cloud</string>
+    <string name="act_log_held">held back by NIRA\'s checks</string>
+    <string name="act_log_failed">not answered</string>
+    <string name="act_log_sent">Images sent to the cloud: %1$d · voice clips: %2$d</string>
+    <string name="act_log_confidential_on">Confidential mode: on</string>
+    <string name="act_log_confidential_off">Confidential mode: off</string>
+    <string name="act_log_empty">No AI requests yet. Ask NIRA, Explain or Read with AI will show here.</string>
+    <string name="act_log_clear">Clear the list</string>
+    <string name="act_log_not_answered">not answered</string>
+    <string name="act_log_image">image sent</string>
+    <string name="act_log_voice">voice sent</string>
+    <string name="act_log_passed">✓ checked</string>
+    <string name="act_log_held_one">held back</string>
+    <string name="act_log_failed_one">failed</string>
+    <string name="feat_ask">Ask NIRA</string>
+    <string name="feat_ask_voice">Ask NIRA by voice</string>
+    <string name="feat_explain">Explain this card</string>
+    <string name="feat_costdown">Cost-Down explanation</string>
+    <string name="feat_artwork_read">AI read of the artwork</string>
+    <string name="feat_brief">Buyer brief reader</string>
+    <string name="feat_report">Report explanation</string>
+    <string name="feat_deep">Deep report</string>
+    <string name="feat_translate">Sheet translation</string>
+    <string name="feat_other">Other</string>
 </resources>

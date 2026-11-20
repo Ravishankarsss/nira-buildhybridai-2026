@@ -154,7 +154,8 @@ class DashboardModelTest {
             RootDestinations.ARTWORK_FLOW_AT to "ARTWORK_FLOW_AT",
             RootDestinations.GARMENT_CAMERA to "GARMENT_CAMERA",
             RootDestinations.SETTINGS to "SETTINGS",
-            RootDestinations.TECHNIQUE_LIBRARY to "TECHNIQUE_LIBRARY"
+            RootDestinations.TECHNIQUE_LIBRARY to "TECHNIQUE_LIBRARY",
+            RootDestinations.AI_ACTIVITY to "AI_ACTIVITY"
         )
         assertEquals("update this test when BUILT changes", RootDestinations.BUILT, names.keys)
         for ((_, constant) in names) {

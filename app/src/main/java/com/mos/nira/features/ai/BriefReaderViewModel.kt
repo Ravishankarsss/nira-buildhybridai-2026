@@ -63,8 +63,11 @@ class BriefReaderViewModel(application: Application) : AndroidViewModel(applicat
             )) {
                 is AiRoute.Run -> {
                     val result = repository.generate(prompt, image = image, mode = route.mode)
-                    AiSettings.record(app, result, imageAttached = image != null)
                     val reading = result.text?.let { BriefReader.parse(it, colourKeys, fabrics, if (image != null) null else text) }
+                    AiSettings.record(
+                        app, result, imageAttached = image != null, feature = com.mos.nira.core.ai.AiFeature.BRIEF_READER,
+                        held = reading == null || reading.fields.any { it.dropped != null }
+                    )
                     _state.value = BriefReadState.Done(result, reading)
                 }
                 else -> _state.value = BriefReadState.Blocked

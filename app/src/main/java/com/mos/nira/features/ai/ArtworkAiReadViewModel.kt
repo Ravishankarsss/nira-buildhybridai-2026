@@ -107,7 +107,7 @@ class ArtworkAiReadViewModel(application: Application) : AndroidViewModel(applic
                     }
                     val image = withContext(Dispatchers.Default) { scaleForAi(bitmap) }
                     val result = repository.generate(prompt, image, route.mode)
-                    AiSettings.record(app, result, imageAttached = true)
+                    AiSettings.record(app, result, imageAttached = true, feature = com.mos.nira.core.ai.AiFeature.ARTWORK_READ)
                     _state.value = ArtworkAiReadState.Done(
                         ArtworkKey.of(bitmap, hexes),
                         result,

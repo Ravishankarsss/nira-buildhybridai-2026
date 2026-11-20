@@ -647,4 +647,31 @@
         <item quantity="other">%1$d 种颜色需要确认（阴影、边缘或斑点）</item>
     </plurals>
     <string name="card_explain_hint_short">AI 用通俗语言解释此卡（仅文字；数字已核对）。</string>
+    <string name="act_log_title">AI 活动</string>
+    <string name="act_log_intro">本机每次 AI 请求，按 Firebase SDK 的报告显示。这里不保存图稿、提示词或回答文本。</string>
+    <string name="act_log_on_device">本机</string>
+    <string name="act_log_cloud">云端</string>
+    <string name="act_log_held">被 NIRA 检查拦截</string>
+    <string name="act_log_failed">未回答</string>
+    <string name="act_log_sent">发送到云端的图片：%1$d · 语音：%2$d</string>
+    <string name="act_log_confidential_on">保密模式：开</string>
+    <string name="act_log_confidential_off">保密模式：关</string>
+    <string name="act_log_empty">还没有 AI 请求。询问 NIRA、解释或用 AI 读取会显示在这里。</string>
+    <string name="act_log_clear">清空列表</string>
+    <string name="act_log_not_answered">未回答</string>
+    <string name="act_log_image">已发送图片</string>
+    <string name="act_log_voice">已发送语音</string>
+    <string name="act_log_passed">✓ 已检查</string>
+    <string name="act_log_held_one">已拦截</string>
+    <string name="act_log_failed_one">失败</string>
+    <string name="feat_ask">询问 NIRA</string>
+    <string name="feat_ask_voice">语音询问 NIRA</string>
+    <string name="feat_explain">解释此卡</string>
+    <string name="feat_costdown">Cost-Down 说明</string>
+    <string name="feat_artwork_read">图稿 AI 解读</string>
+    <string name="feat_brief">买家需求读取</string>
+    <string name="feat_report">报告说明</string>
+    <string name="feat_deep">详细报告</string>
+    <string name="feat_translate">单据翻译</string>
+    <string name="feat_other">其他</string>
 </resources>

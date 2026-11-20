@@ -647,4 +647,31 @@
         <item quantity="other">%1$d màu cần kiểm tra (bóng, viền hoặc chấm)</item>
     </plurals>
     <string name="card_explain_hint_short">AI giải thích thẻ này bằng lời đơn giản (chỉ văn bản; số đã được kiểm tra).</string>
+    <string name="act_log_title">Hoạt động AI</string>
+    <string name="act_log_intro">Mọi yêu cầu AI trên điện thoại này, như SDK Firebase báo cáo. Không lưu hình in, prompt hay câu trả lời ở đây.</string>
+    <string name="act_log_on_device">trên máy</string>
+    <string name="act_log_cloud">trên đám mây</string>
+    <string name="act_log_held">bị NIRA giữ lại</string>
+    <string name="act_log_failed">không trả lời</string>
+    <string name="act_log_sent">Ảnh gửi lên đám mây: %1$d · đoạn ghi âm: %2$d</string>
+    <string name="act_log_confidential_on">Chế độ bảo mật: bật</string>
+    <string name="act_log_confidential_off">Chế độ bảo mật: tắt</string>
+    <string name="act_log_empty">Chưa có yêu cầu AI. Hỏi NIRA, Giải thích hoặc Đọc bằng AI sẽ hiện ở đây.</string>
+    <string name="act_log_clear">Xóa danh sách</string>
+    <string name="act_log_not_answered">không trả lời</string>
+    <string name="act_log_image">đã gửi ảnh</string>
+    <string name="act_log_voice">đã gửi giọng nói</string>
+    <string name="act_log_passed">✓ đã kiểm tra</string>
+    <string name="act_log_held_one">giữ lại</string>
+    <string name="act_log_failed_one">lỗi</string>
+    <string name="feat_ask">Hỏi NIRA</string>
+    <string name="feat_ask_voice">Hỏi NIRA bằng giọng nói</string>
+    <string name="feat_explain">Giải thích thẻ</string>
+    <string name="feat_costdown">Giải thích Cost-Down</string>
+    <string name="feat_artwork_read">AI đọc hình in</string>
+    <string name="feat_brief">Đọc yêu cầu người mua</string>
+    <string name="feat_report">Giải thích báo cáo</string>
+    <string name="feat_deep">Báo cáo chi tiết</string>
+    <string name="feat_translate">Dịch phiếu</string>
+    <string name="feat_other">Khác</string>
 </resources>

@@ -85,15 +85,16 @@ class AskNiraViewModel(application: Application) : AndroidViewModel(application)
             )) {
                 is AiRoute.Run -> {
                     val result = repository.generate(prompt, image = null, mode = route.mode)
-                    AiSettings.record(app, result, imageAttached = false)
                     val reply = result.text?.let { NiraActions.parseReply(it) }
-                    when {
+                    val msg = when {
                         result.text == null || reply == null -> AskMessage(q, result, answer = null)
                         else -> AskMessage(
                             q, result, AskNira.check(reply.answer, facts, q), answer = reply.answer,
                             actions = actionsOf(reply, actionContext, q)
                         )
                     }
+                    AiSettings.record(app, result, imageAttached = false, feature = com.mos.nira.core.ai.AiFeature.ASK, held = msg.hold != null)
+                    msg
                 }
                 else -> AskMessage(q, blocked = true)
             }
@@ -123,10 +124,9 @@ class AskNiraViewModel(application: Application) : AndroidViewModel(application)
             } else {
                 val template = withContext(Dispatchers.IO) { app.assets.open(AskNira.VOICE_ASSET_PATH).bufferedReader().use { it.readText() } }
                 val result = repository.generateWithAudio(AskNira.buildVoice(template, facts, history, lists(actionContext)), audio, mimeType, com.mos.nira.core.ai.HybridMode.ONLY_IN_CLOUD)
-                AiSettings.record(app, result, imageAttached = false)
                 val reply = result.text?.let { NiraActions.parseReply(it) }
                 val heard = reply?.question
-                when {
+                val msg = when {
                     result.text == null -> AskMessage(pendingLabel, result, voice = true)
                     reply == null || heard == null -> AskMessage(pendingLabel, result, voice = true, answer = null)
                     else -> AskMessage(
@@ -134,6 +134,8 @@ class AskNiraViewModel(application: Application) : AndroidViewModel(application)
                         actions = actionsOf(reply, actionContext, heard)
                     )
                 }
+                AiSettings.record(app, result, imageAttached = false, feature = com.mos.nira.core.ai.AiFeature.ASK_VOICE, voice = true, held = msg.hold != null)
+                msg
             }
             _messages.update { list -> list.toMutableList().also { if (index in it.indices) it[index] = done } }
         }

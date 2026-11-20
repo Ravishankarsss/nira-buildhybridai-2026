@@ -53,7 +53,7 @@ class DeepReportViewModel(application: Application) : AndroidViewModel(applicati
             }
             // Text only: no image is attached to this request.
             val result = repository.generate(prompt, image = null, mode = HybridMode.ONLY_IN_CLOUD)
-            AiSettings.record(app, result, imageAttached = false)
+            AiSettings.record(app, result, imageAttached = false, feature = com.mos.nira.core.ai.AiFeature.DEEP_REPORT)
             _state.value = DeepReportState.Done(key, language, result)
         }
     }

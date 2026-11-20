@@ -52,7 +52,31 @@ object AiSettings {
      * Records one answer. An image counts as uploaded only when it was attached and the SDK
      * reported that the answer came from the cloud.
      */
-    fun record(context: Context, result: HybridInferenceResult, imageAttached: Boolean) {
+    fun record(
+        context: Context,
+        result: HybridInferenceResult,
+        imageAttached: Boolean,
+        feature: AiFeature = AiFeature.OTHER,
+        voice: Boolean = false,
+        held: Boolean = false
+    ) {
+        // Every request goes on the AI activity page, failed ones too.
+        AiActivityLog.add(
+            context,
+            AiActivity(
+                timeMs = System.currentTimeMillis(),
+                feature = feature,
+                source = result.inferenceSource,
+                durationMs = result.durationMs,
+                image = imageAttached,
+                voice = voice,
+                outcome = when {
+                    result.text == null -> AiOutcome.ERROR
+                    held -> AiOutcome.HELD
+                    else -> AiOutcome.PASSED
+                }
+            )
+        )
         val now = _counts.value
         val updated = when (result.inferenceSource) {
             "ON_DEVICE" -> now.copy(answersOnDevice = now.answersOnDevice + 1)

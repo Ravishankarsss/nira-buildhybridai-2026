@@ -649,4 +649,31 @@
         <item quantity="other">%1$d couleurs à vérifier (ombre, bord ou point)</item>
     </plurals>
     <string name="card_explain_hint_short">L\'IA explique cette carte simplement (texte seul ; nombres vérifiés).</string>
+    <string name="act_log_title">Activité IA</string>
+    <string name="act_log_intro">Chaque requête IA sur ce téléphone, telle que le SDK Firebase l\'a signalée. Aucun visuel, prompt ni texte de réponse n\'est gardé ici.</string>
+    <string name="act_log_on_device">sur l\'appareil</string>
+    <string name="act_log_cloud">dans le cloud</string>
+    <string name="act_log_held">retenues par les contrôles de NIRA</string>
+    <string name="act_log_failed">sans réponse</string>
+    <string name="act_log_sent">Images envoyées au cloud : %1$d · clips vocaux : %2$d</string>
+    <string name="act_log_confidential_on">Mode confidentiel : activé</string>
+    <string name="act_log_confidential_off">Mode confidentiel : désactivé</string>
+    <string name="act_log_empty">Pas encore de requête IA. Demander à NIRA, Expliquer ou Lire avec l\'IA s\'afficheront ici.</string>
+    <string name="act_log_clear">Vider la liste</string>
+    <string name="act_log_not_answered">sans réponse</string>
+    <string name="act_log_image">image envoyée</string>
+    <string name="act_log_voice">voix envoyée</string>
+    <string name="act_log_passed">✓ vérifié</string>
+    <string name="act_log_held_one">retenu</string>
+    <string name="act_log_failed_one">échec</string>
+    <string name="feat_ask">Demander à NIRA</string>
+    <string name="feat_ask_voice">Demander à NIRA à voix haute</string>
+    <string name="feat_explain">Expliquer cette carte</string>
+    <string name="feat_costdown">Explication Cost-Down</string>
+    <string name="feat_artwork_read">Lecture IA du visuel</string>
+    <string name="feat_brief">Lecteur de brief</string>
+    <string name="feat_report">Explication du rapport</string>
+    <string name="feat_deep">Rapport détaillé</string>
+    <string name="feat_translate">Traduction de la fiche</string>
+    <string name="feat_other">Autre</string>
 </resources>

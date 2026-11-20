@@ -648,4 +648,31 @@
         <item quantity="other">%1$d நிறங்களைச் சரிபாருங்கள் (நிழல், ஓரம் அல்லது புள்ளி)</item>
     </plurals>
     <string name="card_explain_hint_short">AI இந்த அட்டையை எளிய சொற்களில் விளக்கும் (உரை மட்டும்; எண்கள் சோதிக்கப்படும்).</string>
+    <string name="act_log_title">AI செயல்பாடு</string>
+    <string name="act_log_intro">இந்த மொபைலில் ஒவ்வொரு AI கோரிக்கையும், Firebase SDK சொன்னபடி. Artwork, prompt அல்லது பதில் உரை இங்கே சேமிக்கப்படுவதில்லை.</string>
+    <string name="act_log_on_device">மொபைலில்</string>
+    <string name="act_log_cloud">cloud-இல்</string>
+    <string name="act_log_held">NIRA சோதனையால் நிறுத்தப்பட்டவை</string>
+    <string name="act_log_failed">பதில் இல்லை</string>
+    <string name="act_log_sent">Cloud-க்கு அனுப்பிய படங்கள்: %1$d · குரல் பதிவுகள்: %2$d</string>
+    <string name="act_log_confidential_on">Confidential mode: இயக்கம்</string>
+    <string name="act_log_confidential_off">Confidential mode: அணைப்பு</string>
+    <string name="act_log_empty">இன்னும் AI கோரிக்கை இல்லை. NIRA-விடம் கேள், விளக்கு அல்லது AI மூலம் வாசி இங்கே தெரியும்.</string>
+    <string name="act_log_clear">பட்டியலை அழி</string>
+    <string name="act_log_not_answered">பதில் இல்லை</string>
+    <string name="act_log_image">படம் அனுப்பப்பட்டது</string>
+    <string name="act_log_voice">குரல் அனுப்பப்பட்டது</string>
+    <string name="act_log_passed">✓ சோதிக்கப்பட்டது</string>
+    <string name="act_log_held_one">நிறுத்தப்பட்டது</string>
+    <string name="act_log_failed_one">தோல்வி</string>
+    <string name="feat_ask">NIRA-விடம் கேள்</string>
+    <string name="feat_ask_voice">குரலில் NIRA-விடம் கேள்</string>
+    <string name="feat_explain">இந்த அட்டையை விளக்கு</string>
+    <string name="feat_costdown">செலவு குறைப்பு விளக்கம்</string>
+    <string name="feat_artwork_read">கலைப்படைப்பின் AI வாசிப்பு</string>
+    <string name="feat_brief">வாங்குபவர் விவர வாசிப்பு</string>
+    <string name="feat_report">அறிக்கை விளக்கம்</string>
+    <string name="feat_deep">விரிவான அறிக்கை</string>
+    <string name="feat_translate">தாள் மொழிபெயர்ப்பு</string>
+    <string name="feat_other">மற்றவை</string>
 </resources>
