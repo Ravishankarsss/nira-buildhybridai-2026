@@ -139,6 +139,12 @@ fun PrintDecisionCard(
     onCloseCostDownPreview: () -> Unit = {},
     /** The garment preview to put on the Decision Sheet (with or without the white base). */
     sheetPreview: android.graphics.Bitmap? = null,
+    /** The job's inks as the garment preview has them (measured palette), for Ask NIRA actions. */
+    previewInkHexes: List<String> = emptyList(),
+    /** Preview-only ink swaps now in place (ink hex -> shown hex). */
+    inkSwaps: Map<String, String> = emptyMap(),
+    /** Shows an ink in another colour in the preview; null puts it back. */
+    onPreviewInk: (fromHex: String, toHex: String?) -> Unit = { _, _ -> },
     choicesViewModel: PrintMethodChoicesViewModel = viewModel(viewModelStoreOwner = activityViewModelStoreOwner())
 ) {
     LaunchedEffect(Unit) { onLoadRules() }
@@ -436,6 +442,7 @@ fun PrintDecisionCard(
                 // Order cost and Cost-Down: deterministic, from the factory's own rates.
                 var chosenOption by remember { mutableStateOf<com.mos.nira.core.commercial.CostDownOption?>(null) }
                 var sheetOpen by remember { mutableStateOf(false) }
+                var sheetLanguage by remember { mutableStateOf("en") }
                 val rates = com.mos.nira.features.commercial.rememberFactoryRates()
                 val cost = remember(card, screens, rates) { com.mos.nira.core.commercial.PrintCost.forCard(card, screens, rates) }
                 val options = remember(card, screens, rates, costDownRules) {
@@ -477,7 +484,8 @@ fun PrintDecisionCard(
                             contrast = contrastWarnings,
                             preview = sheetPreview
                         ),
-                        onDismiss = { sheetOpen = false }
+                        onDismiss = { sheetOpen = false; sheetLanguage = "en" },
+                        initialLanguage = sheetLanguage
                     )
                 }
 
@@ -501,7 +509,65 @@ fun PrintDecisionCard(
                     val askFacts = remember(facts, cost, options, rates) {
                         if (cost?.perPc != null && cost.total != null) facts + com.mos.nira.features.commercial.tradeOffFacts(cost, options, rates) else facts
                     }
-                    com.mos.nira.features.ai.AskNiraSheet(facts = askFacts, onDismiss = { askOpen = false })
+                    val namedColours = garmentChips?.namedColours.orEmpty().ifEmpty { garmentChips?.chips.orEmpty() }
+                    val actionContext = remember(previewInkHexes, namedColours, briefRules) {
+                        com.mos.nira.core.ai.NiraActions.Context(
+                            inkHexes = previewInkHexes,
+                            colours = namedColours,
+                            fabrics = briefRules.fabrics,
+                            languages = com.mos.nira.features.commercial.DecisionSheet.LANGUAGES
+                        )
+                    }
+                    com.mos.nira.features.ai.AskNiraSheet(
+                        jobKey = artworkKey?.toString() ?: "job",
+                        facts = askFacts,
+                        actionContext = actionContext,
+                        onActions = { actions ->
+                            // Run each checked action and remember how to put it back.
+                            val undo = mutableListOf<() -> Unit>()
+                            actions.forEach { a ->
+                                when (a) {
+                                    is com.mos.nira.core.ai.NiraActions.Action.PreviewInk -> {
+                                        val before = inkSwaps[a.fromHex]
+                                        onPreviewInk(a.fromHex, a.toHex)
+                                        undo += { onPreviewInk(a.fromHex, before) }
+                                    }
+                                    is com.mos.nira.core.ai.NiraActions.Action.SetGarment -> {
+                                        val before = garmentHex
+                                        onGarment(a.hex)
+                                        if (before != null) undo += { onGarment(before) }
+                                    }
+                                    is com.mos.nira.core.ai.NiraActions.Action.SetQuantity -> {
+                                        val before = quantity
+                                        onQuantity(a.pieces)
+                                        undo += { onQuantity(before) }
+                                    }
+                                    is com.mos.nira.core.ai.NiraActions.Action.SetFibre -> {
+                                        val before = fibre
+                                        com.mos.nira.core.ai.BriefReader.fibre(a.fibre)?.let { fb -> choicesViewModel.update(artworkKey) { c -> c.copy(fibre = fb) } }
+                                        undo += { choicesViewModel.update(artworkKey) { c -> c.copy(fibre = before) } }
+                                    }
+                                    is com.mos.nira.core.ai.NiraActions.Action.SetFabric -> {
+                                        val before = fabric
+                                        onFabric(a.fabric)
+                                        undo += { onFabric(before) }
+                                    }
+                                    is com.mos.nira.core.ai.NiraActions.Action.SetFeel -> {
+                                        val before = feel
+                                        com.mos.nira.core.ai.BriefReader.feel(a.feel)?.let { onFeel(it) }
+                                        undo += { onFeel(before) }
+                                    }
+                                    is com.mos.nira.core.ai.NiraActions.Action.OpenSheet -> {
+                                        sheetLanguage = a.language
+                                        sheetOpen = true
+                                    }
+                                }
+                            }
+                            val run: () -> Unit = { undo.asReversed().forEach { it() } }
+                            run
+                        },
+                        onDismiss = { askOpen = false }
+                    )
                 }
             }
             Spacer(Modifier.height(10.dp))

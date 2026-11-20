@@ -1,7 +1,15 @@
 package com.mos.nira.features.ai
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.media.MediaRecorder
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -30,42 +38,39 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import android.Manifest
-import android.content.pm.PackageManager
-import android.media.MediaRecorder
-import android.os.Build
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
-import java.io.File
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Box
-import androidx.compose.material3.TextButton
-import androidx.compose.ui.input.pointer.pointerInput
-import kotlinx.coroutines.delay
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mos.nira.R
 import com.mos.nira.core.ai.AskNira
+import com.mos.nira.core.ai.NiraActions
+import com.mos.nira.core.ai.VoiceTurn
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.io.File
 
 private val KBg = Color(0xFF11182A)
 private val KInner = Color(0xFF1A2238)
@@ -75,34 +80,39 @@ private val KWhite = Color(0xFFF5F6FF)
 private val KMuted = Color(0xFFA8B4CE)
 private val KAmber = Color(0xFFFFC566)
 private val KRed = Color(0xFFFF8A80)
+private val KGreen = Color(0xFF7BE0A0)
 
 /**
- * Ask NIRA about this job: a chat sheet. Facts are the engine's (never the image); every answer
- * shows the inference source the Firebase SDK reported and is hidden if it fails a check.
+ * Ask NIRA about this job: a chat, a hands-free conversation by voice, and actions the user asks
+ * for ("make navy green", "1000 pieces"). Facts are the engine's (never the image); every answer
+ * shows the inference source the SDK reported and is hidden if it fails a check; actions are
+ * checked by NiraActions and can be undone; the engine recalculates after any change.
  */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun AskNiraSheet(
+    jobKey: String,
     facts: List<String>,
+    actionContext: NiraActions.Context?,
+    /** Runs checked actions and returns how to undo them. */
+    onActions: (List<NiraActions.Action>) -> (() -> Unit),
     onDismiss: () -> Unit,
     viewModel: AskNiraViewModel = viewModel(viewModelStoreOwner = activityViewModelStoreOwner())
 ) {
-    val jobKey = facts.hashCode().toString()
     LaunchedEffect(jobKey) { viewModel.openJob(jobKey) }
     val messages by viewModel.messages.collectAsState()
     val running = messages.any { it.result == null && !it.blocked }
     var input by rememberSaveable { mutableStateOf("") }
     val listState = rememberLazyListState()
     LaunchedEffect(messages.size, running) { if (messages.isNotEmpty()) listState.animateScrollToItem(messages.lastIndex) }
+    val send = { q: String -> if (q.isNotBlank() && !running) { viewModel.ask(q, facts, actionContext); input = "" } }
 
-    val send = { q: String -> if (q.isNotBlank() && !running) { viewModel.ask(q, facts); input = "" } }
-
-    // Read-aloud of checked answers (Android's own text-to-speech; Ravi's option A).
-    val ctx = LocalContext.current
-    val speaker = remember { NiraSpeaker(ctx) }
+    // ---------- Read-aloud (Android's own text-to-speech; Ravi's option A) ----------
+    val context = LocalContext.current
+    val speaker = remember { NiraSpeaker(context) }
     val speakingId by speaker.speaking.collectAsState()
     var voiceNote by remember { mutableStateOf<Int?>(null) }
-    val appLanguage = ctx.resources.configuration.locales[0].language
+    val appLanguage = context.resources.configuration.locales[0].language
     fun speak(index: Int, text: String) {
         voiceNote = when (speaker.speak("a$index", text, appLanguage)) {
             NiraSpeaker.Result.SPEAKING -> null
@@ -110,47 +120,40 @@ fun AskNiraSheet(
             NiraSpeaker.Result.NOT_READY -> R.string.ask_tts_not_ready
         }
     }
-    // A spoken question gets a spoken answer, once, and only if the answer passed the checks.
-    var spokenUpTo by remember { mutableStateOf(messages.size) }
-    LaunchedEffect(messages) {
-        val i = messages.lastIndex
-        val m = messages.lastOrNull()
-        if (m != null && i >= spokenUpTo && m.result != null) {
-            spokenUpTo = i + 1
-            if (m.voice && m.hold == null && m.answer != null) speak(i, m.answer)
-        }
-    }
-    DisposableEffect(Unit) { onDispose { speaker.shutdown() } }
 
-    // Voice question: record with Android's own recorder; the AI hears it in the cloud only.
-    val context = LocalContext.current
-    var recording by remember { mutableStateOf(false) }
+    // ---------- Conversation mode: tap once; NIRA listens, sends on a pause, answers, listens again ----------
+    val scope = rememberCoroutineScope()
+    var conversation by remember { mutableStateOf(false) }
+    var listening by remember { mutableStateOf(false) }
+    var awaitingNext by remember { mutableStateOf(false) }
+    var silentTurns by remember { mutableStateOf(0) }
+    var ended by remember { mutableStateOf(false) }
     val recorder = remember { mutableStateOf<MediaRecorder?>(null) }
+    val pollJob = remember { mutableStateOf<Job?>(null) }
     val audioFile = remember { File(context.cacheDir, "ask_voice.m4a") }
     val pendingLabel = stringResource(R.string.ask_voice_pending)
-    fun stopAndAsk() {
+
+    fun release(send: Boolean) {
+        pollJob.value?.cancel(); pollJob.value = null
         val r = recorder.value ?: return
         recorder.value = null
-        recording = false
+        listening = false
         val ok = runCatching { r.stop() }.isSuccess
         r.release()
-        if (ok && audioFile.length() > 0) viewModel.askVoice(audioFile.readBytes(), "audio/mp4", facts, pendingLabel)
+        if (send && ok && audioFile.length() > 0) viewModel.askVoice(audioFile.readBytes(), "audio/mp4", facts, pendingLabel, actionContext)
         audioFile.delete()
     }
-    fun cancelRecording() {
-        val r = recorder.value ?: return
-        recorder.value = null
-        recording = false
-        runCatching { r.stop() }
-        r.release()
-        audioFile.delete()
-    }
-    var seconds by remember { mutableStateOf(0) }
-    var tooShort by remember { mutableStateOf(false) }
-    LaunchedEffect(recording) { seconds = 0; while (recording) { delay(1000); seconds++ } }
-    fun startRecording() {
+
+    fun endConversation() {
+        conversation = false
+        awaitingNext = false
+        release(send = false)
         speaker.stop()
-        tooShort = false
+    }
+
+    fun startListening() {
+        awaitingNext = false
+        speaker.stop()
         val r = if (Build.VERSION.SDK_INT >= 31) MediaRecorder(context) else @Suppress("DEPRECATION") MediaRecorder()
         val started = runCatching {
             r.setAudioSource(MediaRecorder.AudioSource.MIC)
@@ -158,33 +161,76 @@ fun AskNiraSheet(
             r.setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
             r.setAudioSamplingRate(16000)
             r.setAudioEncodingBitRate(32000)
-            r.setMaxDuration(AskNira.VOICE_MAX_SECONDS * 1000)
             r.setOutputFile(audioFile.absolutePath)
-            r.setOnInfoListener { _, what, _ -> if (what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED) stopAndAsk() }
             r.prepare()
             r.start()
         }.isSuccess
-        if (started) { recorder.value = r; recording = true } else r.release()
+        if (!started) { r.release(); endConversation(); return }
+        recorder.value = r
+        listening = true
+        pollJob.value = scope.launch {
+            var st = VoiceTurn.State()
+            while (true) {
+                delay(VoiceTurn.STEP_MS.toLong())
+                val amp = runCatching { r.maxAmplitude }.getOrDefault(0)
+                val (next, decision) = VoiceTurn.step(st, amp, AskNira.VOICE_MAX_SECONDS * 1000)
+                st = next
+                when (decision) {
+                    VoiceTurn.Decision.SEND -> { silentTurns = 0; release(send = true); return@launch }
+                    VoiceTurn.Decision.NOTHING_SAID -> {
+                        release(send = false)
+                        silentTurns++
+                        if (silentTurns >= VoiceTurn.MAX_SILENT_TURNS) { conversation = false; ended = true } else awaitingNext = true
+                        return@launch
+                    }
+                    VoiceTurn.Decision.KEEP_LISTENING -> Unit
+                }
+            }
+        }
     }
-    // After the first "Allow", the user holds the button again to talk.
-    val micPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
-    DisposableEffect(Unit) { onDispose { recorder.value?.let { runCatching { it.stop() }; it.release() }; audioFile.delete() } }
+
+    val micPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        if (granted) { conversation = true; ended = false; silentTurns = 0; startListening() }
+    }
+
+    // ---------- New answers: run checked actions, speak voice answers, then listen again ----------
+    val undos = remember { mutableStateMapOf<Int, () -> Unit>() }
+    val undone = remember { mutableStateMapOf<Int, Boolean>() }
+    var handledUpTo by remember { mutableStateOf(messages.size) }
+    LaunchedEffect(messages) {
+        val i = messages.lastIndex
+        val m = messages.lastOrNull() ?: return@LaunchedEffect
+        if (i < handledUpTo || (m.result == null && !m.blocked)) return@LaunchedEffect
+        handledUpTo = i + 1
+        if (m.hold == null) {
+            val actions = m.actions.mapNotNull { it.action }
+            if (actions.isNotEmpty()) undos[i] = onActions(actions)
+        }
+        if (m.voice && m.hold == null && m.answer != null) speak(i, m.answer)
+        if (conversation) awaitingNext = true
+    }
+    // Listen again once NIRA has finished thinking and speaking.
+    LaunchedEffect(conversation, awaitingNext, running, speakingId, listening) {
+        if (conversation && awaitingNext && !running && speakingId == null && !listening) {
+            delay(500)
+            if (conversation && awaitingNext && speakingId == null) startListening()
+        }
+    }
+    DisposableEffect(Unit) { onDispose { release(send = false); speaker.shutdown() } }
 
     ModalBottomSheet(
-        onDismissRequest = onDismiss,
+        onDismissRequest = { endConversation(); onDismiss() },
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
         containerColor = KBg
     ) {
-        Column(
-            Modifier.fillMaxWidth().padding(horizontal = 16.dp).navigationBarsPadding().imePadding()
-        ) {
+        Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp).navigationBarsPadding().imePadding()) {
             Text(stringResource(R.string.ask_title), color = KWhite, fontSize = 20.sp, fontWeight = FontWeight.Bold)
             Text(stringResource(R.string.ask_intro), color = KMuted, fontSize = 12.sp, lineHeight = 16.sp)
             Spacer(Modifier.height(10.dp))
 
             LazyColumn(
                 state = listState,
-                modifier = Modifier.fillMaxWidth().heightIn(min = 120.dp, max = 420.dp),
+                modifier = Modifier.fillMaxWidth().heightIn(min = 120.dp, max = 400.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 itemsIndexed(messages) { i, m ->
@@ -192,15 +238,20 @@ fun AskNiraSheet(
                         m,
                         speaking = speakingId == "a$i",
                         onSpeak = { text -> if (speakingId == "a$i") speaker.stop() else speak(i, text) },
-                        onEdit = { q -> input = q }
+                        onEdit = { q -> endConversation(); input = q },
+                        canUndo = undos[i] != null && undone[i] != true,
+                        onUndo = { undos[i]?.invoke(); undone[i] = true }
                     )
                 }
             }
 
             if (messages.isEmpty()) {
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    listOf(R.string.ask_suggest_why, R.string.ask_suggest_cheaper, R.string.ask_suggest_risk, R.string.ask_suggest_check).forEach { id ->
-                        val q = stringResource(id)
+                    // The action chip names the job's first ink, so the request is clear.
+                    val firstInk = actionContext?.inkHexes?.firstOrNull()?.let { com.mos.nira.features.artwork.presentation.colourName(it).lowercase() }
+                    val chips = listOf(R.string.ask_suggest_why, R.string.ask_suggest_cheaper, R.string.ask_suggest_risk, R.string.ask_suggest_check)
+                        .map { stringResource(it) } + listOfNotNull(firstInk?.let { stringResource(R.string.ask_suggest_action, it) })
+                    chips.forEach { q ->
                         AssistChip(
                             onClick = { send(q) },
                             label = { Text(q, fontSize = 12.sp) },
@@ -229,33 +280,37 @@ fun AskNiraSheet(
                     colors = ButtonDefaults.buttonColors(containerColor = KViolet, contentColor = Color(0xFF0F1526))
                 ) { Text(stringResource(R.string.ask_send), fontWeight = FontWeight.Bold) }
             }
-            // Hold to talk, let go to send (like a voice message). Under 1 second is not sent.
+
+            // One tap starts a hands-free conversation; one tap ends it.
+            val phase = when {
+                !conversation -> stringResource(R.string.ask_talk_start, AskNira.VOICE_MAX_SECONDS)
+                listening -> stringResource(R.string.ask_talk_listening)
+                running -> stringResource(R.string.ask_talk_thinking)
+                speakingId != null -> stringResource(R.string.ask_talk_speaking)
+                else -> stringResource(R.string.ask_talk_listening)
+            }
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxWidth().padding(top = 8.dp).heightIn(min = 64.dp)
-                    .clip(RoundedCornerShape(32.dp)).background(if (recording) KRed else KInner)
-                    .pointerInput(running) {
-                        detectTapGestures(onPress = {
-                            if (running) return@detectTapGestures
-                            if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-                                micPermission.launch(Manifest.permission.RECORD_AUDIO)
-                                return@detectTapGestures
+                modifier = Modifier.fillMaxWidth().padding(top = 8.dp).heightIn(min = 60.dp)
+                    .clip(RoundedCornerShape(30.dp))
+                    .background(if (listening) KRed else if (conversation) KViolet else KInner)
+                    .clickable {
+                        when {
+                            conversation -> endConversation()
+                            running -> Unit
+                            ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED -> {
+                                conversation = true; ended = false; silentTurns = 0; startListening()
                             }
-                            val pressedAt = System.currentTimeMillis()
-                            startRecording()
-                            tryAwaitRelease()
-                            if (System.currentTimeMillis() - pressedAt < 1000) { cancelRecording(); tooShort = true } else stopAndAsk()
-                        })
+                            else -> micPermission.launch(Manifest.permission.RECORD_AUDIO)
+                        }
                     }
             ) {
-                Text(
-                    if (recording) stringResource(R.string.ask_voice_stop, seconds, AskNira.VOICE_MAX_SECONDS)
-                    else stringResource(R.string.ask_voice_start, AskNira.VOICE_MAX_SECONDS),
-                    color = if (recording) Color(0xFF0F1526) else if (running) KMuted else KCyan,
-                    fontWeight = FontWeight.Bold, fontSize = 15.sp
-                )
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(phase, color = if (conversation) Color(0xFF0F1526) else KCyan, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                    if (conversation) Text(stringResource(R.string.ask_talk_end), color = Color(0xFF0F1526), fontSize = 11.sp)
+                }
             }
-            if (tooShort) Text(stringResource(R.string.ask_voice_too_short), color = KAmber, fontSize = 11.sp)
+            if (ended) Text(stringResource(R.string.ask_talk_ended), color = KMuted, fontSize = 11.sp)
             voiceNote?.let { Text(stringResource(it), color = KAmber, fontSize = 11.sp, lineHeight = 15.sp) }
             Text(stringResource(R.string.ask_voice_privacy), color = KMuted, fontSize = 10.sp, lineHeight = 13.sp)
             Text(stringResource(R.string.ask_privacy), color = KMuted, fontSize = 10.sp, lineHeight = 13.sp, modifier = Modifier.padding(vertical = 6.dp))
@@ -264,7 +319,41 @@ fun AskNiraSheet(
 }
 
 @Composable
-private fun MessageBubble(m: AskMessage, speaking: Boolean, onSpeak: (String) -> Unit, onEdit: (String) -> Unit) {
+private fun actionText(a: NiraActions.Action): String = when (a) {
+    is NiraActions.Action.PreviewInk -> stringResource(R.string.act_preview_ink, colourWord(a.fromHex), colourKeyWord(a.toKey, a.toHex))
+    is NiraActions.Action.SetGarment -> stringResource(R.string.act_garment, colourKeyWord(a.key, a.hex))
+    is NiraActions.Action.SetQuantity -> stringResource(R.string.act_quantity, a.pieces)
+    is NiraActions.Action.SetFibre -> stringResource(R.string.act_fibre, com.mos.nira.core.ai.BriefReader.fibre(a.fibre)?.let { com.mos.nira.features.advice.fibreLabel(it) } ?: a.fibre)
+    is NiraActions.Action.SetFabric -> stringResource(R.string.act_fabric, com.mos.nira.features.advice.fabricLabel(a.fabric))
+    is NiraActions.Action.SetFeel -> stringResource(R.string.act_feel, com.mos.nira.core.ai.BriefReader.feel(a.feel)?.let { com.mos.nira.features.advice.feelLabel(it) } ?: a.feel)
+    is NiraActions.Action.OpenSheet -> stringResource(R.string.act_sheet, java.util.Locale(a.language).let { it.getDisplayLanguage(it) })
+}
+
+@Composable
+private fun colourWord(hex: String) = com.mos.nira.features.artwork.presentation.colourName(hex)
+
+@Composable
+private fun colourKeyWord(key: String, hex: String) = com.mos.nira.features.artwork.presentation.garmentColourName(key, hex)
+
+@Composable
+private fun rejectText(r: NiraActions.Reject): String = stringResource(
+    when (r) {
+        NiraActions.Reject.UNKNOWN_INK -> R.string.act_no_ink
+        NiraActions.Reject.UNKNOWN_COLOUR -> R.string.act_no_colour
+        NiraActions.Reject.QUANTITY_NOT_SAID -> R.string.act_no_quantity
+        NiraActions.Reject.BAD_VALUE, NiraActions.Reject.UNKNOWN_TYPE -> R.string.act_not_allowed
+    }
+)
+
+@Composable
+private fun MessageBubble(
+    m: AskMessage,
+    speaking: Boolean,
+    onSpeak: (String) -> Unit,
+    onEdit: (String) -> Unit,
+    canUndo: Boolean,
+    onUndo: () -> Unit
+) {
     Column(Modifier.fillMaxWidth()) {
         // The question, on the right.
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
@@ -307,8 +396,17 @@ private fun MessageBubble(m: AskMessage, speaking: Boolean, onSpeak: (String) ->
                             m.answer == null -> Text(stringResource(R.string.ask_voice_unclear), color = KAmber, fontSize = 13.sp, lineHeight = 18.sp)
                             else -> {
                                 SelectionContainer { Text(m.answer, color = KWhite, fontSize = 14.sp, lineHeight = 20.sp) }
-                                TextButton(onClick = { onSpeak(m.answer) }) {
-                                    Text(stringResource(if (speaking) R.string.ask_stop_speaking else R.string.ask_speak), color = KCyan, fontSize = 12.sp)
+                                // What NIRA did in the app (checked), and what it could not do.
+                                m.actions.forEach { p ->
+                                    val a = p.action
+                                    if (a != null) Text("✓ " + actionText(a), color = KGreen, fontSize = 12.sp, lineHeight = 16.sp)
+                                    else p.reject?.let { Text("✗ " + rejectText(it), color = KAmber, fontSize = 12.sp, lineHeight = 16.sp) }
+                                }
+                                Row {
+                                    TextButton(onClick = { onSpeak(m.answer) }) {
+                                        Text(stringResource(if (speaking) R.string.ask_stop_speaking else R.string.ask_speak), color = KCyan, fontSize = 12.sp)
+                                    }
+                                    if (canUndo) TextButton(onClick = onUndo) { Text(stringResource(R.string.act_undo), color = KAmber, fontSize = 12.sp) }
                                 }
                             }
                         }

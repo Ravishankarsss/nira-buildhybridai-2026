@@ -52,11 +52,13 @@ import java.util.Locale
 fun DecisionSheetDialog(
     data: SheetData,
     onDismiss: () -> Unit,
+    /** The Buyer Quote language to start with (Ask NIRA can open the sheet in a language). */
+    initialLanguage: String = "en",
     translator: SheetTranslationViewModel = viewModel(viewModelStoreOwner = activityViewModelStoreOwner())
 ) {
     val context = LocalContext.current
     var floor by remember { mutableStateOf(false) }
-    var language by remember { mutableStateOf("en") }
+    var language by remember { mutableStateOf(initialLanguage.takeIf { it in DecisionSheet.LANGUAGES } ?: "en") }
     var sheet by remember { mutableStateOf<Bitmap?>(null) }
     val lang = if (floor) "ta" else language
     val texts = remember(data.card) { SheetTranslation.texts(data.card) }

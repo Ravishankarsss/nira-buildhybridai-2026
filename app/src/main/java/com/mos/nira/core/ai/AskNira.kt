@@ -11,7 +11,7 @@ package com.mos.nira.core.ai
  */
 object AskNira {
 
-    const val ASSET_PATH = "prompts/ask_nira_v1.txt"
+    const val ASSET_PATH = "prompts/ask_nira_v2.txt"
 
     /** How many earlier question-and-answer pairs go back to the model (small on-device context). */
     const val HISTORY_TURNS = 3
@@ -21,25 +21,28 @@ object AskNira {
 
     data class Turn(val question: String, val answer: String)
 
-    fun build(template: String, facts: List<String>, history: List<Turn>, question: String): String {
+    /** [lists] fills the action lists of the v2 prompts ({inks}, {colours}...; NiraActions.promptLists). */
+    fun build(template: String, facts: List<String>, history: List<Turn>, question: String, lists: Map<String, String> = emptyMap()): String {
         val conversation = history.takeLast(HISTORY_TURNS).joinToString("\n") {
             "Q: ${it.question.trim()}\nA: ${it.answer.trim().take(HISTORY_ANSWER_CHARS)}"
         }.ifBlank { "(none)" }
-        return template
+        var t = template
+        lists.forEach { (k, v) -> t = t.replace(k, v) }
+        return t
             .replace("{facts}", facts.joinToString("\n") { "- $it" })
             .replace("{conversation}", conversation)
             .replace("{question}", question.trim())
             .trim()
     }
 
-    const val VOICE_ASSET_PATH = "prompts/ask_nira_voice_v1.txt"
+    const val VOICE_ASSET_PATH = "prompts/ask_nira_voice_v2.txt"
 
     /** Longest voice question recorded, in seconds. */
     const val VOICE_MAX_SECONDS = 30
 
     /** The voice prompt: the same facts and turns; the question is the attached audio. */
-    fun buildVoice(template: String, facts: List<String>, history: List<Turn>): String =
-        build(template, facts, history, "")
+    fun buildVoice(template: String, facts: List<String>, history: List<Turn>, lists: Map<String, String> = emptyMap()): String =
+        build(template, facts, history, "", lists)
 
     /** The model's written-down question and its answer; null when the reply is not usable. */
     fun parseVoice(reply: String): Turn? {

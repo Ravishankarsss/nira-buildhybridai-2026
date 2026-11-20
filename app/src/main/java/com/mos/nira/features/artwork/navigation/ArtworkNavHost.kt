@@ -218,6 +218,9 @@ fun ArtworkNavHost(
                         costDownAfter = uiState.costDownAfter,
                         onCostDownPreview = { from, into, garment -> viewModel.renderCostDownPreview(from, into, garment) },
                         onCloseCostDownPreview = { viewModel.clearCostDownPreview() },
+                        previewInkHexes = uiState.partAResult?.measuredPalette?.map { it.hex }.orEmpty(),
+                        inkSwaps = uiState.inkSwaps,
+                        onPreviewInk = { from, to -> viewModel.swapInk(from, to) },
                         sheetPreview = if (uiState.partBResult?.isDarkGarment == true) uiState.previewWithBase else uiState.previewWithoutBase
                     )
                 },
@@ -315,6 +318,9 @@ fun ArtworkNavHost(
                         costDownAfter = uiState.costDownAfter,
                         onCostDownPreview = { from, into, garment -> viewModel.renderCostDownPreview(from, into, garment) },
                         onCloseCostDownPreview = { viewModel.clearCostDownPreview() },
+                        previewInkHexes = uiState.partAResult?.measuredPalette?.map { it.hex }.orEmpty(),
+                        inkSwaps = uiState.inkSwaps,
+                        onPreviewInk = { from, to -> viewModel.swapInk(from, to) },
                         sheetPreview = if (uiState.partBResult?.isDarkGarment == true) uiState.previewWithBase else uiState.previewWithoutBase
                     )
                 },
