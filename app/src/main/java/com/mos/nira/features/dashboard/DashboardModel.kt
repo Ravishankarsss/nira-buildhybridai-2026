@@ -37,6 +37,8 @@ object ArtworkStart {
     const val PREVIEW = "artwork_preview"
     const val SHADE_LIBRARY = "artwork_shade_library"
     const val PRINT_REPORT = "artwork_print_report"
+    /** The job page (summary bar and tabs). */
+    const val JOB = "artwork_color_intelligence"
 }
 
 enum class DayPart { MORNING, AFTERNOON, EVENING }
@@ -66,7 +68,9 @@ data class RecentAnalysisItem(
     val thumbnailPath: String?,
     val imageUri: String,
     val inputKind: String? = null,
-    val mainHexes: List<String> = emptyList()
+    val mainHexes: List<String> = emptyList(),
+    /** Method, screens and cost per piece, once the job page has worked them out. */
+    val summary: com.mos.nira.features.advice.JobSummary? = null
 )
 
 object DashboardModel {
@@ -92,7 +96,8 @@ object DashboardModel {
     fun recentAnalyses(
         saved: List<ArtworkAnalysisRecord>,
         limit: Int = RECENT_LIMIT,
-        locale: Locale = Locale.getDefault()
+        locale: Locale = Locale.getDefault(),
+        summaries: Map<String, com.mos.nira.features.advice.JobSummary> = emptyMap()
     ): List<RecentAnalysisItem> {
         val format = SimpleDateFormat("d MMM yyyy, HH:mm", locale)
         return saved.sortedByDescending { it.timestamp }.take(limit).map { record ->
@@ -104,7 +109,8 @@ object DashboardModel {
                 thumbnailPath = record.thumbnailPath,
                 imageUri = record.imageUri,
                 inputKind = record.inputKind,
-                mainHexes = record.mainPrintHexes()
+                mainHexes = record.mainPrintHexes(),
+                summary = summaries[record.id]
             )
         }
     }

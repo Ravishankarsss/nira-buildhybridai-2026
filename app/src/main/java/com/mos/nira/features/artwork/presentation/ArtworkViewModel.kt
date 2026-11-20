@@ -751,6 +751,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
 
     fun setJobSummary(summary: com.mos.nira.features.advice.JobSummary) {
         if (_uiState.value.jobSummary != summary) _uiState.update { it.copy(jobSummary = summary) }
+        _uiState.value.currentRecordId?.let { id -> com.mos.nira.features.dashboard.JobSummaryStore.save(getApplication(), id, summary) }
     }
 
     fun setBriefFabric(fabric: String?) = _uiState.update { it.copy(briefFabric = fabric) }

@@ -602,4 +602,14 @@
         <item quantity="one">%1$d khung</item>
         <item quantity="other">%1$d khung</item>
     </plurals>
+    <string name="home_start_title">Bắt đầu đơn in</string>
+    <string name="home_start_hint">Chọn hình in hoặc chụp ảnh áo. Sau đó bốn câu hỏi: phương pháp, chi phí và phiếu.</string>
+    <string name="home_start_artwork">Tệp hình in</string>
+    <string name="home_start_photo">Ảnh áo</string>
+    <string name="home_tool_report">Báo cáo mới nhất</string>
+    <string name="home_tool_shades">Thư viện màu</string>
+    <string name="home_tool_techniques">Kỹ thuật</string>
+    <string name="home_see_all">Xem tất cả</string>
+    <string name="home_ai_title">AI lai trên điện thoại này</string>
+    <string name="home_ai_counts">Trả lời trên máy: %1$d · trên đám mây: %2$d · ảnh đã gửi: %3$d</string>
 </resources>

@@ -603,4 +603,14 @@
         <item quantity="one">%1$d Sieb</item>
         <item quantity="other">%1$d Siebe</item>
     </plurals>
+    <string name="home_start_title">Druckauftrag starten</string>
+    <string name="home_start_hint">Wähle das Motiv oder fotografiere das Kleidungsstück. Dann vier Fragen: Methode, Kosten und Blatt folgen.</string>
+    <string name="home_start_artwork">Motivdatei</string>
+    <string name="home_start_photo">Foto vom Teil</string>
+    <string name="home_tool_report">Letzter Bericht</string>
+    <string name="home_tool_shades">Farbbibliothek</string>
+    <string name="home_tool_techniques">Techniken</string>
+    <string name="home_see_all">Alle ansehen</string>
+    <string name="home_ai_title">Hybride KI auf diesem Telefon</string>
+    <string name="home_ai_counts">Antworten auf dem Gerät: %1$d · aus der Cloud: %2$d · gesendete Bilder: %3$d</string>
 </resources>

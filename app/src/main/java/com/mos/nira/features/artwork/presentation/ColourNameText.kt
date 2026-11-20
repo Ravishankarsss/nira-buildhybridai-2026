@@ -43,7 +43,8 @@ fun colourName(hex: String): String {
     return text.replaceFirstChar { it.titlecase(locale) }
 }
 
-private val CAMERA_NAME = Regex("^(IMG|PXL|DSC|Screenshot)?[_-]?[0-9_ -]{6,}\\.(png|jpe?g|webp)$", RegexOption.IGNORE_CASE)
+// Phone camera names, and NIRA's own camera ("garment_<time>.jpg", GarmentCameraScreen).
+private val CAMERA_NAME = Regex("^(IMG|PXL|DSC|Screenshot|garment)?[_-]?[0-9_ -]{6,}\\.(png|jpe?g|webp)$", RegexOption.IGNORE_CASE)
 
 /**
  * A readable title for a saved job. A real file name is kept (without its extension); a camera

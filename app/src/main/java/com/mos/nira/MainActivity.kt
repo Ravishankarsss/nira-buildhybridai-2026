@@ -170,7 +170,10 @@ fun NIRAAppRoot() {
                 LaunchedEffect(Unit) { artworkViewModel.loadSavedAnalyses() }
 
                 val saved = savedAnalyses
-                val recent = remember(saved) { DashboardModel.recentAnalyses(saved) }
+                val homeContext = androidx.compose.ui.platform.LocalContext.current
+                val recent = remember(saved) {
+                    DashboardModel.recentAnalyses(saved, summaries = com.mos.nira.features.dashboard.JobSummaryStore.all(homeContext))
+                }
                 NIRADashboard(
                     modifier = Modifier,
                     recent = recent,
@@ -205,9 +208,10 @@ fun NIRAAppRoot() {
                     onOpenRecent = { id ->
                         saved.firstOrNull { it.id == id }?.let { record ->
                             artworkViewModel.openAnalysisRecord(record)
-                            rootNavController.navigate(RootDestinations.artworkFlowAt(ArtworkStart.PRINT_REPORT))
+                            rootNavController.navigate(RootDestinations.artworkFlowAt(ArtworkStart.JOB))
                         }
                     },
+                    onSeeAll = { rootNavController.navigate(RootDestinations.ARTWORK_FLOW) },
                 )
             }
 
@@ -262,7 +266,11 @@ fun NIRADashboard(
     onChooseFromGallery: () -> Unit = {},
     onOpenCard: (WorkspaceCard) -> Unit = {},
     onOpenRecent: (String) -> Unit = {},
+    onSeeAll: () -> Unit = {},
 ) {
+    val homeContext = androidx.compose.ui.platform.LocalContext.current
+    LaunchedEffect(Unit) { com.mos.nira.core.ai.AiSettings.load(homeContext) }
+    val aiCounts by com.mos.nira.core.ai.AiSettings.counts.collectAsState()
     var showPhotoSource by remember { mutableStateOf(false) }
 
     if (showPhotoSource) {
@@ -325,9 +333,10 @@ fun NIRADashboard(
             }
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // Greeting follows the device clock
+        // The promise in one short line, and the greeting.
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(text = stringResource(R.string.dashboard_headline), color = Muted, fontSize = 13.sp, lineHeight = 18.sp)
+        Spacer(modifier = Modifier.height(20.dp))
         Text(
             text = stringResource(
                 when (dayPart) {
@@ -335,100 +344,77 @@ fun NIRADashboard(
                     DayPart.AFTERNOON -> R.string.greeting_afternoon
                     DayPart.EVENING -> R.string.greeting_evening
                 },
-            ).uppercase(),
-            color = Muted,
-            fontSize = 11.sp,
-            letterSpacing = 2.sp,
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = stringResource(R.string.dashboard_headline),
+            ),
             color = White,
-            fontSize = 26.sp,
-            lineHeight = 34.sp,
+            fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
         )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Two primary actions
-        PrimaryAction(
-            symbol = "◈",
-            title = stringResource(R.string.action_analyse_artwork),
-            hint = stringResource(R.string.action_analyse_artwork_hint),
-            accent = Violet,
-            highlighted = true,
-            onClick = onAnalyseArtwork,
-        )
-
         Spacer(modifier = Modifier.height(12.dp))
 
-        PrimaryAction(
-            symbol = "◉",
-            title = stringResource(R.string.action_photograph_garment),
-            hint = stringResource(R.string.action_photograph_garment_hint),
-            accent = Cyan,
-            highlighted = false,
-            onClick = { showPhotoSource = true },
-        )
-
-        // Workspace cards: only destinations that are built
-        if (cards.isNotEmpty()) {
-            Spacer(modifier = Modifier.height(30.dp))
-            SectionLabel(stringResource(R.string.section_workspace))
-            Spacer(modifier = Modifier.height(14.dp))
-
-            cards.chunked(2).forEachIndexed { rowIndex, rowCards ->
-                if (rowIndex > 0) Spacer(modifier = Modifier.height(12.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.Top,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                ) {
-                    rowCards.forEach { card ->
-                        WorkspaceTile(
-                            symbol = when (card) {
-                                WorkspaceCard.PRINT_REPORT -> "▤"
-                                WorkspaceCard.SHADE_LIBRARY -> "◐"
-                                WorkspaceCard.TECHNIQUE_LIBRARY -> "✧"
-                                WorkspaceCard.ASK_NIRA -> "✦"
-                            },
-                            title = stringResource(
-                                when (card) {
-                                    WorkspaceCard.PRINT_REPORT -> R.string.card_print_report
-                                    WorkspaceCard.SHADE_LIBRARY -> R.string.card_shade_library
-                                    WorkspaceCard.TECHNIQUE_LIBRARY -> R.string.card_technique_library
-                                    WorkspaceCard.ASK_NIRA -> R.string.card_ask_nira
-                                },
-                            ),
-                            subtitle = when (card) {
-                                WorkspaceCard.PRINT_REPORT ->
-                                    if (latestFileName != null) {
-                                        stringResource(R.string.card_print_report_latest, latestFileName)
-                                    } else {
-                                        stringResource(R.string.card_print_report_pick)
-                                    }
-                                WorkspaceCard.SHADE_LIBRARY -> stringResource(R.string.card_shade_library_hint)
-                                WorkspaceCard.TECHNIQUE_LIBRARY -> stringResource(R.string.card_technique_library_hint)
-                                WorkspaceCard.ASK_NIRA -> stringResource(R.string.card_ask_nira_hint)
-                            },
-                            accent = if (card.ordinal % 2 == 0) Violet else Cyan,
-                            onClick = { onOpenCard(card) },
-                            modifier = Modifier.weight(1f),
-                        )
-                    }
-                    if (rowCards.size == 1) Spacer(modifier = Modifier.weight(1f))
+        // Start a print job: two big choices side by side.
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(20.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Brush.linearGradient(listOf(Color(0xFF302B63), Color(0xFF242044), Color(0xFF171F35))))
+                    .padding(16.dp),
+            ) {
+                Text(stringResource(R.string.home_start_title), color = White, fontSize = 17.sp, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.home_start_hint), color = Muted, fontSize = 12.sp, lineHeight = 16.sp)
+                Spacer(modifier = Modifier.height(12.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    StartChoice("◈", stringResource(R.string.home_start_artwork), Violet, Modifier.weight(1f), onAnalyseArtwork)
+                    StartChoice("◉", stringResource(R.string.home_start_photo), Cyan, Modifier.weight(1f)) { showPhotoSource = true }
                 }
             }
         }
 
-        // Recent analyses from the saved history
-        Spacer(modifier = Modifier.height(30.dp))
-        SectionLabel(stringResource(R.string.section_recent))
-        Spacer(modifier = Modifier.height(12.dp))
+        // Tools in one row.
+        if (cards.isNotEmpty()) {
+            Spacer(modifier = Modifier.height(22.dp))
+            SectionLabel(stringResource(R.string.section_workspace))
+            Spacer(modifier = Modifier.height(10.dp))
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                cards.forEach { card ->
+                    ToolTile(
+                        symbol = when (card) {
+                            WorkspaceCard.PRINT_REPORT -> "▤"
+                            WorkspaceCard.SHADE_LIBRARY -> "◐"
+                            WorkspaceCard.TECHNIQUE_LIBRARY -> "✧"
+                            WorkspaceCard.ASK_NIRA -> "✦"
+                        },
+                        title = stringResource(
+                            when (card) {
+                                WorkspaceCard.PRINT_REPORT -> R.string.home_tool_report
+                                WorkspaceCard.SHADE_LIBRARY -> R.string.home_tool_shades
+                                WorkspaceCard.TECHNIQUE_LIBRARY -> R.string.home_tool_techniques
+                                WorkspaceCard.ASK_NIRA -> R.string.card_ask_nira
+                            },
+                        ),
+                        accent = if (card.ordinal % 2 == 0) Violet else Cyan,
+                        onClick = { onOpenCard(card) },
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+            }
+        }
 
+        // Recent jobs with their decision.
+        Spacer(modifier = Modifier.height(22.dp))
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Box(Modifier.weight(1f)) { SectionLabel(stringResource(R.string.section_recent)) }
+            if (recent.isNotEmpty()) {
+                Text(
+                    stringResource(R.string.home_see_all), color = Cyan, fontSize = 13.sp, fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.clip(RoundedCornerShape(8.dp)).clickable(onClick = onSeeAll).padding(horizontal = 6.dp, vertical = 4.dp)
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(10.dp))
         if (recent.isEmpty()) {
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -436,19 +422,9 @@ fun NIRADashboard(
                 colors = CardDefaults.cardColors(containerColor = CardColor),
             ) {
                 Column(modifier = Modifier.padding(18.dp)) {
-                    Text(
-                        text = stringResource(R.string.recent_empty_title),
-                        color = White,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 16.sp,
-                    )
+                    Text(text = stringResource(R.string.recent_empty_title), color = White, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
                     Spacer(modifier = Modifier.height(6.dp))
-                    Text(
-                        text = stringResource(R.string.recent_empty_message),
-                        color = Muted,
-                        fontSize = 13.sp,
-                        lineHeight = 19.sp,
-                    )
+                    Text(text = stringResource(R.string.recent_empty_message), color = Muted, fontSize = 13.sp, lineHeight = 19.sp)
                 }
             }
         } else {
@@ -458,7 +434,56 @@ fun NIRADashboard(
             }
         }
 
+        // Hybrid AI on this phone: the real counts NIRA keeps (Settings has the details).
+        Spacer(modifier = Modifier.height(22.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(CardColor).padding(14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text("✦", color = Violet, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.width(12.dp))
+            Column(Modifier.weight(1f)) {
+                Text(stringResource(R.string.home_ai_title), color = White, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                Text(
+                    stringResource(R.string.home_ai_counts, aiCounts.answersOnDevice, aiCounts.answersInCloud, aiCounts.imagesUploaded),
+                    color = Muted, fontSize = 12.sp, lineHeight = 16.sp,
+                )
+            }
+        }
+
         Spacer(modifier = Modifier.height(28.dp))
+    }
+}
+
+@Composable
+private fun StartChoice(symbol: String, title: String, accent: Color, modifier: Modifier, onClick: () -> Unit) {
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(16.dp))
+            .background(Color(0xFF0F1526).copy(alpha = 0.7f))
+            .clickable(onClick = onClick)
+            .padding(vertical = 16.dp, horizontal = 12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(symbol, color = accent, fontSize = 26.sp, fontWeight = FontWeight.Bold)
+        Spacer(modifier = Modifier.height(6.dp))
+        Text(title, color = White, fontSize = 14.sp, fontWeight = FontWeight.Bold, textAlign = androidx.compose.ui.text.style.TextAlign.Center, lineHeight = 18.sp)
+    }
+}
+
+@Composable
+private fun ToolTile(symbol: String, title: String, accent: Color, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(16.dp))
+            .background(CardColor)
+            .clickable(onClick = onClick)
+            .padding(vertical = 14.dp, horizontal = 8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(symbol, color = accent, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+        Spacer(modifier = Modifier.height(6.dp))
+        Text(title, color = White, fontSize = 12.sp, fontWeight = FontWeight.SemiBold, textAlign = androidx.compose.ui.text.style.TextAlign.Center, maxLines = 2, lineHeight = 15.sp)
     }
 }
 
@@ -579,11 +604,21 @@ private fun RecentAnalysisCard(item: RecentAnalysisItem, onClick: () -> Unit) {
                     overflow = TextOverflow.Ellipsis,
                 )
                 Spacer(modifier = Modifier.height(3.dp))
+                val sm = item.summary
                 Text(
-                    text = pluralStringResource(R.plurals.recent_colour_count, item.colourCount, item.colourCount),
+                    text = if (sm?.method != null) {
+                        listOfNotNull(
+                            sm.method,
+                            sm.perPc?.let { stringResource(R.string.cost_per_pc, com.mos.nira.core.commercial.Money.format(sm.currency, it, 2)) + if (sm.sampleRates) " *" else "" },
+                        ).joinToString("  ·  ")
+                    } else {
+                        pluralStringResource(R.plurals.recent_colour_count, item.colourCount, item.colourCount)
+                    },
                     color = Cyan,
-                    fontSize = 11.sp,
+                    fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
                 Text(text = item.dateText, color = Muted, fontSize = 11.sp)
             }
