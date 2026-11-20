@@ -539,7 +539,7 @@
     <string name="order_left_sleeve">இடது கை</string>
     <string name="order_right_sleeve">வலது கை</string>
     <string name="order_other">வேறு இடம்</string>
-    <string name="order_screens">%1$d ஸ்கிரீன்கள்</string>
+    <string name="order_screens">ஸ்கிரீன்கள்: %1$d</string>
     <string name="order_partial">பகுதிச் செலவு</string>
     <string name="order_per_garment">ஒரு ஆடைக்கு %1$s (%2$d அச்சுகள்)</string>
     <string name="order_qty_differ">அச்சுகளின் எண்ணிக்கை வேறுபடுகிறது, எனவே ஆர்டர் மொத்தம் இல்லை. ஒவ்வொரு வேலையிலும் ஒரே எண்ணிக்கையைப் பயன்படுத்தவும்.</string>

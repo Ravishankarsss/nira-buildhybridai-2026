@@ -539,7 +539,7 @@
     <string name="order_left_sleeve">বাঁ হাতা</string>
     <string name="order_right_sleeve">ডান হাতা</string>
     <string name="order_other">অন্য জায়গা</string>
-    <string name="order_screens">%1$dটি স্ক্রিন</string>
+    <string name="order_screens">স্ক্রিন: %1$d</string>
     <string name="order_partial">আংশিক খরচ</string>
     <string name="order_per_garment">প্রতি পোশাকে %1$s (%2$dটি প্রিন্ট)</string>
     <string name="order_qty_differ">প্রিন্টগুলোর পরিমাণ আলাদা, তাই অর্ডারের মোট নেই। প্রতিটি কাজে একই পরিমাণ দিন।</string>

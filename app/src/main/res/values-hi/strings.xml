@@ -539,7 +539,7 @@
     <string name="order_left_sleeve">बाईं आस्तीन</string>
     <string name="order_right_sleeve">दाईं आस्तीन</string>
     <string name="order_other">दूसरी जगह</string>
-    <string name="order_screens">%1$d स्क्रीन</string>
+    <string name="order_screens">स्क्रीन: %1$d</string>
     <string name="order_partial">आंशिक लागत</string>
     <string name="order_per_garment">प्रति गारमेंट %1$s (%2$d प्रिंट)</string>
     <string name="order_qty_differ">प्रिंट की मात्राएँ अलग हैं, इसलिए ऑर्डर का कुल नहीं। हर काम में एक ही मात्रा रखें।</string>

@@ -457,7 +457,8 @@ fun PrintDecisionCard(
                     },
                     onClosePreview = onCloseCostDownPreview,
                     onOptionSelected = { chosenOption = it },
-                    jobLabel = card.screens.filter { it.isArtworkColour }
+                    // The artwork's own colours (from the engine's screens; a digital card has none of its own).
+                    jobLabel = card.screens.ifEmpty { screens }.filter { it.isArtworkColour }
                         .map { com.mos.nira.features.artwork.presentation.colourName(it.hex) }.distinct()
                         .joinToString(", ").ifBlank { best.advice.name },
                     extraActions = {

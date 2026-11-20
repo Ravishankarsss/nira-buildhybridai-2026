@@ -538,7 +538,7 @@
     <string name="order_left_sleeve">Tay trái</string>
     <string name="order_right_sleeve">Tay phải</string>
     <string name="order_other">Vị trí khác</string>
-    <string name="order_screens">%1$d khung</string>
+    <string name="order_screens">Khung: %1$d</string>
     <string name="order_partial">chi phí chưa đủ</string>
     <string name="order_per_garment">%1$s mỗi áo (%2$d bản in)</string>
     <string name="order_qty_differ">Các bản in có số lượng khác nhau nên không có tổng đơn. Hãy dùng cùng số lượng cho mỗi việc.</string>

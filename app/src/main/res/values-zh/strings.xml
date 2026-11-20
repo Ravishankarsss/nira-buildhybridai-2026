@@ -538,7 +538,7 @@
     <string name="order_left_sleeve">左袖</string>
     <string name="order_right_sleeve">右袖</string>
     <string name="order_other">其他位置</string>
-    <string name="order_screens">%1$d 个网版</string>
+    <string name="order_screens">网版：%1$d</string>
     <string name="order_partial">成本不完整</string>
     <string name="order_per_garment">每件 %1$s（%2$d 处印花）</string>
     <string name="order_qty_differ">各印花数量不同，因此没有订单总额。请在每个任务中使用相同数量。</string>

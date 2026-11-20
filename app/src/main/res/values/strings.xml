@@ -538,7 +538,7 @@
     <string name="order_left_sleeve">Left sleeve</string>
     <string name="order_right_sleeve">Right sleeve</string>
     <string name="order_other">Other place</string>
-    <string name="order_screens">%1$d screens</string>
+    <string name="order_screens">Screens: %1$d</string>
     <string name="order_partial">partial cost</string>
     <string name="order_per_garment">%1$s per garment (%2$d prints)</string>
     <string name="order_qty_differ">The prints have different quantities, so no order total. Use the same quantity on each job.</string>

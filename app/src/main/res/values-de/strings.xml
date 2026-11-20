@@ -539,7 +539,7 @@
     <string name="order_left_sleeve">Linker Ärmel</string>
     <string name="order_right_sleeve">Rechter Ärmel</string>
     <string name="order_other">Andere Stelle</string>
-    <string name="order_screens">%1$d Siebe</string>
+    <string name="order_screens">Siebe: %1$d</string>
     <string name="order_partial">Teilkosten</string>
     <string name="order_per_garment">%1$s pro Teil (%2$d Drucke)</string>
     <string name="order_qty_differ">Die Drucke haben verschiedene Mengen, daher keine Auftragssumme. Nutze bei jedem Auftrag dieselbe Menge.</string>

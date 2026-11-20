@@ -540,7 +540,7 @@
     <string name="order_left_sleeve">Manche gauche</string>
     <string name="order_right_sleeve">Manche droite</string>
     <string name="order_other">Autre endroit</string>
-    <string name="order_screens">%1$d écrans</string>
+    <string name="order_screens">Écrans : %1$d</string>
     <string name="order_partial">coût partiel</string>
     <string name="order_per_garment">%1$s par vêtement (%2$d impressions)</string>
     <string name="order_qty_differ">Les impressions ont des quantités différentes : pas de total de commande. Utilisez la même quantité pour chaque travail.</string>
