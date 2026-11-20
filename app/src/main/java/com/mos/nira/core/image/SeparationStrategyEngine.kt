@@ -1355,8 +1355,10 @@ object SeparationStrategyEngine {
                 canvas.drawRoundRect(swatchRect, 6f, 6f, swatchPaint)
                 canvas.drawRoundRect(swatchRect, 6f, 6f, borderPaint)
 
-                canvas.drawText("Screen ${ch.channelIndex}: ${ch.inkName}", cellLeft + 54f, metaTop + 22f, bodyPaint)
-                canvas.drawText("HEX: ${ch.inkHex}  |  Mesh: ${ch.recommendedMesh}", cellLeft + 16f, metaTop + 55f, smallPaint)
+                // Colour names first; the code stays in brackets for the separator's software.
+                val inkTitle = if (Regex("^#[0-9A-Fa-f]{6}$").matches(ch.inkName)) ColourName.english(ch.inkName) else ch.inkName
+                canvas.drawText("Screen ${ch.channelIndex}: $inkTitle", cellLeft + 54f, metaTop + 22f, bodyPaint)
+                canvas.drawText("Ink: ${ColourName.english(ch.inkHex)} (${ch.inkHex})  |  Mesh: ${ch.recommendedMesh}", cellLeft + 16f, metaTop + 55f, smallPaint)
                 canvas.drawText("Active Coverage: ${ch.formattedCoverage}  (Box: ${ch.formattedBoxCoverage})", cellLeft + 16f, metaTop + 80f, smallPaint)
             }
 

@@ -436,4 +436,16 @@
     <string name="garment_mustard">Senfgelb</string>
     <string name="garment_maroon">Weinrot</string>
     <string name="garment_lavender">Lavendel</string>
+    <string name="add_colour_button">+ Farbe hinzufügen</string>
+    <string name="add_colour_title">Schmuckfarbe hinzufügen</string>
+    <string name="add_colour_hint">Farbcode vom Kundenblatt eingeben (z. B. #FF5500). NIRA zeigt vor dem Hinzufügen den Namen.</string>
+    <string name="add_colour_name">Diese Farbe ist: %1$s</string>
+    <string name="add_colour_confirm">Hinzufügen und zuordnen</string>
+    <string name="merge_title">%1$s zusammenführen mit…</string>
+    <string name="merge_hint">Farbe wählen, die diese übernimmt:</string>
+    <string name="colour_family">Familie %1$d: %2$s</string>
+    <string name="res_warn_title">Auflösung des Motivs ist niedrig</string>
+    <string name="res_warn_body">%1$.1f px pro cm (etwa %2$d dpi) bei %3$.0f cm Druckbreite. Feine Linien und kleine Schrift brauchen %4$.0f px pro cm (etwa %5$d dpi).</string>
+    <string name="res_warn_fix_artwork">Für diese Größe beim Kunden ein Motiv mit mindestens %1$d px Breite oder eine Vektordatei (AI, PDF, SVG) anfordern. Farben und Flächen unten sind trotzdem gemessen.</string>
+    <string name="res_warn_fix_photo">Näher fotografieren, damit der Druck das Bild füllt, oder das Originalmotiv anfordern. Farben und Flächen unten sind trotzdem gemessen.</string>
 </resources>

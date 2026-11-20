@@ -157,6 +157,8 @@ data class PartAResult(
     val printBox: NormalizedRect = NormalizedRect(0f, 0f, 1f, 1f),
     val pixelsPerCm: Double = 0.0,
     val lowResolutionWarning: String? = null,
+    /** The rule the warning used (print_rules.json resolution.px_per_cm_min_for_fine_detail); 0 when no warning. */
+    val minPxPerCm: Double = 0.0,
     /** Photo or artwork signals against the user's chosen mode (print_rules.json photo_vs_artwork). */
     val inputKindAssessment: InputKindAssessment? = null,
     /** Regions removed as fold shadows (print_rules.json shadow_vs_ink). */

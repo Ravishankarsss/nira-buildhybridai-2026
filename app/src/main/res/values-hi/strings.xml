@@ -436,4 +436,16 @@
     <string name="garment_mustard">सरसों पीला</string>
     <string name="garment_maroon">मैरून</string>
     <string name="garment_lavender">लैवेंडर</string>
+    <string name="add_colour_button">+ रंग जोड़ें</string>
+    <string name="add_colour_title">स्पॉट रंग जोड़ें</string>
+    <string name="add_colour_hint">खरीदार की शीट से रंग कोड लिखें (उदाहरण #FF5500)। जोड़ने से पहले NIRA उसका नाम दिखाता है।</string>
+    <string name="add_colour_name">यह रंग है: %1$s</string>
+    <string name="add_colour_confirm">जोड़ें और बदलें</string>
+    <string name="merge_title">%1$s को इसमें मिलाएँ…</string>
+    <string name="merge_hint">वह रंग चुनें जो इसे लेगा:</string>
+    <string name="colour_family">परिवार %1$d: %2$s</string>
+    <string name="res_warn_title">Artwork का रिज़ॉल्यूशन कम है</string>
+    <string name="res_warn_body">%3$.0f सेमी प्रिंट चौड़ाई पर %1$.1f px प्रति सेमी (लगभग %2$d dpi)। बारीक रेखाओं और छोटे अक्षरों के लिए %4$.0f px प्रति सेमी (लगभग %5$d dpi) चाहिए।</string>
+    <string name="res_warn_fix_artwork">इस आकार के लिए खरीदार से कम से कम %1$d px चौड़ा artwork या vector फ़ाइल (AI, PDF, SVG) माँगें। नीचे के रंग और क्षेत्र फिर भी मापे गए हैं।</string>
+    <string name="res_warn_fix_photo">प्रिंट पूरे फ्रेम में आए, इसके लिए पास से फिर फ़ोटो लें, या मूल artwork माँगें। नीचे के रंग और क्षेत्र फिर भी मापे गए हैं।</string>
 </resources>

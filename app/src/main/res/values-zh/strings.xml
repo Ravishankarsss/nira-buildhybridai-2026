@@ -435,4 +435,16 @@
     <string name="garment_mustard">芥末黄</string>
     <string name="garment_maroon">酒红</string>
     <string name="garment_lavender">薰衣草紫</string>
+    <string name="add_colour_button">+ 添加颜色</string>
+    <string name="add_colour_title">添加专色</string>
+    <string name="add_colour_hint">输入买家色卡上的颜色代码（例如 #FF5500）。添加前 NIRA 会显示颜色名称。</string>
+    <string name="add_colour_name">此颜色为：%1$s</string>
+    <string name="add_colour_confirm">添加并重新分配</string>
+    <string name="merge_title">将 %1$s 合并到…</string>
+    <string name="merge_hint">选择吸收此颜色的颜色：</string>
+    <string name="colour_family">色系 %1$d：%2$s</string>
+    <string name="res_warn_title">图稿分辨率偏低</string>
+    <string name="res_warn_body">印花宽度 %3$.0f 厘米时为每厘米 %1$.1f 像素（约 %2$d dpi）。细线和小字需要每厘米 %4$.0f 像素（约 %5$d dpi）。</string>
+    <string name="res_warn_fix_artwork">此尺寸请向买家索取宽度至少 %1$d 像素的图稿或矢量文件（AI、PDF、SVG）。下方的颜色和面积仍已测量。</string>
+    <string name="res_warn_fix_photo">请靠近重拍，让印花填满画面，或索取原始图稿。下方的颜色和面积仍已测量。</string>
 </resources>

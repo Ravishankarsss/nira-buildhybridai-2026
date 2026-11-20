@@ -435,4 +435,16 @@
     <string name="garment_mustard">Mustard</string>
     <string name="garment_maroon">Maroon</string>
     <string name="garment_lavender">Lavender</string>
+    <string name="add_colour_button">+ Add a colour</string>
+    <string name="add_colour_title">Add a spot colour</string>
+    <string name="add_colour_hint">Type the colour code from the buyer\'s sheet (for example #FF5500). NIRA shows its name before you add it.</string>
+    <string name="add_colour_name">This colour is: %1$s</string>
+    <string name="add_colour_confirm">Add and reassign</string>
+    <string name="merge_title">Merge %1$s into…</string>
+    <string name="merge_hint">Choose the colour that takes this one:</string>
+    <string name="colour_family">Family %1$d: %2$s</string>
+    <string name="res_warn_title">Artwork resolution is low</string>
+    <string name="res_warn_body">%1$.1f px per cm (about %2$d dpi) at %3$.0f cm print width. Fine lines and small text need %4$.0f px per cm (about %5$d dpi).</string>
+    <string name="res_warn_fix_artwork">For this size, ask the buyer for artwork at least %1$d px wide, or a vector file (AI, PDF, SVG). Colours and areas below are still measured.</string>
+    <string name="res_warn_fix_photo">Retake the photo closer so the print fills the frame, or ask for the original artwork. Colours and areas below are still measured.</string>
 </resources>

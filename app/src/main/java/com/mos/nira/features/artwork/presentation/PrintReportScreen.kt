@@ -205,32 +205,34 @@ fun PrintReportScreen(
                 }
             }
 
-            // Low resolution warning if applicable
-            if (partAResult?.lowResolutionWarning != null) {
+            // Low resolution: a caution (not an error) in the user's language, with the size to ask for.
+            if (partAResult?.lowResolutionWarning != null && partAResult.minPxPerCm > 0.0) {
                 item {
+                    val amber = Color(0xFFFFC857)
+                    val needPx = kotlin.math.ceil(partAResult.minPxPerCm * partAResult.printWidthCm).toInt()
                     Card(
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.8f)
-                        ),
+                        colors = CardDefaults.cardColors(containerColor = Color(0xFF2E2612)),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, amber.copy(alpha = 0.5f)),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Row(
-                            modifier = Modifier.padding(12.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(Icons.Default.Warning, contentDescription = null, tint = MaterialTheme.colorScheme.error)
+                        Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.Top) {
+                            Icon(Icons.Default.Warning, contentDescription = null, tint = amber)
                             Spacer(modifier = Modifier.width(10.dp))
-                            Column {
+                            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                Text(stringResource(R.string.res_warn_title), style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold, color = amber)
                                 Text(
-                                    text = "Low Artwork Resolution Warning",
-                                    style = MaterialTheme.typography.labelMedium,
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.onErrorContainer
+                                    stringResource(
+                                        R.string.res_warn_body,
+                                        partAResult.pixelsPerCm, kotlin.math.round(partAResult.pixelsPerCm * 2.54).toInt(),
+                                        partAResult.printWidthCm,
+                                        partAResult.minPxPerCm, kotlin.math.round(partAResult.minPxPerCm * 2.54).toInt()
+                                    ),
+                                    style = MaterialTheme.typography.bodySmall, color = Color(0xFFF1E6C8)
                                 )
                                 Text(
-                                    text = partAResult.lowResolutionWarning,
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onErrorContainer
+                                    if (inputs.inputKind == com.mos.nira.core.image.InputKind.PHOTO) stringResource(R.string.res_warn_fix_photo)
+                                    else stringResource(R.string.res_warn_fix_artwork, needPx),
+                                    style = MaterialTheme.typography.bodySmall, color = Color(0xFFF1E6C8)
                                 )
                             }
                         }
@@ -374,7 +376,7 @@ fun PrintReportScreen(
                                                 )
                                                 Spacer(modifier = Modifier.width(4.dp))
                                                 Text(
-                                                    text = "L* ${String.format("%.1f", garmentProf.medianLab.l)} (spread ΔE ${String.format("%.1f", garmentProf.spreadDeltaE00)})",
+                                                    text = "${colourName(garmentProf.estimatedHex)} · L* ${String.format("%.1f", garmentProf.medianLab.l)} (spread ΔE ${String.format("%.1f", garmentProf.spreadDeltaE00)})",
                                                     style = MaterialTheme.typography.labelSmall,
                                                     fontFamily = FontFamily.Monospace
                                                 )
@@ -1304,7 +1306,7 @@ fun InkConsumptionChannelRow(channel: InkChannelConsumption, orderPieces: Int) {
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = "Screen ${channel.channelIndex}: ${channel.inkName}",
+                        text = "Screen ${channel.channelIndex}: ${inkLabel(channel.inkName)}",
                         style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.Bold
                     )
@@ -1739,10 +1741,9 @@ fun MeasuredColorRow(color: MeasuredColor) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = color.hex,
+                        text = colourName(color.hex),
                         style = MaterialTheme.typography.titleSmall,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = FontFamily.Monospace
+                        fontWeight = FontWeight.Bold
                     )
                     Text(
                         text = color.formattedCoverage,
@@ -1753,7 +1754,7 @@ fun MeasuredColorRow(color: MeasuredColor) {
                 }
 
                 Text(
-                    text = "${color.formattedLab} • ${color.formattedArea}",
+                    text = "${color.hex} • ${color.formattedLab} • ${color.formattedArea}",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -1885,7 +1886,7 @@ fun FilmPositiveCard(channel: FilmPositiveChannel) {
             if (filmBmp != null) {
                 Image(
                     bitmap = filmBmp.asImageBitmap(),
-                    contentDescription = "Film Positive ${channel.inkName}",
+                    contentDescription = "Film Positive ${inkLabel(channel.inkName)}",
                     modifier = Modifier
                         .size(68.dp)
                         .clip(RoundedCornerShape(6.dp))
@@ -1918,7 +1919,7 @@ fun FilmPositiveCard(channel: FilmPositiveChannel) {
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = "Screen ${channel.channelIndex}: ${channel.inkName}",
+                        text = "Screen ${channel.channelIndex}: ${inkLabel(channel.inkName)}",
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Bold
                     )
@@ -1929,7 +1930,7 @@ fun FilmPositiveCard(channel: FilmPositiveChannel) {
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        text = "HEX: ${channel.inkHex}",
+                        text = colourName(channel.inkHex),
                         style = MaterialTheme.typography.labelSmall,
                         fontFamily = FontFamily.Monospace,
                         color = MaterialTheme.colorScheme.onSurfaceVariant

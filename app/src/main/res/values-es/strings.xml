@@ -437,4 +437,16 @@
     <string name="garment_mustard">Mostaza</string>
     <string name="garment_maroon">Granate</string>
     <string name="garment_lavender">Lavanda</string>
+    <string name="add_colour_button">+ Añadir color</string>
+    <string name="add_colour_title">Añadir color directo</string>
+    <string name="add_colour_hint">Escribe el código de color de la hoja del comprador (por ejemplo #FF5500). NIRA muestra su nombre antes de añadirlo.</string>
+    <string name="add_colour_name">Este color es: %1$s</string>
+    <string name="add_colour_confirm">Añadir y reasignar</string>
+    <string name="merge_title">Unir %1$s con…</string>
+    <string name="merge_hint">Elige el color que absorbe este:</string>
+    <string name="colour_family">Familia %1$d: %2$s</string>
+    <string name="res_warn_title">La resolución del diseño es baja</string>
+    <string name="res_warn_body">%1$.1f px por cm (unos %2$d dpi) con %3$.0f cm de ancho de impresión. Las líneas finas y el texto pequeño necesitan %4$.0f px por cm (unos %5$d dpi).</string>
+    <string name="res_warn_fix_artwork">Para este tamaño, pide al comprador un diseño de al menos %1$d px de ancho o un archivo vectorial (AI, PDF, SVG). Los colores y áreas de abajo sí están medidos.</string>
+    <string name="res_warn_fix_photo">Vuelve a fotografiar más cerca para que la impresión llene el encuadre, o pide el diseño original. Los colores y áreas de abajo sí están medidos.</string>
 </resources>

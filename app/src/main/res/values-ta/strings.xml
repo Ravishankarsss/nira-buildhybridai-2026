@@ -436,4 +436,16 @@
     <string name="garment_mustard">கடுகு மஞ்சள்</string>
     <string name="garment_maroon">மெரூன்</string>
     <string name="garment_lavender">லாவெண்டர்</string>
+    <string name="add_colour_button">+ நிறம் சேர்</string>
+    <string name="add_colour_title">ஸ்பாட் நிறம் சேர்</string>
+    <string name="add_colour_hint">வாங்குபவர் தாளில் உள்ள நிறக் குறியீட்டை உள்ளிடவும் (உதாரணம் #FF5500). சேர்ப்பதற்கு முன் NIRA அதன் பெயரைக் காட்டும்.</string>
+    <string name="add_colour_name">இந்த நிறம்: %1$s</string>
+    <string name="add_colour_confirm">சேர்த்து மாற்று</string>
+    <string name="merge_title">%1$s-ஐ இதனுடன் இணை…</string>
+    <string name="merge_hint">இந்த நிறத்தை ஏற்கும் நிறத்தைத் தேர்ந்தெடுக்கவும்:</string>
+    <string name="colour_family">குடும்பம் %1$d: %2$s</string>
+    <string name="res_warn_title">Artwork தெளிவுத்திறன் குறைவு</string>
+    <string name="res_warn_body">%3$.0f செ.மீ அச்சு அகலத்தில் ஒரு செ.மீக்கு %1$.1f px (சுமார் %2$d dpi). மெல்லிய கோடுகள் மற்றும் சிறிய எழுத்துகளுக்கு ஒரு செ.மீக்கு %4$.0f px (சுமார் %5$d dpi) தேவை.</string>
+    <string name="res_warn_fix_artwork">இந்த அளவுக்கு, குறைந்தது %1$d px அகலமுள்ள artwork அல்லது vector ஃபைலை (AI, PDF, SVG) வாங்குபவரிடம் கேளுங்கள். கீழே உள்ள நிறங்களும் பரப்பளவும் அளக்கப்பட்டுள்ளன.</string>
+    <string name="res_warn_fix_photo">அச்சு முழு சட்டத்தையும் நிரப்பும்படி அருகில் சென்று மீண்டும் புகைப்படம் எடுங்கள், அல்லது அசல் artwork-ஐக் கேளுங்கள். கீழே உள்ள நிறங்களும் பரப்பளவும் அளக்கப்பட்டுள்ளன.</string>
 </resources>

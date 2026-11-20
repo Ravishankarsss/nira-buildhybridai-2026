@@ -1,5 +1,6 @@
 package com.mos.nira.features.artwork.components
 
+import com.mos.nira.features.artwork.presentation.colourName
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -80,11 +81,10 @@ fun ColorSwatchCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = color.hex,
+                        text = colourName(color.hex),
                         color = TextWhite,
                         fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = FontFamily.Monospace
+                        fontWeight = FontWeight.Bold
                     )
                     Text(
                         text = color.formattedPercentage,
@@ -97,7 +97,7 @@ fun ColorSwatchCard(
                 Spacer(modifier = Modifier.height(3.dp))
 
                 Text(
-                    text = color.formattedRgb,
+                    text = "${color.hex}  •  ${color.formattedRgb}",
                     color = TextMuted,
                     fontSize = 12.sp,
                     fontFamily = FontFamily.Monospace
@@ -157,10 +157,15 @@ fun ColorDetailInspector(
 
                 Column {
                     Text(
-                        text = color.hex,
+                        text = colourName(color.hex),
                         color = TextWhite,
                         fontSize = 22.sp,
-                        fontWeight = FontWeight.ExtraBold,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                    Text(
+                        text = color.hex,
+                        color = TextMuted,
+                        fontSize = 12.sp,
                         fontFamily = FontFamily.Monospace
                     )
                     Text(

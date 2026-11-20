@@ -437,4 +437,16 @@
     <string name="garment_mustard">Moutarde</string>
     <string name="garment_maroon">Bordeaux</string>
     <string name="garment_lavender">Lavande</string>
+    <string name="add_colour_button">+ Ajouter une couleur</string>
+    <string name="add_colour_title">Ajouter une couleur d\'accompagnement</string>
+    <string name="add_colour_hint">Saisissez le code couleur de la fiche client (par exemple #FF5500). NIRA affiche son nom avant de l\'ajouter.</string>
+    <string name="add_colour_name">Cette couleur est : %1$s</string>
+    <string name="add_colour_confirm">Ajouter et réaffecter</string>
+    <string name="merge_title">Fusionner %1$s avec…</string>
+    <string name="merge_hint">Choisissez la couleur qui reprend celle-ci :</string>
+    <string name="colour_family">Famille %1$d : %2$s</string>
+    <string name="res_warn_title">Résolution du visuel faible</string>
+    <string name="res_warn_body">%1$.1f px par cm (environ %2$d dpi) pour %3$.0f cm de largeur d\'impression. Les traits fins et petits textes demandent %4$.0f px par cm (environ %5$d dpi).</string>
+    <string name="res_warn_fix_artwork">Pour cette taille, demandez au client un visuel d\'au moins %1$d px de large ou un fichier vectoriel (AI, PDF, SVG). Les couleurs et surfaces ci-dessous sont quand même mesurées.</string>
+    <string name="res_warn_fix_photo">Reprenez la photo de plus près pour que l\'impression remplisse le cadre, ou demandez le visuel original. Les couleurs et surfaces ci-dessous sont quand même mesurées.</string>
 </resources>

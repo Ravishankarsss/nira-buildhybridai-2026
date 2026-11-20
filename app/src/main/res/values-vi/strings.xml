@@ -435,4 +435,16 @@
     <string name="garment_mustard">Vàng mù tạt</string>
     <string name="garment_maroon">Đỏ đô</string>
     <string name="garment_lavender">Tím oải hương</string>
+    <string name="add_colour_button">+ Thêm màu</string>
+    <string name="add_colour_title">Thêm màu pha sẵn</string>
+    <string name="add_colour_hint">Nhập mã màu từ bảng của người mua (ví dụ #FF5500). NIRA hiện tên màu trước khi thêm.</string>
+    <string name="add_colour_name">Màu này là: %1$s</string>
+    <string name="add_colour_confirm">Thêm và gán lại</string>
+    <string name="merge_title">Gộp %1$s vào…</string>
+    <string name="merge_hint">Chọn màu sẽ nhận màu này:</string>
+    <string name="colour_family">Nhóm %1$d: %2$s</string>
+    <string name="res_warn_title">Độ phân giải hình in thấp</string>
+    <string name="res_warn_body">%1$.1f px mỗi cm (khoảng %2$d dpi) với chiều rộng in %3$.0f cm. Nét mảnh và chữ nhỏ cần %4$.0f px mỗi cm (khoảng %5$d dpi).</string>
+    <string name="res_warn_fix_artwork">Với kích thước này, hãy xin người mua hình in rộng ít nhất %1$d px hoặc tệp vector (AI, PDF, SVG). Màu và diện tích bên dưới vẫn được đo.</string>
+    <string name="res_warn_fix_photo">Chụp lại gần hơn để hình in lấp đầy khung, hoặc xin hình in gốc. Màu và diện tích bên dưới vẫn được đo.</string>
 </resources>

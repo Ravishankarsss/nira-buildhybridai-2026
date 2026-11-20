@@ -151,10 +151,10 @@ fun ColorIntelligenceScreen(
     if (showAddDialog) {
         AlertDialog(
             onDismissRequest = { showAddDialog = false },
-            title = { Text("Add Spot Colour", color = TextWhite, fontWeight = FontWeight.Bold) },
+            title = { Text(stringResource(R.string.add_colour_title), color = TextWhite, fontWeight = FontWeight.Bold) },
             text = {
                 Column {
-                    Text("Enter custom 6-digit HEX color code (e.g. #FF5500):", color = TextMuted, fontSize = 12.sp)
+                    Text(stringResource(R.string.add_colour_hint), color = TextMuted, fontSize = 12.sp)
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
                         value = hexInput,
@@ -168,6 +168,11 @@ fun ColorIntelligenceScreen(
                             focusedIndicatorColor = Cyan
                         )
                     )
+                    // The name, so nobody has to read a colour code.
+                    if (Regex("^#[0-9A-Fa-f]{6}$").matches(hexInput.trim())) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(stringResource(R.string.add_colour_name, colourName(hexInput.trim())), color = Cyan, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                    }
                 }
             },
             confirmButton = {
@@ -178,7 +183,7 @@ fun ColorIntelligenceScreen(
                         hexInput = "#"
                     }
                 ) {
-                    Text("Add & Reassign", color = Cyan, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.add_colour_confirm), color = Cyan, fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
@@ -194,10 +199,10 @@ fun ColorIntelligenceScreen(
     if (showMergeDialog && selectedColor != null) {
         AlertDialog(
             onDismissRequest = { showMergeDialog = false },
-            title = { Text("Merge ${selectedColor.hex} Into...", color = TextWhite, fontWeight = FontWeight.Bold) },
+            title = { Text(stringResource(R.string.merge_title, colourName(selectedColor.hex)), color = TextWhite, fontWeight = FontWeight.Bold) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("Select which colour to absorb this shade into:", color = TextMuted, fontSize = 12.sp)
+                    Text(stringResource(R.string.merge_hint), color = TextMuted, fontSize = 12.sp)
                     palette.filter { it.id != selectedColor.id }.forEach { target ->
                         Row(
                             modifier = Modifier
@@ -215,7 +220,7 @@ fun ColorIntelligenceScreen(
                                     .background(Color(target.r, target.g, target.b))
                             )
                             Spacer(modifier = Modifier.width(10.dp))
-                            Text(target.hex, color = TextWhite, fontFamily = FontFamily.Monospace, fontSize = 13.sp)
+                            Text(colourName(target.hex), color = TextWhite, fontSize = 13.sp)
                             Spacer(modifier = Modifier.weight(1f))
                             Text(target.formattedPercentage, color = Cyan, fontSize = 12.sp)
                         }
@@ -586,7 +591,7 @@ fun ColorIntelligenceScreen(
                     }
 
                     TextButton(onClick = { showAddDialog = true }) {
-                        Text("+ Add Custom HEX", color = Cyan, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.add_colour_button), color = Cyan, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -634,7 +639,7 @@ fun ColorIntelligenceScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    text = "Family #${group.groupId + 1}: ${group.primaryColor.hex}",
+                                    text = stringResource(R.string.colour_family, group.groupId + 1, colourName(group.primaryColor.hex)),
                                     color = TextWhite,
                                     fontSize = 13.sp,
                                     fontWeight = FontWeight.Bold,

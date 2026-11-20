@@ -436,4 +436,16 @@
     <string name="garment_mustard">সরষে হলুদ</string>
     <string name="garment_maroon">মেরুন</string>
     <string name="garment_lavender">ল্যাভেন্ডার</string>
+    <string name="add_colour_button">+ রং যোগ করুন</string>
+    <string name="add_colour_title">স্পট রং যোগ করুন</string>
+    <string name="add_colour_hint">ক্রেতার শিট থেকে রঙের কোড লিখুন (যেমন #FF5500)। যোগ করার আগে NIRA তার নাম দেখায়।</string>
+    <string name="add_colour_name">এই রংটি: %1$s</string>
+    <string name="add_colour_confirm">যোগ করুন ও বদলান</string>
+    <string name="merge_title">%1$s কে এতে মেশান…</string>
+    <string name="merge_hint">যে রং এটিকে নেবে সেটি বেছে নিন:</string>
+    <string name="colour_family">পরিবার %1$d: %2$s</string>
+    <string name="res_warn_title">Artwork রেজোলিউশন কম</string>
+    <string name="res_warn_body">%3$.0f সেমি প্রিন্ট প্রস্থে প্রতি সেমিতে %1$.1f px (প্রায় %2$d dpi)। সূক্ষ্ম রেখা ও ছোট লেখার জন্য প্রতি সেমিতে %4$.0f px (প্রায় %5$d dpi) দরকার।</string>
+    <string name="res_warn_fix_artwork">এই মাপের জন্য ক্রেতার কাছে অন্তত %1$d px চওড়া artwork বা vector ফাইল (AI, PDF, SVG) চান। নিচের রং ও এলাকা তবুও মাপা হয়েছে।</string>
+    <string name="res_warn_fix_photo">প্রিন্ট যেন পুরো ফ্রেম ভরে, তাই কাছ থেকে আবার ছবি তুলুন, বা আসল artwork চান। নিচের রং ও এলাকা তবুও মাপা হয়েছে।</string>
 </resources>
