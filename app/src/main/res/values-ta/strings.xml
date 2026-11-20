@@ -547,4 +547,10 @@
     <string name="order_setup_once">ஒவ்வொரு அச்சும் தனி set-up கணக்கிடுகிறது. உங்கள் தொழிற்சாலை ஒரு ஆர்டருக்கு ஒரு முறை set-up வசூலித்தால், ஆர்டர் %1$s குறையும்.</string>
     <string name="order_currency_differ">அச்சுகள் வெவ்வேறு நாணயங்களில் உள்ளன, எனவே கூட்டப்படவில்லை. தொழிற்சாலை விலைகளில் ஒரே நாணயத்தைப் பயன்படுத்தவும்.</string>
     <string name="order_clear">ஆர்டரை அழி</string>
+    <string name="ask_voice_start">🎤 குரலில் கேள் (%1$d வினாடிகள் வரை)</string>
+    <string name="ask_voice_stop">■ நிறுத்திக் கேள்</string>
+    <string name="ask_voice_pending">குரல் கேள்வி…</string>
+    <string name="ask_voice_privacy">குரல்: உங்கள் பதிவு cloud AI-க்கு (Firebase) செல்லும்; அது கேள்வியை எழுதி, இந்த வேலையிலிருந்து பதில் தரும். மொபைலின் சொந்த மாடலால் ஒலியைக் கேட்க முடியாது. Confidential mode-இல் அனுப்பப்படாது.</string>
+    <string name="ask_voice_blocked">Confidential mode இயக்கத்தில் உள்ளது, எனவே பதிவு அனுப்பப்படவில்லை. கேள்வியைத் தட்டச்சு செய்யுங்கள்.</string>
+    <string name="ask_voice_unclear">NIRA-வுக்குத் தெளிவான கேள்வி கேட்கவில்லை. மொபைலுக்கு அருகில் மீண்டும் முயலுங்கள், அல்லது தட்டச்சு செய்யுங்கள்.</string>
 </resources>

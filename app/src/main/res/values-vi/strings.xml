@@ -546,4 +546,10 @@
     <string name="order_setup_once">Mỗi bản in tính chi phí chuẩn bị riêng. Nếu xưởng tính chuẩn bị một lần cho cả đơn, đơn rẻ hơn %1$s.</string>
     <string name="order_currency_differ">Các bản in dùng tiền tệ khác nhau nên không cộng lại. Hãy dùng một loại tiền trong đơn giá.</string>
     <string name="order_clear">Xóa đơn</string>
+    <string name="ask_voice_start">🎤 Hỏi bằng giọng nói (tối đa %1$d giây)</string>
+    <string name="ask_voice_stop">■ Dừng và hỏi</string>
+    <string name="ask_voice_pending">Câu hỏi bằng giọng nói…</string>
+    <string name="ask_voice_privacy">Giọng nói: bản ghi được gửi tới AI đám mây (Firebase), AI ghi lại câu hỏi và trả lời từ đơn này. Mô hình trên máy không nghe được âm thanh. Không gửi khi bật chế độ bảo mật.</string>
+    <string name="ask_voice_blocked">Chế độ bảo mật đang bật nên bản ghi không được gửi. Hãy gõ câu hỏi.</string>
+    <string name="ask_voice_unclear">NIRA không nghe rõ câu hỏi. Hãy nói lại gần điện thoại hơn, hoặc gõ câu hỏi.</string>
 </resources>

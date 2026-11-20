@@ -547,4 +547,10 @@
     <string name="order_setup_once">প্রতিটি প্রিন্ট নিজের সেট-আপ গোনে। কারখানা পুরো অর্ডারে একবার সেট-আপ নিলে অর্ডার %1$s কম হবে।</string>
     <string name="order_currency_differ">প্রিন্টগুলো ভিন্ন মুদ্রায়, তাই যোগ করা হয়নি। কারখানার রেটে একটি মুদ্রা ব্যবহার করুন।</string>
     <string name="order_clear">অর্ডার মুছুন</string>
+    <string name="ask_voice_start">🎤 কথা বলে জিজ্ঞাসা করুন (%1$d সেকেন্ড পর্যন্ত)</string>
+    <string name="ask_voice_stop">■ থামান ও জিজ্ঞাসা করুন</string>
+    <string name="ask_voice_pending">কণ্ঠে প্রশ্ন…</string>
+    <string name="ask_voice_privacy">কণ্ঠ: আপনার রেকর্ডিং ক্লাউড AI-তে (Firebase) যায়, যা প্রশ্নটি লিখে এই কাজ থেকে উত্তর দেয়। ফোনের নিজের মডেল শব্দ শুনতে পারে না। Confidential mode-এ পাঠানো হয় না।</string>
+    <string name="ask_voice_blocked">Confidential mode চালু, তাই রেকর্ডিং পাঠানো হয়নি। প্রশ্নটি টাইপ করুন।</string>
+    <string name="ask_voice_unclear">NIRA স্পষ্ট প্রশ্ন শুনতে পায়নি। ফোনের কাছে আবার বলুন, বা টাইপ করুন।</string>
 </resources>

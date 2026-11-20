@@ -9,6 +9,8 @@
 
     <!-- Needed for Firebase App Check and cloud AI requests. Images are not uploaded. -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Ask NIRA voice questions: recorded only after the user taps the mic, until Stop (30 s at most); sent to Firebase AI Logic. -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:name=".NiraApplication"

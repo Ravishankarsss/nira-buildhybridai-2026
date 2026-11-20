@@ -548,4 +548,10 @@
     <string name="order_setup_once">Cada impresión cuenta su propia preparación. Si la fábrica cobra la preparación una vez por pedido, el pedido cuesta %1$s menos.</string>
     <string name="order_currency_differ">Las impresiones usan monedas distintas, así que no se suman. Usa una sola moneda en las tarifas.</string>
     <string name="order_clear">Vaciar el pedido</string>
+    <string name="ask_voice_start">🎤 Preguntar por voz (hasta %1$d segundos)</string>
+    <string name="ask_voice_stop">■ Parar y preguntar</string>
+    <string name="ask_voice_pending">Pregunta por voz…</string>
+    <string name="ask_voice_privacy">Voz: tu grabación va a la IA en la nube (Firebase), que escribe la pregunta y responde con datos de este trabajo. El modelo del teléfono no puede oír audio. No se envía en modo confidencial.</string>
+    <string name="ask_voice_blocked">El modo confidencial está activo, así que la grabación no se envió. Escribe la pregunta.</string>
+    <string name="ask_voice_unclear">NIRA no oyó una pregunta clara. Prueba más cerca del teléfono o escríbela.</string>
 </resources>

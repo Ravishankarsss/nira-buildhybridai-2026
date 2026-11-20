@@ -547,4 +547,10 @@
     <string name="order_setup_once">Jeder Druck zählt sein eigenes Einrichten. Berechnet die Fabrik das Einrichten einmal pro Auftrag, ist der Auftrag %1$s günstiger.</string>
     <string name="order_currency_differ">Die Drucke nutzen verschiedene Währungen und werden nicht addiert. Nutze eine Währung in den Fabriksätzen.</string>
     <string name="order_clear">Auftrag leeren</string>
+    <string name="ask_voice_start">🎤 Per Sprache fragen (bis %1$d Sekunden)</string>
+    <string name="ask_voice_stop">■ Stoppen und fragen</string>
+    <string name="ask_voice_pending">Sprachfrage…</string>
+    <string name="ask_voice_privacy">Sprache: Deine Aufnahme geht an die Cloud-KI (Firebase), die die Frage aufschreibt und aus diesem Auftrag antwortet. Das Gerätemodell kann kein Audio hören. Im vertraulichen Modus wird nichts gesendet.</string>
+    <string name="ask_voice_blocked">Der vertrauliche Modus ist an, die Aufnahme wurde nicht gesendet. Tippe die Frage ein.</string>
+    <string name="ask_voice_unclear">NIRA hat keine klare Frage gehört. Versuche es näher am Telefon oder tippe sie ein.</string>
 </resources>

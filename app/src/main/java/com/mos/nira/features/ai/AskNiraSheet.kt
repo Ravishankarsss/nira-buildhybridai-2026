@@ -47,6 +47,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import android.Manifest
+import android.content.pm.PackageManager
+import android.media.MediaRecorder
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
+import java.io.File
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mos.nira.R
 import com.mos.nira.core.ai.AskNira
@@ -80,6 +91,40 @@ fun AskNiraSheet(
     LaunchedEffect(messages.size, running) { if (messages.isNotEmpty()) listState.animateScrollToItem(messages.lastIndex) }
 
     val send = { q: String -> if (q.isNotBlank() && !running) { viewModel.ask(q, facts); input = "" } }
+
+    // Voice question: record with Android's own recorder; the AI hears it in the cloud only.
+    val context = LocalContext.current
+    var recording by remember { mutableStateOf(false) }
+    val recorder = remember { mutableStateOf<MediaRecorder?>(null) }
+    val audioFile = remember { File(context.cacheDir, "ask_voice.m4a") }
+    val pendingLabel = stringResource(R.string.ask_voice_pending)
+    fun stopAndAsk() {
+        val r = recorder.value ?: return
+        recorder.value = null
+        recording = false
+        val ok = runCatching { r.stop() }.isSuccess
+        r.release()
+        if (ok && audioFile.length() > 0) viewModel.askVoice(audioFile.readBytes(), "audio/mp4", facts, pendingLabel)
+        audioFile.delete()
+    }
+    fun startRecording() {
+        val r = if (Build.VERSION.SDK_INT >= 31) MediaRecorder(context) else @Suppress("DEPRECATION") MediaRecorder()
+        val started = runCatching {
+            r.setAudioSource(MediaRecorder.AudioSource.MIC)
+            r.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+            r.setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+            r.setAudioSamplingRate(16000)
+            r.setAudioEncodingBitRate(32000)
+            r.setMaxDuration(AskNira.VOICE_MAX_SECONDS * 1000)
+            r.setOutputFile(audioFile.absolutePath)
+            r.setOnInfoListener { _, what, _ -> if (what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED) stopAndAsk() }
+            r.prepare()
+            r.start()
+        }.isSuccess
+        if (started) { recorder.value = r; recording = true } else r.release()
+    }
+    val micPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted -> if (granted) startRecording() }
+    DisposableEffect(Unit) { onDispose { recorder.value?.let { runCatching { it.stop() }; it.release() }; audioFile.delete() } }
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -133,6 +178,21 @@ fun AskNiraSheet(
                     colors = ButtonDefaults.buttonColors(containerColor = KViolet, contentColor = Color(0xFF0F1526))
                 ) { Text(stringResource(R.string.ask_send), fontWeight = FontWeight.Bold) }
             }
+            Button(
+                onClick = {
+                    when {
+                        recording -> stopAndAsk()
+                        ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED -> startRecording()
+                        else -> micPermission.launch(Manifest.permission.RECORD_AUDIO)
+                    }
+                },
+                enabled = recording || !running,
+                modifier = Modifier.fillMaxWidth().padding(top = 6.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = if (recording) KRed else KInner, contentColor = if (recording) Color(0xFF0F1526) else KCyan)
+            ) {
+                Text(stringResource(if (recording) R.string.ask_voice_stop else R.string.ask_voice_start, AskNira.VOICE_MAX_SECONDS), fontWeight = FontWeight.Bold, fontSize = 13.sp)
+            }
+            Text(stringResource(R.string.ask_voice_privacy), color = KMuted, fontSize = 10.sp, lineHeight = 13.sp)
             Text(stringResource(R.string.ask_privacy), color = KMuted, fontSize = 10.sp, lineHeight = 13.sp, modifier = Modifier.padding(vertical = 6.dp))
         }
     }
@@ -144,7 +204,7 @@ private fun MessageBubble(m: AskMessage) {
         // The question, on the right.
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
             Text(
-                m.question, color = Color(0xFF0F1526), fontSize = 14.sp,
+                (if (m.voice) "🎤 " else "") + m.question, color = Color(0xFF0F1526), fontSize = 14.sp,
                 modifier = Modifier.widthIn(max = 300.dp).clip(RoundedCornerShape(12.dp)).background(KCyan).padding(10.dp)
             )
         }
@@ -152,7 +212,7 @@ private fun MessageBubble(m: AskMessage) {
         Column(Modifier.widthIn(max = 330.dp).clip(RoundedCornerShape(12.dp)).background(KInner).padding(10.dp)) {
             val r = m.result
             when {
-                m.blocked -> Text(stringResource(R.string.explain_blocked), color = KMuted, fontSize = 13.sp, lineHeight = 18.sp)
+                m.blocked -> Text(stringResource(if (m.voice) R.string.ask_voice_blocked else R.string.explain_blocked), color = KMuted, fontSize = 13.sp, lineHeight = 18.sp)
                 r == null -> Text(stringResource(R.string.ask_thinking), color = KMuted, fontSize = 13.sp)
                 else -> {
                     val ok = r.text != null
@@ -172,8 +232,11 @@ private fun MessageBubble(m: AskMessage) {
                             color = KAmber, fontSize = 13.sp, lineHeight = 18.sp
                         )
                         AskNira.Hold.ColourCode -> Text(stringResource(R.string.ask_held_code), color = KAmber, fontSize = 13.sp, lineHeight = 18.sp)
-                        null -> if (ok) SelectionContainer { Text(r.text!!, color = KWhite, fontSize = 14.sp, lineHeight = 20.sp) }
-                            else Text(aiErrorText(r), color = KRed, fontSize = 13.sp)
+                        null -> when {
+                            !ok -> Text(aiErrorText(r), color = KRed, fontSize = 13.sp)
+                            m.answer == null -> Text(stringResource(R.string.ask_voice_unclear), color = KAmber, fontSize = 13.sp, lineHeight = 18.sp)
+                            else -> SelectionContainer { Text(m.answer, color = KWhite, fontSize = 14.sp, lineHeight = 20.sp) }
+                        }
                     }
                 }
             }

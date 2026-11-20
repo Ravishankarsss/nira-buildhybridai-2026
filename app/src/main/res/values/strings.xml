@@ -546,4 +546,10 @@
     <string name="order_setup_once">Each print counts its own set-up. If your factory charges set-up once per order, the order is %1$s less.</string>
     <string name="order_currency_differ">The prints use different currencies, so they are not added. Use one currency in the factory rates.</string>
     <string name="order_clear">Clear the order</string>
+    <string name="ask_voice_start">🎤 Ask by voice (up to %1$d seconds)</string>
+    <string name="ask_voice_stop">■ Stop and ask</string>
+    <string name="ask_voice_pending">Voice question…</string>
+    <string name="ask_voice_privacy">Voice: your recording goes to the cloud AI (Firebase), which writes your question down and answers from this job. The phone\'s own model cannot hear audio. Not sent in Confidential mode.</string>
+    <string name="ask_voice_blocked">Confidential mode is on, so the recording was not sent. Type the question instead.</string>
+    <string name="ask_voice_unclear">NIRA could not hear a clear question. Try again closer to the phone, or type it.</string>
 </resources>

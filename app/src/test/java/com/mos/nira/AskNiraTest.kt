@@ -51,6 +51,25 @@ class AskNiraTest {
     }
 
     @Test
+    fun voiceReplyGivesTheWrittenQuestionAndTheCheckedAnswer() {
+        val turn = AskNira.parseVoice("""```json
+            {"question": "1000 துண்டுகளுக்கு எவ்வளவு?", "answer": "For 1000 pieces it is ₹9.10 each."}
+            ```""")!!
+        assertEquals("1000 துண்டுகளுக்கு எவ்வளவு?", turn.question)
+        // The spoken 1000 may be repeated; the made-up price is still held back.
+        assertEquals(AskNira.Hold.Numbers(listOf(9.1)), AskNira.check(turn.answer, facts, turn.question))
+        // No clear question, or not JSON: nothing to show.
+        assertNull(AskNira.parseVoice("""{"question": "", "answer": ""}"""))
+        assertNull(AskNira.parseVoice("I could not hear anything."))
+        val voice = listOf(File("src/main/assets/${AskNira.VOICE_ASSET_PATH}"), File("app/src/main/assets/${AskNira.VOICE_ASSET_PATH}"))
+            .first { it.exists() }.readText()
+        val p = AskNira.buildVoice(voice, facts, emptyList())
+        assertTrue(p.contains("- Order cost now: ₹10.25 per piece"))
+        assertTrue(p.contains("Do not calculate new numbers"))
+        assertFalse(p.contains("{facts}") || p.contains("{conversation}"))
+    }
+
+    @Test
     fun promptKeepsTheGuardrails() {
         assertTrue(template.contains("Do not calculate new numbers"))
         assertTrue(template.contains("never colour codes"))

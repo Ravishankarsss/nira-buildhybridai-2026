@@ -32,6 +32,24 @@ object AskNira {
             .trim()
     }
 
+    const val VOICE_ASSET_PATH = "prompts/ask_nira_voice_v1.txt"
+
+    /** Longest voice question recorded, in seconds. */
+    const val VOICE_MAX_SECONDS = 30
+
+    /** The voice prompt: the same facts and turns; the question is the attached audio. */
+    fun buildVoice(template: String, facts: List<String>, history: List<Turn>): String =
+        build(template, facts, history, "")
+
+    /** The model's written-down question and its answer; null when the reply is not usable. */
+    fun parseVoice(reply: String): Turn? {
+        val json = BriefReader.extractJson(reply) ?: return null
+        val q = json.optString("question").trim()
+        val a = json.optString("answer").trim()
+        if (q.isEmpty() || a.isEmpty() || q == "null" || a == "null") return null
+        return Turn(q, a)
+    }
+
     /** Numbers in the answer that are neither in the facts nor in the question. */
     fun unverifiedNumbers(answer: String, facts: List<String>, question: String): List<Double> =
         ReportExplanation.unverifiedNumbers(answer, facts + question)

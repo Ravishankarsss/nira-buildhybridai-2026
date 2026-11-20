@@ -105,6 +105,44 @@ class HybridInferenceRepository {
     }
 
     /**
+     * Sends a text prompt with one recorded audio clip (a spoken question) through Firebase AI
+     * Logic. The caller decides the mode; audio is only sent to the cloud model.
+     */
+    suspend fun generateWithAudio(
+        prompt: String,
+        audio: ByteArray,
+        mimeType: String,
+        mode: HybridMode
+    ): HybridInferenceResult {
+        val start = System.nanoTime()
+        return try {
+            val model = Firebase.ai(backend = GenerativeBackend.googleAI()).generativeModel(
+                modelName = CLOUD_MODEL_NAME,
+                onDeviceConfig = OnDeviceConfig(mode = sdkMode(mode))
+            )
+            val response = model.generateContent(
+                content {
+                    inlineData(audio, mimeType)
+                    text(prompt)
+                }
+            )
+            HybridInferenceResult(
+                text = response.text,
+                inferenceSource = sourceName(response.inferenceSource),
+                durationMs = elapsedMs(start),
+                requestedMode = mode,
+                cloudModelName = CLOUD_MODEL_NAME
+            )
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: FirebaseAIOnDeviceNotAvailableException) {
+            failure("UNAVAILABLE", e, start, mode)
+        } catch (e: Exception) {
+            failure("ERROR", e, start, mode)
+        }
+    }
+
+    /**
      * Queries the real Firebase AI on-device SDK for model availability status.
      * Returns "available", "downloadable", "downloading", "unavailable", etc. exactly as reported by the SDK.
      */
