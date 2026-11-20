@@ -149,23 +149,18 @@ fun SettingsScreen(
         }
 
         var versionTaps by androidx.compose.runtime.saveable.rememberSaveable { androidx.compose.runtime.mutableIntStateOf(0) }
-        AiPrivacySection()
-
+        // Order by use: language, the factory's own rates, AI and privacy, then everything about the app.
         SettingsSection(stringResource(R.string.rates_title)) {
             com.mos.nira.features.commercial.FactoryRatesEditor()
         }
 
-        SettingsSection(stringResource(R.string.settings_section_rules)) {
+        AiPrivacySection()
+
+        SettingsSection(stringResource(R.string.settings_section_about)) {
             SettingsRow(stringResource(R.string.settings_rules_version), info.rulesVersion ?: notAvailable)
             SettingsRow(stringResource(R.string.settings_rules_status), info.rulesStatus ?: notAvailable)
-        }
-        SettingsSection(stringResource(R.string.settings_section_engine)) {
             SettingsRow(stringResource(R.string.settings_engine_library), info.geometryLibrary ?: notAvailable)
-        }
-        SettingsSection(stringResource(R.string.settings_section_data)) {
             SettingsRow(stringResource(R.string.settings_saved_analyses), savedAnalysesCount.toString())
-        }
-        SettingsSection(stringResource(R.string.settings_section_app)) {
             // Seven taps on the version open the developer test (debug builds only), so it never
             // shows by accident in a demo or a judge build.
             androidx.compose.foundation.layout.Box(

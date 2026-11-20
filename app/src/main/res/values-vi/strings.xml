@@ -612,4 +612,19 @@
     <string name="home_see_all">Xem tất cả</string>
     <string name="home_ai_title">AI lai trên điện thoại này</string>
     <string name="home_ai_counts">Trả lời trên máy: %1$d · trên đám mây: %2$d · ảnh đã gửi: %3$d</string>
+    <string name="settings_section_about">VỀ NIRA</string>
+    <string name="rpt_s1">Vùng in và mặt nạ</string>
+    <string name="rpt_s1_hint">Mực ở đâu, kích thước, độ phân giải, công cụ xóa</string>
+    <string name="rpt_s2">Thông số kỹ thuật</string>
+    <string name="rpt_s2_hint">Lót trắng, chiều cao in, số lượt kéo, hao hụt</string>
+    <string name="rpt_s3">Màu in đo được</string>
+    <string name="rpt_s3_hint">Từng màu, tỷ lệ trong hình in và màu gần nhất</string>
+    <string name="rpt_s4">Đường sai số</string>
+    <string name="rpt_s4_hint">Sai số màu giảm thế nào khi thêm khung</string>
+    <string name="rpt_s5">Cách tách màu</string>
+    <string name="rpt_s5_hint">So sánh các phương án khung; phương án đề xuất trước</string>
+    <string name="rpt_s6">Khung và bản thử</string>
+    <string name="rpt_s6_hint">Mỗi khung một phim, bản thử, lưới và độ phủ</string>
+    <string name="rpt_s7">Mực cần dùng</string>
+    <string name="rpt_s7_hint">Gam mỗi áo và cho cả đơn, theo từng khung</string>
 </resources>

@@ -177,6 +177,9 @@ fun PrintReportScreen(
             return@Scaffold
         }
 
+        // Folded sections: short headers; the user opens what they need.
+        var openSections by remember { mutableStateOf(setOf(5)) }
+        fun toggle(n: Int) { openSections = if (n in openSections) openSections - n else openSections + n }
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -243,7 +246,8 @@ fun PrintReportScreen(
             item { header() }
 
             // SECTION 1: PRINT MASK & RECTANGLE ERASE TOOL
-            item {
+            item(key = "fold_1") { ReportFoldHeader(1, 1 in openSections) { toggle(1) } }
+            if (1 in openSections) item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
@@ -399,7 +403,8 @@ fun PrintReportScreen(
             }
 
             // SECTION 2: PRODUCTION INPUTS & RULE PARAMETERS
-            item {
+            item(key = "fold_2") { ReportFoldHeader(2, 2 in openSections) { toggle(2) } }
+            if (2 in openSections) item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
@@ -625,7 +630,8 @@ fun PrintReportScreen(
             }
 
             // SECTION 3: MEASURED PALETTE TABLE
-            item {
+            item(key = "fold_3") { ReportFoldHeader(3, 3 in openSections) { toggle(3) } }
+            if (3 in openSections) item {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -660,7 +666,7 @@ fun PrintReportScreen(
             }
 
             val palette = partAResult?.measuredPalette.orEmpty()
-            if (palette.isEmpty()) {
+            if (3 !in openSections) Unit else if (palette.isEmpty()) {
                 item {
                     Text(
                         "No print colours detected in active mask.",
@@ -675,7 +681,8 @@ fun PrintReportScreen(
             }
 
             // SECTION 4: FLAT-SEPARATION ERROR CURVE
-            item {
+            item(key = "fold_4") { ReportFoldHeader(4, 4 in openSections) { toggle(4) } }
+            if (4 in openSections) item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
@@ -710,7 +717,8 @@ fun PrintReportScreen(
             }
 
             // SECTION 5: SEPARATION STRATEGIES COMPARISON TABLE (PART B)
-            item {
+            item(key = "fold_5") { ReportFoldHeader(5, 5 in openSections) { toggle(5) } }
+            if (5 in openSections) item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
@@ -818,7 +826,8 @@ fun PrintReportScreen(
             // -------------------------------------------------------------
             // Section 6: Screens & Proof (Part C)
             // -------------------------------------------------------------
-            item {
+            item(key = "fold_6") { ReportFoldHeader(6, 6 in openSections) { toggle(6) } }
+            if (6 in openSections) item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
@@ -1101,7 +1110,8 @@ fun PrintReportScreen(
             // -------------------------------------------------------------
             // Section 7: INK CONSUMPTION REQUIREMENTS (Part D)
             // -------------------------------------------------------------
-            item {
+            item(key = "fold_7") { ReportFoldHeader(7, 7 in openSections) { toggle(7) } }
+            if (7 in openSections) item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
@@ -1964,6 +1974,38 @@ fun FilmPositiveCard(channel: FilmPositiveChannel) {
                     )
                 }
             }
+        }
+    }
+}
+
+
+/** One folded Report section: number, name, what is inside, and open/close. */
+@Composable
+private fun ReportFoldHeader(n: Int, open: Boolean, onToggle: () -> Unit) {
+    val (title, hint) = when (n) {
+        1 -> R.string.rpt_s1 to R.string.rpt_s1_hint
+        2 -> R.string.rpt_s2 to R.string.rpt_s2_hint
+        3 -> R.string.rpt_s3 to R.string.rpt_s3_hint
+        4 -> R.string.rpt_s4 to R.string.rpt_s4_hint
+        5 -> R.string.rpt_s5 to R.string.rpt_s5_hint
+        6 -> R.string.rpt_s6 to R.string.rpt_s6_hint
+        else -> R.string.rpt_s7 to R.string.rpt_s7_hint
+    }
+    Surface(
+        color = if (open) MaterialTheme.colorScheme.primary.copy(alpha = 0.14f) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+        shape = RoundedCornerShape(14.dp),
+        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).clickable(onClick = onToggle)
+    ) {
+        Row(Modifier.padding(horizontal = 14.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                "$n", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.width(24.dp)
+            )
+            Column(Modifier.weight(1f)) {
+                Text(stringResource(title), style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+                Text(stringResource(hint), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1)
+            }
+            Text(if (open) "▲" else "▼", color = MaterialTheme.colorScheme.primary)
         }
     }
 }

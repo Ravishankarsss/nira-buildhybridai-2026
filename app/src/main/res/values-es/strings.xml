@@ -614,4 +614,19 @@
     <string name="home_see_all">Ver todo</string>
     <string name="home_ai_title">IA híbrida en este teléfono</string>
     <string name="home_ai_counts">Respuestas en el teléfono: %1$d · en la nube: %2$d · imágenes enviadas: %3$d</string>
+    <string name="settings_section_about">ACERCA DE NIRA</string>
+    <string name="rpt_s1">Área de impresión y máscara</string>
+    <string name="rpt_s1_hint">Dónde está la tinta, tamaño, resolución, borrador</string>
+    <string name="rpt_s2">Datos de ingeniería</string>
+    <string name="rpt_s2_hint">Base blanca, alto de impresión, pasadas, merma</string>
+    <string name="rpt_s3">Colores de impresión medidos</string>
+    <string name="rpt_s3_hint">Cada color, su parte del diseño y el tono más cercano</string>
+    <string name="rpt_s4">Curva de error</string>
+    <string name="rpt_s4_hint">Cómo baja el error de color al añadir pantallas</string>
+    <string name="rpt_s5">Rutas de separación</string>
+    <string name="rpt_s5_hint">Opciones de pantalla comparadas; la recomendada primero</string>
+    <string name="rpt_s6">Pantallas y prueba</string>
+    <string name="rpt_s6_hint">Una película por pantalla, la prueba, malla y cobertura</string>
+    <string name="rpt_s7">Tinta necesaria</string>
+    <string name="rpt_s7_hint">Gramos por prenda y por pedido, por pantalla</string>
 </resources>

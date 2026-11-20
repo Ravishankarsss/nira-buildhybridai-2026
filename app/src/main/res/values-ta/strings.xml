@@ -613,4 +613,19 @@
     <string name="home_see_all">அனைத்தும்</string>
     <string name="home_ai_title">இந்த மொபைலில் ஹைப்ரிட் AI</string>
     <string name="home_ai_counts">மொபைலில் பதில்கள்: %1$d · cloud பதில்கள்: %2$d · அனுப்பிய படங்கள்: %3$d</string>
+    <string name="settings_section_about">NIRA பற்றி</string>
+    <string name="rpt_s1">அச்சுப் பரப்பும் மாஸ்க்கும்</string>
+    <string name="rpt_s1_hint">மை எங்கே, அளவு, தெளிவுத்திறன், அழிப்புக் கருவி</string>
+    <string name="rpt_s2">பொறியியல் உள்ளீடுகள்</string>
+    <string name="rpt_s2_hint">வெள்ளை அடிப்படை, அச்சு உயரம், ஸ்ட்ரோக்குகள், வீணாகும் அளவு</string>
+    <string name="rpt_s3">அளந்த அச்சு நிறங்கள்</string>
+    <string name="rpt_s3_hint">ஒவ்வொரு நிறமும், அதன் பங்கும் அருகிலுள்ள shade-உம்</string>
+    <string name="rpt_s4">பிழை வளைவு</string>
+    <string name="rpt_s4_hint">ஸ்கிரீன்கள் சேர்க்கும்போது நிறப் பிழை எப்படிக் குறைகிறது</string>
+    <string name="rpt_s5">பிரிப்பு வழிகள்</string>
+    <string name="rpt_s5_hint">ஸ்கிரீன் வழிகள் ஒப்பீடு; பரிந்துரைத்தது முதலில்</string>
+    <string name="rpt_s6">ஸ்கிரீன்களும் proof-உம்</string>
+    <string name="rpt_s6_hint">ஒவ்வொரு ஸ்கிரீனுக்கும் பிலிம், proof, mesh, பரப்பு</string>
+    <string name="rpt_s7">தேவையான மை</string>
+    <string name="rpt_s7_hint">ஒரு ஆடைக்கும் ஆர்டருக்கும் கிராம், ஸ்கிரீன் வாரியாக</string>
 </resources>

@@ -613,4 +613,19 @@
     <string name="home_see_all">সব দেখুন</string>
     <string name="home_ai_title">এই ফোনে হাইব্রিড AI</string>
     <string name="home_ai_counts">ফোনে উত্তর: %1$d · ক্লাউড উত্তর: %2$d · পাঠানো ছবি: %3$d</string>
+    <string name="settings_section_about">NIRA সম্পর্কে</string>
+    <string name="rpt_s1">প্রিন্ট এলাকা ও মাস্ক</string>
+    <string name="rpt_s1_hint">কালি কোথায়, মাপ, রেজোলিউশন, মোছার টুল</string>
+    <string name="rpt_s2">ইঞ্জিনিয়ারিং ইনপুট</string>
+    <string name="rpt_s2_hint">সাদা আন্ডারবেস, প্রিন্টের উচ্চতা, স্ট্রোক, অপচয়</string>
+    <string name="rpt_s3">মাপা প্রিন্ট রং</string>
+    <string name="rpt_s3_hint">প্রতিটি রং, প্রিন্টে তার অংশ ও নিকটতম শেড</string>
+    <string name="rpt_s4">ত্রুটি রেখা</string>
+    <string name="rpt_s4_hint">স্ক্রিন বাড়লে রঙের ত্রুটি কীভাবে কমে</string>
+    <string name="rpt_s5">সেপারেশন পদ্ধতি</string>
+    <string name="rpt_s5_hint">স্ক্রিন বিকল্পের তুলনা; প্রস্তাবিতটি আগে</string>
+    <string name="rpt_s6">স্ক্রিন ও প্রুফ</string>
+    <string name="rpt_s6_hint">প্রতি স্ক্রিনে ফিল্ম, প্রুফ, মেশ ও কভারেজ</string>
+    <string name="rpt_s7">প্রয়োজনীয় কালি</string>
+    <string name="rpt_s7_hint">প্রতি পোশাক ও অর্ডারের গ্রাম, প্রতি স্ক্রিনে</string>
 </resources>

@@ -613,4 +613,19 @@
     <string name="home_see_all">Alle ansehen</string>
     <string name="home_ai_title">Hybride KI auf diesem Telefon</string>
     <string name="home_ai_counts">Antworten auf dem Gerät: %1$d · aus der Cloud: %2$d · gesendete Bilder: %3$d</string>
+    <string name="settings_section_about">ÜBER NIRA</string>
+    <string name="rpt_s1">Druckfläche und Maske</string>
+    <string name="rpt_s1_hint">Wo die Farbe ist, Größe, Auflösung, Radierer</string>
+    <string name="rpt_s2">Technische Eingaben</string>
+    <string name="rpt_s2_hint">Weißer Unterdruck, Druckhöhe, Rakelzüge, Ausschuss</string>
+    <string name="rpt_s3">Gemessene Druckfarben</string>
+    <string name="rpt_s3_hint">Jede Farbe, ihr Anteil und der nächste Farbton</string>
+    <string name="rpt_s4">Fehlerkurve</string>
+    <string name="rpt_s4_hint">Wie der Farbfehler mit mehr Sieben sinkt</string>
+    <string name="rpt_s5">Separationswege</string>
+    <string name="rpt_s5_hint">Sieb-Optionen im Vergleich; die empfohlene zuerst</string>
+    <string name="rpt_s6">Siebe und Proof</string>
+    <string name="rpt_s6_hint">Ein Film pro Sieb, Proof, Gewebe und Deckung</string>
+    <string name="rpt_s7">Benötigte Farbe</string>
+    <string name="rpt_s7_hint">Gramm pro Teil und für den Auftrag, je Sieb</string>
 </resources>

@@ -612,4 +612,19 @@
     <string name="home_see_all">See all</string>
     <string name="home_ai_title">Hybrid AI on this phone</string>
     <string name="home_ai_counts">On-device answers: %1$d · cloud answers: %2$d · images sent: %3$d</string>
+    <string name="settings_section_about">ABOUT NIRA</string>
+    <string name="rpt_s1">Print area and mask</string>
+    <string name="rpt_s1_hint">Where the ink is, size, resolution, erase tool</string>
+    <string name="rpt_s2">Engineering inputs</string>
+    <string name="rpt_s2_hint">White underbase, print height, strokes, wastage</string>
+    <string name="rpt_s3">Measured print colours</string>
+    <string name="rpt_s3_hint">Each colour, its share of the print and nearest shade</string>
+    <string name="rpt_s4">Error curve</string>
+    <string name="rpt_s4_hint">How colour error falls as screens are added</string>
+    <string name="rpt_s5">Separation strategies</string>
+    <string name="rpt_s5_hint">Screen options compared; the recommended one first</string>
+    <string name="rpt_s6">Screens and proof</string>
+    <string name="rpt_s6_hint">One film per screen, the proof, mesh and coverage</string>
+    <string name="rpt_s7">Ink needed</string>
+    <string name="rpt_s7_hint">Grams per garment and for the order, per screen</string>
 </resources>

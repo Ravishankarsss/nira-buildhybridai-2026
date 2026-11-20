@@ -612,4 +612,19 @@
     <string name="home_see_all">查看全部</string>
     <string name="home_ai_title">本机混合 AI</string>
     <string name="home_ai_counts">本机回答：%1$d · 云端回答：%2$d · 已发送图片：%3$d</string>
+    <string name="settings_section_about">关于 NIRA</string>
+    <string name="rpt_s1">印花区域与蒙版</string>
+    <string name="rpt_s1_hint">油墨位置、尺寸、分辨率、擦除工具</string>
+    <string name="rpt_s2">工程参数</string>
+    <string name="rpt_s2_hint">白色底浆、印花高度、刮印次数、损耗</string>
+    <string name="rpt_s3">测得的印花颜色</string>
+    <string name="rpt_s3_hint">每种颜色、其占比及最接近的色号</string>
+    <string name="rpt_s4">误差曲线</string>
+    <string name="rpt_s4_hint">增加网版时颜色误差如何下降</string>
+    <string name="rpt_s5">分色方式</string>
+    <string name="rpt_s5_hint">各网版方案对比；推荐方案在前</string>
+    <string name="rpt_s6">网版与打样</string>
+    <string name="rpt_s6_hint">每个网版一张菲林、打样、网目和覆盖率</string>
+    <string name="rpt_s7">所需油墨</string>
+    <string name="rpt_s7_hint">每件及整单克数，按网版</string>
 </resources>

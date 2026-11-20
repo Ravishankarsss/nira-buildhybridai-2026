@@ -613,4 +613,19 @@
     <string name="home_see_all">सभी देखें</string>
     <string name="home_ai_title">इस फ़ोन पर हाइब्रिड AI</string>
     <string name="home_ai_counts">फ़ोन पर जवाब: %1$d · क्लाउड जवाब: %2$d · भेजी गई तस्वीरें: %3$d</string>
+    <string name="settings_section_about">NIRA के बारे में</string>
+    <string name="rpt_s1">प्रिंट क्षेत्र और मास्क</string>
+    <string name="rpt_s1_hint">स्याही कहाँ है, आकार, रिज़ॉल्यूशन, मिटाने का टूल</string>
+    <string name="rpt_s2">इंजीनियरिंग इनपुट</string>
+    <string name="rpt_s2_hint">सफ़ेद अंडरबेस, प्रिंट ऊँचाई, स्ट्रोक, बर्बादी</string>
+    <string name="rpt_s3">मापे गए प्रिंट रंग</string>
+    <string name="rpt_s3_hint">हर रंग, प्रिंट में उसका हिस्सा और नज़दीकी शेड</string>
+    <string name="rpt_s4">त्रुटि वक्र</string>
+    <string name="rpt_s4_hint">स्क्रीन बढ़ाने पर रंग त्रुटि कैसे घटती है</string>
+    <string name="rpt_s5">सेपरेशन तरीके</string>
+    <string name="rpt_s5_hint">स्क्रीन विकल्पों की तुलना; सुझाया गया पहले</string>
+    <string name="rpt_s6">स्क्रीन और प्रूफ़</string>
+    <string name="rpt_s6_hint">हर स्क्रीन की फ़िल्म, प्रूफ़, मेश और कवरेज</string>
+    <string name="rpt_s7">ज़रूरी स्याही</string>
+    <string name="rpt_s7_hint">प्रति गारमेंट और ऑर्डर के ग्राम, हर स्क्रीन के लिए</string>
 </resources>
