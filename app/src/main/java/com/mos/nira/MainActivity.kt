@@ -295,8 +295,14 @@ fun NIRADashboard(
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.spacedBy(14.dp),
         ) {
+            // NIRA mark from Ravi's logo: the ribbon N with a needle.
+            androidx.compose.foundation.Image(
+                painter = androidx.compose.ui.res.painterResource(R.drawable.nira_mark),
+                contentDescription = null,
+                modifier = Modifier.size(56.dp).clip(RoundedCornerShape(14.dp)),
+            )
             Column {
                 Text(
                     text = stringResource(R.string.app_name),
@@ -310,19 +316,6 @@ fun NIRADashboard(
                     color = Violet,
                     fontSize = 10.sp,
                     letterSpacing = 2.sp,
-                )
-            }
-
-            Surface(
-                shape = CircleShape,
-                color = CardColor,
-            ) {
-                Text(
-                    text = "N",
-                    modifier = Modifier.padding(14.dp),
-                    color = Cyan,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
                 )
             }
         }
