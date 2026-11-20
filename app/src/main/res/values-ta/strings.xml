@@ -532,4 +532,19 @@
     <string name="sheet_translate_result">%2$d விதி உரைகளில் %1$d மொழிபெயர்க்கப்பட்டன; %3$d ஆங்கிலத்திலேயே (எண் சோதனை).</string>
     <string name="sheet_translate_failed">AI பதிலைப் பயன்படுத்த முடியவில்லை; விதி உரைகள் ஆங்கிலத்திலேயே இருக்கும்.</string>
     <string name="sheet_ai_note">விதி உரைகள் AI மூலம் மொழிபெயர்க்கப்பட்டன, ஒவ்வொரு எண்ணும் சோதிக்கப்பட்டது; ஆங்கில விதிக் கோப்பே ஆதாரம்.</string>
+    <string name="order_title">ஒன்றுக்கு மேற்பட்ட அச்சுள்ள ஆர்டர்</string>
+    <string name="order_add_hint">இந்த அச்சை ஆடையில் அதன் இடத்தில் ஆர்டரில் சேருங்கள். மற்ற artwork-ஐயும் திறந்து சேருங்கள்.</string>
+    <string name="order_front">முன்பக்கம்</string>
+    <string name="order_back">பின்பக்கம்</string>
+    <string name="order_left_sleeve">இடது கை</string>
+    <string name="order_right_sleeve">வலது கை</string>
+    <string name="order_other">வேறு இடம்</string>
+    <string name="order_screens">%1$d ஸ்கிரீன்கள்</string>
+    <string name="order_partial">பகுதிச் செலவு</string>
+    <string name="order_per_garment">ஒரு ஆடைக்கு %1$s (%2$d அச்சுகள்)</string>
+    <string name="order_qty_differ">அச்சுகளின் எண்ணிக்கை வேறுபடுகிறது, எனவே ஆர்டர் மொத்தம் இல்லை. ஒவ்வொரு வேலையிலும் ஒரே எண்ணிக்கையைப் பயன்படுத்தவும்.</string>
+    <string name="order_incomplete">சில அச்சுகளுக்கு விலை அல்லது மை எண் இல்லை; அவற்றின் செலவு முழுமையானதல்ல.</string>
+    <string name="order_setup_once">ஒவ்வொரு அச்சும் தனி set-up கணக்கிடுகிறது. உங்கள் தொழிற்சாலை ஒரு ஆர்டருக்கு ஒரு முறை set-up வசூலித்தால், ஆர்டர் %1$s குறையும்.</string>
+    <string name="order_currency_differ">அச்சுகள் வெவ்வேறு நாணயங்களில் உள்ளன, எனவே கூட்டப்படவில்லை. தொழிற்சாலை விலைகளில் ஒரே நாணயத்தைப் பயன்படுத்தவும்.</string>
+    <string name="order_clear">ஆர்டரை அழி</string>
 </resources>

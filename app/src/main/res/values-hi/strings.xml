@@ -532,4 +532,19 @@
     <string name="sheet_translate_result">%2$d में से %1$d नियम टेक्स्ट अनूदित; %3$d अंग्रेज़ी में रखे गए (अंक जाँच)।</string>
     <string name="sheet_translate_failed">AI का जवाब उपयोग नहीं हो सका; नियम टेक्स्ट अंग्रेज़ी में रहेंगे।</string>
     <string name="sheet_ai_note">नियम टेक्स्ट AI से अनूदित, हर अंक जाँचा गया; अंग्रेज़ी नियम फ़ाइल ही आधार है।</string>
+    <string name="order_title">एक से ज़्यादा प्रिंट वाला ऑर्डर</string>
+    <string name="order_add_hint">इस प्रिंट को गारमेंट पर उसकी जगह के साथ ऑर्डर में जोड़ें। दूसरा artwork खोलकर उसे भी जोड़ें।</string>
+    <string name="order_front">आगे</string>
+    <string name="order_back">पीछे</string>
+    <string name="order_left_sleeve">बाईं आस्तीन</string>
+    <string name="order_right_sleeve">दाईं आस्तीन</string>
+    <string name="order_other">दूसरी जगह</string>
+    <string name="order_screens">%1$d स्क्रीन</string>
+    <string name="order_partial">आंशिक लागत</string>
+    <string name="order_per_garment">प्रति गारमेंट %1$s (%2$d प्रिंट)</string>
+    <string name="order_qty_differ">प्रिंट की मात्राएँ अलग हैं, इसलिए ऑर्डर का कुल नहीं। हर काम में एक ही मात्रा रखें।</string>
+    <string name="order_incomplete">कुछ प्रिंट में दर या स्याही का आँकड़ा नहीं है; उनकी लागत पूरी नहीं है।</string>
+    <string name="order_setup_once">हर प्रिंट अपना सेट-अप गिनता है। अगर फ़ैक्टरी पूरे ऑर्डर पर एक बार सेट-अप लेती है, तो ऑर्डर %1$s कम होगा।</string>
+    <string name="order_currency_differ">प्रिंट अलग-अलग मुद्राओं में हैं, इसलिए जोड़े नहीं गए। फ़ैक्टरी दरों में एक ही मुद्रा रखें।</string>
+    <string name="order_clear">ऑर्डर साफ़ करें</string>
 </resources>

@@ -531,4 +531,19 @@
     <string name="sheet_translate_result">已翻译 %2$d 条规则文字中的 %1$d 条；%3$d 条保留英文（数字检查）。</string>
     <string name="sheet_translate_failed">AI 回复无法使用；规则文字保留英文。</string>
     <string name="sheet_ai_note">规则文字由 AI 翻译，每个数字均已核对；以英文规则文件为准。</string>
+    <string name="order_title">多印花位置订单</string>
+    <string name="order_add_hint">将此印花按其在服装上的位置加入订单。打开另一个图稿，也把它加入。</string>
+    <string name="order_front">前片</string>
+    <string name="order_back">后片</string>
+    <string name="order_left_sleeve">左袖</string>
+    <string name="order_right_sleeve">右袖</string>
+    <string name="order_other">其他位置</string>
+    <string name="order_screens">%1$d 个网版</string>
+    <string name="order_partial">成本不完整</string>
+    <string name="order_per_garment">每件 %1$s（%2$d 处印花）</string>
+    <string name="order_qty_differ">各印花数量不同，因此没有订单总额。请在每个任务中使用相同数量。</string>
+    <string name="order_incomplete">部分印花缺少单价或油墨数据；其成本不完整。</string>
+    <string name="order_setup_once">每处印花各自计算调机费。如果工厂每单只收一次调机费，订单可少 %1$s。</string>
+    <string name="order_currency_differ">各印花使用不同货币，因此不相加。请在工厂单价中使用同一种货币。</string>
+    <string name="order_clear">清空订单</string>
 </resources>

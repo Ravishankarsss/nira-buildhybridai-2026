@@ -532,4 +532,19 @@
     <string name="sheet_translate_result">%1$d von %2$d Regeltexten übersetzt; %3$d auf Englisch belassen (Zahlenprüfung).</string>
     <string name="sheet_translate_failed">Die KI-Antwort war nicht verwendbar; die Regeltexte bleiben englisch.</string>
     <string name="sheet_ai_note">Regeltexte von KI übersetzt, jede Zahl geprüft; maßgeblich ist die englische Regeldatei.</string>
+    <string name="order_title">AUFTRAG MIT MEHREREN DRUCKEN</string>
+    <string name="order_add_hint">Füge diesen Druck mit seiner Position am Kleidungsstück zum Auftrag hinzu. Öffne das andere Motiv und füge es auch hinzu.</string>
+    <string name="order_front">Vorne</string>
+    <string name="order_back">Hinten</string>
+    <string name="order_left_sleeve">Linker Ärmel</string>
+    <string name="order_right_sleeve">Rechter Ärmel</string>
+    <string name="order_other">Andere Stelle</string>
+    <string name="order_screens">%1$d Siebe</string>
+    <string name="order_partial">Teilkosten</string>
+    <string name="order_per_garment">%1$s pro Teil (%2$d Drucke)</string>
+    <string name="order_qty_differ">Die Drucke haben verschiedene Mengen, daher keine Auftragssumme. Nutze bei jedem Auftrag dieselbe Menge.</string>
+    <string name="order_incomplete">Bei manchen Drucken fehlt ein Satz oder eine Farbmenge; ihre Kosten sind unvollständig.</string>
+    <string name="order_setup_once">Jeder Druck zählt sein eigenes Einrichten. Berechnet die Fabrik das Einrichten einmal pro Auftrag, ist der Auftrag %1$s günstiger.</string>
+    <string name="order_currency_differ">Die Drucke nutzen verschiedene Währungen und werden nicht addiert. Nutze eine Währung in den Fabriksätzen.</string>
+    <string name="order_clear">Auftrag leeren</string>
 </resources>

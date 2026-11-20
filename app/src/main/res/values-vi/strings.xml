@@ -531,4 +531,19 @@
     <string name="sheet_translate_result">Đã dịch %1$d trên %2$d văn bản quy tắc; %3$d giữ tiếng Anh (kiểm tra số).</string>
     <string name="sheet_translate_failed">Không dùng được câu trả lời của AI; văn bản quy tắc giữ tiếng Anh.</string>
     <string name="sheet_ai_note">Văn bản quy tắc do AI dịch, mọi con số đã kiểm tra; tệp quy tắc tiếng Anh là bản gốc.</string>
+    <string name="order_title">ĐƠN CÓ NHIỀU VỊ TRÍ IN</string>
+    <string name="order_add_hint">Thêm bản in này vào đơn theo vị trí trên áo. Mở hình in còn lại và thêm cả nó.</string>
+    <string name="order_front">Mặt trước</string>
+    <string name="order_back">Mặt sau</string>
+    <string name="order_left_sleeve">Tay trái</string>
+    <string name="order_right_sleeve">Tay phải</string>
+    <string name="order_other">Vị trí khác</string>
+    <string name="order_screens">%1$d khung</string>
+    <string name="order_partial">chi phí chưa đủ</string>
+    <string name="order_per_garment">%1$s mỗi áo (%2$d bản in)</string>
+    <string name="order_qty_differ">Các bản in có số lượng khác nhau nên không có tổng đơn. Hãy dùng cùng số lượng cho mỗi việc.</string>
+    <string name="order_incomplete">Một số bản in thiếu đơn giá hoặc số mực; chi phí chưa đầy đủ.</string>
+    <string name="order_setup_once">Mỗi bản in tính chi phí chuẩn bị riêng. Nếu xưởng tính chuẩn bị một lần cho cả đơn, đơn rẻ hơn %1$s.</string>
+    <string name="order_currency_differ">Các bản in dùng tiền tệ khác nhau nên không cộng lại. Hãy dùng một loại tiền trong đơn giá.</string>
+    <string name="order_clear">Xóa đơn</string>
 </resources>

@@ -533,4 +533,19 @@
     <string name="sheet_translate_result">%1$d textes de règles sur %2$d traduits ; %3$d gardés en anglais (contrôle des nombres).</string>
     <string name="sheet_translate_failed">La réponse de l\'IA n\'est pas utilisable ; les textes de règles restent en anglais.</string>
     <string name="sheet_ai_note">Textes de règles traduits par IA, chaque nombre vérifié ; le fichier de règles anglais fait foi.</string>
+    <string name="order_title">COMMANDE AVEC PLUSIEURS IMPRESSIONS</string>
+    <string name="order_add_hint">Ajoutez cette impression à la commande à sa place sur le vêtement. Ouvrez l\'autre visuel et ajoutez-le aussi.</string>
+    <string name="order_front">Devant</string>
+    <string name="order_back">Dos</string>
+    <string name="order_left_sleeve">Manche gauche</string>
+    <string name="order_right_sleeve">Manche droite</string>
+    <string name="order_other">Autre endroit</string>
+    <string name="order_screens">%1$d écrans</string>
+    <string name="order_partial">coût partiel</string>
+    <string name="order_per_garment">%1$s par vêtement (%2$d impressions)</string>
+    <string name="order_qty_differ">Les impressions ont des quantités différentes : pas de total de commande. Utilisez la même quantité pour chaque travail.</string>
+    <string name="order_incomplete">Il manque un tarif ou une donnée d\'encre pour certaines impressions ; leur coût est incomplet.</string>
+    <string name="order_setup_once">Chaque impression compte son propre calage. Si l\'usine facture le calage une fois par commande, la commande coûte %1$s de moins.</string>
+    <string name="order_currency_differ">Les impressions utilisent des devises différentes et ne sont pas additionnées. Utilisez une seule devise dans les tarifs.</string>
+    <string name="order_clear">Vider la commande</string>
 </resources>

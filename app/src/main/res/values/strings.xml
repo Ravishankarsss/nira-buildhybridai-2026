@@ -531,4 +531,19 @@
     <string name="sheet_translate_result">%1$d of %2$d rule texts translated; %3$d kept in English (number check).</string>
     <string name="sheet_translate_failed">The AI reply could not be used; rule texts stay in English.</string>
     <string name="sheet_ai_note">Rule texts translated by AI with every number checked; the English rules file is the reference.</string>
+    <string name="order_title">ORDER WITH MORE THAN ONE PRINT</string>
+    <string name="order_add_hint">Add this print to the order at its place on the garment. Open the other artwork and add it too.</string>
+    <string name="order_front">Front</string>
+    <string name="order_back">Back</string>
+    <string name="order_left_sleeve">Left sleeve</string>
+    <string name="order_right_sleeve">Right sleeve</string>
+    <string name="order_other">Other place</string>
+    <string name="order_screens">%1$d screens</string>
+    <string name="order_partial">partial cost</string>
+    <string name="order_per_garment">%1$s per garment (%2$d prints)</string>
+    <string name="order_qty_differ">The prints have different quantities, so no order total. Use the same quantity on each job.</string>
+    <string name="order_incomplete">Some prints are missing a rate or ink figure; their cost is not complete.</string>
+    <string name="order_setup_once">Each print counts its own set-up. If your factory charges set-up once per order, the order is %1$s less.</string>
+    <string name="order_currency_differ">The prints use different currencies, so they are not added. Use one currency in the factory rates.</string>
+    <string name="order_clear">Clear the order</string>
 </resources>

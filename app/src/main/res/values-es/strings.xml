@@ -533,4 +533,19 @@
     <string name="sheet_translate_result">%1$d de %2$d textos de reglas traducidos; %3$d se quedan en inglés (control de números).</string>
     <string name="sheet_translate_failed">No se pudo usar la respuesta de la IA; los textos de reglas quedan en inglés.</string>
     <string name="sheet_ai_note">Textos de reglas traducidos por IA con cada número comprobado; la referencia es el archivo de reglas en inglés.</string>
+    <string name="order_title">PEDIDO CON MÁS DE UNA IMPRESIÓN</string>
+    <string name="order_add_hint">Añade esta impresión al pedido en su lugar de la prenda. Abre el otro diseño y añádelo también.</string>
+    <string name="order_front">Delantero</string>
+    <string name="order_back">Espalda</string>
+    <string name="order_left_sleeve">Manga izquierda</string>
+    <string name="order_right_sleeve">Manga derecha</string>
+    <string name="order_other">Otro lugar</string>
+    <string name="order_screens">%1$d pantallas</string>
+    <string name="order_partial">costo parcial</string>
+    <string name="order_per_garment">%1$s por prenda (%2$d impresiones)</string>
+    <string name="order_qty_differ">Las impresiones tienen cantidades distintas, así que no hay total del pedido. Usa la misma cantidad en cada trabajo.</string>
+    <string name="order_incomplete">A algunas impresiones les falta una tarifa o dato de tinta; su costo no está completo.</string>
+    <string name="order_setup_once">Cada impresión cuenta su propia preparación. Si la fábrica cobra la preparación una vez por pedido, el pedido cuesta %1$s menos.</string>
+    <string name="order_currency_differ">Las impresiones usan monedas distintas, así que no se suman. Usa una sola moneda en las tarifas.</string>
+    <string name="order_clear">Vaciar el pedido</string>
 </resources>

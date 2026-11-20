@@ -457,6 +457,9 @@ fun PrintDecisionCard(
                     },
                     onClosePreview = onCloseCostDownPreview,
                     onOptionSelected = { chosenOption = it },
+                    jobLabel = card.screens.filter { it.isArtworkColour }
+                        .map { com.mos.nira.features.artwork.presentation.colourName(it.hex) }.distinct()
+                        .joinToString(", ").ifBlank { best.advice.name },
                     extraActions = {
                         androidx.compose.material3.OutlinedButton(onClick = { sheetOpen = true }, modifier = Modifier.fillMaxWidth()) {
                             Text(stringResource(R.string.sheet_button), fontSize = 12.sp, color = DCyan)

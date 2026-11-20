@@ -103,6 +103,8 @@ fun OrderCostSection(
     onPreviewOption: (CostDownOption) -> Unit,
     onClosePreview: () -> Unit,
     onOptionSelected: (CostDownOption?) -> Unit = {},
+    /** The job's name in the order list (front + back orders). */
+    jobLabel: String = "",
     extraActions: @Composable () -> Unit = {}
 ) {
     var ratesOpen by remember { mutableStateOf(false) }
@@ -159,6 +161,9 @@ fun OrderCostSection(
             TextButton(onClick = { ratesOpen = true }) { Text(stringResource(R.string.cost_edit_rates), color = CCyan, fontSize = 11.sp) }
         }
     }
+
+    // Front + back: add this print to the order; the order adds the prints up.
+    OrderPlacementsBlock(cost, rates, jobLabel)
 
     // Actions: Cost-Down and the share sheet, one above the other (long labels in Tamil fit).
     Spacer(Modifier.height(8.dp))

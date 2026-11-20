@@ -532,4 +532,19 @@
     <string name="sheet_translate_result">%2$dটির মধ্যে %1$dটি নিয়মের লেখা অনূদিত; %3$dটি ইংরেজিতে রাখা হয়েছে (সংখ্যা যাচাই)।</string>
     <string name="sheet_translate_failed">AI-এর উত্তর ব্যবহার করা যায়নি; নিয়মের লেখা ইংরেজিতেই থাকবে।</string>
     <string name="sheet_ai_note">নিয়মের লেখা AI দিয়ে অনূদিত, প্রতিটি সংখ্যা যাচাই করা; ইংরেজি নিয়ম ফাইলই মূল সূত্র।</string>
+    <string name="order_title">একাধিক প্রিন্টের অর্ডার</string>
+    <string name="order_add_hint">এই প্রিন্টটি পোশাকে তার জায়গা দিয়ে অর্ডারে যোগ করুন। অন্য artwork খুলে সেটিও যোগ করুন।</string>
+    <string name="order_front">সামনে</string>
+    <string name="order_back">পেছনে</string>
+    <string name="order_left_sleeve">বাঁ হাতা</string>
+    <string name="order_right_sleeve">ডান হাতা</string>
+    <string name="order_other">অন্য জায়গা</string>
+    <string name="order_screens">%1$dটি স্ক্রিন</string>
+    <string name="order_partial">আংশিক খরচ</string>
+    <string name="order_per_garment">প্রতি পোশাকে %1$s (%2$dটি প্রিন্ট)</string>
+    <string name="order_qty_differ">প্রিন্টগুলোর পরিমাণ আলাদা, তাই অর্ডারের মোট নেই। প্রতিটি কাজে একই পরিমাণ দিন।</string>
+    <string name="order_incomplete">কিছু প্রিন্টে রেট বা কালির হিসাব নেই; সেগুলোর খরচ সম্পূর্ণ নয়।</string>
+    <string name="order_setup_once">প্রতিটি প্রিন্ট নিজের সেট-আপ গোনে। কারখানা পুরো অর্ডারে একবার সেট-আপ নিলে অর্ডার %1$s কম হবে।</string>
+    <string name="order_currency_differ">প্রিন্টগুলো ভিন্ন মুদ্রায়, তাই যোগ করা হয়নি। কারখানার রেটে একটি মুদ্রা ব্যবহার করুন।</string>
+    <string name="order_clear">অর্ডার মুছুন</string>
 </resources>
