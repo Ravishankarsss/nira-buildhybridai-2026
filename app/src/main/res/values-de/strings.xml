@@ -478,4 +478,26 @@
     <string name="ask_held_numbers">NIRA hat diese Antwort zurückgehalten: Sie enthielt Zahlen, die nicht in diesem Auftrag stehen (%1$s). Ändere den Auftrag in NIRA, die Engine rechnet neu.</string>
     <string name="ask_held_code">NIRA hat diese Antwort zurückgehalten: Sie fügte einen Farbcode hinzu, der nicht in diesem Auftrag steht.</string>
     <string name="ask_privacy">Nur Text, nie dein Motiv. Zuerst KI auf dem Gerät; die Cloud nur, wenn das Telefon kein Modell hat und der vertrauliche Modus aus ist.</string>
+    <string name="reader_button">📄 Kunden-Briefing lesen (KI)</string>
+    <string name="reader_title">Kunden-Briefing lesen</string>
+    <string name="reader_intro">Füge die E-Mail oder Nachricht des Kunden ein oder wähle ein Foto der Tech-Pack-Seite. NIRAs KI schlägt Antworten vor; du hakst die passenden an.</string>
+    <string name="reader_tab_text">Text einfügen</string>
+    <string name="reader_tab_photo">Seitenfoto</string>
+    <string name="reader_text_hint">Auftrags-E-Mail oder Nachricht hier einfügen…</string>
+    <string name="reader_choose_photo">Seitenfoto wählen</string>
+    <string name="reader_photo_chosen">Foto gewählt ✓ (zum Ändern tippen)</string>
+    <string name="reader_photo_privacy">Das Seitenfoto geht zum Lesen an die Cloud-KI (zuerst auf dem Gerät, falls ein Modell vorhanden ist). Der vertrauliche Modus behält es auf dem Telefon.</string>
+    <string name="reader_read">Lesen</string>
+    <string name="reader_running">NIRA liest das Briefing…</string>
+    <string name="reader_blocked">Der vertrauliche Modus ist an und das Telefon hat kein Gerätemodell, daher wurde nichts gesendet.</string>
+    <string name="reader_nothing">NIRA hat keine Antworten gefunden. Fülle die vier Fragen von Hand aus.</string>
+    <string name="reader_check_text">Jede Antwort wurde geprüft: ein erlaubter NIRA-Wert, und die Worte stehen in deinem Text. Hake die gewünschten an.</string>
+    <string name="reader_check_photo">Prüfe jede Antwort mit der Seite, bevor du sie nutzt: Ein Foto lässt sich nicht Wort für Wort prüfen.</string>
+    <string name="reader_apply">Briefing ausfüllen (%1$d)</string>
+    <string name="reader_again">Neu lesen</string>
+    <string name="reader_q_fibre">Faser</string>
+    <string name="reader_q_fabric">Stoff</string>
+    <string name="reader_drop_allowed">Nicht angeboten: kein NIRA-Wert.</string>
+    <string name="reader_drop_text">Nicht angeboten: diese Worte stehen nicht im Briefing.</string>
+    <string name="reader_drop_number">Nicht angeboten: keine ganze Stückzahl.</string>
 </resources>

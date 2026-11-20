@@ -477,4 +477,26 @@
     <string name="ask_held_numbers">NIRA đã giữ lại câu trả lời này: có số không có trong đơn này (%1$s). Hãy sửa đơn trong NIRA để engine tính lại.</string>
     <string name="ask_held_code">NIRA đã giữ lại câu trả lời này: nó thêm mã màu không có trong đơn này.</string>
     <string name="ask_privacy">Chỉ văn bản, không bao giờ gửi hình in. Ưu tiên AI trên máy; chỉ dùng cloud khi máy không có mô hình và chế độ bảo mật đang tắt.</string>
+    <string name="reader_button">📄 Đọc yêu cầu của người mua (AI)</string>
+    <string name="reader_title">Đọc yêu cầu của người mua</string>
+    <string name="reader_intro">Dán email hoặc tin nhắn của người mua, hoặc chọn ảnh trang tech-pack. AI của NIRA đề xuất câu trả lời; bạn đánh dấu những câu sẽ dùng.</string>
+    <string name="reader_tab_text">Dán văn bản</string>
+    <string name="reader_tab_photo">Ảnh trang</string>
+    <string name="reader_text_hint">Dán email hoặc tin nhắn đặt hàng vào đây…</string>
+    <string name="reader_choose_photo">Chọn ảnh trang</string>
+    <string name="reader_photo_chosen">Đã chọn ảnh ✓ (chạm để đổi)</string>
+    <string name="reader_photo_privacy">Ảnh trang được gửi tới AI đám mây để đọc (ưu tiên trên máy nếu có mô hình). Chế độ bảo mật giữ ảnh trên điện thoại.</string>
+    <string name="reader_read">Đọc</string>
+    <string name="reader_running">NIRA đang đọc yêu cầu…</string>
+    <string name="reader_blocked">Chế độ bảo mật đang bật và máy không có mô hình trên thiết bị, nên không gửi gì.</string>
+    <string name="reader_nothing">NIRA không tìm thấy câu trả lời. Hãy điền bốn câu hỏi bằng tay.</string>
+    <string name="reader_check_text">Mỗi câu trả lời đã được kiểm tra: là giá trị NIRA cho phép và có trong văn bản của bạn. Đánh dấu những câu sẽ dùng.</string>
+    <string name="reader_check_photo">Hãy đối chiếu từng câu trả lời với trang trước khi dùng: ảnh không thể kiểm tra từng chữ.</string>
+    <string name="reader_apply">Điền yêu cầu (%1$d)</string>
+    <string name="reader_again">Đọc lại</string>
+    <string name="reader_q_fibre">Sợi</string>
+    <string name="reader_q_fabric">Vải</string>
+    <string name="reader_drop_allowed">Không đề xuất: không phải giá trị của NIRA.</string>
+    <string name="reader_drop_text">Không đề xuất: các từ này không có trong yêu cầu.</string>
+    <string name="reader_drop_number">Không đề xuất: không phải số chiếc nguyên.</string>
 </resources>

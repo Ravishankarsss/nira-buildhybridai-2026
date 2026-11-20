@@ -477,4 +477,26 @@
     <string name="ask_held_numbers">NIRA 已拦截此回答：其中有此订单中没有的数字（%1$s）。请在 NIRA 中修改订单，由引擎重新计算。</string>
     <string name="ask_held_code">NIRA 已拦截此回答：它添加了此订单中没有的颜色代码。</string>
     <string name="ask_privacy">仅发送文字，从不发送图稿。优先使用本机 AI；仅当手机没有模型且保密模式关闭时才使用云端。</string>
+    <string name="reader_button">📄 读取买家需求（AI）</string>
+    <string name="reader_title">读取买家需求</string>
+    <string name="reader_intro">粘贴买家的邮件或消息，或选择技术包页面的照片。NIRA 的 AI 提出答案；由你勾选要使用的项。</string>
+    <string name="reader_tab_text">粘贴文字</string>
+    <string name="reader_tab_photo">页面照片</string>
+    <string name="reader_text_hint">在此粘贴订单邮件或消息…</string>
+    <string name="reader_choose_photo">选择页面照片</string>
+    <string name="reader_photo_chosen">已选照片 ✓（点按更换）</string>
+    <string name="reader_photo_privacy">页面照片会发送到云端 AI 读取（若手机有模型则优先在本机）。保密模式会将其保留在手机上。</string>
+    <string name="reader_read">读取</string>
+    <string name="reader_running">NIRA 正在读取需求…</string>
+    <string name="reader_blocked">保密模式已开启且本机没有本地模型，因此未发送任何内容。</string>
+    <string name="reader_nothing">NIRA 未找到答案。请手动填写四个问题。</string>
+    <string name="reader_check_text">每个答案都已检查：是 NIRA 允许的值，且原文出现在你的文字中。勾选要使用的项。</string>
+    <string name="reader_check_photo">使用前请将每个答案与页面核对：照片无法逐字核查。</string>
+    <string name="reader_apply">填写需求 (%1$d)</string>
+    <string name="reader_again">重新读取</string>
+    <string name="reader_q_fibre">纤维</string>
+    <string name="reader_q_fabric">面料</string>
+    <string name="reader_drop_allowed">未提供：不是 NIRA 的取值。</string>
+    <string name="reader_drop_text">未提供：需求中没有这些文字。</string>
+    <string name="reader_drop_number">未提供：不是整数件数。</string>
 </resources>

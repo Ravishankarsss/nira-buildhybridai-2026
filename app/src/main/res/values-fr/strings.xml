@@ -479,4 +479,26 @@
     <string name="ask_held_numbers">NIRA a retenu cette réponse : elle contenait des nombres absents de ce travail (%1$s). Modifiez le travail dans NIRA et le moteur recalcule.</string>
     <string name="ask_held_code">NIRA a retenu cette réponse : elle ajoutait un code couleur absent de ce travail.</string>
     <string name="ask_privacy">Texte uniquement, jamais votre visuel. IA sur l\'appareil d\'abord ; le cloud seulement si le téléphone n\'a pas de modèle et que le mode confidentiel est désactivé.</string>
+    <string name="reader_button">📄 Lire le brief de l\'acheteur (IA)</string>
+    <string name="reader_title">Lire le brief de l\'acheteur</string>
+    <string name="reader_intro">Collez l\'e-mail ou le message de l\'acheteur, ou choisissez une photo de la page du dossier technique. L\'IA de NIRA propose les réponses ; vous cochez celles à utiliser.</string>
+    <string name="reader_tab_text">Coller le texte</string>
+    <string name="reader_tab_photo">Photo de page</string>
+    <string name="reader_text_hint">Collez ici l\'e-mail ou le message de commande…</string>
+    <string name="reader_choose_photo">Choisir la photo</string>
+    <string name="reader_photo_chosen">Photo choisie ✓ (touchez pour changer)</string>
+    <string name="reader_photo_privacy">La photo de la page est envoyée à l\'IA cloud pour être lue (d\'abord sur l\'appareil s\'il a un modèle). Le mode confidentiel la garde sur le téléphone.</string>
+    <string name="reader_read">Lire</string>
+    <string name="reader_running">NIRA lit le brief…</string>
+    <string name="reader_blocked">Le mode confidentiel est activé et ce téléphone n\'a pas de modèle local : rien n\'a été envoyé.</string>
+    <string name="reader_nothing">NIRA n\'a pas trouvé les réponses. Remplissez les quatre questions à la main.</string>
+    <string name="reader_check_text">Chaque réponse a été vérifiée : c\'est une valeur NIRA autorisée et ses mots sont dans votre texte. Cochez celles à utiliser.</string>
+    <string name="reader_check_photo">Comparez chaque réponse avec la page avant de l\'utiliser : une photo ne peut pas être vérifiée mot à mot.</string>
+    <string name="reader_apply">Remplir le brief (%1$d)</string>
+    <string name="reader_again">Relire</string>
+    <string name="reader_q_fibre">Fibre</string>
+    <string name="reader_q_fabric">Tissu</string>
+    <string name="reader_drop_allowed">Non proposé : ce n\'est pas une valeur NIRA.</string>
+    <string name="reader_drop_text">Non proposé : ces mots ne sont pas dans le brief.</string>
+    <string name="reader_drop_number">Non proposé : pas un nombre entier de pièces.</string>
 </resources>

@@ -478,4 +478,26 @@
     <string name="ask_held_numbers">NIRA এই উত্তর আটকেছে: এতে এমন সংখ্যা আছে যা এই কাজে নেই (%1$s)। NIRA তে কাজ বদলান, ইঞ্জিন আবার হিসাব করবে।</string>
     <string name="ask_held_code">NIRA এই উত্তর আটকেছে: এতে এমন রঙের কোড যোগ হয়েছে যা এই কাজে নেই।</string>
     <string name="ask_privacy">শুধু লেখা, আপনার artwork কখনো নয়। আগে ফোনের AI; ফোনে মডেল না থাকলে এবং Confidential mode বন্ধ থাকলে তবেই ক্লাউড।</string>
+    <string name="reader_button">📄 ক্রেতার ব্রিফ পড়ুন (AI)</string>
+    <string name="reader_title">ক্রেতার ব্রিফ পড়ুন</string>
+    <string name="reader_intro">ক্রেতার ইমেল বা বার্তা পেস্ট করুন, বা tech-pack পাতার ছবি বেছে নিন। NIRA-র AI উত্তর প্রস্তাব করে; আপনি যেগুলো নেবেন টিক দিন।</string>
+    <string name="reader_tab_text">লেখা পেস্ট</string>
+    <string name="reader_tab_photo">পাতার ছবি</string>
+    <string name="reader_text_hint">অর্ডারের ইমেল বা বার্তা এখানে পেস্ট করুন…</string>
+    <string name="reader_choose_photo">পাতার ছবি বেছে নিন</string>
+    <string name="reader_photo_chosen">ছবি বাছা হয়েছে ✓ (বদলাতে ট্যাপ করুন)</string>
+    <string name="reader_photo_privacy">পাতার ছবি পড়ার জন্য ক্লাউড AI-তে পাঠানো হয় (ফোনে মডেল থাকলে আগে ফোনে)। Confidential mode এটি ফোনেই রাখে।</string>
+    <string name="reader_read">পড়ুন</string>
+    <string name="reader_running">NIRA ব্রিফ পড়ছে…</string>
+    <string name="reader_blocked">Confidential mode চালু এবং এই ফোনে on-device মডেল নেই, তাই কিছু পাঠানো হয়নি।</string>
+    <string name="reader_nothing">NIRA উত্তর খুঁজে পায়নি। চারটি প্রশ্ন হাতে পূরণ করুন।</string>
+    <string name="reader_check_text">প্রতিটি উত্তর যাচাই করা হয়েছে: এটি NIRA-র অনুমোদিত মান এবং এর শব্দ আপনার লেখায় আছে। যেগুলো নেবেন টিক দিন।</string>
+    <string name="reader_check_photo">ব্যবহারের আগে প্রতিটি উত্তর পাতার সাথে মিলিয়ে নিন: ছবি শব্দে শব্দে যাচাই করা যায় না।</string>
+    <string name="reader_apply">ব্রিফ পূরণ করুন (%1$d)</string>
+    <string name="reader_again">আবার পড়ুন</string>
+    <string name="reader_q_fibre">ফাইবার</string>
+    <string name="reader_q_fabric">কাপড়</string>
+    <string name="reader_drop_allowed">দেওয়া হয়নি: NIRA-র মানের মধ্যে নেই।</string>
+    <string name="reader_drop_text">দেওয়া হয়নি: এই শব্দগুলো ব্রিফে নেই।</string>
+    <string name="reader_drop_number">দেওয়া হয়নি: পিসের পূর্ণ সংখ্যা নয়।</string>
 </resources>

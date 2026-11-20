@@ -478,4 +478,26 @@
     <string name="ask_held_numbers">NIRA ने यह जवाब रोका: इसमें ऐसे अंक थे जो इस काम में नहीं हैं (%1$s)। NIRA में काम बदलें, इंजन फिर से गणना करेगा।</string>
     <string name="ask_held_code">NIRA ने यह जवाब रोका: इसमें ऐसा रंग कोड जोड़ा गया जो इस काम में नहीं है।</string>
     <string name="ask_privacy">केवल टेक्स्ट, आपका artwork कभी नहीं। पहले फ़ोन पर AI; क्लाउड तभी जब फ़ोन में मॉडल न हो और Confidential mode बंद हो।</string>
+    <string name="reader_button">📄 खरीदार का ब्रीफ़ पढ़ें (AI)</string>
+    <string name="reader_title">खरीदार का ब्रीफ़ पढ़ें</string>
+    <string name="reader_intro">खरीदार का ईमेल या संदेश चिपकाएँ, या tech-pack पेज की फ़ोटो चुनें। NIRA का AI जवाब सुझाता है; आप जिन्हें उपयोग करना है उन्हें टिक करें।</string>
+    <string name="reader_tab_text">टेक्स्ट चिपकाएँ</string>
+    <string name="reader_tab_photo">पेज फ़ोटो</string>
+    <string name="reader_text_hint">ऑर्डर ईमेल या संदेश यहाँ चिपकाएँ…</string>
+    <string name="reader_choose_photo">पेज फ़ोटो चुनें</string>
+    <string name="reader_photo_chosen">फ़ोटो चुनी गई ✓ (बदलने के लिए टैप करें)</string>
+    <string name="reader_photo_privacy">पेज फ़ोटो पढ़ने के लिए क्लाउड AI को भेजी जाती है (फ़ोन में मॉडल हो तो पहले फ़ोन पर)। Confidential mode इसे फ़ोन पर ही रखता है।</string>
+    <string name="reader_read">पढ़ें</string>
+    <string name="reader_running">NIRA ब्रीफ़ पढ़ रहा है…</string>
+    <string name="reader_blocked">Confidential mode चालू है और इस फ़ोन में on-device मॉडल नहीं है, इसलिए कुछ नहीं भेजा गया।</string>
+    <string name="reader_nothing">NIRA को जवाब नहीं मिले। चारों सवाल हाथ से भरें।</string>
+    <string name="reader_check_text">हर जवाब जाँचा गया: यह NIRA का मान्य मान है और इसके शब्द आपके टेक्स्ट में हैं। जिन्हें उपयोग करना है उन्हें टिक करें।</string>
+    <string name="reader_check_photo">उपयोग से पहले हर जवाब पेज से मिलाएँ: फ़ोटो को शब्द-दर-शब्द नहीं जाँचा जा सकता।</string>
+    <string name="reader_apply">ब्रीफ़ भरें (%1$d)</string>
+    <string name="reader_again">फिर से पढ़ें</string>
+    <string name="reader_q_fibre">फ़ाइबर</string>
+    <string name="reader_q_fabric">कपड़ा</string>
+    <string name="reader_drop_allowed">नहीं दिया गया: NIRA के मानों में से नहीं।</string>
+    <string name="reader_drop_text">नहीं दिया गया: ये शब्द ब्रीफ़ में नहीं हैं।</string>
+    <string name="reader_drop_number">नहीं दिया गया: पीस की पूरी संख्या नहीं।</string>
 </resources>

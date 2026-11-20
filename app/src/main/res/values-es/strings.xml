@@ -479,4 +479,26 @@
     <string name="ask_held_numbers">NIRA retuvo esta respuesta: tenía números que no están en este trabajo (%1$s). Cambia el trabajo en NIRA y el motor recalcula.</string>
     <string name="ask_held_code">NIRA retuvo esta respuesta: añadió un código de color que no está en este trabajo.</string>
     <string name="ask_privacy">Solo texto, nunca tu diseño. Primero IA en el teléfono; la nube solo si el teléfono no tiene modelo y el modo confidencial está apagado.</string>
+    <string name="reader_button">📄 Leer el pedido del comprador (IA)</string>
+    <string name="reader_title">Leer el pedido del comprador</string>
+    <string name="reader_intro">Pega el correo o mensaje del comprador, o elige una foto de la página de la ficha técnica. La IA de NIRA propone las respuestas; tú marcas las que usar.</string>
+    <string name="reader_tab_text">Pegar texto</string>
+    <string name="reader_tab_photo">Foto de página</string>
+    <string name="reader_text_hint">Pega aquí el correo o mensaje del pedido…</string>
+    <string name="reader_choose_photo">Elegir foto de página</string>
+    <string name="reader_photo_chosen">Foto elegida ✓ (toca para cambiar)</string>
+    <string name="reader_photo_privacy">La foto de la página se envía a la IA en la nube para leerla (primero en el teléfono si tiene modelo). El modo confidencial la mantiene en el teléfono.</string>
+    <string name="reader_read">Leer</string>
+    <string name="reader_running">NIRA está leyendo el pedido…</string>
+    <string name="reader_blocked">El modo confidencial está activo y este teléfono no tiene modelo local, así que no se envió nada.</string>
+    <string name="reader_nothing">NIRA no encontró las respuestas. Rellena las cuatro preguntas a mano.</string>
+    <string name="reader_check_text">Cada respuesta se comprobó: es un valor permitido de NIRA y sus palabras están en tu texto. Marca las que usar.</string>
+    <string name="reader_check_photo">Compara cada respuesta con la página antes de usarla: una foto no se puede comprobar palabra por palabra.</string>
+    <string name="reader_apply">Rellenar el pedido (%1$d)</string>
+    <string name="reader_again">Leer de nuevo</string>
+    <string name="reader_q_fibre">Fibra</string>
+    <string name="reader_q_fabric">Tejido</string>
+    <string name="reader_drop_allowed">No ofrecido: no es un valor de NIRA.</string>
+    <string name="reader_drop_text">No ofrecido: estas palabras no están en el pedido.</string>
+    <string name="reader_drop_number">No ofrecido: no es un número entero de piezas.</string>
 </resources>

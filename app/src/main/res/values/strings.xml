@@ -477,4 +477,26 @@
     <string name="ask_held_numbers">NIRA held this answer back: it had numbers that are not in this job (%1$s). Change the job in NIRA and the engine recalculates.</string>
     <string name="ask_held_code">NIRA held this answer back: it added a colour code that is not in this job.</string>
     <string name="ask_privacy">Text only, never your artwork. On-device AI first; the cloud only when this phone has no model and Confidential mode is off.</string>
+    <string name="reader_button">📄 Read the buyer\'s brief (AI)</string>
+    <string name="reader_title">Read the buyer\'s brief</string>
+    <string name="reader_intro">Paste the buyer\'s email or message, or choose a photo of the tech-pack page. NIRA\'s AI proposes the answers; you tick the ones to use.</string>
+    <string name="reader_tab_text">Paste text</string>
+    <string name="reader_tab_photo">Page photo</string>
+    <string name="reader_text_hint">Paste the order email or message here…</string>
+    <string name="reader_choose_photo">Choose page photo</string>
+    <string name="reader_photo_chosen">Photo chosen ✓ (tap to change)</string>
+    <string name="reader_photo_privacy">The page photo is sent to the cloud AI to be read (on-device first if this phone has a model). Confidential mode keeps it on the phone.</string>
+    <string name="reader_read">Read</string>
+    <string name="reader_running">NIRA is reading the brief…</string>
+    <string name="reader_blocked">Confidential mode is on and this phone has no on-device model, so nothing was sent.</string>
+    <string name="reader_nothing">NIRA could not find the brief answers. Fill the four questions by hand.</string>
+    <string name="reader_check_text">Each answer was checked: it is an allowed NIRA value and its words are in your text. Tick the ones to use.</string>
+    <string name="reader_check_photo">Check each answer against the page before you use it: a photo cannot be checked word by word.</string>
+    <string name="reader_apply">Fill the brief (%1$d)</string>
+    <string name="reader_again">Read again</string>
+    <string name="reader_q_fibre">Fibre</string>
+    <string name="reader_q_fabric">Fabric</string>
+    <string name="reader_drop_allowed">Not offered: not one of NIRA\'s values.</string>
+    <string name="reader_drop_text">Not offered: these words are not in the brief.</string>
+    <string name="reader_drop_number">Not offered: not a whole number of pieces.</string>
 </resources>

@@ -478,4 +478,26 @@
     <string name="ask_held_numbers">NIRA இந்தப் பதிலை நிறுத்தியது: இந்த வேலையில் இல்லாத எண்கள் உள்ளன (%1$s). NIRA-வில் வேலையை மாற்றினால் engine மீண்டும் கணக்கிடும்.</string>
     <string name="ask_held_code">NIRA இந்தப் பதிலை நிறுத்தியது: இந்த வேலையில் இல்லாத நிறக் குறியீட்டைச் சேர்த்தது.</string>
     <string name="ask_privacy">உரை மட்டும், உங்கள் artwork ஒருபோதும் இல்லை. முதலில் மொபைலில் உள்ள AI; இந்த மொபைலில் மாடல் இல்லாதபோது மற்றும் Confidential mode அணைந்திருக்கும்போது மட்டும் cloud.</string>
+    <string name="reader_button">📄 வாங்குபவர் விவரத்தைப் படி (AI)</string>
+    <string name="reader_title">வாங்குபவர் விவரத்தைப் படி</string>
+    <string name="reader_intro">வாங்குபவரின் email அல்லது செய்தியை ஒட்டவும், அல்லது tech-pack பக்கத்தின் புகைப்படத்தைத் தேர்ந்தெடுக்கவும். NIRA AI பதில்களை முன்மொழியும்; பயன்படுத்த வேண்டியவற்றை நீங்கள் டிக் செய்யுங்கள்.</string>
+    <string name="reader_tab_text">உரையை ஒட்டு</string>
+    <string name="reader_tab_photo">பக்கப் புகைப்படம்</string>
+    <string name="reader_text_hint">ஆர்டர் email அல்லது செய்தியை இங்கே ஒட்டவும்…</string>
+    <string name="reader_choose_photo">பக்கப் புகைப்படம் தேர்ந்தெடு</string>
+    <string name="reader_photo_chosen">புகைப்படம் தேர்ந்தது ✓ (மாற்ற தட்டவும்)</string>
+    <string name="reader_photo_privacy">பக்கப் புகைப்படம் படிக்க cloud AI-க்கு அனுப்பப்படும் (இந்த மொபைலில் மாடல் இருந்தால் முதலில் மொபைலிலேயே). Confidential mode அதை மொபைலிலேயே வைக்கும்.</string>
+    <string name="reader_read">படி</string>
+    <string name="reader_running">NIRA விவரத்தைப் படிக்கிறது…</string>
+    <string name="reader_blocked">Confidential mode இயக்கத்தில் உள்ளது, இந்த மொபைலில் on-device மாடல் இல்லை, எனவே எதுவும் அனுப்பப்படவில்லை.</string>
+    <string name="reader_nothing">NIRA பதில்களைக் கண்டுபிடிக்கவில்லை. நான்கு கேள்விகளையும் கையால் நிரப்புங்கள்.</string>
+    <string name="reader_check_text">ஒவ்வொரு பதிலும் சரிபார்க்கப்பட்டது: அது NIRA அனுமதிக்கும் மதிப்பு, அதன் சொற்கள் உங்கள் உரையில் உள்ளன. பயன்படுத்த வேண்டியவற்றை டிக் செய்யுங்கள்.</string>
+    <string name="reader_check_photo">பயன்படுத்தும் முன் ஒவ்வொரு பதிலையும் பக்கத்துடன் ஒப்பிடுங்கள்: புகைப்படத்தைச் சொல்லுக்குச் சொல் சரிபார்க்க முடியாது.</string>
+    <string name="reader_apply">விவரத்தை நிரப்பு (%1$d)</string>
+    <string name="reader_again">மீண்டும் படி</string>
+    <string name="reader_q_fibre">இழை</string>
+    <string name="reader_q_fabric">துணி</string>
+    <string name="reader_drop_allowed">வழங்கப்படவில்லை: NIRA மதிப்புகளில் ஒன்று அல்ல.</string>
+    <string name="reader_drop_text">வழங்கப்படவில்லை: இந்தச் சொற்கள் விவரத்தில் இல்லை.</string>
+    <string name="reader_drop_number">வழங்கப்படவில்லை: துண்டுகளின் முழு எண் அல்ல.</string>
 </resources>

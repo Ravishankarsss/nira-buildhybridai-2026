@@ -157,6 +157,34 @@ fun PrintDecisionCard(
             Spacer(Modifier.height(4.dp))
             Text(stringResource(R.string.brief_hint), color = DMuted, fontSize = 12.sp, lineHeight = 17.sp)
 
+            // Buyer Brief Reader: AI proposes the answers from the buyer's email or page; the user ticks them.
+            var readerOpen by remember { mutableStateOf(false) }
+            Spacer(Modifier.height(8.dp))
+            androidx.compose.material3.OutlinedButton(onClick = { readerOpen = true }, modifier = Modifier.fillMaxWidth()) {
+                Text(stringResource(R.string.reader_button), color = DCyan, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+            }
+            val readerColours = garmentChips?.namedColours.orEmpty().ifEmpty { garmentChips?.chips.orEmpty() }
+            if (readerOpen && briefRules != null) {
+                BriefReaderDialog(
+                    colours = readerColours,
+                    fabrics = briefRules.fabrics,
+                    onApply = { fields ->
+                        fields.forEach { f ->
+                            when (f.kind) {
+                                com.mos.nira.core.ai.BriefReader.Kind.GARMENT_COLOUR ->
+                                    readerColours.firstOrNull { it.first == f.value }?.let { onGarment(it.second) }
+                                com.mos.nira.core.ai.BriefReader.Kind.FIBRE ->
+                                    com.mos.nira.core.ai.BriefReader.fibre(f.value)?.let { fb -> choicesViewModel.update(artworkKey) { c -> c.copy(fibre = fb) } }
+                                com.mos.nira.core.ai.BriefReader.Kind.FABRIC -> onFabric(f.value)
+                                com.mos.nira.core.ai.BriefReader.Kind.QUANTITY -> f.value.toIntOrNull()?.let { onQuantity(it) }
+                                com.mos.nira.core.ai.BriefReader.Kind.FEEL -> com.mos.nira.core.ai.BriefReader.feel(f.value)?.let { onFeel(it) }
+                            }
+                        }
+                    },
+                    onDismiss = { readerOpen = false }
+                )
+            }
+
             // 1. Garment colour
             var pickerOpen by remember { mutableStateOf(false) }
             Question(stringResource(R.string.brief_q_garment))
@@ -553,7 +581,7 @@ private fun Chip(text: String, selected: Boolean, swatchHex: String? = null, onC
 }
 
 @Composable
-private fun fabricLabel(id: String): String = when (id) {
+internal fun fabricLabel(id: String): String = when (id) {
     "single_jersey" -> stringResource(R.string.fabric_single_jersey)
     "pique" -> stringResource(R.string.fabric_pique)
     "fleece" -> stringResource(R.string.fabric_fleece)
@@ -563,7 +591,7 @@ private fun fabricLabel(id: String): String = when (id) {
 }
 
 @Composable
-private fun feelLabel(f: Feel): String = stringResource(
+internal fun feelLabel(f: Feel): String = stringResource(
     when (f) {
         Feel.SOFT -> R.string.feel_soft
         Feel.RAISED -> R.string.feel_raised

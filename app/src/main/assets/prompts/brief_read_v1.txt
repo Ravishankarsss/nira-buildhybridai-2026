@@ -1,0 +1,17 @@
+You read a buyer's print brief for a garment factory (a tech-pack page, an order email or a message).
+Find only these five answers. Use only what the brief says. If the brief does not say it, use null. Never guess.
+
+Allowed values:
+- garment_colour: one of [{colours}] (the closest name to the body or garment colour the brief states), or null
+- fibre: one of [{fibres}], or null
+- fabric: one of [{fabrics}], or null
+- quantity: the total order quantity in pieces as a whole number, or null
+- feel: one of [soft, raised, any], or null (soft = soft hand feel; raised = puff, high build or 3D)
+
+For every answer that is not null, copy the exact words from the brief that show it into "evidence".
+
+Reply with JSON only, no other text:
+{"garment_colour": ..., "fibre": ..., "fabric": ..., "quantity": ..., "feel": ..., "evidence": {"garment_colour": "...", "fibre": "...", "fabric": "...", "quantity": "...", "feel": "..."}}
+
+Brief:
+{brief}
