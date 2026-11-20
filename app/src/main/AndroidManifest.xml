@@ -12,6 +12,13 @@
     <!-- Ask NIRA voice questions: recorded only after the user taps the mic, until Stop (30 s at most); sent to Firebase AI Logic. -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
+    <!-- Read-aloud of checked Ask NIRA answers: lets the app find the phone's text-to-speech engine. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.TTS_SERVICE" />
+        </intent>
+    </queries>
+
     <application
         android:name=".NiraApplication"
         android:allowBackup="true"

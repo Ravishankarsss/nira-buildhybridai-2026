@@ -547,10 +547,16 @@
     <string name="order_setup_once">हर प्रिंट अपना सेट-अप गिनता है। अगर फ़ैक्टरी पूरे ऑर्डर पर एक बार सेट-अप लेती है, तो ऑर्डर %1$s कम होगा।</string>
     <string name="order_currency_differ">प्रिंट अलग-अलग मुद्राओं में हैं, इसलिए जोड़े नहीं गए। फ़ैक्टरी दरों में एक ही मुद्रा रखें।</string>
     <string name="order_clear">ऑर्डर साफ़ करें</string>
-    <string name="ask_voice_start">🎤 बोलकर पूछें (%1$d सेकंड तक)</string>
-    <string name="ask_voice_stop">■ रोकें और पूछें</string>
+    <string name="ask_voice_start">🎤 बोलने के लिए दबाकर रखें (%1$d सेकंड तक)</string>
+    <string name="ask_voice_stop">● %1$d / %2$d सेकंड — भेजने के लिए छोड़ें</string>
     <string name="ask_voice_pending">आवाज़ में सवाल…</string>
     <string name="ask_voice_privacy">आवाज़: आपकी रिकॉर्डिंग क्लाउड AI (Firebase) को जाती है, जो सवाल लिखकर इस काम से जवाब देता है। फ़ोन का अपना मॉडल आवाज़ नहीं सुन सकता। Confidential mode में नहीं भेजी जाती।</string>
     <string name="ask_voice_blocked">Confidential mode चालू है, इसलिए रिकॉर्डिंग नहीं भेजी गई। सवाल टाइप करें।</string>
     <string name="ask_voice_unclear">NIRA को साफ़ सवाल नहीं सुनाई दिया। फ़ोन के पास फिर से बोलें, या टाइप करें।</string>
+    <string name="ask_voice_too_short">बोलते समय बटन दबाकर रखें (कम से कम 1 सेकंड)।</string>
+    <string name="ask_speak">🔊 सुनें</string>
+    <string name="ask_stop_speaking">■ रोकें</string>
+    <string name="ask_tts_missing">इस फ़ोन में अभी इस भाषा की आवाज़ नहीं है। फ़ोन की Text-to-speech सेटिंग (Google speech services) में जोड़ें, फिर सुनें दबाएँ।</string>
+    <string name="ask_tts_not_ready">फ़ोन की आवाज़ अभी शुरू हो रही है। थोड़ी देर में फिर सुनें दबाएँ।</string>
+    <string name="ask_edit_heard">✎ मैंने यह नहीं कहा? बदलकर फिर पूछें</string>
 </resources>

@@ -58,6 +58,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import java.io.File
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Box
+import androidx.compose.material3.TextButton
+import androidx.compose.ui.input.pointer.pointerInput
+import kotlinx.coroutines.delay
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mos.nira.R
 import com.mos.nira.core.ai.AskNira
@@ -92,6 +97,31 @@ fun AskNiraSheet(
 
     val send = { q: String -> if (q.isNotBlank() && !running) { viewModel.ask(q, facts); input = "" } }
 
+    // Read-aloud of checked answers (Android's own text-to-speech; Ravi's option A).
+    val ctx = LocalContext.current
+    val speaker = remember { NiraSpeaker(ctx) }
+    val speakingId by speaker.speaking.collectAsState()
+    var voiceNote by remember { mutableStateOf<Int?>(null) }
+    val appLanguage = ctx.resources.configuration.locales[0].language
+    fun speak(index: Int, text: String) {
+        voiceNote = when (speaker.speak("a$index", text, appLanguage)) {
+            NiraSpeaker.Result.SPEAKING -> null
+            NiraSpeaker.Result.VOICE_MISSING -> R.string.ask_tts_missing
+            NiraSpeaker.Result.NOT_READY -> R.string.ask_tts_not_ready
+        }
+    }
+    // A spoken question gets a spoken answer, once, and only if the answer passed the checks.
+    var spokenUpTo by remember { mutableStateOf(messages.size) }
+    LaunchedEffect(messages) {
+        val i = messages.lastIndex
+        val m = messages.lastOrNull()
+        if (m != null && i >= spokenUpTo && m.result != null) {
+            spokenUpTo = i + 1
+            if (m.voice && m.hold == null && m.answer != null) speak(i, m.answer)
+        }
+    }
+    DisposableEffect(Unit) { onDispose { speaker.shutdown() } }
+
     // Voice question: record with Android's own recorder; the AI hears it in the cloud only.
     val context = LocalContext.current
     var recording by remember { mutableStateOf(false) }
@@ -107,7 +137,20 @@ fun AskNiraSheet(
         if (ok && audioFile.length() > 0) viewModel.askVoice(audioFile.readBytes(), "audio/mp4", facts, pendingLabel)
         audioFile.delete()
     }
+    fun cancelRecording() {
+        val r = recorder.value ?: return
+        recorder.value = null
+        recording = false
+        runCatching { r.stop() }
+        r.release()
+        audioFile.delete()
+    }
+    var seconds by remember { mutableStateOf(0) }
+    var tooShort by remember { mutableStateOf(false) }
+    LaunchedEffect(recording) { seconds = 0; while (recording) { delay(1000); seconds++ } }
     fun startRecording() {
+        speaker.stop()
+        tooShort = false
         val r = if (Build.VERSION.SDK_INT >= 31) MediaRecorder(context) else @Suppress("DEPRECATION") MediaRecorder()
         val started = runCatching {
             r.setAudioSource(MediaRecorder.AudioSource.MIC)
@@ -123,7 +166,8 @@ fun AskNiraSheet(
         }.isSuccess
         if (started) { recorder.value = r; recording = true } else r.release()
     }
-    val micPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted -> if (granted) startRecording() }
+    // After the first "Allow", the user holds the button again to talk.
+    val micPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
     DisposableEffect(Unit) { onDispose { recorder.value?.let { runCatching { it.stop() }; it.release() }; audioFile.delete() } }
 
     ModalBottomSheet(
@@ -143,7 +187,14 @@ fun AskNiraSheet(
                 modifier = Modifier.fillMaxWidth().heightIn(min = 120.dp, max = 420.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                itemsIndexed(messages) { _, m -> MessageBubble(m) }
+                itemsIndexed(messages) { i, m ->
+                    MessageBubble(
+                        m,
+                        speaking = speakingId == "a$i",
+                        onSpeak = { text -> if (speakingId == "a$i") speaker.stop() else speak(i, text) },
+                        onEdit = { q -> input = q }
+                    )
+                }
             }
 
             if (messages.isEmpty()) {
@@ -178,20 +229,34 @@ fun AskNiraSheet(
                     colors = ButtonDefaults.buttonColors(containerColor = KViolet, contentColor = Color(0xFF0F1526))
                 ) { Text(stringResource(R.string.ask_send), fontWeight = FontWeight.Bold) }
             }
-            Button(
-                onClick = {
-                    when {
-                        recording -> stopAndAsk()
-                        ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED -> startRecording()
-                        else -> micPermission.launch(Manifest.permission.RECORD_AUDIO)
+            // Hold to talk, let go to send (like a voice message). Under 1 second is not sent.
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxWidth().padding(top = 8.dp).heightIn(min = 64.dp)
+                    .clip(RoundedCornerShape(32.dp)).background(if (recording) KRed else KInner)
+                    .pointerInput(running) {
+                        detectTapGestures(onPress = {
+                            if (running) return@detectTapGestures
+                            if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                                micPermission.launch(Manifest.permission.RECORD_AUDIO)
+                                return@detectTapGestures
+                            }
+                            val pressedAt = System.currentTimeMillis()
+                            startRecording()
+                            tryAwaitRelease()
+                            if (System.currentTimeMillis() - pressedAt < 1000) { cancelRecording(); tooShort = true } else stopAndAsk()
+                        })
                     }
-                },
-                enabled = recording || !running,
-                modifier = Modifier.fillMaxWidth().padding(top = 6.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = if (recording) KRed else KInner, contentColor = if (recording) Color(0xFF0F1526) else KCyan)
             ) {
-                Text(stringResource(if (recording) R.string.ask_voice_stop else R.string.ask_voice_start, AskNira.VOICE_MAX_SECONDS), fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                Text(
+                    if (recording) stringResource(R.string.ask_voice_stop, seconds, AskNira.VOICE_MAX_SECONDS)
+                    else stringResource(R.string.ask_voice_start, AskNira.VOICE_MAX_SECONDS),
+                    color = if (recording) Color(0xFF0F1526) else if (running) KMuted else KCyan,
+                    fontWeight = FontWeight.Bold, fontSize = 15.sp
+                )
             }
+            if (tooShort) Text(stringResource(R.string.ask_voice_too_short), color = KAmber, fontSize = 11.sp)
+            voiceNote?.let { Text(stringResource(it), color = KAmber, fontSize = 11.sp, lineHeight = 15.sp) }
             Text(stringResource(R.string.ask_voice_privacy), color = KMuted, fontSize = 10.sp, lineHeight = 13.sp)
             Text(stringResource(R.string.ask_privacy), color = KMuted, fontSize = 10.sp, lineHeight = 13.sp, modifier = Modifier.padding(vertical = 6.dp))
         }
@@ -199,7 +264,7 @@ fun AskNiraSheet(
 }
 
 @Composable
-private fun MessageBubble(m: AskMessage) {
+private fun MessageBubble(m: AskMessage, speaking: Boolean, onSpeak: (String) -> Unit, onEdit: (String) -> Unit) {
     Column(Modifier.fillMaxWidth()) {
         // The question, on the right.
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
@@ -207,6 +272,11 @@ private fun MessageBubble(m: AskMessage) {
                 (if (m.voice) "🎤 " else "") + m.question, color = Color(0xFF0F1526), fontSize = 14.sp,
                 modifier = Modifier.widthIn(max = 300.dp).clip(RoundedCornerShape(12.dp)).background(KCyan).padding(10.dp)
             )
+        }
+        if (m.voice && m.result != null && m.question.isNotBlank()) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                TextButton(onClick = { onEdit(m.question) }) { Text(stringResource(R.string.ask_edit_heard), color = KMuted, fontSize = 11.sp) }
+            }
         }
         Spacer(Modifier.height(6.dp))
         Column(Modifier.widthIn(max = 330.dp).clip(RoundedCornerShape(12.dp)).background(KInner).padding(10.dp)) {
@@ -235,7 +305,12 @@ private fun MessageBubble(m: AskMessage) {
                         null -> when {
                             !ok -> Text(aiErrorText(r), color = KRed, fontSize = 13.sp)
                             m.answer == null -> Text(stringResource(R.string.ask_voice_unclear), color = KAmber, fontSize = 13.sp, lineHeight = 18.sp)
-                            else -> SelectionContainer { Text(m.answer, color = KWhite, fontSize = 14.sp, lineHeight = 20.sp) }
+                            else -> {
+                                SelectionContainer { Text(m.answer, color = KWhite, fontSize = 14.sp, lineHeight = 20.sp) }
+                                TextButton(onClick = { onSpeak(m.answer) }) {
+                                    Text(stringResource(if (speaking) R.string.ask_stop_speaking else R.string.ask_speak), color = KCyan, fontSize = 12.sp)
+                                }
+                            }
                         }
                     }
                 }

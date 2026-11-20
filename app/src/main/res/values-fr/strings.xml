@@ -548,10 +548,16 @@
     <string name="order_setup_once">Chaque impression compte son propre calage. Si l\'usine facture le calage une fois par commande, la commande coûte %1$s de moins.</string>
     <string name="order_currency_differ">Les impressions utilisent des devises différentes et ne sont pas additionnées. Utilisez une seule devise dans les tarifs.</string>
     <string name="order_clear">Vider la commande</string>
-    <string name="ask_voice_start">🎤 Demander à voix haute (jusqu\'à %1$d secondes)</string>
-    <string name="ask_voice_stop">■ Arrêter et demander</string>
+    <string name="ask_voice_start">🎤 Maintenir pour parler (jusqu\'à %1$d s)</string>
+    <string name="ask_voice_stop">● %1$d s sur %2$d — relâchez pour envoyer</string>
     <string name="ask_voice_pending">Question vocale…</string>
     <string name="ask_voice_privacy">Voix : votre enregistrement va à l\'IA cloud (Firebase), qui écrit la question et répond à partir de ce travail. Le modèle du téléphone ne peut pas entendre l\'audio. Rien n\'est envoyé en mode confidentiel.</string>
     <string name="ask_voice_blocked">Le mode confidentiel est activé : l\'enregistrement n\'a pas été envoyé. Tapez la question.</string>
     <string name="ask_voice_unclear">NIRA n\'a pas entendu de question claire. Réessayez plus près du téléphone, ou tapez-la.</string>
+    <string name="ask_voice_too_short">Maintenez le bouton pendant que vous parlez (au moins 1 seconde).</string>
+    <string name="ask_speak">🔊 Écouter</string>
+    <string name="ask_stop_speaking">■ Arrêter</string>
+    <string name="ask_tts_missing">Ce téléphone n\'a pas encore de voix pour cette langue. Ajoutez-la dans les paramètres de synthèse vocale (services vocaux Google), puis touchez Écouter.</string>
+    <string name="ask_tts_not_ready">La voix du téléphone démarre encore. Touchez Écouter dans un instant.</string>
+    <string name="ask_edit_heard">✎ Ce n\'est pas ce que j\'ai dit ? Modifier et redemander</string>
 </resources>

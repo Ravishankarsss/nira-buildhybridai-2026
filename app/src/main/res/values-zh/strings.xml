@@ -546,10 +546,16 @@
     <string name="order_setup_once">每处印花各自计算调机费。如果工厂每单只收一次调机费，订单可少 %1$s。</string>
     <string name="order_currency_differ">各印花使用不同货币，因此不相加。请在工厂单价中使用同一种货币。</string>
     <string name="order_clear">清空订单</string>
-    <string name="ask_voice_start">🎤 语音提问（最长 %1$d 秒）</string>
-    <string name="ask_voice_stop">■ 停止并提问</string>
+    <string name="ask_voice_start">🎤 按住说话（最长 %1$d 秒）</string>
+    <string name="ask_voice_stop">● %1$d / %2$d 秒 — 松开发送</string>
     <string name="ask_voice_pending">语音问题…</string>
     <string name="ask_voice_privacy">语音：录音会发送到云端 AI（Firebase），由其记录问题并根据此订单回答。手机本地模型无法听取音频。保密模式下不会发送。</string>
     <string name="ask_voice_blocked">保密模式已开启，录音未发送。请输入问题。</string>
     <string name="ask_voice_unclear">NIRA 没有听清问题。请靠近手机再说一次，或直接输入。</string>
+    <string name="ask_voice_too_short">说话时请按住按钮（至少 1 秒）。</string>
+    <string name="ask_speak">🔊 收听</string>
+    <string name="ask_stop_speaking">■ 停止</string>
+    <string name="ask_tts_missing">这部手机还没有该语言的语音。请在手机的文字转语音设置（Google 语音服务）中添加，然后再点收听。</string>
+    <string name="ask_tts_not_ready">手机语音仍在启动。请稍后再点收听。</string>
+    <string name="ask_edit_heard">✎ 不是我说的？修改后重新提问</string>
 </resources>
