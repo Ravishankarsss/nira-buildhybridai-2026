@@ -66,12 +66,14 @@ Judges need artwork and a garment photo that may be published:
 
 ## 4. Judge steps (draft, to finish after testing)
 
-Android:
-1. Download `NIRA-<version>.apk` from the GitHub Releases page on an Android 8.0+ phone.
-2. Allow installing from this source when the phone asks, then install.
-3. Open NIRA → Artwork → choose a sample file from `samples/` → Colour screen → Report.
-4. In the Print Report, read "Why this recommendation": the badge shows ON_DEVICE or IN_CLOUD and the time.
-5. Settings → AI and privacy: on-device status from the SDK, answer counters, Confidential mode.
+Android (judge build "NIRA judge", link only in the Devpost testing instructions):
+1. On an Android 8.0+ phone, download `NIRA-judge-<version>.apk` from the link in the testing instructions.
+2. Allow installing from this source when the phone asks, then install. It is called "NIRA judge".
+3. Home → "Start a print job" → Artwork file → choose a sample from `samples/`.
+4. On the job page answer the four Brief questions (garment colour, fibre, quantity, feel). The top bar shows the method, screens and cost per piece; the tabs show Decision, Cost and Engineering.
+5. Decision tab → "Explain this card", or the ✦ Ask NIRA button (type, or tap the microphone to talk). Every answer shows its source as reported by the SDK (On this phone / In cloud) and the time.
+6. Home → "Hybrid AI on this phone" → AI activity: every AI request, on-device or cloud, and whether NIRA's checks passed it.
+7. Settings → AI and privacy: on-device status from the SDK, Confidential mode.
 
 Web (Chrome):
 1. Open the hosted link in Chrome (version and flags as listed on the page).
@@ -101,3 +103,13 @@ Web (Chrome):
 | 30 Nov | Final check of both links from a clean phone and a clean Chrome profile |
 
 Never claim a path works for judges until it has been tested from a device that is not Ravi's.
+
+## 7. Results so far
+
+20 Nov 2026 — Android route A, first test:
+- Judge build type in `app/build.gradle.kts`: app id `com.mos.nira.judge` ("NIRA judge"), installs beside NIRA, debug-signed, not debuggable (package flags 0x0), 13.9 MB (`./gradlew :app:assembleJudge`).
+- The token is a new random value in the git-ignored `judge.properties`; Ravi registered it in the Firebase console for the NIRA judge app only. `app/google-services.json` (git-ignored) now holds both apps.
+- Fresh install on the vivo V60e (new app, empty data): Home → Ask NIRA → one question answered `IN_CLOUD` in 11,400 ms with App Check enforcement on. So storing the token before App Check starts works on a clean start.
+- Still to do: the same test on a second phone or the emulator (section 6); revoke the token after judging.
+
+Web: code ready (reCAPTCHA Enterprise on the hosted page, debug provider on localhost; `firebase.json`, `.firebaserc`). Waiting for the site key and Ravi's approval to deploy.
