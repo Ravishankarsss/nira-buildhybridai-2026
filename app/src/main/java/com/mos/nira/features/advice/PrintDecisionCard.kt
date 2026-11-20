@@ -1,5 +1,8 @@
 package com.mos.nira.features.advice
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -164,8 +167,10 @@ fun PrintDecisionCard(
     DecisionShell(visible = section != CardSection.NONE) {
         if (show(CardSection.BRIEF)) {
             Text(stringResource(R.string.brief_title).uppercase(), color = DViolet, fontSize = 11.sp, letterSpacing = 1.5.sp, fontWeight = FontWeight.Bold)
-            Spacer(Modifier.height(4.dp))
-            Text(stringResource(R.string.brief_hint), color = DMuted, fontSize = 12.sp, lineHeight = 17.sp)
+            if (section == CardSection.ALL) {
+                Spacer(Modifier.height(4.dp))
+                Text(stringResource(R.string.brief_hint), color = DMuted, fontSize = 12.sp, lineHeight = 17.sp)
+            }
 
             // Buyer Brief Reader: AI proposes the answers from the buyer's email or page; the user ticks them.
             var readerOpen by remember { mutableStateOf(false) }
@@ -198,7 +203,7 @@ fun PrintDecisionCard(
             // 1. Garment colour
             var pickerOpen by remember { mutableStateOf(false) }
             Question(stringResource(R.string.brief_q_garment))
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 if (isPhoto && measuredFabricHex != null) {
                     Chip(stringResource(R.string.brief_garment_photo), garmentHex.equals(measuredFabricHex, true), measuredFabricHex) { onGarment(measuredFabricHex) }
                 }
@@ -234,13 +239,13 @@ fun PrintDecisionCard(
 
             // 2. Fibre and fabric
             Question(stringResource(R.string.brief_q_fibre))
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Fibre.values().forEach { f ->
                     Chip(fibreLabel(f), fibre == f) { choicesViewModel.update(artworkKey) { c -> c.copy(fibre = if (fibre == f) null else f) } }
                 }
             }
             Spacer(Modifier.height(4.dp))
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 briefRules?.fabrics?.forEach { f ->
                     Chip(fabricLabel(f), fabric == f) { onFabric(if (fabric == f) null else f) }
                 }
@@ -264,7 +269,7 @@ fun PrintDecisionCard(
 
             // 4. Feel
             Question(stringResource(R.string.brief_q_feel))
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Feel.values().forEach { f -> Chip(feelLabel(f), feel == f) { onFeel(if (feel == f) null else f) } }
             }
         }
@@ -347,7 +352,9 @@ fun PrintDecisionCard(
             val best = card.best
             if (best == null) {
                 val left = card.unanswered
-                LaunchedEffect(left) { onSummary(JobSummary(null, null, null, "", false, left, false)) }
+                LaunchedEffect(left) {
+                    onSummary(JobSummary(null, null, null, "", false, left, false, notes = if (left > 0) listOf(JobNote(NoteKind.UNANSWERED, count = left)) else emptyList()))
+                }
             }
             if (!show(CardSection.DECISION)) Unit
             else if (best == null && (garmentHex == null || fibre == null)) {
@@ -357,8 +364,17 @@ fun PrintDecisionCard(
                 Line(stringResource(R.string.card_method), stringResource(R.string.card_none), stringResource(R.string.src_rules), null, false)
             } else {
                 MethodLine(stringResource(R.string.card_method), best, emphasise = true)
-                card.second?.let { MethodLine(stringResource(R.string.card_second), it, emphasise = false) }
-                card.smallRun?.let { MethodLine(stringResource(R.string.card_small_run), it, emphasise = false) }
+                val others = listOfNotNull(card.second?.let { R.string.card_second to it }, card.smallRun?.let { R.string.card_small_run to it })
+                if (others.isNotEmpty()) {
+                    var othersOpen by remember { mutableStateOf(false) }
+                    androidx.compose.material3.TextButton(onClick = { othersOpen = !othersOpen }, contentPadding = androidx.compose.foundation.layout.PaddingValues(0.dp)) {
+                        Text(
+                            stringResource(if (othersOpen) R.string.card_others_hide else R.string.card_others_show, others.size),
+                            color = DCyan, fontSize = 12.sp
+                        )
+                    }
+                    if (othersOpen) others.forEach { (label, choice) -> MethodLine(stringResource(label), choice, emphasise = false) }
+                }
             }
 
             // Quantity line (quantity_thresholds)
@@ -387,9 +403,14 @@ fun PrintDecisionCard(
                         )
                     }
                     if (best.advice.processSteps.isNotEmpty()) {
-                        Spacer(Modifier.height(8.dp))
-                        Text(stringResource(R.string.card_process), color = DMuted, fontSize = 11.sp)
-                        best.advice.processSteps.forEachIndexed { i, step ->
+                        var stepsOpen by remember { mutableStateOf(false) }
+                        Spacer(Modifier.height(6.dp))
+                        Text(
+                            stringResource(R.string.card_process) + "  (" + best.advice.processSteps.size + ")  " + if (stepsOpen) "▴" else "▾",
+                            color = DCyan, fontSize = 12.sp,
+                            modifier = Modifier.clip(RoundedCornerShape(6.dp)).clickable { stepsOpen = !stepsOpen }.padding(vertical = 4.dp)
+                        )
+                        if (stepsOpen) best.advice.processSteps.forEachIndexed { i, step ->
                             Text("${i + 1}. $step", color = DWhite, fontSize = 12.sp, lineHeight = 17.sp)
                         }
                     }
@@ -463,8 +484,18 @@ fun PrintDecisionCard(
                 }
                 // The top bar: method, screens and cost per piece.
                 val summaryScreens = if (card.baseSource == BaseSource.DIGITAL) best.advice.screens ?: 0 else card.screens.size
-                LaunchedEffect(best.advice.name, summaryScreens, cost?.perPc, rates.currency, card.unanswered, best.advice.verifiedByRavi, rates.isSample) {
-                    onSummary(JobSummary(best.advice.name, summaryScreens, cost?.perPc, rates.currency, best.advice.verifiedByRavi, card.unanswered, rates.isSample, card.baseSource == BaseSource.DIGITAL))
+                // What the card noticed, from its own checks (no new values).
+                val bestSaving = options.maxOfOrNull { it.savingPerPc }?.takeIf { it > 0 }
+                val notes = buildList {
+                    contrastWarnings.forEach { add(JobNote(NoteKind.CONTRAST, colourHex = it.inkHex)) }
+                    groundChecks.filter { it.verdict == com.mos.nira.core.advice.GroundVerdict.NEEDS_DISCHARGE_OR_BASE && "discharge" !in best.advice.id }
+                        .forEach { add(JobNote(NoteKind.NEEDS_BASE, colourHex = it.inkHex)) }
+                    if (!best.advice.verifiedByRavi) add(JobNote(NoteKind.NOT_VERIFIED))
+                    bestSaving?.let { add(JobNote(NoteKind.SAVING, amount = it, currency = rates.currency)) }
+                    if (card.unanswered > 0) add(JobNote(NoteKind.UNANSWERED, count = card.unanswered))
+                }
+                LaunchedEffect(best.advice.name, summaryScreens, cost?.perPc, rates.currency, card.unanswered, best.advice.verifiedByRavi, rates.isSample, notes) {
+                    onSummary(JobSummary(best.advice.name, summaryScreens, cost?.perPc, rates.currency, best.advice.verifiedByRavi, card.unanswered, rates.isSample, card.baseSource == BaseSource.DIGITAL, notes))
                 }
                 if (show(CardSection.COST)) com.mos.nira.features.commercial.OrderCostSection(
                     cost = cost,
@@ -515,7 +546,10 @@ fun PrintDecisionCard(
                 }
 
                 // "Explain this card": AI explains the card's facts (text only, on-device preferred).
-                if (show(CardSection.DECISION)) com.mos.nira.features.ai.CardExplanationSection(facts, best.advice.name)
+                if (show(CardSection.DECISION)) com.mos.nira.features.ai.CardExplanationSection(
+                    facts, best.advice.name,
+                    hintText = if (section == CardSection.ALL) null else stringResource(R.string.card_explain_hint_short)
+                )
 
                 // Ask NIRA: questions about this job, answered from the same facts plus the order cost.
                 // On the job page it opens from the floating button; in ALL mode it keeps its own button.
@@ -610,8 +644,15 @@ data class JobSummary(
     val unanswered: Int,
     val sampleRates: Boolean,
     /** True when the method is digital-based (digital, or discharge + digital): no spot-screen separation. */
-    val digitalBase: Boolean = false
+    val digitalBase: Boolean = false,
+    /** What the card noticed (contrast, base needed, not floor-verified, a saving). */
+    val notes: List<JobNote> = emptyList()
 )
+
+/** One "NIRA noticed" note. [colourHex] or [amount] fill the text; [tab] is where to fix it. */
+data class JobNote(val kind: NoteKind, val colourHex: String? = null, val amount: Double? = null, val currency: String = "", val count: Int = 0)
+
+enum class NoteKind { LOW_RES, BACKGROUND, INPUT_KIND, COLOUR_CHECKS, UNANSWERED, CONTRAST, NEEDS_BASE, NOT_VERIFIED, SAVING }
 
 /**
  * Top of the Print Report: the job's method from the decision card, and what the screen
@@ -686,23 +727,24 @@ private fun ScreenRow(s: PlannedScreen) {
 /** One card line: label, value, source, and confidence / floor check. */
 @Composable
 private fun Line(label: String, value: String, source: String, confidence: String?, verified: Boolean, emphasise: Boolean = false) {
-    Spacer(Modifier.height(8.dp))
-    Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(DInner).padding(10.dp)) {
-        Text(label, color = DMuted, fontSize = 11.sp)
-        Text(value, color = DWhite, fontSize = if (emphasise) 15.sp else 13.sp, fontWeight = if (emphasise) FontWeight.Bold else FontWeight.Normal, lineHeight = 18.sp)
+    Spacer(Modifier.height(6.dp))
+    androidx.compose.material3.HorizontalDivider(color = DInner)
+    Column(Modifier.fillMaxWidth().padding(top = 6.dp)) {
+        // Label, then where it comes from, how sure it is and the floor check, all on one small line.
         val conf = confidence?.let { stringResource(R.string.card_confidence, it) } ?: stringResource(R.string.advice_confidence_none)
         Text(
-            "$source  •  $conf  •  " + stringResource(if (verified) R.string.card_verified else R.string.card_not_verified),
-            color = if (verified) DGreen else DMuted, fontSize = 10.sp
+            "$label  ·  $source  ·  $conf  ·  " + stringResource(if (verified) R.string.card_verified else R.string.card_not_verified),
+            color = if (verified) DGreen else DMuted, fontSize = 10.sp, lineHeight = 13.sp
         )
+        Text(value, color = DWhite, fontSize = if (emphasise) 15.sp else 13.sp, fontWeight = if (emphasise) FontWeight.Bold else FontWeight.Normal, lineHeight = 18.sp)
     }
 }
 
 @Composable
 private fun Question(text: String) {
-    Spacer(Modifier.height(12.dp))
+    Spacer(Modifier.height(8.dp))
     Text(text, color = DWhite, fontSize = 13.sp, fontWeight = FontWeight.Bold)
-    Spacer(Modifier.height(4.dp))
+    Spacer(Modifier.height(2.dp))
 }
 
 @Composable

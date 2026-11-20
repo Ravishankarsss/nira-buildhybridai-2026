@@ -628,4 +628,24 @@
     <string name="rpt_s6_hint">প্রতি স্ক্রিনে ফিল্ম, প্রুফ, মেশ ও কভারেজ</string>
     <string name="rpt_s7">প্রয়োজনীয় কালি</string>
     <string name="rpt_s7_hint">প্রতি পোশাক ও অর্ডারের গ্রাম, প্রতি স্ক্রিনে</string>
+    <string name="note_background">উত্তর দিন: পটভূমি কি কালি?</string>
+    <string name="note_input_kind">উত্তর দিন: এটি ছবি না artwork?</string>
+    <string name="note_low_res">সূক্ষ্ম রেখা ও ছোট লেখার জন্য artwork রেজোলিউশন কম</string>
+    <string name="note_contrast">%1$s কালি এই পোশাকে কম দেখা যায়</string>
+    <string name="note_needs_base">%1$s কালি কাপড়ের চেয়ে হালকা: ডিসচার্জ বা সাদা বেস দরকার</string>
+    <string name="note_not_verified">এই পদ্ধতি এখনো ফ্লোরে যাচাই হয়নি: আগে strike-off করুন</string>
+    <string name="note_saving">Cost-Down প্রতি পিসে %1$s বাঁচাতে পারে</string>
+    <string name="card_others_show">অন্য পদ্ধতি দেখান (%1$d) ▾</string>
+    <string name="card_others_hide">অন্য পদ্ধতি লুকান ▴</string>
+    <string name="preview_hint_short">এই ফোনে একটি মডেল, প্রুফ নয়।</string>
+    <string name="order_open">+ সামনে / পেছনে / হাতার প্রিন্ট</string>
+    <plurals name="noticed_title">
+        <item quantity="one">NIRA %1$dটি বিষয় লক্ষ করেছে</item>
+        <item quantity="other">NIRA %1$dটি বিষয় লক্ষ করেছে</item>
+    </plurals>
+    <plurals name="note_colour_checks">
+        <item quantity="one">%1$dটি রং যাচাই করুন (ছায়া, কিনারা বা দাগ)</item>
+        <item quantity="other">%1$dটি রং যাচাই করুন (ছায়া, কিনারা বা দাগ)</item>
+    </plurals>
+    <string name="card_explain_hint_short">AI এই কার্ড সহজ ভাষায় বোঝায় (শুধু লেখা; সংখ্যা যাচাই করা হয়)।</string>
 </resources>

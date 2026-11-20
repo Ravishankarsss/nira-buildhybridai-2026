@@ -628,4 +628,24 @@
     <string name="rpt_s6_hint">हर स्क्रीन की फ़िल्म, प्रूफ़, मेश और कवरेज</string>
     <string name="rpt_s7">ज़रूरी स्याही</string>
     <string name="rpt_s7_hint">प्रति गारमेंट और ऑर्डर के ग्राम, हर स्क्रीन के लिए</string>
+    <string name="note_background">जवाब दें: पृष्ठभूमि स्याही है या नहीं?</string>
+    <string name="note_input_kind">जवाब दें: यह फ़ोटो है या artwork?</string>
+    <string name="note_low_res">बारीक रेखाओं और छोटे अक्षरों के लिए artwork रिज़ॉल्यूशन कम है</string>
+    <string name="note_contrast">%1$s स्याही इस गारमेंट पर कम दिखती है</string>
+    <string name="note_needs_base">%1$s स्याही कपड़े से हल्की है: डिस्चार्ज या सफ़ेद बेस चाहिए</string>
+    <string name="note_not_verified">यह तरीका अभी फ़्लोर पर नहीं जाँचा गया: पहले strike-off करें</string>
+    <string name="note_saving">Cost-Down प्रति पीस %1$s बचा सकता है</string>
+    <string name="card_others_show">दूसरे तरीके दिखाएँ (%1$d) ▾</string>
+    <string name="card_others_hide">दूसरे तरीके छिपाएँ ▴</string>
+    <string name="preview_hint_short">इस फ़ोन पर एक मॉडल, प्रूफ़ नहीं।</string>
+    <string name="order_open">+ आगे / पीछे / आस्तीन प्रिंट</string>
+    <plurals name="noticed_title">
+        <item quantity="one">NIRA ने %1$d बात देखी</item>
+        <item quantity="other">NIRA ने %1$d बातें देखीं</item>
+    </plurals>
+    <plurals name="note_colour_checks">
+        <item quantity="one">%1$d रंग जाँचें (छाया, किनारा या धब्बा)</item>
+        <item quantity="other">%1$d रंग जाँचें (छाया, किनारा या धब्बा)</item>
+    </plurals>
+    <string name="card_explain_hint_short">AI इस कार्ड को आसान शब्दों में समझाता है (सिर्फ़ टेक्स्ट; अंक जाँचे जाते हैं)।</string>
 </resources>

@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -63,6 +64,13 @@ fun OrderPlacementsBlock(cost: CostResult?, rates: FactoryRates, jobLabel: Strin
     LaunchedEffect(Unit) { OrderStore.load(context) }
     val order by OrderStore.order.collectAsState()
     if (cost?.perPc == null && order.isEmpty()) return
+    // Folded until used: one line "+ Front / back / sleeve prints" until an order exists.
+    var open by androidx.compose.runtime.saveable.rememberSaveable { androidx.compose.runtime.mutableStateOf(false) }
+    if (order.isEmpty() && !open) {
+        Spacer(Modifier.height(6.dp))
+        TextButton(onClick = { open = true }) { Text(stringResource(R.string.order_open), color = OCyan, fontSize = 12.sp) }
+        return
+    }
 
     Spacer(Modifier.height(10.dp))
     Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(OInner).padding(12.dp)) {

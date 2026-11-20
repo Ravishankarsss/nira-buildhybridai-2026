@@ -629,4 +629,24 @@
     <string name="rpt_s6_hint">Una película por pantalla, la prueba, malla y cobertura</string>
     <string name="rpt_s7">Tinta necesaria</string>
     <string name="rpt_s7_hint">Gramos por prenda y por pedido, por pantalla</string>
+    <string name="note_background">Responde: ¿el fondo es tinta o no?</string>
+    <string name="note_input_kind">Responde: ¿es foto o diseño?</string>
+    <string name="note_low_res">La resolución es baja para líneas finas y texto pequeño</string>
+    <string name="note_contrast">La tinta %1$s se ve poco en esta prenda</string>
+    <string name="note_needs_base">La tinta %1$s es más clara que la tela: necesita corrosión o base blanca</string>
+    <string name="note_not_verified">El método aún no está verificado en planta: haz una prueba primero</string>
+    <string name="note_saving">Cost-Down puede ahorrar %1$s por pieza</string>
+    <string name="card_others_show">Ver otros métodos (%1$d) ▾</string>
+    <string name="card_others_hide">Ocultar otros métodos ▴</string>
+    <string name="preview_hint_short">Un modelo en este teléfono, no una prueba.</string>
+    <string name="order_open">+ Delantero / espalda / manga</string>
+    <plurals name="noticed_title">
+        <item quantity="one">NIRA notó %1$d cosa</item>
+        <item quantity="other">NIRA notó %1$d cosas</item>
+    </plurals>
+    <plurals name="note_colour_checks">
+        <item quantity="one">%1$d color necesita revisión (sombra, borde o mota)</item>
+        <item quantity="other">%1$d colores necesitan revisión (sombra, borde o mota)</item>
+    </plurals>
+    <string name="card_explain_hint_short">La IA explica esta tarjeta con palabras sencillas (solo texto; números comprobados).</string>
 </resources>

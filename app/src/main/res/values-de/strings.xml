@@ -628,4 +628,24 @@
     <string name="rpt_s6_hint">Ein Film pro Sieb, Proof, Gewebe und Deckung</string>
     <string name="rpt_s7">Benötigte Farbe</string>
     <string name="rpt_s7_hint">Gramm pro Teil und für den Auftrag, je Sieb</string>
+    <string name="note_background">Antwort nötig: ist der Hintergrund Farbe?</string>
+    <string name="note_input_kind">Antwort nötig: Foto oder Motivdatei?</string>
+    <string name="note_low_res">Die Auflösung ist für feine Linien und kleine Schrift zu niedrig</string>
+    <string name="note_contrast">Die Farbe %1$s ist auf diesem Teil schwer zu sehen</string>
+    <string name="note_needs_base">Die Farbe %1$s ist heller als der Stoff: Ätzdruck oder weißer Unterdruck nötig</string>
+    <string name="note_not_verified">Die Methode ist noch nicht in der Produktion geprüft: zuerst ein Andruck</string>
+    <string name="note_saving">Cost-Down kann %1$s pro Stück sparen</string>
+    <string name="card_others_show">Andere Methoden zeigen (%1$d) ▾</string>
+    <string name="card_others_hide">Andere Methoden ausblenden ▴</string>
+    <string name="preview_hint_short">Ein Modell auf diesem Telefon, kein Proof.</string>
+    <string name="order_open">+ Vorne / hinten / Ärmel</string>
+    <plurals name="noticed_title">
+        <item quantity="one">NIRA hat %1$d Punkt bemerkt</item>
+        <item quantity="other">NIRA hat %1$d Punkte bemerkt</item>
+    </plurals>
+    <plurals name="note_colour_checks">
+        <item quantity="one">%1$d Farbe prüfen (Schatten, Kante oder Fleck)</item>
+        <item quantity="other">%1$d Farben prüfen (Schatten, Kante oder Fleck)</item>
+    </plurals>
+    <string name="card_explain_hint_short">Die KI erklärt diese Karte in einfachen Worten (nur Text; Zahlen geprüft).</string>
 </resources>

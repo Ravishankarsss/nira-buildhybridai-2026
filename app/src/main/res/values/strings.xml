@@ -627,4 +627,24 @@
     <string name="rpt_s6_hint">One film per screen, the proof, mesh and coverage</string>
     <string name="rpt_s7">Ink needed</string>
     <string name="rpt_s7_hint">Grams per garment and for the order, per screen</string>
+    <string name="note_background">Answer: is the background ink or not?</string>
+    <string name="note_input_kind">Answer: is this a photo or artwork?</string>
+    <string name="note_low_res">Artwork resolution is low for fine lines and small text</string>
+    <string name="note_contrast">%1$s ink is hard to see on this garment</string>
+    <string name="note_needs_base">%1$s ink is lighter than the fabric: needs discharge or a white base</string>
+    <string name="note_not_verified">The method is not floor-verified yet: do a strike-off first</string>
+    <string name="note_saving">Cost-Down can save %1$s per piece</string>
+    <string name="card_others_show">Show other methods (%1$d) ▾</string>
+    <string name="card_others_hide">Hide other methods ▴</string>
+    <string name="preview_hint_short">A model on this phone, not a proof.</string>
+    <string name="order_open">+ Front / back / sleeve prints</string>
+    <plurals name="noticed_title">
+        <item quantity="one">NIRA noticed %1$d thing</item>
+        <item quantity="other">NIRA noticed %1$d things</item>
+    </plurals>
+    <plurals name="note_colour_checks">
+        <item quantity="one">%1$d colour needs your check (shadow, edge or speck)</item>
+        <item quantity="other">%1$d colours need your check (shadow, edge or speck)</item>
+    </plurals>
+    <string name="card_explain_hint_short">AI explains this card in plain words (text only; numbers checked).</string>
 </resources>

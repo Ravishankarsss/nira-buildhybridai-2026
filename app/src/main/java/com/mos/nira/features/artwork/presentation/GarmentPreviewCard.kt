@@ -1,5 +1,6 @@
 package com.mos.nira.features.artwork.presentation
 
+import androidx.compose.foundation.layout.heightIn
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -95,9 +96,14 @@ fun GarmentPreviewCard(
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(stringResource(R.string.preview_title).uppercase(), color = PViolet, fontSize = 11.sp, letterSpacing = 1.5.sp, fontWeight = FontWeight.Bold)
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(stringResource(R.string.preview_hint), color = PMuted, fontSize = 12.sp, lineHeight = 17.sp)
-            Spacer(modifier = Modifier.height(10.dp))
+            // The long note only where the garment chips are shown (the job page keeps it short).
+            if (showGarmentChips) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(stringResource(R.string.preview_hint), color = PMuted, fontSize = 12.sp, lineHeight = 17.sp)
+            } else {
+                Text(stringResource(R.string.preview_hint_short), color = PMuted, fontSize = 11.sp)
+            }
+            Spacer(modifier = Modifier.height(8.dp))
 
             // Garment chips from the rules file, plus a custom colour.
             if (showGarmentChips) Row(modifier = Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -157,7 +163,9 @@ fun GarmentPreviewCard(
                                 bitmap = bmp.asImageBitmap(),
                                 contentDescription = stringResource(caption),
                                 contentScale = ContentScale.Fit,
-                                modifier = Modifier.fillMaxWidth().aspectRatio(bmp.width.toFloat() / bmp.height).clip(RoundedCornerShape(10.dp))
+                                modifier = (if (showGarmentChips) Modifier.fillMaxWidth() else Modifier.fillMaxWidth().heightIn(max = 150.dp))
+                                    .aspectRatio(bmp.width.toFloat() / bmp.height, matchHeightConstraintsFirst = !showGarmentChips)
+                                    .clip(RoundedCornerShape(10.dp))
                             )
                             Text(stringResource(caption), color = PMuted, fontSize = 11.sp)
                         }

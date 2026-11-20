@@ -627,4 +627,24 @@
     <string name="rpt_s6_hint">每个网版一张菲林、打样、网目和覆盖率</string>
     <string name="rpt_s7">所需油墨</string>
     <string name="rpt_s7_hint">每件及整单克数，按网版</string>
+    <string name="note_background">请回答：背景是油墨吗？</string>
+    <string name="note_input_kind">请回答：这是照片还是图稿？</string>
+    <string name="note_low_res">图稿分辨率不足以呈现细线和小字</string>
+    <string name="note_contrast">%1$s油墨在此服装上不易看清</string>
+    <string name="note_needs_base">%1$s油墨比面料浅：需要拔印或白色底浆</string>
+    <string name="note_not_verified">此工艺尚未在车间验证：请先打样</string>
+    <string name="note_saving">Cost-Down 每件可节省 %1$s</string>
+    <string name="card_others_show">显示其他工艺 (%1$d) ▾</string>
+    <string name="card_others_hide">隐藏其他工艺 ▴</string>
+    <string name="preview_hint_short">本机模型，非打样。</string>
+    <string name="order_open">+ 前片 / 后片 / 袖子印花</string>
+    <plurals name="noticed_title">
+        <item quantity="one">NIRA 注意到 %1$d 件事</item>
+        <item quantity="other">NIRA 注意到 %1$d 件事</item>
+    </plurals>
+    <plurals name="note_colour_checks">
+        <item quantity="one">%1$d 种颜色需要确认（阴影、边缘或斑点）</item>
+        <item quantity="other">%1$d 种颜色需要确认（阴影、边缘或斑点）</item>
+    </plurals>
+    <string name="card_explain_hint_short">AI 用通俗语言解释此卡（仅文字；数字已核对）。</string>
 </resources>

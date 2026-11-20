@@ -190,6 +190,7 @@ fun ArtworkNavHost(
                     )
                 },
                 jobSummary = uiState.jobSummary,
+                lowResolution = uiState.partAResult?.lowResolutionWarning != null,
                 jobTitle = com.mos.nira.features.artwork.presentation.jobTitle(
                     uiState.metadata?.fileName ?: "",
                     uiState.printJobInputs.inputKind.name,

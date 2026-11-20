@@ -627,4 +627,24 @@
     <string name="rpt_s6_hint">Mỗi khung một phim, bản thử, lưới và độ phủ</string>
     <string name="rpt_s7">Mực cần dùng</string>
     <string name="rpt_s7_hint">Gam mỗi áo và cho cả đơn, theo từng khung</string>
+    <string name="note_background">Cần trả lời: nền có phải mực không?</string>
+    <string name="note_input_kind">Cần trả lời: đây là ảnh hay hình in?</string>
+    <string name="note_low_res">Độ phân giải thấp cho nét mảnh và chữ nhỏ</string>
+    <string name="note_contrast">Mực %1$s khó thấy trên áo này</string>
+    <string name="note_needs_base">Mực %1$s sáng hơn vải: cần in tẩy hoặc lót trắng</string>
+    <string name="note_not_verified">Phương pháp chưa được kiểm tra tại xưởng: hãy in thử trước</string>
+    <string name="note_saving">Cost-Down có thể tiết kiệm %1$s mỗi chiếc</string>
+    <string name="card_others_show">Xem phương pháp khác (%1$d) ▾</string>
+    <string name="card_others_hide">Ẩn phương pháp khác ▴</string>
+    <string name="preview_hint_short">Mô hình trên điện thoại, không phải bản thử.</string>
+    <string name="order_open">+ In trước / sau / tay áo</string>
+    <plurals name="noticed_title">
+        <item quantity="one">NIRA nhận thấy %1$d điều</item>
+        <item quantity="other">NIRA nhận thấy %1$d điều</item>
+    </plurals>
+    <plurals name="note_colour_checks">
+        <item quantity="one">%1$d màu cần kiểm tra (bóng, viền hoặc chấm)</item>
+        <item quantity="other">%1$d màu cần kiểm tra (bóng, viền hoặc chấm)</item>
+    </plurals>
+    <string name="card_explain_hint_short">AI giải thích thẻ này bằng lời đơn giản (chỉ văn bản; số đã được kiểm tra).</string>
 </resources>

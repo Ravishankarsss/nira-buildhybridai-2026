@@ -131,6 +131,8 @@ fun ColorIntelligenceScreen(
     // Method, screens and cost for the top bar (from the decision card).
     jobSummary: com.mos.nira.features.advice.JobSummary? = null,
     jobTitle: String = "",
+    // The artwork's resolution is below the rules' limit for fine detail (a "NIRA noticed" note).
+    lowResolution: Boolean = false,
     includePhotoEdgeArea: Boolean = false,
     onIncludePhotoEdgeArea: (Boolean) -> Unit = {},
     onBack: () -> Unit,
@@ -263,8 +265,8 @@ fun ColorIntelligenceScreen(
         state = listState,
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 20.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+            .padding(horizontal = 14.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         item {
             Spacer(modifier = Modifier.height(10.dp))
@@ -284,6 +286,19 @@ fun ColorIntelligenceScreen(
                 },
                 onBack = onBack
             )
+            // NIRA noticed: the page's own questions first, then what the decision card noticed.
+            val screenNotes = buildList {
+                if (artworkBackground != null && artworkBackgroundAnswer == null) add(com.mos.nira.features.advice.JobNote(com.mos.nira.features.advice.NoteKind.BACKGROUND))
+                if (inputKindAssessment != null && inputKindAssessment.askUser && !inputKindConfirmed) add(com.mos.nira.features.advice.JobNote(com.mos.nira.features.advice.NoteKind.INPUT_KIND))
+                if (lowResolution) add(com.mos.nira.features.advice.JobNote(com.mos.nira.features.advice.NoteKind.LOW_RES))
+                val flagged = measuredPrintColours?.count { it.possibleFoldShadow || it.possibleEdgeBlend || it.possibleSmallColour } ?: 0
+                if (flagged > 0) add(com.mos.nira.features.advice.JobNote(com.mos.nira.features.advice.NoteKind.COLOUR_CHECKS, count = flagged))
+            }
+            val allNotes = (screenNotes + jobSummary?.notes.orEmpty()).distinct()
+            if (allNotes.isNotEmpty()) {
+                Spacer(Modifier.height(8.dp))
+                NoticedStrip(allNotes) { tab = it }
+            }
         }
 
         // The tabs stay at the top while the tab scrolls.
@@ -884,7 +899,7 @@ private fun JobSummaryBar(
                         bitmap = bitmap.asImageBitmap(),
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
-                        modifier = Modifier.size(52.dp).clip(RoundedCornerShape(12.dp)).border(1.dp, Color.White.copy(alpha = 0.15f), RoundedCornerShape(12.dp))
+                        modifier = Modifier.size(44.dp).clip(RoundedCornerShape(10.dp)).border(1.dp, Color.White.copy(alpha = 0.15f), RoundedCornerShape(12.dp))
                     )
                     Spacer(Modifier.width(12.dp))
                 }
@@ -893,7 +908,7 @@ private fun JobSummaryBar(
                     Text(colourLine, color = TextMuted, fontSize = 12.sp, maxLines = 1)
                 }
             }
-            Spacer(Modifier.height(10.dp))
+            Spacer(Modifier.height(6.dp))
             val m = summary?.method
             if (m == null) {
                 Text(
@@ -909,7 +924,6 @@ private fun JobSummaryBar(
                     if (summary.verifiedByRavi) stringResource(R.string.job_verified) else null
                 )
                 Text(parts.joinToString("  ·  "), color = TextWhite, fontSize = 13.sp)
-                if (summary.sampleRates && summary.perPc != null) Text(stringResource(R.string.job_sample_rates_note), color = TextMuted, fontSize = 10.sp)
             }
         }
     }
@@ -972,6 +986,66 @@ private fun EngineeringLinks(onReport: () -> Unit, onSeparation: () -> Unit, onS
                     Text("›", color = Cyan, fontSize = 22.sp)
                 }
             }
+        }
+    }
+}
+
+
+/** Which tab fixes a note. */
+private fun tabFor(k: com.mos.nira.features.advice.NoteKind): JobTab = when (k) {
+    com.mos.nira.features.advice.NoteKind.BACKGROUND, com.mos.nira.features.advice.NoteKind.INPUT_KIND,
+    com.mos.nira.features.advice.NoteKind.UNANSWERED, com.mos.nira.features.advice.NoteKind.CONTRAST -> JobTab.BRIEF
+    com.mos.nira.features.advice.NoteKind.NEEDS_BASE, com.mos.nira.features.advice.NoteKind.NOT_VERIFIED -> JobTab.DECISION
+    com.mos.nira.features.advice.NoteKind.SAVING -> JobTab.COST
+    com.mos.nira.features.advice.NoteKind.LOW_RES, com.mos.nira.features.advice.NoteKind.COLOUR_CHECKS -> JobTab.ENGINEERING
+}
+
+@Composable
+private fun noteText(n: com.mos.nira.features.advice.JobNote): String = when (n.kind) {
+    com.mos.nira.features.advice.NoteKind.BACKGROUND -> stringResource(R.string.note_background)
+    com.mos.nira.features.advice.NoteKind.INPUT_KIND -> stringResource(R.string.note_input_kind)
+    com.mos.nira.features.advice.NoteKind.LOW_RES -> stringResource(R.string.note_low_res)
+    com.mos.nira.features.advice.NoteKind.COLOUR_CHECKS -> pluralStringResource(R.plurals.note_colour_checks, n.count, n.count)
+    com.mos.nira.features.advice.NoteKind.UNANSWERED -> pluralStringResource(R.plurals.job_answer_left, n.count, n.count)
+    com.mos.nira.features.advice.NoteKind.CONTRAST -> stringResource(R.string.note_contrast, colourName(n.colourHex ?: "#000000"))
+    com.mos.nira.features.advice.NoteKind.NEEDS_BASE -> stringResource(R.string.note_needs_base, colourName(n.colourHex ?: "#000000"))
+    com.mos.nira.features.advice.NoteKind.NOT_VERIFIED -> stringResource(R.string.note_not_verified)
+    com.mos.nira.features.advice.NoteKind.SAVING -> stringResource(R.string.note_saving, com.mos.nira.core.commercial.Money.format(n.currency, n.amount ?: 0.0, 2))
+}
+
+/** One line when closed ("NIRA noticed 3 things: ..."); every note, each opening its tab, when open. */
+@Composable
+private fun NoticedStrip(notes: List<com.mos.nira.features.advice.JobNote>, onOpenTab: (JobTab) -> Unit) {
+    var open by rememberSaveable { mutableStateOf(false) }
+    Column(
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(Color(0xFF2E2612))
+            .border(1.dp, Amber.copy(alpha = 0.4f), RoundedCornerShape(14.dp))
+    ) {
+        Row(
+            Modifier.fillMaxWidth().clickable { open = !open }.padding(horizontal = 12.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("💡", fontSize = 15.sp)
+            Spacer(Modifier.width(8.dp))
+            Column(Modifier.weight(1f)) {
+                Text(pluralStringResource(R.plurals.noticed_title, notes.size, notes.size), color = Amber, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                if (!open) Text(noteText(notes.first()), color = TextWhite, fontSize = 12.sp, maxLines = 1, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis)
+            }
+            Text(if (open) "▲" else "▼", color = Amber, fontSize = 12.sp)
+        }
+        if (open) {
+            notes.forEach { n ->
+                Row(
+                    Modifier.fillMaxWidth().clickable { onOpenTab(tabFor(n.kind)) }.padding(horizontal = 12.dp, vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("•", color = Amber, fontSize = 13.sp)
+                    Spacer(Modifier.width(8.dp))
+                    Text(noteText(n), color = TextWhite, fontSize = 12.sp, lineHeight = 16.sp, modifier = Modifier.weight(1f))
+                    Text("›", color = Cyan, fontSize = 18.sp)
+                }
+            }
+            Spacer(Modifier.height(4.dp))
         }
     }
 }

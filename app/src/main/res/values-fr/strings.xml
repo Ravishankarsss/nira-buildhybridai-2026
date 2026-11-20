@@ -629,4 +629,24 @@
     <string name="rpt_s6_hint">Un film par écran, l\'épreuve, la maille et la couverture</string>
     <string name="rpt_s7">Encre nécessaire</string>
     <string name="rpt_s7_hint">Grammes par vêtement et par commande, par écran</string>
+    <string name="note_background">À répondre : le fond est-il de l\'encre ?</string>
+    <string name="note_input_kind">À répondre : photo ou visuel ?</string>
+    <string name="note_low_res">Résolution faible pour les traits fins et petits textes</string>
+    <string name="note_contrast">L\'encre %1$s se voit mal sur ce vêtement</string>
+    <string name="note_needs_base">L\'encre %1$s est plus claire que le tissu : rongeant ou sous-couche blanche nécessaire</string>
+    <string name="note_not_verified">La méthode n\'est pas encore vérifiée en atelier : faire une épreuve d\'abord</string>
+    <string name="note_saving">Cost-Down peut économiser %1$s par pièce</string>
+    <string name="card_others_show">Voir les autres méthodes (%1$d) ▾</string>
+    <string name="card_others_hide">Masquer les autres méthodes ▴</string>
+    <string name="preview_hint_short">Un modèle sur ce téléphone, pas une épreuve.</string>
+    <string name="order_open">+ Devant / dos / manche</string>
+    <plurals name="noticed_title">
+        <item quantity="one">NIRA a remarqué %1$d point</item>
+        <item quantity="other">NIRA a remarqué %1$d points</item>
+    </plurals>
+    <plurals name="note_colour_checks">
+        <item quantity="one">%1$d couleur à vérifier (ombre, bord ou point)</item>
+        <item quantity="other">%1$d couleurs à vérifier (ombre, bord ou point)</item>
+    </plurals>
+    <string name="card_explain_hint_short">L\'IA explique cette carte simplement (texte seul ; nombres vérifiés).</string>
 </resources>
