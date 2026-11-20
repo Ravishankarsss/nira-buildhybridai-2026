@@ -104,6 +104,8 @@ data class ArtworkStudioUiState(
     val previewRules: GarmentPreviewRules? = null,
     val previewGarmentHex: String? = null,
     val inkSwaps: Map<String, String> = emptyMap(),
+    // The decision card's method, screens and cost (job page top bar; the Report's method note).
+    val jobSummary: com.mos.nira.features.advice.JobSummary? = null,
     val previewWithoutBase: Bitmap? = null,
     val previewWithBase: Bitmap? = null,
     val previewWarnings: List<GarmentPreview.ContrastWarning> = emptyList(),
@@ -745,6 +747,10 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
             val ground = printRulesRepository.getPrintVsGroundRules()
             _uiState.update { it.copy(briefRules = brief, quantityRules = quantity, costDownRules = costDown, printVsGroundRules = ground) }
         }
+    }
+
+    fun setJobSummary(summary: com.mos.nira.features.advice.JobSummary) {
+        if (_uiState.value.jobSummary != summary) _uiState.update { it.copy(jobSummary = summary) }
     }
 
     fun setBriefFabric(fabric: String?) = _uiState.update { it.copy(briefFabric = fabric) }

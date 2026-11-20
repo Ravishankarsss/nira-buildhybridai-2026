@@ -185,10 +185,17 @@ fun ArtworkNavHost(
                         swaps = uiState.inkSwaps,
                         onGarment = { hex -> viewModel.setPreviewGarment(hex) },
                         onSwap = { from, to -> viewModel.swapInk(from, to) },
-                        onTapGarment = { x, y -> viewModel.pickGarmentAt(x, y) }
+                        onTapGarment = { x, y -> viewModel.pickGarmentAt(x, y) },
+                        showGarmentChips = false
                     )
                 },
-                decisionContent = {
+                jobSummary = uiState.jobSummary,
+                jobTitle = com.mos.nira.features.artwork.presentation.jobTitle(
+                    uiState.metadata?.fileName ?: "",
+                    uiState.printJobInputs.inputKind.name,
+                    uiState.partAResult?.measuredPalette?.map { it.hex }.orEmpty()
+                ),
+                decisionContent = { section, askOpen, onAskOpen ->
                     val isPhotoD = uiState.printJobInputs.inputKind == com.mos.nira.core.image.InputKind.PHOTO
                     val measuredD = uiState.partAResult?.garmentProfile?.estimatedHex
                     com.mos.nira.features.advice.PrintDecisionCard(
@@ -221,7 +228,11 @@ fun ArtworkNavHost(
                         previewInkHexes = uiState.partAResult?.measuredPalette?.map { it.hex }.orEmpty(),
                         inkSwaps = uiState.inkSwaps,
                         onPreviewInk = { from, to -> viewModel.swapInk(from, to) },
-                        sheetPreview = if (uiState.partBResult?.isDarkGarment == true) uiState.previewWithBase else uiState.previewWithoutBase
+                        sheetPreview = if (uiState.partBResult?.isDarkGarment == true) uiState.previewWithBase else uiState.previewWithoutBase,
+                        section = section,
+                        askOpen = askOpen,
+                        onAskOpenChange = onAskOpen,
+                        onSummary = { viewModel.setJobSummary(it) }
                     )
                 },
                 includePhotoEdgeArea = uiState.printJobInputs.includePhotoEdgeArea,
@@ -288,42 +299,8 @@ fun ArtworkNavHost(
                 onClearExportMessage = { viewModel.clearExportMessage() },
                 onRecalculate = { viewModel.computePartAReport() },
                 onBack = goBack,
-                header = {
-                    val isPhotoD = uiState.printJobInputs.inputKind == com.mos.nira.core.image.InputKind.PHOTO
-                    val measuredD = uiState.partAResult?.garmentProfile?.estimatedHex
-                    com.mos.nira.features.advice.PrintDecisionCard(
-                        artworkKey = ArtworkKey.of(uiState.selectedBitmap, uiState.palette.filter { !it.isGarmentBase }.map { it.hex }),
-                        garmentHex = uiState.previewGarmentHex ?: if (isPhotoD) measuredD else null,
-                        garmentChips = uiState.previewRules,
-                        measuredFabricHex = measuredD,
-                        isPhoto = isPhotoD,
-                        fabric = uiState.briefFabric,
-                        quantity = uiState.briefQuantity,
-                        feel = uiState.briefFeel,
-                        briefRules = uiState.briefRules,
-                        quantityRules = uiState.quantityRules,
-                        partB = uiState.partBResult,
-                        partC = uiState.partCResult,
-                        partD = uiState.partDResult,
-                        isComputing = uiState.isComputingPartB || uiState.isComputingPartC || uiState.isComputingPartD,
-                        contrastWarnings = uiState.previewWarnings,
-                        onGarment = { hex -> viewModel.setPreviewGarment(hex) },
-                        onFabric = { viewModel.setBriefFabric(it) },
-                        onQuantity = { viewModel.setBriefQuantity(it) },
-                        onFeel = { viewModel.setBriefFeel(it) },
-                        onLoadRules = { viewModel.loadBriefRules() },
-                        costDownRules = uiState.costDownRules,
-                        printVsGroundRules = uiState.printVsGroundRules,
-                        costDownBefore = uiState.costDownBefore,
-                        costDownAfter = uiState.costDownAfter,
-                        onCostDownPreview = { from, into, garment -> viewModel.renderCostDownPreview(from, into, garment) },
-                        onCloseCostDownPreview = { viewModel.clearCostDownPreview() },
-                        previewInkHexes = uiState.partAResult?.measuredPalette?.map { it.hex }.orEmpty(),
-                        inkSwaps = uiState.inkSwaps,
-                        onPreviewInk = { from, to -> viewModel.swapInk(from, to) },
-                        sheetPreview = if (uiState.partBResult?.isDarkGarment == true) uiState.previewWithBase else uiState.previewWithoutBase
-                    )
-                },
+                // The brief and decision card live on the job page; the Report only says which method they chose.
+                header = { com.mos.nira.features.advice.JobMethodNote(uiState.jobSummary, onEditBrief = goBack) },
                 footer = { Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     // Deep report: text and numbers only, from what this screen shows.
                     val key = ArtworkKey.of(uiState.selectedBitmap, uiState.palette.filter { !it.isGarmentBase }.map { it.hex })

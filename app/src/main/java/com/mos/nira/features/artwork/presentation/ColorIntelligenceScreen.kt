@@ -74,6 +74,7 @@ private val TextMuted = Color(0xFF9BA6C0)
 private val Amber = Color(0xFFFFC566) // "needs your answer" text
 
 @Composable
+@OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
 fun ColorIntelligenceScreen(
     bitmap: Bitmap?,
     palette: List<DominantColor>,
@@ -125,8 +126,11 @@ fun ColorIntelligenceScreen(
     onAnswerArtworkBackground: (print: Boolean) -> Unit = {},
     // "See it on your garment" (print_rules.json garment_preview).
     previewContent: @Composable () -> Unit = {},
-    // Print brief and decision card (print_rules.json print_brief).
-    decisionContent: @Composable () -> Unit = {},
+    // Print brief and decision card (print_rules.json print_brief): one section per tab, Ask NIRA open state.
+    decisionContent: @Composable (section: com.mos.nira.features.advice.CardSection, askOpen: Boolean, onAskOpen: (Boolean) -> Unit) -> Unit = { _, _, _ -> },
+    // Method, screens and cost for the top bar (from the decision card).
+    jobSummary: com.mos.nira.features.advice.JobSummary? = null,
+    jobTitle: String = "",
     includePhotoEdgeArea: Boolean = false,
     onIncludePhotoEdgeArea: (Boolean) -> Unit = {},
     onBack: () -> Unit,
@@ -143,6 +147,8 @@ fun ColorIntelligenceScreen(
         return ColorConverter.deltaE00(ColorConverter.Lab(c.labL, c.labA, c.labB), lab) <= limit
     }
     var detailsOpen by rememberSaveable { mutableStateOf(false) }
+    var tab by rememberSaveable { mutableStateOf(JobTab.BRIEF) }
+    var askOpen by remember { mutableStateOf(false) }
     var showAddDialog by remember { mutableStateOf(false) }
     var showMergeDialog by remember { mutableStateOf(false) }
     var mergeTargetId by remember { mutableStateOf<Int?>(null) }
@@ -251,142 +257,56 @@ fun ColorIntelligenceScreen(
         )
     }
 
+    val listState = androidx.compose.foundation.lazy.rememberLazyListState()
+    Box(modifier = modifier.fillMaxSize().background(NavyBg)) {
     LazyColumn(
-        modifier = modifier
+        state = listState,
+        modifier = Modifier
             .fillMaxSize()
-            .background(NavyBg)
             .padding(horizontal = 20.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item {
             Spacer(modifier = Modifier.height(10.dp))
-
-            // Navigation bar
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                OutlinedButton(
-                    onClick = onBack,
-                    shape = RoundedCornerShape(10.dp)
-                ) {
-                    Text("← Preview", color = TextWhite)
-                }
-
-                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    OutlinedButton(
-                        onClick = onOpenShadeLibrary,
-                        shape = RoundedCornerShape(10.dp)
-                    ) {
-                        Text("Shades", color = Cyan, fontSize = 11.sp)
+            JobSummaryBar(
+                bitmap = bitmap,
+                title = jobTitle,
+                summary = jobSummary,
+                colourLine = when {
+                    measuredPrintColours != null -> {
+                        val flagged = measuredPrintColours.count { it.possibleFoldShadow || it.possibleEdgeBlend || it.possibleSmallColour }
+                        val sure = measuredPrintColours.size - flagged
+                        pluralStringResource(R.plurals.measured_print_colours, sure, sure) +
+                            (if (flagged > 0) " " + stringResource(R.string.colour_possible_shadow_extra, flagged) else "")
                     }
+                    isMeasuringPrintColours -> stringResource(R.string.colour_measuring)
+                    else -> stringResource(R.string.colour_clusters_title, palette.size)
+                },
+                onBack = onBack
+            )
+        }
 
-                    OutlinedButton(
-                        onClick = onNavigateToPrintReport,
-                        shape = RoundedCornerShape(10.dp)
-                    ) {
-                        Text("Report", color = Cyan, fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
-                    }
-
-                    Button(
-                        onClick = onNavigateToSeparation,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Violet,
-                            contentColor = TextWhite
-                        ),
-                        shape = RoundedCornerShape(10.dp)
-                    ) {
-                        Text("Separation →", fontWeight = FontWeight.Bold, fontSize = 11.sp)
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Mini Artwork Thumbnail Card
-            if (bitmap != null) {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(18.dp),
-                    colors = CardDefaults.cardColors(containerColor = CardBg)
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(14.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Image(
-                            bitmap = bitmap.asImageBitmap(),
-                            contentDescription = "Analyzed Artwork",
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .size(64.dp)
-                                .clip(RoundedCornerShape(12.dp))
-                                .border(1.dp, Color.White.copy(alpha = 0.15f), RoundedCornerShape(12.dp))
-                        )
-
-                        Spacer(modifier = Modifier.width(14.dp))
-
-                        Column {
-                            Text(
-                                text = "CIEDE2000 PALETTE & SHADE MATCHING",
-                                color = Cyan,
-                                fontSize = 11.sp,
-                                letterSpacing = 1.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Spacer(modifier = Modifier.height(2.dp))
-                            // Headline count = the colours the Print Report uses (garment removed).
-                            Text(
-                                text = when {
-                                    measuredPrintColours != null -> {
-                                        // Colours that may be fold shadows are shown as "+N if ink".
-                                        val flagged = measuredPrintColours.count { it.possibleFoldShadow || it.possibleEdgeBlend || it.possibleSmallColour }
-                                        val sure = measuredPrintColours.size - flagged
-                                        pluralStringResource(R.plurals.measured_print_colours, sure, sure) +
-                                            (if (flagged > 0) " " + stringResource(R.string.colour_possible_shadow_extra, flagged) else "")
-                                    }
-                                    isMeasuringPrintColours -> stringResource(R.string.colour_measuring)
-                                    else -> stringResource(R.string.colour_clusters_title, palette.size)
-                                },
-                                color = TextWhite,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                            (measuredGarmentHex ?: garmentColor?.hex)?.let { hex ->
-                                Text(
-                                    text = stringResource(
-                                        R.string.colour_garment_excluded,
-                                        colourName(hex)
-                                    ),
-                                    color = TextMuted,
-                                    fontSize = 11.sp
-                                )
-                            }
-                        }
-                    }
-                }
-            }
+        // The tabs stay at the top while the tab scrolls.
+        stickyHeader {
+            JobTabs(selected = tab, onSelect = { tab = it })
         }
 
         // "This looks like background, not ink. Print it or drop it?" (artwork files).
-        if (artworkBackground != null) {
+        if (tab == JobTab.BRIEF && artworkBackground != null) {
             item {
                 ArtworkBackgroundCard(artworkBackground, artworkBackgroundAnswer, onAnswerArtworkBackground)
             }
         }
 
         // "This looks like a photo. Treat it as a photo?" when the signals disagree with the mode.
-        if (inputKindAssessment != null && inputKindAssessment.askUser && !inputKindConfirmed) {
+        if (tab == JobTab.BRIEF && inputKindAssessment != null && inputKindAssessment.askUser && !inputKindConfirmed) {
             item {
                 InputKindQuestionCard(inputKindAssessment, onAnswerInputKind)
             }
         }
 
         // Fold shadow notes (photos of light garments).
-        if (foldShadowsRemoved > 0 || shadowTestLowResolution) {
+        if (tab == JobTab.ENGINEERING && (foldShadowsRemoved > 0 || shadowTestLowResolution)) {
             item {
                 Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp)) {
                     if (foldShadowsRemoved > 0) {
@@ -403,7 +323,7 @@ fun ColorIntelligenceScreen(
         }
 
         // Photo edge area left out of the print, and the switch to include it.
-        if (photoEdgeExcludedPercent > 0.0 || includePhotoEdgeArea) {
+        if (tab == JobTab.ENGINEERING && (photoEdgeExcludedPercent > 0.0 || includePhotoEdgeArea)) {
             item {
                 Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp)) {
                     if (photoEdgeExcludedPercent > 0.0) {
@@ -424,7 +344,7 @@ fun ColorIntelligenceScreen(
         }
 
         // Specks removed as colours.
-        if (speckPixelsRemoved > 0) {
+        if (tab == JobTab.ENGINEERING && speckPixelsRemoved > 0) {
             item {
                 Text(
                     pluralStringResource(R.plurals.speck_pixels_removed, speckPixelsRemoved, speckPixelsRemoved),
@@ -435,7 +355,7 @@ fun ColorIntelligenceScreen(
         }
 
         // Edge blending report and the undo switch.
-        if (edgeBlendPixelsMerged > 0 || keepEdgeColours) {
+        if (tab == JobTab.ENGINEERING && (edgeBlendPixelsMerged > 0 || keepEdgeColours)) {
             item {
                 Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp)) {
                     if (edgeBlendPixelsMerged > 0) {
@@ -456,20 +376,21 @@ fun ColorIntelligenceScreen(
         }
 
         // Measured print colours: the ones used for screens and ink.
-        if (!measuredPrintColours.isNullOrEmpty()) {
+        if (tab == JobTab.ENGINEERING && !measuredPrintColours.isNullOrEmpty()) {
             item {
                 MeasuredPrintColoursCard(measuredPrintColours, onAnswerFoldShadow, onAnswerAllFoldShadows, onAnswerEdgeBlend, onAnswerSmallColour)
             }
         }
 
         // "See it on your garment": drawn on the phone with the rules' ink model.
-        item { previewContent() }
+        if (tab == JobTab.BRIEF) item { previewContent() }
 
         // "Ask like a master": four tap questions, then one decision card.
-        item { decisionContent() }
+        // Always composed (the Engineering tab draws nothing) so Ask NIRA, the sheet and the top bar work on every tab.
+        item { decisionContent(tab.section, askOpen) { askOpen = it } }
 
         // AI read of the artwork (Firebase AI Logic). Engine numbers are passed in as facts.
-        item {
+        if (tab == JobTab.DECISION) item {
             ArtworkAiReadCard(
                 bitmap = bitmap,
                 printColourHexes = palette.filter { !it.isGarmentBase }.map { it.hex },
@@ -488,9 +409,13 @@ fun ColorIntelligenceScreen(
             )
         }
 
-        // Details: every method, colour editing and colour families. Closed by default so the
-        // journey reads picture -> colours -> preview -> brief -> decision card.
-        item {
+        // Engineering: the full report, the films, and the shade library.
+        if (tab == JobTab.ENGINEERING) item {
+            EngineeringLinks(onReport = onNavigateToPrintReport, onSeparation = onNavigateToSeparation, onShades = onOpenShadeLibrary)
+        }
+
+        // Details: every method, colour editing and colour families. Closed by default.
+        if (tab == JobTab.ENGINEERING) item {
             Card(
                 modifier = Modifier.fillMaxWidth().clickable { detailsOpen = !detailsOpen },
                 shape = RoundedCornerShape(16.dp),
@@ -506,7 +431,7 @@ fun ColorIntelligenceScreen(
             }
         }
 
-        if (detailsOpen) {
+        if (tab == JobTab.ENGINEERING && detailsOpen) {
             // Print method advice from print_techniques.json (rules, not AI).
             item {
                 PrintMethodAdviceCard(
@@ -682,9 +607,33 @@ fun ColorIntelligenceScreen(
         }
 
         item {
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(96.dp))
         }
     }
+        // Ask NIRA from every tab, once the card has a method to talk about.
+        if (jobSummary?.method != null) {
+            // Full label at the top of the page; a small round button once the user scrolls.
+            val expanded = listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset < 40
+            val label = stringResource(R.string.ask_fab)
+            androidx.compose.material3.ExtendedFloatingActionButton(
+                text = { Text(label.removePrefix("✦").trim(), fontWeight = FontWeight.Bold) },
+                icon = { Text("✦", fontSize = 18.sp, fontWeight = FontWeight.Bold) },
+                expanded = expanded,
+                onClick = { askOpen = true },
+                containerColor = Violet,
+                contentColor = Color(0xFF0F1526),
+                modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)
+            )
+        }
+    }
+}
+
+/** The job page's tabs; each shows one part of the job. */
+enum class JobTab(val section: com.mos.nira.features.advice.CardSection) {
+    BRIEF(com.mos.nira.features.advice.CardSection.BRIEF),
+    DECISION(com.mos.nira.features.advice.CardSection.DECISION),
+    COST(com.mos.nira.features.advice.CardSection.COST),
+    ENGINEERING(com.mos.nira.features.advice.CardSection.NONE)
 }
 
 /** The Print Report engine's measured print colours, with coverage and nearest shade. */
@@ -902,6 +851,125 @@ private fun ArtworkBackgroundCard(bg: ArtworkBackground, answer: Boolean?, onAns
                     TextButton(onClick = { onAnswer(!bg.printed) }) {
                         Text(stringResource(if (bg.printed) R.string.artbg_drop_instead else R.string.artbg_print_instead), color = Cyan, fontSize = 12.sp)
                     }
+                }
+            }
+        }
+    }
+}
+
+
+/** Top of the job page: back, the artwork, its name, and what NIRA decided (method, screens, cost). */
+@Composable
+private fun JobSummaryBar(
+    bitmap: Bitmap?,
+    title: String,
+    summary: com.mos.nira.features.advice.JobSummary?,
+    colourLine: String,
+    onBack: () -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(18.dp),
+        colors = CardDefaults.cardColors(containerColor = CardBg)
+    ) {
+        Column(Modifier.padding(14.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    "←", color = TextWhite, fontSize = 22.sp,
+                    modifier = Modifier.clip(RoundedCornerShape(10.dp)).clickable(onClick = onBack).padding(horizontal = 8.dp, vertical = 2.dp)
+                )
+                Spacer(Modifier.width(8.dp))
+                if (bitmap != null) {
+                    Image(
+                        bitmap = bitmap.asImageBitmap(),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.size(52.dp).clip(RoundedCornerShape(12.dp)).border(1.dp, Color.White.copy(alpha = 0.15f), RoundedCornerShape(12.dp))
+                    )
+                    Spacer(Modifier.width(12.dp))
+                }
+                Column(Modifier.weight(1f)) {
+                    Text(title.ifBlank { stringResource(R.string.job_untitled) }, color = TextWhite, fontSize = 16.sp, fontWeight = FontWeight.Bold, maxLines = 1)
+                    Text(colourLine, color = TextMuted, fontSize = 12.sp, maxLines = 1)
+                }
+            }
+            Spacer(Modifier.height(10.dp))
+            val m = summary?.method
+            if (m == null) {
+                Text(
+                    if (summary != null && summary.unanswered > 0) pluralStringResource(R.plurals.job_answer_left, summary.unanswered, summary.unanswered)
+                    else stringResource(R.string.job_answer_brief),
+                    color = Amber, fontSize = 13.sp, fontWeight = FontWeight.Bold
+                )
+            } else {
+                Text(m, color = Cyan, fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                val parts = listOfNotNull(
+                    summary.screens?.let { pluralStringResource(R.plurals.job_screens, it, it) },
+                    summary.perPc?.let { stringResource(R.string.cost_per_pc, com.mos.nira.core.commercial.Money.format(summary.currency, it, 2)) + if (summary.sampleRates) " *" else "" },
+                    if (summary.verifiedByRavi) stringResource(R.string.job_verified) else null
+                )
+                Text(parts.joinToString("  ·  "), color = TextWhite, fontSize = 13.sp)
+                if (summary.sampleRates && summary.perPc != null) Text(stringResource(R.string.job_sample_rates_note), color = TextMuted, fontSize = 10.sp)
+            }
+        }
+    }
+}
+
+/** Brief · Decision · Cost · Engineering. */
+@Composable
+private fun JobTabs(selected: JobTab, onSelect: (JobTab) -> Unit) {
+    Row(
+        modifier = Modifier.fillMaxWidth().background(NavyBg).padding(vertical = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        JobTab.values().forEach { t ->
+            val on = t == selected
+            Text(
+                stringResource(
+                    when (t) {
+                        JobTab.BRIEF -> R.string.tab_brief
+                        JobTab.DECISION -> R.string.tab_decision
+                        JobTab.COST -> R.string.tab_cost
+                        JobTab.ENGINEERING -> R.string.tab_engineering
+                    }
+                ),
+                color = if (on) Color(0xFF0F1526) else TextWhite,
+                fontSize = 12.sp,
+                fontWeight = if (on) FontWeight.Bold else FontWeight.Medium,
+                maxLines = 1,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                modifier = Modifier.weight(1f).clip(RoundedCornerShape(20.dp))
+                    .background(if (on) Cyan else CardBg)
+                    .clickable { onSelect(t) }
+                    .padding(vertical = 10.dp, horizontal = 4.dp)
+            )
+        }
+    }
+}
+
+/** The full engineering pages: report, films and separation, shade library. */
+@Composable
+private fun EngineeringLinks(onReport: () -> Unit, onSeparation: () -> Unit, onShades: () -> Unit) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = CardBg)
+    ) {
+        Column(Modifier.padding(6.dp)) {
+            listOf(
+                Triple(R.string.eng_report, R.string.eng_report_hint, onReport),
+                Triple(R.string.eng_films, R.string.eng_films_hint, onSeparation),
+                Triple(R.string.eng_shades, R.string.eng_shades_hint, onShades)
+            ).forEach { (title, hint, go) ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).clickable(onClick = go).padding(12.dp)
+                ) {
+                    Column(Modifier.weight(1f)) {
+                        Text(stringResource(title), color = TextWhite, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                        Text(stringResource(hint), color = TextMuted, fontSize = 11.sp, lineHeight = 15.sp)
+                    }
+                    Text("›", color = Cyan, fontSize = 22.sp)
                 }
             }
         }

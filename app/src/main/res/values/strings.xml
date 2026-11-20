@@ -366,7 +366,7 @@
     <string name="cost_enter_qty">Enter the quantity (question 3) to see the order cost.</string>
     <string name="cost_per_pc">%1$s / pc</string>
     <string name="cost_total">%1$s for %2$d pcs</string>
-    <string name="cost_breakdown">%1$d screens · fixed %2$s · per piece %3$s</string>
+    <string name="cost_breakdown">Screens: %1$d · fixed %2$s · per piece %3$s</string>
     <string name="cost_ink">ink %1$s</string>
     <string name="cost_not_included">Not included: %1$s</string>
     <string name="cost_needs">Needed for the cost: %1$s</string>
@@ -574,4 +574,32 @@
     <string name="act_no_quantity">Not done: that quantity was not said</string>
     <string name="act_not_allowed">Not done: NIRA cannot do that yet</string>
     <string name="act_undo">↶ Undo</string>
+    <string name="ask_fab">✦ Ask NIRA</string>
+    <string name="tab_brief">Brief</string>
+    <string name="tab_decision">Decision</string>
+    <string name="tab_cost">Cost</string>
+    <string name="tab_engineering">Engineering</string>
+    <string name="job_untitled">Print job</string>
+    <string name="job_answer_brief">Answer the brief to get the method</string>
+    <string name="job_verified">✓ verified by Ravi</string>
+    <string name="job_sample_rates_note">* sample rates, not a quote</string>
+    <string name="eng_report">Full print report</string>
+    <string name="eng_report_hint">Mask, print area, measured palette, separation strategies, error curve</string>
+    <string name="eng_films">Films and separation</string>
+    <string name="eng_films_hint">One film per screen, the proof and the mesh</string>
+    <string name="eng_shades">Shade library</string>
+    <string name="eng_shades_hint">Match the print colours to your shade cards</string>
+    <string name="report_no_method">No method yet: answer the four brief questions on the job page.</string>
+    <string name="report_job_method">Job method: %1$s</string>
+    <string name="report_note_digital">This method is digital-based, so it does not use the screen separations below. They are shown only to compare if you print it by screen.</string>
+    <string name="report_note_screen">The screens of this method come from the separation below.</string>
+    <string name="report_edit_brief">← Edit the brief on the job page</string>
+    <plurals name="job_answer_left">
+        <item quantity="one">%1$d question left for the method</item>
+        <item quantity="other">%1$d questions left for the method</item>
+    </plurals>
+    <plurals name="job_screens">
+        <item quantity="one">%1$d screen</item>
+        <item quantity="other">%1$d screens</item>
+    </plurals>
 </resources>

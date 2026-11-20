@@ -366,7 +366,7 @@
     <string name="cost_enter_qty">填写数量（第 3 题）以查看订单成本。</string>
     <string name="cost_per_pc">%1$s / 件</string>
     <string name="cost_total">%2$d 件共 %1$s</string>
-    <string name="cost_breakdown">%1$d 个网版 · 固定 %2$s · 每件 %3$s</string>
+    <string name="cost_breakdown">网版：%1$d · 固定 %2$s · 每件 %3$s</string>
     <string name="cost_ink">油墨 %1$s</string>
     <string name="cost_not_included">未计入：%1$s</string>
     <string name="cost_needs">计算成本还需要：%1$s</string>
@@ -574,4 +574,32 @@
     <string name="act_no_quantity">未执行：没有说出该数量</string>
     <string name="act_not_allowed">未执行：NIRA 暂时无法做到</string>
     <string name="act_undo">↶ 撤销</string>
+    <string name="ask_fab">✦ 询问 NIRA</string>
+    <string name="tab_brief">需求</string>
+    <string name="tab_decision">决策</string>
+    <string name="tab_cost">成本</string>
+    <string name="tab_engineering">工程</string>
+    <string name="job_untitled">印花订单</string>
+    <string name="job_answer_brief">回答需求以获得工艺</string>
+    <string name="job_verified">✓ Ravi 已验证</string>
+    <string name="job_sample_rates_note">* 示例单价，非报价</string>
+    <string name="eng_report">完整印花报告</string>
+    <string name="eng_report_hint">蒙版、印花面积、测得颜色、分色方式、误差曲线</string>
+    <string name="eng_films">菲林与分色</string>
+    <string name="eng_films_hint">每个网版一张菲林、打样和网目</string>
+    <string name="eng_shades">色卡库</string>
+    <string name="eng_shades_hint">将印花颜色与你的色卡比对</string>
+    <string name="report_no_method">尚无工艺：请在订单页回答四个需求问题。</string>
+    <string name="report_job_method">订单工艺：%1$s</string>
+    <string name="report_note_digital">此工艺基于数码印花，不使用下方的网版分色；仅在改用丝网印时作比较。</string>
+    <string name="report_note_screen">此工艺的网版来自下方分色。</string>
+    <string name="report_edit_brief">← 在订单页修改需求</string>
+    <plurals name="job_answer_left">
+        <item quantity="one">还差 %1$d 个问题</item>
+        <item quantity="other">还差 %1$d 个问题</item>
+    </plurals>
+    <plurals name="job_screens">
+        <item quantity="one">%1$d 个网版</item>
+        <item quantity="other">%1$d 个网版</item>
+    </plurals>
 </resources>

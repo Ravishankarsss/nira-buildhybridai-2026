@@ -367,7 +367,7 @@
     <string name="cost_enter_qty">খরচ দেখতে পরিমাণ (প্রশ্ন ৩) দিন।</string>
     <string name="cost_per_pc">%1$s / পিস</string>
     <string name="cost_total">%2$d পিসে %1$s</string>
-    <string name="cost_breakdown">%1$d স্ক্রিন · স্থির %2$s · প্রতি পিস %3$s</string>
+    <string name="cost_breakdown">স্ক্রিন: %1$d · স্থির %2$s · প্রতি পিস %3$s</string>
     <string name="cost_ink">কালি %1$s</string>
     <string name="cost_not_included">যোগ করা হয়নি: %1$s</string>
     <string name="cost_needs">খরচের জন্য দরকার: %1$s</string>
@@ -575,4 +575,32 @@
     <string name="act_no_quantity">করা হয়নি: সেই পরিমাণ বলা হয়নি</string>
     <string name="act_not_allowed">করা হয়নি: NIRA এখনও এটা পারে না</string>
     <string name="act_undo">↶ আগের মতো করুন</string>
+    <string name="ask_fab">✦ NIRA-কে জিজ্ঞাসা</string>
+    <string name="tab_brief">ব্রিফ</string>
+    <string name="tab_decision">সিদ্ধান্ত</string>
+    <string name="tab_cost">খরচ</string>
+    <string name="tab_engineering">ইঞ্জিনিয়ারিং</string>
+    <string name="job_untitled">প্রিন্ট কাজ</string>
+    <string name="job_answer_brief">পদ্ধতি পেতে ব্রিফের উত্তর দিন</string>
+    <string name="job_verified">✓ রবি যাচাই করেছেন</string>
+    <string name="job_sample_rates_note">* নমুনা রেট, কোটেশন নয়</string>
+    <string name="eng_report">পূর্ণ প্রিন্ট রিপোর্ট</string>
+    <string name="eng_report_hint">মাস্ক, প্রিন্ট এলাকা, মাপা রং, সেপারেশন পদ্ধতি, ত্রুটি রেখা</string>
+    <string name="eng_films">ফিল্ম ও সেপারেশন</string>
+    <string name="eng_films_hint">প্রতি স্ক্রিনে একটি ফিল্ম, প্রুফ ও মেশ</string>
+    <string name="eng_shades">শেড লাইব্রেরি</string>
+    <string name="eng_shades_hint">প্রিন্টের রং আপনার শেড কার্ডের সাথে মেলান</string>
+    <string name="report_no_method">এখনো পদ্ধতি নেই: কাজের পাতায় ব্রিফের চারটি প্রশ্নের উত্তর দিন।</string>
+    <string name="report_job_method">কাজের পদ্ধতি: %1$s</string>
+    <string name="report_note_digital">এই পদ্ধতি ডিজিটাল-ভিত্তিক, তাই নিচের স্ক্রিন সেপারেশন ব্যবহার করে না। স্ক্রিনে প্রিন্ট করলে তুলনার জন্যই দেখানো হয়েছে।</string>
+    <string name="report_note_screen">এই পদ্ধতির স্ক্রিন নিচের সেপারেশন থেকে আসে।</string>
+    <string name="report_edit_brief">← কাজের পাতায় ব্রিফ বদলান</string>
+    <plurals name="job_answer_left">
+        <item quantity="one">পদ্ধতির জন্য %1$dটি প্রশ্ন বাকি</item>
+        <item quantity="other">পদ্ধতির জন্য %1$dটি প্রশ্ন বাকি</item>
+    </plurals>
+    <plurals name="job_screens">
+        <item quantity="one">%1$dটি স্ক্রিন</item>
+        <item quantity="other">%1$dটি স্ক্রিন</item>
+    </plurals>
 </resources>

@@ -367,7 +367,7 @@
     <string name="cost_enter_qty">ஆர்டர் செலவைப் பார்க்க எண்ணிக்கையை (கேள்வி 3) உள்ளிடவும்.</string>
     <string name="cost_per_pc">%1$s / துண்டு</string>
     <string name="cost_total">%2$d துண்டுகளுக்கு %1$s</string>
-    <string name="cost_breakdown">%1$d ஸ்கிரீன்கள் · நிலையான %2$s · ஒரு துண்டுக்கு %3$s</string>
+    <string name="cost_breakdown">ஸ்கிரீன்கள்: %1$d · நிலையான %2$s · ஒரு துண்டுக்கு %3$s</string>
     <string name="cost_ink">மை %1$s</string>
     <string name="cost_not_included">சேர்க்கப்படவில்லை: %1$s</string>
     <string name="cost_needs">செலவுக்குத் தேவை: %1$s</string>
@@ -575,4 +575,32 @@
     <string name="act_no_quantity">செய்யவில்லை: அந்த எண்ணிக்கை சொல்லப்படவில்லை</string>
     <string name="act_not_allowed">செய்யவில்லை: NIRA இன்னும் அதைச் செய்ய முடியாது</string>
     <string name="act_undo">↶ செயல்தவிர்</string>
+    <string name="ask_fab">✦ NIRA-விடம் கேள்</string>
+    <string name="tab_brief">விவரம்</string>
+    <string name="tab_decision">முடிவு</string>
+    <string name="tab_cost">செலவு</string>
+    <string name="tab_engineering">பொறியியல்</string>
+    <string name="job_untitled">அச்சு வேலை</string>
+    <string name="job_answer_brief">முறையைப் பெற விவரத்துக்குப் பதிலளிக்கவும்</string>
+    <string name="job_verified">✓ ரவி சரிபார்த்தது</string>
+    <string name="job_sample_rates_note">* மாதிரி விலைகள், விலைப்புள்ளி அல்ல</string>
+    <string name="eng_report">முழு அச்சு அறிக்கை</string>
+    <string name="eng_report_hint">மாஸ்க், அச்சுப் பரப்பு, அளந்த நிறங்கள், பிரிப்பு வழிகள், பிழை வளைவு</string>
+    <string name="eng_films">பிலிம்களும் பிரிப்பும்</string>
+    <string name="eng_films_hint">ஒவ்வொரு ஸ்கிரீனுக்கும் ஒரு பிலிம், proof மற்றும் mesh</string>
+    <string name="eng_shades">Shade நூலகம்</string>
+    <string name="eng_shades_hint">அச்சு நிறங்களை உங்கள் shade அட்டைகளுடன் பொருத்து</string>
+    <string name="report_no_method">இன்னும் முறை இல்லை: வேலைப் பக்கத்தில் நான்கு விவரக் கேள்விகளுக்கும் பதிலளிக்கவும்.</string>
+    <string name="report_job_method">வேலையின் முறை: %1$s</string>
+    <string name="report_note_digital">இந்த முறை டிஜிட்டல் அடிப்படையிலானது, எனவே கீழே உள்ள ஸ்கிரீன் பிரிப்புகளைப் பயன்படுத்தாது. ஸ்கிரீனில் அச்சிட்டால் ஒப்பிட மட்டுமே அவை காட்டப்படுகின்றன.</string>
+    <string name="report_note_screen">இந்த முறையின் ஸ்கிரீன்கள் கீழே உள்ள பிரிப்பிலிருந்து வருகின்றன.</string>
+    <string name="report_edit_brief">← வேலைப் பக்கத்தில் விவரத்தைத் திருத்து</string>
+    <plurals name="job_answer_left">
+        <item quantity="one">முறைக்கு %1$d கேள்வி மீதம்</item>
+        <item quantity="other">முறைக்கு %1$d கேள்விகள் மீதம்</item>
+    </plurals>
+    <plurals name="job_screens">
+        <item quantity="one">%1$d ஸ்கிரீன்</item>
+        <item quantity="other">%1$d ஸ்கிரீன்கள்</item>
+    </plurals>
 </resources>

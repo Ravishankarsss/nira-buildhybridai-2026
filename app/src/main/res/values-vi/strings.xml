@@ -366,7 +366,7 @@
     <string name="cost_enter_qty">Nhập số lượng (câu 3) để xem chi phí.</string>
     <string name="cost_per_pc">%1$s / chiếc</string>
     <string name="cost_total">%1$s cho %2$d chiếc</string>
-    <string name="cost_breakdown">%1$d khung · cố định %2$s · mỗi chiếc %3$s</string>
+    <string name="cost_breakdown">Khung: %1$d · cố định %2$s · mỗi chiếc %3$s</string>
     <string name="cost_ink">mực %1$s</string>
     <string name="cost_not_included">Chưa tính: %1$s</string>
     <string name="cost_needs">Cần để tính: %1$s</string>
@@ -574,4 +574,32 @@
     <string name="act_no_quantity">Không thực hiện: số lượng đó chưa được nói</string>
     <string name="act_not_allowed">Không thực hiện: NIRA chưa làm được việc đó</string>
     <string name="act_undo">↶ Hoàn tác</string>
+    <string name="ask_fab">✦ Hỏi NIRA</string>
+    <string name="tab_brief">Yêu cầu</string>
+    <string name="tab_decision">Quyết định</string>
+    <string name="tab_cost">Chi phí</string>
+    <string name="tab_engineering">Kỹ thuật</string>
+    <string name="job_untitled">Đơn in</string>
+    <string name="job_answer_brief">Trả lời yêu cầu để có phương pháp</string>
+    <string name="job_verified">✓ Ravi đã kiểm tra</string>
+    <string name="job_sample_rates_note">* đơn giá mẫu, không phải báo giá</string>
+    <string name="eng_report">Báo cáo in đầy đủ</string>
+    <string name="eng_report_hint">Mặt nạ, diện tích in, màu đo được, cách tách màu, đường sai số</string>
+    <string name="eng_films">Phim và tách màu</string>
+    <string name="eng_films_hint">Mỗi khung một phim, bản thử và lưới</string>
+    <string name="eng_shades">Thư viện màu</string>
+    <string name="eng_shades_hint">So màu in với bảng màu của bạn</string>
+    <string name="report_no_method">Chưa có phương pháp: hãy trả lời bốn câu hỏi trên trang đơn.</string>
+    <string name="report_job_method">Phương pháp của đơn: %1$s</string>
+    <string name="report_note_digital">Phương pháp này dựa trên in kỹ thuật số nên không dùng các cách tách màu khung bên dưới; chúng chỉ để so sánh nếu in lưới.</string>
+    <string name="report_note_screen">Các khung của phương pháp này lấy từ cách tách màu bên dưới.</string>
+    <string name="report_edit_brief">← Sửa yêu cầu trên trang đơn</string>
+    <plurals name="job_answer_left">
+        <item quantity="one">Còn %1$d câu hỏi cho phương pháp</item>
+        <item quantity="other">Còn %1$d câu hỏi cho phương pháp</item>
+    </plurals>
+    <plurals name="job_screens">
+        <item quantity="one">%1$d khung</item>
+        <item quantity="other">%1$d khung</item>
+    </plurals>
 </resources>

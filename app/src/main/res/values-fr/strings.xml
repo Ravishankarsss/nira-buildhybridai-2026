@@ -368,7 +368,7 @@
     <string name="cost_enter_qty">Saisissez la quantité (question 3) pour voir le coût.</string>
     <string name="cost_per_pc">%1$s / pièce</string>
     <string name="cost_total">%1$s pour %2$d pièces</string>
-    <string name="cost_breakdown">%1$d écrans · fixe %2$s · par pièce %3$s</string>
+    <string name="cost_breakdown">Écrans : %1$d · fixe %2$s · par pièce %3$s</string>
     <string name="cost_ink">encre %1$s</string>
     <string name="cost_not_included">Non inclus : %1$s</string>
     <string name="cost_needs">Requis pour le coût : %1$s</string>
@@ -576,4 +576,32 @@
     <string name="act_no_quantity">Non fait : cette quantité n\'a pas été dite</string>
     <string name="act_not_allowed">Non fait : NIRA ne sait pas encore le faire</string>
     <string name="act_undo">↶ Annuler</string>
+    <string name="ask_fab">✦ Demander à NIRA</string>
+    <string name="tab_brief">Brief</string>
+    <string name="tab_decision">Décision</string>
+    <string name="tab_cost">Coût</string>
+    <string name="tab_engineering">Ingénierie</string>
+    <string name="job_untitled">Travail d\'impression</string>
+    <string name="job_answer_brief">Répondez au brief pour obtenir la méthode</string>
+    <string name="job_verified">✓ vérifié par Ravi</string>
+    <string name="job_sample_rates_note">* tarifs exemples, pas un devis</string>
+    <string name="eng_report">Rapport d\'impression complet</string>
+    <string name="eng_report_hint">Masque, surface imprimée, palette mesurée, voies de séparation, courbe d\'erreur</string>
+    <string name="eng_films">Films et séparation</string>
+    <string name="eng_films_hint">Un film par écran, l\'épreuve et la maille</string>
+    <string name="eng_shades">Nuancier</string>
+    <string name="eng_shades_hint">Comparer les couleurs imprimées à vos nuanciers</string>
+    <string name="report_no_method">Pas encore de méthode : répondez aux quatre questions du brief sur la page du travail.</string>
+    <string name="report_job_method">Méthode du travail : %1$s</string>
+    <string name="report_note_digital">Cette méthode est numérique : elle n\'utilise pas les séparations par écran ci-dessous, affichées seulement pour comparer en sérigraphie.</string>
+    <string name="report_note_screen">Les écrans de cette méthode viennent de la séparation ci-dessous.</string>
+    <string name="report_edit_brief">← Modifier le brief sur la page du travail</string>
+    <plurals name="job_answer_left">
+        <item quantity="one">%1$d question restante pour la méthode</item>
+        <item quantity="other">%1$d questions restantes pour la méthode</item>
+    </plurals>
+    <plurals name="job_screens">
+        <item quantity="one">%1$d écran</item>
+        <item quantity="other">%1$d écrans</item>
+    </plurals>
 </resources>

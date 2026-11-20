@@ -73,7 +73,9 @@ fun GarmentPreviewCard(
     swaps: Map<String, String>,
     onGarment: (String) -> Unit,
     onSwap: (from: String, to: String?) -> Unit,
-    onTapGarment: (normX: Float, normY: Float) -> Unit
+    onTapGarment: (normX: Float, normY: Float) -> Unit,
+    /** False on the job page, where the brief's question 1 already has the garment chips. */
+    showGarmentChips: Boolean = true
 ) {
     if (rules == null) return
     var customOpen by remember { mutableStateOf(false) }
@@ -98,7 +100,7 @@ fun GarmentPreviewCard(
             Spacer(modifier = Modifier.height(10.dp))
 
             // Garment chips from the rules file, plus a custom colour.
-            Row(modifier = Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            if (showGarmentChips) Row(modifier = Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 rules.chips.forEach { (name, hex) ->
                     val label = when (name) {
                         "white" -> stringResource(R.string.preview_chip_white)

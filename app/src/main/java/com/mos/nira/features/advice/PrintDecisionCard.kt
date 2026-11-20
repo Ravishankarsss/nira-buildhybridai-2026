@@ -145,6 +145,13 @@ fun PrintDecisionCard(
     inkSwaps: Map<String, String> = emptyMap(),
     /** Shows an ink in another colour in the preview; null puts it back. */
     onPreviewInk: (fromHex: String, toHex: String?) -> Unit = { _, _ -> },
+    /** Which part to draw (the job page's tabs). Everything is still worked out every time. */
+    section: CardSection = CardSection.ALL,
+    /** Ask NIRA is opened from outside (the floating button on every tab). */
+    askOpen: Boolean = false,
+    onAskOpenChange: (Boolean) -> Unit = {},
+    /** Method, screens and cost for the job page's top bar. */
+    onSummary: (JobSummary) -> Unit = {},
     choicesViewModel: PrintMethodChoicesViewModel = viewModel(viewModelStoreOwner = activityViewModelStoreOwner())
 ) {
     LaunchedEffect(Unit) { onLoadRules() }
@@ -152,13 +159,10 @@ fun PrintDecisionCard(
     val allChoices by choicesViewModel.choices.collectAsState()
     val choices = allChoices.takeIf { it.key == artworkKey } ?: PrintMethodChoices(artworkKey)
     val fibre = choices.fibre
+    fun show(part: CardSection) = section == CardSection.ALL || section == part
 
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(18.dp),
-        colors = CardDefaults.cardColors(containerColor = DCardBg)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+    DecisionShell(visible = section != CardSection.NONE) {
+        if (show(CardSection.BRIEF)) {
             Text(stringResource(R.string.brief_title).uppercase(), color = DViolet, fontSize = 11.sp, letterSpacing = 1.5.sp, fontWeight = FontWeight.Bold)
             Spacer(Modifier.height(4.dp))
             Text(stringResource(R.string.brief_hint), color = DMuted, fontSize = 12.sp, lineHeight = 17.sp)
@@ -263,15 +267,18 @@ fun PrintDecisionCard(
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Feel.values().forEach { f -> Chip(feelLabel(f), feel == f) { onFeel(if (feel == f) null else f) } }
             }
+        }
 
             // ---------- The decision card ----------
-            Spacer(Modifier.height(16.dp))
-            Text(stringResource(R.string.card_title).uppercase(), color = DCyan, fontSize = 11.sp, letterSpacing = 1.5.sp, fontWeight = FontWeight.Bold)
+            if (show(CardSection.DECISION)) {
+                if (section == CardSection.ALL) Spacer(Modifier.height(16.dp))
+                Text(stringResource(R.string.card_title).uppercase(), color = DCyan, fontSize = 11.sp, letterSpacing = 1.5.sp, fontWeight = FontWeight.Bold)
+            }
 
             val ar = adviceRules
             if (ar == null || briefRules == null) {
-                Small(stringResource(R.string.advice_loading))
-                return@Column
+                if (section != CardSection.NONE) Small(stringResource(R.string.advice_loading))
+                return@DecisionShell
             }
             val tone = garmentHex?.let {
                 val rgb = ColorConverter.hexToRgb(it)
@@ -292,7 +299,7 @@ fun PrintDecisionCard(
                     engineScreens = screens
                 )
             }
-            if (card.unanswered > 0) Small(stringResource(R.string.card_questions_left, card.unanswered))
+            if (show(CardSection.DECISION) && card.unanswered > 0) Small(stringResource(R.string.card_questions_left, card.unanswered))
 
             // Print vs fabric (print_vs_ground): on a dark or coloured garment, per print colour.
             val groundChecks = remember(garmentHex, screens, printVsGroundRules, tone) {
@@ -301,7 +308,7 @@ fun PrintDecisionCard(
                 if (g == null || r == null || tone != com.mos.nira.core.advice.GarmentTone.DARK_OR_COLOURED) emptyList()
                 else com.mos.nira.core.advice.PrintVsGround.check(screens.filter { it.isArtworkColour }.map { it.hex }, g, r)
             }
-            if (groundChecks.isNotEmpty()) {
+            if (show(CardSection.DECISION) && groundChecks.isNotEmpty()) {
                 Spacer(Modifier.height(8.dp))
                 Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(DInner).padding(10.dp)) {
                     Text(stringResource(R.string.pvg_title), color = DMuted, fontSize = 11.sp)
@@ -329,7 +336,7 @@ fun PrintDecisionCard(
             }
 
             // Contrast first (garment_preview)
-            contrastWarnings.forEach { w ->
+            if (show(CardSection.DECISION)) contrastWarnings.forEach { w ->
                 Spacer(Modifier.height(6.dp))
                 Text(
                     "⚠ " + stringResource(R.string.card_contrast_risk, com.mos.nira.features.artwork.presentation.colourName(w.inkHex), w.deltaL),
@@ -338,7 +345,12 @@ fun PrintDecisionCard(
             }
 
             val best = card.best
-            if (best == null && (garmentHex == null || fibre == null)) {
+            if (best == null) {
+                val left = card.unanswered
+                LaunchedEffect(left) { onSummary(JobSummary(null, null, null, "", false, left, false)) }
+            }
+            if (!show(CardSection.DECISION)) Unit
+            else if (best == null && (garmentHex == null || fibre == null)) {
                 Spacer(Modifier.height(8.dp))
                 Text(stringResource(R.string.card_need_basics), color = DAmber, fontSize = 13.sp, fontWeight = FontWeight.Bold)
             } else if (best == null) {
@@ -359,10 +371,11 @@ fun PrintDecisionCard(
                 QuantityBand.SCREEN -> stringResource(R.string.card_quantity_screen, q ?: 0, quantityRules?.screenFromPieces ?: 0)
                 QuantityBand.BETWEEN -> stringResource(R.string.card_quantity_between, q ?: 0, quantityRules?.digitalBelowPieces ?: 0, quantityRules?.screenFromPieces ?: 0)
             }
-            Line(stringResource(R.string.card_quantity), qText, stringResource(R.string.src_rules), quantityRules?.confidence, quantityRules?.verifiedByRavi == true)
+            if (show(CardSection.DECISION)) Line(stringResource(R.string.card_quantity), qText, stringResource(R.string.src_rules), quantityRules?.confidence, quantityRules?.verifiedByRavi == true)
 
             if (best != null) {
-                if (card.baseSource == BaseSource.DIGITAL) {
+                if (!show(CardSection.DECISION)) Unit
+                else if (card.baseSource == BaseSource.DIGITAL) {
                     val n = best.advice.screens
                     val screensText = if (n != null && n > 0) stringResource(R.string.card_screens_value, n, best.advice.screensDetail ?: "")
                     else stringResource(R.string.card_screens_digital)
@@ -448,7 +461,12 @@ fun PrintDecisionCard(
                 val options = remember(card, screens, rates, costDownRules) {
                     com.mos.nira.core.commercial.PrintCost.costDown(card, screens, rates, costDownRules)
                 }
-                com.mos.nira.features.commercial.OrderCostSection(
+                // The top bar: method, screens and cost per piece.
+                val summaryScreens = if (card.baseSource == BaseSource.DIGITAL) best.advice.screens ?: 0 else card.screens.size
+                LaunchedEffect(best.advice.name, summaryScreens, cost?.perPc, rates.currency, card.unanswered, best.advice.verifiedByRavi, rates.isSample) {
+                    onSummary(JobSummary(best.advice.name, summaryScreens, cost?.perPc, rates.currency, best.advice.verifiedByRavi, card.unanswered, rates.isSample, card.baseSource == BaseSource.DIGITAL))
+                }
+                if (show(CardSection.COST)) com.mos.nira.features.commercial.OrderCostSection(
                     cost = cost,
                     options = options,
                     rates = rates,
@@ -490,20 +508,22 @@ fun PrintDecisionCard(
                 }
 
                 // Risks from the rules file for the chosen method
-                if (best.advice.risks.isNotEmpty()) {
+                if (show(CardSection.DECISION) && best.advice.risks.isNotEmpty()) {
                     Spacer(Modifier.height(10.dp))
                     Text(stringResource(R.string.card_risks), color = DMuted, fontSize = 11.sp)
                     best.advice.risks.forEach { Text("• $it", color = DWhite, fontSize = 12.sp, lineHeight = 17.sp) }
                 }
 
                 // "Explain this card": AI explains the card's facts (text only, on-device preferred).
-                com.mos.nira.features.ai.CardExplanationSection(facts, best.advice.name)
+                if (show(CardSection.DECISION)) com.mos.nira.features.ai.CardExplanationSection(facts, best.advice.name)
 
                 // Ask NIRA: questions about this job, answered from the same facts plus the order cost.
-                var askOpen by remember { mutableStateOf(false) }
-                Spacer(Modifier.height(8.dp))
-                androidx.compose.material3.OutlinedButton(onClick = { askOpen = true }, modifier = Modifier.fillMaxWidth()) {
-                    Text(stringResource(R.string.ask_button), color = DCyan, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+                // On the job page it opens from the floating button; in ALL mode it keeps its own button.
+                if (section == CardSection.ALL) {
+                    Spacer(Modifier.height(8.dp))
+                    androidx.compose.material3.OutlinedButton(onClick = { onAskOpenChange(true) }, modifier = Modifier.fillMaxWidth()) {
+                        Text(stringResource(R.string.ask_button), color = DCyan, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+                    }
                 }
                 if (askOpen) {
                     val askFacts = remember(facts, cost, options, rates) {
@@ -566,13 +586,72 @@ fun PrintDecisionCard(
                             val run: () -> Unit = { undo.asReversed().forEach { it() } }
                             run
                         },
-                        onDismiss = { askOpen = false }
+                        onDismiss = { onAskOpenChange(false) }
                     )
                 }
             }
-            Spacer(Modifier.height(10.dp))
-            Small(stringResource(R.string.card_disclaimer))
+            if (show(CardSection.DECISION)) {
+                Spacer(Modifier.height(10.dp))
+                Small(stringResource(R.string.card_disclaimer))
+            }
+    }
+}
+
+/** The job page's tabs draw one part of the card each; NONE draws nothing but keeps the dialogs. */
+enum class CardSection { ALL, BRIEF, DECISION, COST, NONE }
+
+/** What the job page's top bar shows. Numbers are the engine's and the factory rates'. */
+data class JobSummary(
+    val method: String?,
+    val screens: Int?,
+    val perPc: Double?,
+    val currency: String,
+    val verifiedByRavi: Boolean,
+    val unanswered: Int,
+    val sampleRates: Boolean,
+    /** True when the method is digital-based (digital, or discharge + digital): no spot-screen separation. */
+    val digitalBase: Boolean = false
+)
+
+/**
+ * Top of the Print Report: the job's method from the decision card, and what the screen
+ * separations below mean for it, so the two never seem to disagree.
+ */
+@Composable
+fun JobMethodNote(summary: JobSummary?, onEditBrief: () -> Unit) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = DCardBg)
+    ) {
+        Column(Modifier.padding(14.dp)) {
+            val m = summary?.method
+            if (m == null) {
+                Text(stringResource(R.string.report_no_method), color = DAmber, fontSize = 13.sp, lineHeight = 18.sp)
+            } else {
+                Text(stringResource(R.string.report_job_method, m), color = DCyan, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                Text(
+                    stringResource(if (summary.digitalBase) R.string.report_note_digital else R.string.report_note_screen),
+                    color = DWhite, fontSize = 12.sp, lineHeight = 17.sp
+                )
+            }
+            androidx.compose.material3.TextButton(onClick = onEditBrief) {
+                Text(stringResource(R.string.report_edit_brief), color = DCyan, fontSize = 12.sp)
+            }
         }
+    }
+}
+
+@Composable
+private fun DecisionShell(visible: Boolean, content: @Composable androidx.compose.foundation.layout.ColumnScope.() -> Unit) {
+    if (visible) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(18.dp),
+            colors = CardDefaults.cardColors(containerColor = DCardBg)
+        ) { Column(modifier = Modifier.padding(16.dp), content = content) }
+    } else {
+        Column(content = content)
     }
 }
 

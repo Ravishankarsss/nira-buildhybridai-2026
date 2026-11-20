@@ -367,7 +367,7 @@
     <string name="cost_enter_qty">ऑर्डर लागत देखने के लिए मात्रा (प्रश्न 3) भरें।</string>
     <string name="cost_per_pc">%1$s / पीस</string>
     <string name="cost_total">%2$d पीस के लिए %1$s</string>
-    <string name="cost_breakdown">%1$d स्क्रीन · स्थिर %2$s · प्रति पीस %3$s</string>
+    <string name="cost_breakdown">स्क्रीन: %1$d · स्थिर %2$s · प्रति पीस %3$s</string>
     <string name="cost_ink">स्याही %1$s</string>
     <string name="cost_not_included">शामिल नहीं: %1$s</string>
     <string name="cost_needs">लागत के लिए चाहिए: %1$s</string>
@@ -575,4 +575,32 @@
     <string name="act_no_quantity">नहीं किया: वह मात्रा बोली नहीं गई</string>
     <string name="act_not_allowed">नहीं किया: NIRA अभी यह नहीं कर सकता</string>
     <string name="act_undo">↶ पहले जैसा करें</string>
+    <string name="ask_fab">✦ NIRA से पूछें</string>
+    <string name="tab_brief">ब्रीफ़</string>
+    <string name="tab_decision">निर्णय</string>
+    <string name="tab_cost">लागत</string>
+    <string name="tab_engineering">इंजीनियरिंग</string>
+    <string name="job_untitled">प्रिंट काम</string>
+    <string name="job_answer_brief">तरीका पाने के लिए ब्रीफ़ का जवाब दें</string>
+    <string name="job_verified">✓ रवि ने जाँचा</string>
+    <string name="job_sample_rates_note">* सैंपल दरें, कोटेशन नहीं</string>
+    <string name="eng_report">पूरी प्रिंट रिपोर्ट</string>
+    <string name="eng_report_hint">मास्क, प्रिंट क्षेत्र, मापे गए रंग, सेपरेशन तरीके, त्रुटि वक्र</string>
+    <string name="eng_films">फ़िल्म और सेपरेशन</string>
+    <string name="eng_films_hint">हर स्क्रीन की एक फ़िल्म, प्रूफ़ और मेश</string>
+    <string name="eng_shades">शेड लाइब्रेरी</string>
+    <string name="eng_shades_hint">प्रिंट रंगों को अपने शेड कार्ड से मिलाएँ</string>
+    <string name="report_no_method">अभी कोई तरीका नहीं: काम के पेज पर ब्रीफ़ के चार सवालों का जवाब दें।</string>
+    <string name="report_job_method">काम का तरीका: %1$s</string>
+    <string name="report_note_digital">यह तरीका डिजिटल आधारित है, इसलिए नीचे के स्क्रीन सेपरेशन इस्तेमाल नहीं करता। स्क्रीन से प्रिंट करने पर तुलना के लिए ही दिखाए गए हैं।</string>
+    <string name="report_note_screen">इस तरीके की स्क्रीन नीचे के सेपरेशन से आती हैं।</string>
+    <string name="report_edit_brief">← काम के पेज पर ब्रीफ़ बदलें</string>
+    <plurals name="job_answer_left">
+        <item quantity="one">तरीके के लिए %1$d सवाल बाकी</item>
+        <item quantity="other">तरीके के लिए %1$d सवाल बाकी</item>
+    </plurals>
+    <plurals name="job_screens">
+        <item quantity="one">%1$d स्क्रीन</item>
+        <item quantity="other">%1$d स्क्रीन</item>
+    </plurals>
 </resources>

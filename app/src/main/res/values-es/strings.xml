@@ -368,7 +368,7 @@
     <string name="cost_enter_qty">Indique la cantidad (pregunta 3) para ver el coste.</string>
     <string name="cost_per_pc">%1$s / pieza</string>
     <string name="cost_total">%1$s por %2$d piezas</string>
-    <string name="cost_breakdown">%1$d pantallas · fijo %2$s · por pieza %3$s</string>
+    <string name="cost_breakdown">Pantallas: %1$d · fijo %2$s · por pieza %3$s</string>
     <string name="cost_ink">tinta %1$s</string>
     <string name="cost_not_included">No incluido: %1$s</string>
     <string name="cost_needs">Falta para el coste: %1$s</string>
@@ -576,4 +576,32 @@
     <string name="act_no_quantity">No hecho: esa cantidad no se dijo</string>
     <string name="act_not_allowed">No hecho: NIRA aún no puede hacer eso</string>
     <string name="act_undo">↶ Deshacer</string>
+    <string name="ask_fab">✦ Preguntar a NIRA</string>
+    <string name="tab_brief">Pedido</string>
+    <string name="tab_decision">Decisión</string>
+    <string name="tab_cost">Costo</string>
+    <string name="tab_engineering">Ingeniería</string>
+    <string name="job_untitled">Trabajo de impresión</string>
+    <string name="job_answer_brief">Responde el pedido para obtener el método</string>
+    <string name="job_verified">✓ verificado por Ravi</string>
+    <string name="job_sample_rates_note">* tarifas de ejemplo, no es cotización</string>
+    <string name="eng_report">Informe de impresión completo</string>
+    <string name="eng_report_hint">Máscara, área de impresión, paleta medida, rutas de separación, curva de error</string>
+    <string name="eng_films">Películas y separación</string>
+    <string name="eng_films_hint">Una película por pantalla, la prueba y la malla</string>
+    <string name="eng_shades">Biblioteca de tonos</string>
+    <string name="eng_shades_hint">Compara los colores de impresión con tus cartas de tonos</string>
+    <string name="report_no_method">Aún no hay método: responde las cuatro preguntas del pedido en la página del trabajo.</string>
+    <string name="report_job_method">Método del trabajo: %1$s</string>
+    <string name="report_note_digital">Este método es digital, así que no usa las separaciones por pantalla de abajo. Se muestran solo para comparar si se imprime por pantalla.</string>
+    <string name="report_note_screen">Las pantallas de este método salen de la separación de abajo.</string>
+    <string name="report_edit_brief">← Editar el pedido en la página del trabajo</string>
+    <plurals name="job_answer_left">
+        <item quantity="one">Falta %1$d pregunta para el método</item>
+        <item quantity="other">Faltan %1$d preguntas para el método</item>
+    </plurals>
+    <plurals name="job_screens">
+        <item quantity="one">%1$d pantalla</item>
+        <item quantity="other">%1$d pantallas</item>
+    </plurals>
 </resources>

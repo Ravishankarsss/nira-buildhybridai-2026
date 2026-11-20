@@ -367,7 +367,7 @@
     <string name="cost_enter_qty">Menge eingeben (Frage 3), um die Kosten zu sehen.</string>
     <string name="cost_per_pc">%1$s / Stück</string>
     <string name="cost_total">%1$s für %2$d Stück</string>
-    <string name="cost_breakdown">%1$d Siebe · fix %2$s · je Stück %3$s</string>
+    <string name="cost_breakdown">Siebe: %1$d · fix %2$s · je Stück %3$s</string>
     <string name="cost_ink">Farbe %1$s</string>
     <string name="cost_not_included">Nicht enthalten: %1$s</string>
     <string name="cost_needs">Für die Kosten fehlt: %1$s</string>
@@ -575,4 +575,32 @@
     <string name="act_no_quantity">Nicht ausgeführt: diese Menge wurde nicht genannt</string>
     <string name="act_not_allowed">Nicht ausgeführt: das kann NIRA noch nicht</string>
     <string name="act_undo">↶ Rückgängig</string>
+    <string name="ask_fab">✦ NIRA fragen</string>
+    <string name="tab_brief">Briefing</string>
+    <string name="tab_decision">Entscheidung</string>
+    <string name="tab_cost">Kosten</string>
+    <string name="tab_engineering">Technik</string>
+    <string name="job_untitled">Druckauftrag</string>
+    <string name="job_answer_brief">Beantworte das Briefing, um die Methode zu erhalten</string>
+    <string name="job_verified">✓ von Ravi geprüft</string>
+    <string name="job_sample_rates_note">* Beispielsätze, kein Angebot</string>
+    <string name="eng_report">Vollständiger Druckbericht</string>
+    <string name="eng_report_hint">Maske, Druckfläche, gemessene Farben, Separationswege, Fehlerkurve</string>
+    <string name="eng_films">Filme und Separation</string>
+    <string name="eng_films_hint">Ein Film pro Sieb, Proof und Gewebe</string>
+    <string name="eng_shades">Farbbibliothek</string>
+    <string name="eng_shades_hint">Druckfarben mit deinen Farbkarten abgleichen</string>
+    <string name="report_no_method">Noch keine Methode: beantworte die vier Briefing-Fragen auf der Auftragsseite.</string>
+    <string name="report_job_method">Methode des Auftrags: %1$s</string>
+    <string name="report_note_digital">Diese Methode ist digital, sie nutzt die Sieb-Separationen unten nicht. Sie dienen nur zum Vergleich, falls im Siebdruck gedruckt wird.</string>
+    <string name="report_note_screen">Die Siebe dieser Methode kommen aus der Separation unten.</string>
+    <string name="report_edit_brief">← Briefing auf der Auftragsseite ändern</string>
+    <plurals name="job_answer_left">
+        <item quantity="one">Noch %1$d Frage für die Methode</item>
+        <item quantity="other">Noch %1$d Fragen für die Methode</item>
+    </plurals>
+    <plurals name="job_screens">
+        <item quantity="one">%1$d Sieb</item>
+        <item quantity="other">%1$d Siebe</item>
+    </plurals>
 </resources>
