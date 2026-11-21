@@ -128,6 +128,18 @@ button { font: inherit; }
 .ticks li::before { content: "✓"; position: absolute; left: 0; color: var(--green); font-weight: 700; }
 .ticks.cols { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px 28px; margin-top: 26px; }
 
+/* Phone and web */
+.devices { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 40px; align-items: center; }
+.devices-visual { position: relative; padding: 10px 40px 30px 0; }
+.devices-visual::before { content: ""; position: absolute; inset: 0 10% 10% 0; background: radial-gradient(closest-side, rgba(85,214,232,0.22), transparent); filter: blur(20px); }
+.laptop { position: relative; margin: 0; }
+.laptop-screen { background: #1B2340; border: 1px solid rgba(255,255,255,0.14); border-radius: 16px 16px 4px 4px; padding: 12px; box-shadow: 0 30px 80px rgba(0,0,0,0.5); }
+.laptop-screen img { width: 100%; border-radius: 6px; aspect-ratio: 714 / 407; object-fit: cover; }
+.laptop-base { height: 16px; margin: 0 -6%; background: linear-gradient(180deg, #3A4466, #1B2340); border-radius: 0 0 16px 16px; position: relative; }
+.laptop-base::after { content: ""; position: absolute; left: 42%; right: 42%; top: 0; height: 6px; background: #0C1224; border-radius: 0 0 8px 8px; }
+.p-dev { width: 150px; height: 290px; right: 0; bottom: 0; border-radius: 24px; padding: 6px; }
+.p-dev img { border-radius: 19px; }
+
 /* Hybrid route */
 .route { display: flex; align-items: stretch; gap: 10px; flex-wrap: wrap; }
 .node { flex: 1 1 160px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px; font-family: Outfit, sans-serif; font-weight: 600; font-size: 17px; }
@@ -228,6 +240,7 @@ fieldset label { font-size: 14px; }
   .steps4 { grid-template-columns: repeat(2, 1fr); }
   .grid { grid-template-columns: repeat(2, 1fr); }
   .try-grid { grid-template-columns: 1fr; }
+  .devices { grid-template-columns: 1fr; }
 }
 @media (max-width: 640px) {
   .navlinks { display: none; }
@@ -244,8 +257,11 @@ fieldset label { font-size: 14px; }
   .people-grid { grid-template-columns: 1fr; grid-template-rows: 300px 220px 220px; }
   .pcard.big { grid-row: auto; }
   .maker { grid-template-columns: 1fr; gap: 20px; padding: 18px; }
+  .devices-visual { padding-right: 24px; }
+  .p-dev { width: 100px; height: 196px; }
   .maker-pic { max-width: 300px; }
   .route { flex-direction: column; }
+  .route .node { flex: none; }
   .arrow { transform: rotate(90deg); }
   .shot { height: 240px; }
 }
