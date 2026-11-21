@@ -101,7 +101,7 @@ button { font: inherit; }
 /* Maker */
 .maker { display: grid; grid-template-columns: 340px 1fr; gap: 44px; align-items: center; background: linear-gradient(135deg, rgba(169,155,255,0.10), rgba(85,214,232,0.06)); border: 1px solid var(--line); border-radius: 28px; padding: 28px; }
 .maker-mark { aspect-ratio: 1; border-radius: 20px; display: grid; place-items: center; background: radial-gradient(circle, rgba(169,155,255,0.30), rgba(85,214,232,0.08) 65%, transparent), var(--inner); }
-.maker-mark img { width: 55%; }
+.maker-pic { width: 100%; aspect-ratio: 1; border-radius: 20px; display: block; }
 .maker h2 { margin-bottom: 16px; }
 
 /* How it works */
@@ -243,7 +243,7 @@ fieldset label { font-size: 14px; }
   .people-grid { grid-template-columns: 1fr; grid-template-rows: 300px 220px 220px; }
   .pcard.big { grid-row: auto; }
   .maker { grid-template-columns: 1fr; gap: 20px; padding: 18px; }
-  .maker-mark { max-width: 220px; }
+  .maker-pic { max-width: 300px; }
   .route { flex-direction: column; }
   .arrow { transform: rotate(90deg); }
   .shot { height: 240px; }

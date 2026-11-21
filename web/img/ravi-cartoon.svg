@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <!-- Original NIRA illustration: cartoon of S Ravi Shankar (with his permission), holding NIRA on a phone. -->
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="40%" r="60%">
+      <stop offset="0" stop-color="#A99BFF" stop-opacity="0.45"/>
+      <stop offset="0.7" stop-color="#55D6E8" stop-opacity="0.10"/>
+      <stop offset="1" stop-color="#0C1224" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="shirt" x1="0" x2="1">
+      <stop offset="0" stop-color="#9CC6EE"/>
+      <stop offset="0.5" stop-color="#B4D7F6"/>
+      <stop offset="1" stop-color="#93BFE9"/>
+    </linearGradient>
+    <clipPath id="frame"><rect width="400" height="400" rx="20"/></clipPath>
+  </defs>
+  <g clip-path="url(#frame)">
+    <rect width="400" height="400" fill="#0C1224"/>
+    <circle cx="200" cy="170" r="190" fill="url(#bg)"/>
+    <!-- screen frame behind, the print floor -->
+    <rect x="276" y="60" width="96" height="70" rx="6" fill="none" stroke="#9AA6C2" stroke-width="6" opacity="0.35"/>
+    <path d="M290 75 h68 M290 90 h68 M290 105 h68 M290 120 h68" stroke="#9AA6C2" stroke-width="1.5" opacity="0.25"/>
+
+    <!-- shirt body -->
+    <path d="M92 400 L100 276 Q106 238 150 226 L182 214 L200 236 L218 214 L250 226 Q294 238 300 276 L308 400 Z" fill="url(#shirt)"/>
+    <path d="M250 226 Q294 238 300 276 L308 400 L272 400 Q276 300 250 226 Z" fill="#7FAEDC" opacity="0.35"/>
+    <!-- neck -->
+    <path d="M182 190 L218 190 L218 222 Q200 236 182 222 Z" fill="#8A5638"/>
+    <!-- collar -->
+    <path d="M180 210 L200 244 L168 236 L174 214 Z" fill="#C9E3FB" stroke="#86B3DE" stroke-width="2"/>
+    <path d="M220 210 L200 244 L232 236 L226 214 Z" fill="#C9E3FB" stroke="#86B3DE" stroke-width="2"/>
+    <!-- placket and buttons -->
+    <path d="M200 244 V400" stroke="#86B3DE" stroke-width="2.5"/>
+    <circle cx="200" cy="268" r="3.2" fill="#E4F0FC" stroke="#86B3DE"/>
+    <circle cx="200" cy="306" r="3.2" fill="#E4F0FC" stroke="#86B3DE"/>
+    <circle cx="200" cy="344" r="3.2" fill="#E4F0FC" stroke="#86B3DE"/>
+    <circle cx="200" cy="382" r="3.2" fill="#E4F0FC" stroke="#86B3DE"/>
+    <!-- pocket with pen -->
+    <rect x="224" y="282" width="46" height="52" rx="4" fill="none" stroke="#86B3DE" stroke-width="2.5"/>
+    <rect x="236" y="266" width="6" height="26" rx="3" fill="#2E5AAC"/>
+    <rect x="236" y="266" width="6" height="8" rx="3" fill="#F4F6FF"/>
+
+    <!-- left arm (rolled sleeve) holding the phone -->
+    <path d="M100 276 L88 368 L140 376 L148 300 Z" fill="url(#shirt)"/>
+    <rect x="84" y="352" width="60" height="20" rx="8" fill="#C9E3FB" stroke="#86B3DE" stroke-width="2" transform="rotate(6 114 362)"/>
+    <path d="M118 372 L170 322" stroke="#9C6644" stroke-width="30" stroke-linecap="round"/>
+    <path d="M150 336 l12 12" stroke="#E5484D" stroke-width="4" stroke-linecap="round"/>
+    <!-- phone showing NIRA -->
+    <rect x="160" y="250" width="54" height="92" rx="10" fill="#0C1224" stroke="#F4F6FF" stroke-width="3"/>
+    <rect x="168" y="262" width="30" height="7" rx="3.5" fill="#55D6E8"/>
+    <rect x="168" y="276" width="38" height="5" rx="2.5" fill="#9AA6C2"/>
+    <rect x="168" y="288" width="38" height="18" rx="4" fill="#FFC566" opacity="0.85"/>
+    <path d="M170 318 l5 5 9 -10" stroke="#7BE0A0" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="188" y="314" width="18" height="5" rx="2.5" fill="#9AA6C2"/>
+    <ellipse cx="176" cy="322" rx="15" ry="13" fill="#9C6644"/>
+    <path d="M166 312 q-4 -10 6 -14" stroke="#9C6644" stroke-width="9" stroke-linecap="round" fill="none"/>
+
+    <!-- head -->
+    <ellipse cx="147" cy="150" rx="10" ry="16" fill="#8A5638"/>
+    <ellipse cx="253" cy="150" rx="10" ry="16" fill="#8A5638"/>
+    <ellipse cx="200" cy="142" rx="53" ry="63" fill="#9C6644"/>
+    <path d="M150 160 Q156 196 200 204 Q244 196 250 160 Q246 192 200 198 Q154 192 150 160 Z" fill="#7C4A2F" opacity="0.45"/>
+    <!-- hair, short and side parted -->
+    <path d="M146 136 Q140 76 200 70 Q262 70 256 134 Q252 108 236 100 Q214 92 186 98 L176 112 L170 100 Q154 110 146 136 Z" fill="#1E140F"/>
+    <path d="M186 98 Q204 88 232 96" stroke="#3A2A20" stroke-width="3" fill="none" opacity="0.8"/>
+    <!-- brows, eyes, nose -->
+    <path d="M168 124 q14 -8 26 -3 M206 121 q13 -5 26 3" stroke="#1E140F" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <ellipse cx="182" cy="139" rx="6.5" ry="4.5" fill="#1E140F"/>
+    <ellipse cx="219" cy="139" rx="6.5" ry="4.5" fill="#1E140F"/>
+    <circle cx="184" cy="137.5" r="1.6" fill="#FFFFFF"/>
+    <circle cx="221" cy="137.5" r="1.6" fill="#FFFFFF"/>
+    <path d="M201 142 q-7 18 0 22 q5 2 8 -1" stroke="#7C4A2F" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <!-- moustache and smile -->
+    <path d="M176 174 Q188 162 201 170 Q214 162 226 174 Q214 177 201 174 Q188 177 176 174 Z" fill="#1E140F"/>
+    <path d="M186 184 q15 10 30 0" stroke="#5A2E1E" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+    <path d="M178 194 Q200 208 222 194" stroke="#1E140F" stroke-width="7" fill="none" opacity="0.18" stroke-linecap="round"/>
+  </g>
+</svg>
