@@ -91,7 +91,8 @@ button { font: inherit; }
   background: radial-gradient(circle at 30% 25%, rgba(169,155,255,0.35), transparent 60%), radial-gradient(circle at 80% 80%, rgba(85,214,232,0.25), transparent 55%), var(--card); }
 .pcard.big { grid-row: span 2; }
 .pcard:has(img)::before { display: none; }
-.pcard img[src$=".svg"] { object-fit: contain; object-position: center top; }
+.pcard img[src*="people-wear"] { object-position: center 62%; }
+.pcard img[src*="people-floor"] { object-position: center 52%; }
 .pcard::before { content: attr(data-icon); position: absolute; top: 38%; left: 50%; transform: translate(-50%, -50%); font-size: 56px; opacity: 0.55; }
 .pcard img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .pcard figcaption { position: absolute; left: 0; right: 0; bottom: 0; padding: 40px 20px 18px; background: linear-gradient(180deg, transparent, rgba(8,12,26,0.92)); }
@@ -101,7 +102,7 @@ button { font: inherit; }
 /* Maker */
 .maker { display: grid; grid-template-columns: 340px 1fr; gap: 44px; align-items: center; background: linear-gradient(135deg, rgba(169,155,255,0.10), rgba(85,214,232,0.06)); border: 1px solid var(--line); border-radius: 28px; padding: 28px; }
 .maker-mark { aspect-ratio: 1; border-radius: 20px; display: grid; place-items: center; background: radial-gradient(circle, rgba(169,155,255,0.30), rgba(85,214,232,0.08) 65%, transparent), var(--inner); }
-.maker-pic { width: 100%; aspect-ratio: 1; border-radius: 20px; display: block; }
+.maker-pic { width: 100%; aspect-ratio: 1; object-fit: cover; object-position: top; border-radius: 20px; display: block; }
 .maker h2 { margin-bottom: 16px; }
 
 /* How it works */
