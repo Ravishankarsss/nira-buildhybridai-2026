@@ -155,6 +155,10 @@ fun PrintDecisionCard(
     onAskOpenChange: (Boolean) -> Unit = {},
     /** Method, screens and cost for the job page's top bar. */
     onSummary: (JobSummary) -> Unit = {},
+    /** The fibre saved with this job (restored when the job is opened again). */
+    savedFibre: Fibre? = null,
+    /** Every fibre change, so the job can save it. */
+    onFibre: (Fibre?) -> Unit = {},
     choicesViewModel: PrintMethodChoicesViewModel = viewModel(viewModelStoreOwner = activityViewModelStoreOwner())
 ) {
     LaunchedEffect(Unit) { onLoadRules() }
@@ -162,6 +166,15 @@ fun PrintDecisionCard(
     val allChoices by choicesViewModel.choices.collectAsState()
     val choices = allChoices.takeIf { it.key == artworkKey } ?: PrintMethodChoices(artworkKey)
     val fibre = choices.fibre
+    // Restore the saved fibre once for this artwork, then report changes so the job keeps them.
+    var fibreRestored by remember(artworkKey) { mutableStateOf(savedFibre == null) }
+    LaunchedEffect(artworkKey, savedFibre) {
+        if (!fibreRestored) {
+            if (choices.fibre == null && savedFibre != null) choicesViewModel.update(artworkKey) { c -> c.copy(fibre = savedFibre) }
+            fibreRestored = true
+        }
+    }
+    LaunchedEffect(fibre, fibreRestored) { if (fibreRestored) onFibre(fibre) }
     fun show(part: CardSection) = section == CardSection.ALL || section == part
 
     DecisionShell(visible = section != CardSection.NONE) {

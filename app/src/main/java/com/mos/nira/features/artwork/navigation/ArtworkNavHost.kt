@@ -234,7 +234,9 @@ fun ArtworkNavHost(
                         section = section,
                         askOpen = askOpen,
                         onAskOpenChange = onAskOpen,
-                        onSummary = { viewModel.setJobSummary(it) }
+                        onSummary = { viewModel.setJobSummary(it) },
+                        savedFibre = uiState.briefFibre,
+                        onFibre = { viewModel.setBriefFibre(it) }
                     )
                 },
                 includePhotoEdgeArea = uiState.printJobInputs.includePhotoEdgeArea,

@@ -51,6 +51,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -111,7 +113,9 @@ data class ArtworkStudioUiState(
     val previewWarnings: List<GarmentPreview.ContrastWarning> = emptyList(),
     /** Without a white base every ink stays too close to the garment: the print almost disappears. */
     val previewInksVanish: Boolean = false,
-    // Print brief (fibre is kept with the method advice choices).
+    // Print brief. The fibre is used through the method advice choices; it is kept here too so it
+    // is saved with the job (JobAnswersStore) and restored when the job is opened again.
+    val briefFibre: com.mos.nira.core.advice.Fibre? = null,
     val briefFabric: String? = null,
     val briefQuantity: Int? = null,
     val briefFeel: Feel? = null,
@@ -140,7 +144,32 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
     init {
         loadSavedAnalyses()
         loadShadeLibraries()
+        // Keep each saved job's answers on the phone, so reopening it does not ask again.
+        viewModelScope.launch {
+            _uiState.map { s -> s.currentRecordId?.let { it to answersOf(s) } }
+                .distinctUntilChanged()
+                .collect { pair -> pair?.let { (id, answers) -> com.mos.nira.features.artwork.data.JobAnswersStore.save(getApplication(), id, answers) } }
+        }
     }
+
+    /** The answers the user gave on this job (what JobAnswersStore keeps). */
+    private fun answersOf(s: ArtworkStudioUiState) = com.mos.nira.features.artwork.data.JobAnswers(
+        backgroundPrinted = s.printJobInputs.artworkBackgroundAnswer,
+        garmentHex = s.previewGarmentHex,
+        fibre = s.briefFibre,
+        fabric = s.briefFabric,
+        quantity = s.briefQuantity,
+        feel = s.briefFeel,
+        inkSwaps = s.inkSwaps,
+        regionAnswers = s.printJobInputs.regionAnswers,
+        smallColourAnswers = s.printJobInputs.smallColourAnswers,
+        edgeBlendAnswer = s.printJobInputs.edgeBlendAnswer,
+        allUncertainAreFoldShadows = s.printJobInputs.allUncertainAreFoldShadows,
+        keepEdgeColours = s.printJobInputs.keepEdgeColours,
+        includePhotoEdgeArea = s.printJobInputs.includePhotoEdgeArea,
+        userGarmentHex = s.printJobInputs.userGarmentHex,
+        useWhiteBaseOverride = s.printJobInputs.useWhiteBaseOverride
+    )
 
     fun loadSavedAnalyses() {
         viewModelScope.launch {
@@ -291,6 +320,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                         targetGarmentHex = null
                     ),
                     previewGarmentHex = null,
+                    briefFibre = null,
                     briefFabric = null,
                     briefQuantity = null,
                     briefFeel = null,
@@ -566,6 +596,9 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
     fun openAnalysisRecord(record: ArtworkAnalysisRecord) {
         viewModelScope.launch {
             val cameraExif = readCameraExif(Uri.parse(record.imageUri))
+            // The answers given last time (empty for a job never answered).
+            val saved = com.mos.nira.features.artwork.data.JobAnswersStore.load(getApplication(), record.id)
+                ?: com.mos.nira.features.artwork.data.JobAnswers()
             _uiState.update {
                 it.copy(
                     printJobInputs = it.printJobInputs.copy(
@@ -574,20 +607,25 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                         inputKind = record.inputKind?.let { k -> InputKind.valueOf(k) } ?: InputKind.ARTWORK,
                         inputKindConfirmed = record.inputKindConfirmed,
                         cameraExif = cameraExif,
-                        regionAnswers = emptyList(),
-                        allUncertainAreFoldShadows = false,
-                        keepEdgeColours = false,
-                        edgeBlendAnswer = null,
-                        smallColourAnswers = emptyList(),
-                        includePhotoEdgeArea = false,
-                        artworkBackgroundAnswer = null,
-                        targetGarmentHex = null
+                        regionAnswers = saved.regionAnswers,
+                        allUncertainAreFoldShadows = saved.allUncertainAreFoldShadows,
+                        keepEdgeColours = saved.keepEdgeColours,
+                        edgeBlendAnswer = saved.edgeBlendAnswer,
+                        smallColourAnswers = saved.smallColourAnswers,
+                        includePhotoEdgeArea = saved.includePhotoEdgeArea,
+                        artworkBackgroundAnswer = saved.backgroundPrinted,
+                        targetGarmentHex = saved.garmentHex,
+                        userGarmentHex = saved.userGarmentHex,
+                        useWhiteBaseOverride = saved.useWhiteBaseOverride,
+                        orderPieces = saved.quantity?.coerceAtLeast(1) ?: it.printJobInputs.orderPieces
                     ),
-                    previewGarmentHex = null,
-                    briefFabric = null,
-                    briefQuantity = null,
-                    briefFeel = null,
-                    inkSwaps = emptyMap(),
+                    previewGarmentHex = saved.garmentHex,
+                    briefFibre = saved.fibre,
+                    briefFabric = saved.fabric,
+                    briefQuantity = saved.quantity,
+                    briefFeel = saved.feel,
+                    inkSwaps = saved.inkSwaps,
+                    jobSummary = null,
                     previewWithoutBase = null,
                     previewWithBase = null,
                     previewWarnings = emptyList(),
@@ -757,6 +795,10 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun setBriefFabric(fabric: String?) = _uiState.update { it.copy(briefFabric = fabric) }
+
+    fun setBriefFibre(fibre: com.mos.nira.core.advice.Fibre?) {
+        if (_uiState.value.briefFibre != fibre) _uiState.update { it.copy(briefFibre = fibre) }
+    }
 
     fun setBriefFeel(feel: Feel?) = _uiState.update { it.copy(briefFeel = feel) }
 
@@ -956,6 +998,8 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
     fun deleteAnalysis(id: String) {
         viewModelScope.launch {
             repository.deleteAnalysis(id)
+            com.mos.nira.features.artwork.data.JobAnswersStore.remove(getApplication(), id)
+            com.mos.nira.features.dashboard.JobSummaryStore.remove(getApplication(), id)
             val updated = repository.getAllAnalyses()
             _uiState.update { current ->
                 current.copy(
