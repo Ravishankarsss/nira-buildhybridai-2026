@@ -8,6 +8,18 @@ Built for the **#BuildHybridAI 2026** hackathon (Google / Firebase).
 
 > Status: work in progress for the hackathon. See [docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md) for measured results and [docs/UNFINISHED.md](docs/UNFINISHED.md) for what is not finished.
 
+## For judges
+
+- **Web (Chrome):** https://nira-90d39.web.app — choose the job, press **Explain this card**, **Ask NIRA** or **Translate**. Each answer shows the real source (`ON_DEVICE` or `IN_CLOUD`) and time.
+- **Android:** judge build "NIRA judge"; steps in [docs/JUDGE_ACCESS_PLAN.md](docs/JUDGE_ACCESS_PLAN.md).
+- **Where on-device AI runs:** Gemini Nano in Chrome (tested 18 Nov 2026, `ON_DEVICE`). The test phone (vivo V60e) has no on-device model, so the Android app shows `IN_CLOUD` there; it never pretends.
+
+## Honest limits
+
+- The garment preview is a model, not a proof. Costs use sample factory rates, not a quote.
+- Many rule values are labelled "assumption" until confirmed on the floor.
+- First analysis of a large tonal artwork takes about 30–40 s on a mid-range phone (measured, 22 Nov 2026).
+
 ## Who it is for
 
 Screen-print technicians, merchandisers, garment designers and sampling teams who must decide, before a sample is made, how many colours an artwork really has, which print method fits the fabric, how many screens are needed and roughly how much ink the job uses.
@@ -64,7 +76,7 @@ Requirements: Android Studio with JDK 17 or newer, Android SDK 36.
 All engineering values live in `app/src/main/assets`, never in Kotlin:
 
 - `print_rules.json`: mesh, halftone, white base, garment mask, ink model, recommendation tolerances, resolution, ink deposit, dye calculator formulas.
-- `print_techniques.json`: 28 print techniques with artwork fit, fibre suitability, parameters, risks and sources.
+- `print_techniques.json`: 29 print techniques with artwork fit, fibre suitability, parameters, risks and sources.
 - `nira_demo_shades.csv`: 150 generic demo shades made for NIRA.
 - `prompts/`: AI prompt text.
 
