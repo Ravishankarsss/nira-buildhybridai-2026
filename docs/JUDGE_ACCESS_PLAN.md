@@ -116,4 +116,5 @@ Never claim a path works for judges until it has been tested from a device that 
 - reCAPTCHA Enterprise site key created by Ravi (domains nira-90d39.web.app, nira-90d39.firebaseapp.com, localhost); NIRA Web registered in App Check. The key is in the git-ignored `web/firebase-config.js` (a site key is public and domain-limited).
 - Published with Ravi's approval: `firebase deploy --only hosting` -> https://nira-90d39.web.app (6 files).
 - Live test from the Claude browser pane (a browser with no registered debug token): "Explain this card" answered `IN_CLOUD` in 3,888 ms with App Check enforced; the number, method-name and colour-code checks passed. So reCAPTCHA Enterprise App Check works on the hosted page.
+- 22 Nov: web page v3 published (people section, built-by section, phone and web section, FAQ). Live "Explain this card" answered `IN_CLOUD` in 3,289 ms; all checks passed. The laptop screenshot on the page is this real answer.
 - Still to do: open the link from a computer or phone that is not Ravi's.
