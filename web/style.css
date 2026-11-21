@@ -108,3 +108,68 @@ details.dev summary {
   text-transform: uppercase;
 }
 details.dev[open] summary { margin-bottom: 10px; }
+
+/* ---------- Web v2: first screen, flow, decision card, AI tabs, activity ---------- */
+:root { --amber: #FFC566; --green: #7BE0A0; --inner: #0F1526; }
+a { color: var(--cyan); }
+.hero { padding-top: 8px; }
+.brandrow { display: flex; align-items: center; gap: 14px; }
+.mark { width: 56px; height: 56px; border-radius: 14px; }
+.hero h1 { font-size: 28px; line-height: 1.25; margin: 22px 0 8px; }
+.badges { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 6px; }
+.badge { background: var(--card); border: 1px solid rgba(255,255,255,0.08); border-radius: 999px; padding: 6px 12px; font-size: 13px; }
+.links { font-size: 14px; }
+
+.flow { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; counter-reset: step; }
+.flow li { background: var(--inner); border-radius: 12px; padding: 10px; position: relative; }
+.flow li b { display: block; font-size: 14px; }
+.flow li span { color: var(--muted); font-size: 12px; }
+.flow li.ai { border: 1px solid var(--violet); }
+.flow li.ai b { color: var(--violet); }
+
+.decision { margin-top: 12px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+.chip { background: var(--inner); color: var(--cyan); border: 1px solid rgba(85,214,232,0.3); border-radius: 999px; padding: 6px 12px; font-size: 13px; font-weight: 500; margin: 0; }
+.chips.static .chip { color: var(--white); border-color: rgba(255,255,255,0.12); }
+button.chip { cursor: pointer; }
+.note { color: var(--amber); font-size: 13px; margin: 6px 0; }
+.method { background: var(--inner); border-radius: 14px; padding: 12px; margin: 10px 0; }
+.method-name { font-size: 20px; font-weight: 800; color: var(--cyan); margin: 2px 0; }
+.ok { color: var(--green); }
+.steps { margin: 4px 0 10px; padding-left: 20px; font-size: 14px; }
+.plain { list-style: none; padding: 0; margin: 4px 0 10px; font-size: 14px; }
+.plain li { margin-bottom: 4px; }
+.others summary, .facts-all summary { cursor: pointer; color: var(--cyan); font-size: 13px; margin: 6px 0; }
+.facts-all { margin-top: 10px; }
+
+.tabs { display: flex; gap: 6px; margin-bottom: 10px; }
+.tab { background: var(--inner); color: var(--white); margin: 0; flex: 1; font-weight: 600; }
+.tab.on { background: var(--cyan); color: var(--navy); }
+.answer { margin-top: 10px; background: var(--inner); border-radius: 12px; padding: 12px; }
+.src { color: var(--cyan); font-weight: 700; font-size: 13px; margin: 0 0 6px; }
+.check { color: var(--muted); font-size: 12px; margin: 6px 0 0; }
+.kept { color: var(--amber); }
+
+.chat { display: flex; flex-direction: column; gap: 8px; margin: 8px 0; }
+.chat .q { align-self: flex-end; background: var(--cyan); color: var(--navy); border-radius: 12px; padding: 8px 12px; margin: 0; max-width: 85%; }
+.chat .a { background: var(--inner); border-radius: 12px; padding: 10px 12px; max-width: 92%; }
+.chat .a p { margin: 0 0 4px; }
+.askrow { display: flex; gap: 8px; }
+.askrow input { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); background: var(--inner); color: var(--white); font: inherit; }
+.askrow button { margin: 0; }
+button.secondary { background: var(--inner); color: var(--cyan); border: 1px solid rgba(85,214,232,0.4); }
+
+.totals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
+.totals div { background: var(--inner); border-radius: 12px; padding: 10px; text-align: center; }
+.totals b { display: block; font-size: 22px; color: var(--cyan); }
+.totals span { color: var(--muted); font-size: 12px; }
+.activity { list-style: none; padding: 0; margin: 0 0 10px; font-size: 13px; }
+.activity li { padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+.pill { margin-left: auto; border-radius: 8px; padding: 2px 8px; font-size: 11px; font-weight: 700; }
+.pill.passed { color: var(--green); background: rgba(123,224,160,0.12); }
+.pill.held { color: var(--amber); background: rgba(255,197,102,0.12); }
+.pill.error { color: var(--error); background: rgba(255,138,128,0.12); }
+.foot { margin-top: 20px; text-align: center; }
+@media (max-width: 480px) { .hero h1 { font-size: 23px; } .totals b { font-size: 18px; } }
+
+#availability, #chrome-version { white-space: nowrap; }
