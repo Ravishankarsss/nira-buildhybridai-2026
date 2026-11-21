@@ -152,6 +152,46 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+    /**
+     * The engine results of the last few jobs opened in this session, so opening a job again with
+     * the same answers is instant. Memory only; never saved. The answers (inputs) must match exactly.
+     */
+    private class EngineSnapshot(
+        val inputs: PrintJobInputs,
+        val bitmap: Bitmap,
+        val partA: PartAResult,
+        val partB: PartBResult?,
+        val partC: PartCResult?,
+        val partD: PartDResult?,
+        val strategy: SeparationStrategyType,
+        val userPickedStrategy: Boolean
+    )
+
+    private val engineCache = object : LinkedHashMap<String, EngineSnapshot>(4, 0.75f, true) {
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, EngineSnapshot>?) = size > 3
+    }
+
+    /** Keeps the open job's engine results (only when Part A has finished). */
+    private fun rememberCurrentEngine() {
+        val s = _uiState.value
+        val id = s.currentRecordId ?: return
+        val a = s.partAResult ?: return
+        val bmp = s.selectedBitmap ?: return
+        if (s.isComputingPrintReport || s.isComputingPartB || s.isComputingPartC || s.isComputingPartD) return
+        engineCache[id] = EngineSnapshot(s.printJobInputs, bmp, a, s.partBResult, s.partCResult, s.partDResult, s.selectedStrategyType, s.userPickedStrategy)
+    }
+
+    /** The same answers, ignoring what only describes the file (camera information is read again). */
+    private fun sameAnswers(a: PrintJobInputs, b: PrintJobInputs) = a.copy(cameraExif = null) == b.copy(cameraExif = null)
+
+    /** Engine work off the main thread, with its time in logcat (tag NiraTiming) for speed checks on the phone. */
+    private suspend fun <T> timedDefault(label: String, block: suspend kotlinx.coroutines.CoroutineScope.() -> T): T {
+        val start = android.os.SystemClock.elapsedRealtime()
+        val result = withContext(Dispatchers.Default, block)
+        android.util.Log.i("NiraTiming", "$label ${android.os.SystemClock.elapsedRealtime() - start} ms")
+        return result
+    }
+
     /** The answers the user gave on this job (what JobAnswersStore keeps). */
     private fun answersOf(s: ArtworkStudioUiState) = com.mos.nira.features.artwork.data.JobAnswers(
         backgroundPrinted = s.printJobInputs.artworkBackgroundAnswer,
@@ -421,7 +461,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                     garmentColorHex = garment?.hex
                 )
 
-                val extractionResult = withContext(Dispatchers.Default) {
+                val extractionResult = timedDefault("palette") {
                     ColorExtractor.extractPalette(currentBitmap, config)
                 }
 
@@ -594,6 +634,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun openAnalysisRecord(record: ArtworkAnalysisRecord) {
+        rememberCurrentEngine()
         viewModelScope.launch {
             val cameraExif = readCameraExif(Uri.parse(record.imageUri))
             // The answers given last time (empty for a job never answered).
@@ -648,8 +689,6 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
 
             val context = getApplication<Application>()
             val uri = Uri.parse(record.imageUri)
-            val bitmap = ArtworkImageProcessor.decodeBitmapSafely(context, uri)
-
             val meta = ArtworkMetadata(
                 fileName = record.fileName,
                 width = record.width,
@@ -658,6 +697,30 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                 mimeType = "image/*"
             )
 
+            // Opened earlier in this session with the same answers: show those results at once.
+            val cached = engineCache[record.id]?.takeIf { sameAnswers(it.inputs, _uiState.value.printJobInputs) }
+            if (cached != null) {
+                android.util.Log.i("NiraTiming", "reopen from session cache")
+                _uiState.update {
+                    it.copy(
+                        selectedImageUri = uri,
+                        selectedBitmap = cached.bitmap,
+                        metadata = meta,
+                        analysisState = AnalysisState.Success,
+                        partAResult = cached.partA,
+                        partBResult = cached.partB,
+                        partCResult = cached.partC,
+                        partDResult = cached.partD,
+                        selectedStrategyType = cached.strategy,
+                        userPickedStrategy = cached.userPickedStrategy
+                    )
+                }
+                refreshPaletteShadeMatches()
+                computeGarmentPreview()
+                return@launch
+            }
+
+            val bitmap = ArtworkImageProcessor.decodeBitmapSafely(context, uri)
             _uiState.update {
                 it.copy(
                     selectedImageUri = uri,
@@ -859,7 +922,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                 return@launch
             }
             val swaps = state.inkSwaps
-            val result = withContext(Dispatchers.Default) {
+            val result = timedDefault("preview") {
                 val input = previewInput(partA, bitmap, mask)
                 val without = renderPreview(input, swaps, garmentHex, withWhiteBase = false)
                 val with = renderPreview(input, swaps, garmentHex, withWhiteBase = true)
@@ -1124,7 +1187,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                 val smallColourRules = printRulesRepository.getSmallColourRules()
                 val backgroundRules = printRulesRepository.getPhotoBackgroundRules()
                 val artworkBackgroundRules = printRulesRepository.getArtworkBackgroundRules()
-                val result = withContext(Dispatchers.Default) {
+                val result = timedDefault("partA") {
                     val maxDim = 2048
                     val width = bitmap.width
                     val height = bitmap.height
@@ -1205,7 +1268,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                 val selectedStrat = _uiState.value.selectedStrategyType
                 val mixedRules = printRulesRepository.getMixedSeparationRules()
 
-                val result = withContext(Dispatchers.Default) {
+                val result = timedDefault("partB") {
                     val maxDim = 1024
                     val width = bitmap.width
                     val height = bitmap.height
@@ -1298,7 +1361,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                 val decisionRules = printRulesRepository.getSeparationDecisionRules()
                 val meshRules = printRulesRepository.getScreenMeshRules()
 
-                val result = withContext(Dispatchers.Default) {
+                val result = timedDefault("partC") {
                     val maxDim = 800
                     val width = bitmap.width
                     val height = bitmap.height
@@ -1360,7 +1423,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
             _uiState.update { it.copy(isComputingPartD = true) }
             try {
                 val depositRules = printRulesRepository.getMeshDepositRules()
-                val partD = withContext(Dispatchers.Default) {
+                val partD = timedDefault("partD") {
                     SeparationStrategyEngine.calculatePartD(
                         partA = partA,
                         partC = partC,
