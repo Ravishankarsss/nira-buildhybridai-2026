@@ -131,6 +131,10 @@ fun ColorIntelligenceScreen(
     // Method, screens and cost for the top bar (from the decision card).
     jobSummary: com.mos.nira.features.advice.JobSummary? = null,
     jobTitle: String = "",
+    /** The print on the chosen garment for the top bar (falls back to the artwork). */
+    headerBitmap: Bitmap? = null,
+    /** The buyer's order quantity, shown in the top bar once answered. */
+    orderQuantity: Int? = null,
     // The artwork's resolution is below the rules' limit for fine detail (a "NIRA noticed" note).
     lowResolution: Boolean = false,
     includePhotoEdgeArea: Boolean = false,
@@ -271,10 +275,11 @@ fun ColorIntelligenceScreen(
         item {
             Spacer(modifier = Modifier.height(10.dp))
             JobSummaryBar(
-                bitmap = bitmap,
+                bitmap = headerBitmap ?: bitmap,
                 title = jobTitle,
                 summary = jobSummary,
-                colourLine = when {
+                // Quantity first: the long colour note may be cut at the end of the line.
+                colourLine = (orderQuantity?.let { stringResource(R.string.sheet_quantity, it) + " · " } ?: "") + (when {
                     measuredPrintColours != null -> {
                         val flagged = measuredPrintColours.count { it.possibleFoldShadow || it.possibleEdgeBlend || it.possibleSmallColour }
                         val sure = measuredPrintColours.size - flagged
@@ -283,7 +288,7 @@ fun ColorIntelligenceScreen(
                     }
                     isMeasuringPrintColours -> stringResource(R.string.colour_measuring)
                     else -> stringResource(R.string.colour_clusters_title, palette.size)
-                },
+                }),
                 onBack = onBack
             )
             // NIRA noticed: the page's own questions first, then what the decision card noticed.

@@ -348,6 +348,7 @@
     <string name="sep_coverage">প্রিন্টে কালির কভারেজ</string>
     <string name="job_artwork">আর্টওয়ার্ক · %1$s</string>
     <string name="job_photo">পোশাকের ছবি · %1$s</string>
+    <string name="job_artwork_on">%1$s-এ আর্টওয়ার্ক</string>
     <string name="rates_title">কারখানার দর</string>
     <string name="rates_hint">আপনার কারখানার নিজস্ব দর, শুধু এই ফোনে রাখা। NIRA এগুলো দিয়ে অর্ডারের খরচ হিসাব করে; কখনও দাম বানায় না।</string>
     <string name="rates_currency">মুদ্রা</string>

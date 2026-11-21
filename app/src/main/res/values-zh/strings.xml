@@ -347,6 +347,7 @@
     <string name="sep_coverage">油墨覆盖率</string>
     <string name="job_artwork">图稿 · %1$s</string>
     <string name="job_photo">成衣照片 · %1$s</string>
+    <string name="job_artwork_on">%1$s上的图案</string>
     <string name="rates_title">工厂单价</string>
     <string name="rates_hint">您工厂自己的单价，只保存在本手机上。NIRA 用它们计算订单成本，从不编造价格。</string>
     <string name="rates_currency">货币</string>

@@ -349,6 +349,7 @@
     <string name="sep_coverage">Cobertura de tinta</string>
     <string name="job_artwork">Diseño · %1$s</string>
     <string name="job_photo">Foto de prenda · %1$s</string>
+    <string name="job_artwork_on">Diseño sobre %1$s</string>
     <string name="rates_title">Tarifas de la fábrica</string>
     <string name="rates_hint">Los precios propios de su fábrica, solo en este teléfono. NIRA los usa para calcular el coste del pedido; nunca inventa un precio.</string>
     <string name="rates_currency">Moneda</string>

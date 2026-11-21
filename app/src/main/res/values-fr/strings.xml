@@ -349,6 +349,7 @@
     <string name="sep_coverage">Couverture d\'encre</string>
     <string name="job_artwork">Motif · %1$s</string>
     <string name="job_photo">Photo de vêtement · %1$s</string>
+    <string name="job_artwork_on">Motif sur %1$s</string>
     <string name="rates_title">Tarifs de l\'usine</string>
     <string name="rates_hint">Les prix de votre usine, gardés sur ce téléphone. NIRA s\'en sert pour calculer le coût de la commande ; il n\'invente jamais de prix.</string>
     <string name="rates_currency">Devise</string>

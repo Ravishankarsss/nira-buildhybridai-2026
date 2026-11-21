@@ -192,11 +192,24 @@ fun ArtworkNavHost(
                 },
                 jobSummary = uiState.jobSummary,
                 lowResolution = uiState.partAResult?.lowResolutionWarning != null,
-                jobTitle = com.mos.nira.features.artwork.presentation.jobTitle(
-                    uiState.metadata?.fileName ?: "",
-                    uiState.printJobInputs.inputKind.name,
-                    uiState.partAResult?.measuredPalette?.map { it.hex }.orEmpty()
-                ),
+                jobTitle = run {
+                    // An artwork with a chosen garment: "Artwork on navy cotton" (the answers, no AI).
+                    val g = uiState.previewGarmentHex
+                    if (uiState.printJobInputs.inputKind == com.mos.nira.core.image.InputKind.ARTWORK && g != null) {
+                        val locale = androidx.compose.ui.platform.LocalConfiguration.current.locales[0]
+                        val garment = listOfNotNull(
+                            com.mos.nira.features.artwork.presentation.colourName(g),
+                            uiState.briefFibre?.let { com.mos.nira.features.advice.fibreLabel(it) }
+                        ).joinToString(" ") { it.lowercase(locale) }
+                        androidx.compose.ui.res.stringResource(com.mos.nira.R.string.job_artwork_on, garment)
+                    } else com.mos.nira.features.artwork.presentation.jobTitle(
+                        uiState.metadata?.fileName ?: "",
+                        uiState.printJobInputs.inputKind.name,
+                        uiState.partAResult?.measuredPalette?.map { it.hex }.orEmpty()
+                    )
+                },
+                headerBitmap = if (uiState.partBResult?.isDarkGarment == true) uiState.previewWithBase else uiState.previewWithoutBase,
+                orderQuantity = uiState.briefQuantity,
                 decisionContent = { section, askOpen, onAskOpen ->
                     val isPhotoD = uiState.printJobInputs.inputKind == com.mos.nira.core.image.InputKind.PHOTO
                     val measuredD = uiState.partAResult?.garmentProfile?.estimatedHex

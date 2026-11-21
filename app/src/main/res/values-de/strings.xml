@@ -348,6 +348,7 @@
     <string name="sep_coverage">Farbdeckung des Drucks</string>
     <string name="job_artwork">Motiv · %1$s</string>
     <string name="job_photo">Kleidungsfoto · %1$s</string>
+    <string name="job_artwork_on">Motiv auf %1$s</string>
     <string name="rates_title">Fabrikpreise</string>
     <string name="rates_hint">Die eigenen Preise Ihrer Fabrik, nur auf diesem Telefon. NIRA berechnet damit die Auftragskosten und erfindet nie einen Preis.</string>
     <string name="rates_currency">Währung</string>

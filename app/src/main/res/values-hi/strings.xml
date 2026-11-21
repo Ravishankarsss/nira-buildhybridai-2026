@@ -348,6 +348,7 @@
     <string name="sep_coverage">प्रिंट में स्याही का कवरेज</string>
     <string name="job_artwork">आर्टवर्क · %1$s</string>
     <string name="job_photo">गारमेंट फ़ोटो · %1$s</string>
+    <string name="job_artwork_on">%1$s पर आर्टवर्क</string>
     <string name="rates_title">फ़ैक्टरी दरें</string>
     <string name="rates_hint">आपकी फ़ैक्टरी की अपनी दरें, केवल इसी फ़ोन पर। NIRA इनसे ऑर्डर की लागत निकालता है; कोई दर खुद नहीं बनाता।</string>
     <string name="rates_currency">मुद्रा</string>

@@ -347,6 +347,7 @@
     <string name="sep_coverage">Độ phủ mực</string>
     <string name="job_artwork">Hình in · %1$s</string>
     <string name="job_photo">Ảnh áo · %1$s</string>
+    <string name="job_artwork_on">Hình in trên %1$s</string>
     <string name="rates_title">Đơn giá xưởng</string>
     <string name="rates_hint">Đơn giá riêng của xưởng bạn, chỉ lưu trên điện thoại này. NIRA dùng để tính chi phí đơn hàng; không bao giờ tự đặt giá.</string>
     <string name="rates_currency">Tiền tệ</string>
