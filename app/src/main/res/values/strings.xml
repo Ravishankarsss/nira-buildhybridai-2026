@@ -244,6 +244,7 @@
     <string name="preview_contrast">%1$s is hard to see on this garment: lightness difference %2$d (limit %3$s).</string>
     <string name="preview_use_white">Use white</string>
     <string name="preview_use_cream">Use cream</string>
+    <string name="preview_vanish">Without a white base these inks almost disappear on this garment.</string>
     <string name="preview_swapped">%1$s shown as %2$s in the preview.</string>
     <string name="preview_undo">Undo</string>
     <string name="preview_fabric_measured">Fabric measured from the photo: %1$s. Wrong? Tap the garment in the photo below.</string>

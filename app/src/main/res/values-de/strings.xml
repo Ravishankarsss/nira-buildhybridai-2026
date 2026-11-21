@@ -245,6 +245,7 @@
     <string name="preview_contrast">%1$s ist auf diesem Kleidungsstück schwer zu sehen: Helligkeitsunterschied %2$d (Grenze %3$s).</string>
     <string name="preview_use_white">Weiß verwenden</string>
     <string name="preview_use_cream">Creme verwenden</string>
+    <string name="preview_vanish">Ohne weiße Unterlage verschwinden diese Farben auf diesem Kleidungsstück fast.</string>
     <string name="preview_swapped">%1$s wird in der Vorschau als %2$s gezeigt.</string>
     <string name="preview_undo">Rückgängig</string>
     <string name="preview_fabric_measured">Aus dem Foto gemessener Stoff: %1$s. Falsch? Tippen Sie unten im Foto auf das Kleidungsstück.</string>

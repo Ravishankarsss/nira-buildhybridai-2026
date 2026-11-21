@@ -76,7 +76,9 @@ fun GarmentPreviewCard(
     onSwap: (from: String, to: String?) -> Unit,
     onTapGarment: (normX: Float, normY: Float) -> Unit,
     /** False on the job page, where the brief's question 1 already has the garment chips. */
-    showGarmentChips: Boolean = true
+    showGarmentChips: Boolean = true,
+    /** Without a white base every ink stays too close to the garment (from the contrast limit). */
+    inksVanish: Boolean = false
 ) {
     if (rules == null) return
     var customOpen by remember { mutableStateOf(false) }
@@ -171,6 +173,10 @@ fun GarmentPreviewCard(
                         }
                     }
                 }
+                if (inksVanish) {
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text(stringResource(R.string.preview_vanish), color = PAmber, fontSize = 12.sp, lineHeight = 17.sp)
+                }
             }
 
             // Contrast check: inks too close to the garment in lightness, with a one-tap swap.
@@ -181,10 +187,16 @@ fun GarmentPreviewCard(
                         stringResource(R.string.preview_contrast, colourName(w.inkHex), w.deltaL, rules.contrastMinDeltaL.toInt().toString()),
                         color = PAmber, fontSize = 12.sp, lineHeight = 17.sp
                     )
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        rules.swapColours.forEach { (name, hex) ->
-                            val from = swaps.entries.firstOrNull { it.value == w.inkHex }?.key ?: w.inkHex
-                            OutlinedButton(onClick = { onSwap(from, hex) }) {
+                    // Only swaps that would themselves be visible on this garment.
+                    val useful = garmentHex?.let { GarmentPreview.usefulSwaps(rules.swapColours, it, rules.contrastMinDeltaL) } ?: emptyList()
+                    if (useful.isNotEmpty()) Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        useful.forEach { (name, hex) ->
+                            OutlinedButton(onClick = {
+                                w.sameNameHexes.forEach { shade ->
+                                    val from = swaps.entries.firstOrNull { it.value == shade }?.key ?: shade
+                                    onSwap(from, hex)
+                                }
+                            }) {
                                 Text(
                                     when (name) {
                                         "white" -> stringResource(R.string.preview_use_white)

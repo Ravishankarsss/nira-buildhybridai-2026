@@ -246,6 +246,7 @@
     <string name="preview_contrast">%1$s se verá poco en esta prenda: diferencia de luminosidad %2$d (límite %3$s).</string>
     <string name="preview_use_white">Usar blanco</string>
     <string name="preview_use_cream">Usar crema</string>
+    <string name="preview_vanish">Sin base blanca, estas tintas casi desaparecen en esta prenda.</string>
     <string name="preview_swapped">%1$s se muestra como %2$s en la vista previa.</string>
     <string name="preview_undo">Deshacer</string>
     <string name="preview_fabric_measured">Tela medida en la foto: %1$s. ¿Incorrecto? Toque la prenda en la foto de abajo.</string>

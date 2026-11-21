@@ -245,6 +245,7 @@
     <string name="preview_contrast">এই পোশাকে %1$s কম দেখা যাবে: উজ্জ্বলতার পার্থক্য %2$d (সীমা %3$s)।</string>
     <string name="preview_use_white">সাদা নিন</string>
     <string name="preview_use_cream">ক্রিম নিন</string>
+    <string name="preview_vanish">সাদা বেস ছাড়া এই কালিগুলো এই পোশাকে প্রায় হারিয়ে যায়।</string>
     <string name="preview_swapped">প্রিভিউতে %1$s কে %2$s হিসেবে দেখানো হয়েছে।</string>
     <string name="preview_undo">আগের মতো</string>
     <string name="preview_fabric_measured">ছবি থেকে মাপা কাপড়: %1$s। ভুল? নিচের ছবিতে পোশাকের ওপর ট্যাপ করুন।</string>

@@ -68,6 +68,38 @@ class GarmentPreviewTest {
     }
 
     @Test
+    fun oneWarningPerColourNameListsEveryShade() {
+        val warnings = listOf(
+            GarmentPreview.ContrastWarning("#0A1A40", 18),
+            GarmentPreview.ContrastWarning("#001F3F", 0),
+            GarmentPreview.ContrastWarning("#5B2C83", 25)
+        )
+        val names = mapOf("#0A1A40" to "navy", "#001F3F" to "navy", "#5B2C83" to "purple")
+        val merged = GarmentPreview.mergeByName(warnings) { names.getValue(it) }
+        assertEquals(2, merged.size)
+        val navy = merged.first { it.inkHex == "#001F3F" }
+        assertEquals(0, navy.deltaL)
+        assertEquals(listOf("#0A1A40", "#001F3F"), navy.sameNameHexes)
+    }
+
+    @Test
+    fun noWhiteSwapOnAWhiteGarment() {
+        val onWhite = GarmentPreview.usefulSwaps(rules.swapColours, "#FFFFFF", rules.contrastMinDeltaL).map { it.first }
+        assertTrue("white" !in onWhite)
+        assertTrue("cream" !in onWhite)
+        val onBlack = GarmentPreview.usefulSwaps(rules.swapColours, "#000000", rules.contrastMinDeltaL).map { it.first }
+        assertEquals(listOf("white", "cream"), onBlack)
+    }
+
+    @Test
+    fun inksVanishWithoutBaseOnBlackButNotOnWhite() {
+        val inks = listOf("#E53935", "#FDD835", "#1E88E5")
+        assertTrue(GarmentPreview.inksVanishWithoutBase(inks, "#000000", rules.contrastMinDeltaL))
+        assertTrue(!GarmentPreview.inksVanishWithoutBase(inks, "#FFFFFF", rules.contrastMinDeltaL))
+        assertTrue(!GarmentPreview.inksVanishWithoutBase(emptyList(), "#000000", rules.contrastMinDeltaL))
+    }
+
+    @Test
     fun swappingToWhiteClearsTheWarningOnBlack() {
         val white = rules.swapColours.first { it.first == "white" }.second
         assertTrue(GarmentPreview.contrastWarnings(listOf(white), "#000000", rules.contrastMinDeltaL).isEmpty())

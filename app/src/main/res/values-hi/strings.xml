@@ -245,6 +245,7 @@
     <string name="preview_contrast">इस गारमेंट पर %1$s मुश्किल से दिखेगा: हल्केपन का अंतर %2$d (सीमा %3$s)।</string>
     <string name="preview_use_white">सफ़ेद लें</string>
     <string name="preview_use_cream">क्रीम लें</string>
+    <string name="preview_vanish">सफ़ेद बेस के बिना ये स्याहियाँ इस गारमेंट पर लगभग गायब हो जाती हैं।</string>
     <string name="preview_swapped">पूर्वावलोकन में %1$s को %2$s दिखाया गया।</string>
     <string name="preview_undo">पूर्ववत करें</string>
     <string name="preview_fabric_measured">फ़ोटो से मापा गया कपड़ा: %1$s। गलत है? नीचे फ़ोटो में गारमेंट पर टैप करें।</string>

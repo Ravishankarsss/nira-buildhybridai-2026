@@ -109,6 +109,8 @@ data class ArtworkStudioUiState(
     val previewWithoutBase: Bitmap? = null,
     val previewWithBase: Bitmap? = null,
     val previewWarnings: List<GarmentPreview.ContrastWarning> = emptyList(),
+    /** Without a white base every ink stays too close to the garment: the print almost disappears. */
+    val previewInksVanish: Boolean = false,
     // Print brief (fibre is kept with the method advice choices).
     val briefFabric: String? = null,
     val briefQuantity: Int? = null,
@@ -811,7 +813,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
             if (rules == null || partA == null || mask == null || bitmap == null || garmentHex == null ||
                 partA.maskWidth <= 0 || partA.maskHeight <= 0
             ) {
-                _uiState.update { it.copy(previewRules = rules, previewWithoutBase = null, previewWithBase = null, previewWarnings = emptyList()) }
+                _uiState.update { it.copy(previewRules = rules, previewWithoutBase = null, previewWithBase = null, previewWarnings = emptyList(), previewInksVanish = false) }
                 return@launch
             }
             val swaps = state.inkSwaps
@@ -820,13 +822,20 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                 val without = renderPreview(input, swaps, garmentHex, withWhiteBase = false)
                 val with = renderPreview(input, swaps, garmentHex, withWhiteBase = true)
                 val inks = partA.measuredPalette.map { swaps[it.hex] ?: it.hex }.distinct()
-                Triple(without, with, GarmentPreview.contrastWarnings(inks, garmentHex, rules.contrastMinDeltaL))
+                val warnings = GarmentPreview.mergeByName(GarmentPreview.contrastWarnings(inks, garmentHex, rules.contrastMinDeltaL))
+                val vanish = GarmentPreview.inksVanishWithoutBase(inks, garmentHex, rules.contrastMinDeltaL)
+                PreviewResult(without, with, warnings, vanish)
             }
             _uiState.update {
-                it.copy(previewRules = rules, previewWithoutBase = result.first, previewWithBase = result.second, previewWarnings = result.third)
+                it.copy(
+                    previewRules = rules, previewWithoutBase = result.without, previewWithBase = result.with,
+                    previewWarnings = result.warnings, previewInksVanish = result.vanish
+                )
             }
         }
     }
+
+    private class PreviewResult(val without: Bitmap, val with: Bitmap, val warnings: List<GarmentPreview.ContrastWarning>, val vanish: Boolean)
 
     /** The analysed image and print mask at preview size (at most 480 px on the long side). */
     private class PreviewInput(val px: IntArray, val mask: BooleanArray, val w: Int, val h: Int, val palette: List<MeasuredColor>)

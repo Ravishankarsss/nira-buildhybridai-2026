@@ -245,6 +245,7 @@
     <string name="preview_contrast">%1$s இந்த ஆடையில் தெரிவது கடினம்: ஒளிர்வு வேறுபாடு %2$d (வரம்பு %3$s).</string>
     <string name="preview_use_white">வெள்ளை பயன்படுத்து</string>
     <string name="preview_use_cream">கிரீம் பயன்படுத்து</string>
+    <string name="preview_vanish">வெள்ளை அடித்தளம் இல்லாமல் இந்த மைகள் இந்த ஆடையில் கிட்டத்தட்ட மறைந்துவிடும்.</string>
     <string name="preview_swapped">முன்னோட்டத்தில் %1$s, %2$s ஆகக் காட்டப்படுகிறது.</string>
     <string name="preview_undo">செயல்தவிர்</string>
     <string name="preview_fabric_measured">புகைப்படத்திலிருந்து அளந்த துணி: %1$s. தவறா? கீழே உள்ள புகைப்படத்தில் ஆடையைத் தொடவும்.</string>

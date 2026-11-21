@@ -246,6 +246,7 @@
     <string name="preview_contrast">%1$s se verra mal sur ce vêtement : écart de clarté %2$d (limite %3$s).</string>
     <string name="preview_use_white">Utiliser le blanc</string>
     <string name="preview_use_cream">Utiliser le crème</string>
+    <string name="preview_vanish">Sans sous-couche blanche, ces encres disparaissent presque sur ce vêtement.</string>
     <string name="preview_swapped">%1$s est affiché en %2$s dans l\'aperçu.</string>
     <string name="preview_undo">Annuler</string>
     <string name="preview_fabric_measured">Tissu mesuré sur la photo : %1$s. Erreur ? Touchez le vêtement sur la photo ci-dessous.</string>

@@ -244,6 +244,7 @@
     <string name="preview_contrast">%1$s 在此成衣上不易看清：明度差 %2$d（下限 %3$s）。</string>
     <string name="preview_use_white">改用白色</string>
     <string name="preview_use_cream">改用米色</string>
+    <string name="preview_vanish">没有白色打底，这些油墨在此服装上几乎看不见。</string>
     <string name="preview_swapped">预览中 %1$s 显示为 %2$s。</string>
     <string name="preview_undo">撤销</string>
     <string name="preview_fabric_measured">从照片测得的面料：%1$s。不对？请点按下方照片中的成衣。</string>

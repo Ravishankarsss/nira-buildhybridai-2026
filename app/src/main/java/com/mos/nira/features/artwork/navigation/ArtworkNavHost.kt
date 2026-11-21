@@ -182,6 +182,7 @@ fun ArtworkNavHost(
                         withoutBase = uiState.previewWithoutBase,
                         withBase = uiState.previewWithBase,
                         warnings = uiState.previewWarnings,
+                        inksVanish = uiState.previewInksVanish,
                         swaps = uiState.inkSwaps,
                         onGarment = { hex -> viewModel.setPreviewGarment(hex) },
                         onSwap = { from, to -> viewModel.swapInk(from, to) },

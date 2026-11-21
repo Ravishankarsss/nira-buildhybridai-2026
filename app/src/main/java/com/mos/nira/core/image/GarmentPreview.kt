@@ -46,8 +46,11 @@ object GarmentPreview {
         }
     }
 
-    /** An ink that will be hard to see on the garment: its lightness is too close. */
-    data class ContrastWarning(val inkHex: String, val deltaL: Int)
+    /**
+     * An ink that will be hard to see on the garment: its lightness is too close. [sameNameHexes] are
+     * all measured shades with the same colour name (one warning per name; a swap covers them all).
+     */
+    data class ContrastWarning(val inkHex: String, val deltaL: Int, val sameNameHexes: List<String> = listOf(inkHex))
 
     /** Inks whose lightness differs from the garment's by less than [minDeltaL] (L* units). */
     fun contrastWarnings(inkHexes: List<String>, garmentHex: String, minDeltaL: Double): List<ContrastWarning> {
@@ -55,6 +58,41 @@ object GarmentPreview {
         return inkHexes.mapNotNull { hex ->
             val d = abs(lab(hex).l - gl)
             if (d < minDeltaL) ContrastWarning(hex, d.roundToInt()) else null
+        }
+    }
+
+    /**
+     * One warning per colour name ("Navy" once, not once per navy shade). The kept warning is the
+     * closest one (lowest lightness difference); it lists every shade so a swap changes them all.
+     */
+    fun mergeByName(warnings: List<ContrastWarning>, nameOf: (String) -> String = ColourName::english): List<ContrastWarning> =
+        warnings.groupBy { nameOf(it.inkHex) }.values.map { group ->
+            group.minBy { it.deltaL }.copy(sameNameHexes = group.map { it.inkHex })
+        }
+
+    /**
+     * Swap colours that are worth offering on this garment: only those that pass the same contrast
+     * limit themselves (no "Use white" on a white garment).
+     */
+    fun usefulSwaps(swapColours: List<Pair<String, String>>, garmentHex: String, minDeltaL: Double): List<Pair<String, String>> {
+        val gl = lab(garmentHex).l
+        return swapColours.filter { (_, hex) -> abs(lab(hex).l - gl) >= minDeltaL }
+    }
+
+    /**
+     * True when every ink, printed without a white base (the transparent ink model above), stays
+     * within [minDeltaL] of the garment's lightness: the print almost disappears without a base.
+     */
+    fun inksVanishWithoutBase(inkHexes: List<String>, garmentHex: String, minDeltaL: Double): Boolean {
+        if (inkHexes.isEmpty()) return false
+        val g = ColorConverter.hexToRgb(garmentHex)
+        val gl = lab(garmentHex).l
+        return inkHexes.all { hex ->
+            val ink = ColorConverter.hexToRgb(hex)
+            val r = ColorConverter.linearToSRgb(lin(g.r) * lin(ink.r))
+            val gg = ColorConverter.linearToSRgb(lin(g.g) * lin(ink.g))
+            val b = ColorConverter.linearToSRgb(lin(g.b) * lin(ink.b))
+            abs(ColorConverter.rgbToLab(r, gg, b).l - gl) < minDeltaL
         }
     }
 
