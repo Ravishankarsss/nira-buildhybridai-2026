@@ -112,4 +112,8 @@ Never claim a path works for judges until it has been tested from a device that 
 - Fresh install on the vivo V60e (new app, empty data): Home → Ask NIRA → one question answered `IN_CLOUD` in 11,400 ms with App Check enforcement on. So storing the token before App Check starts works on a clean start.
 - Still to do: the same test on a second phone or the emulator (section 6); revoke the token after judging.
 
-Web: code ready (reCAPTCHA Enterprise on the hosted page, debug provider on localhost; `firebase.json`, `.firebaserc`). Waiting for the site key and Ravi's approval to deploy.
+21 Nov 2026 — Web:
+- reCAPTCHA Enterprise site key created by Ravi (domains nira-90d39.web.app, nira-90d39.firebaseapp.com, localhost); NIRA Web registered in App Check. The key is in the git-ignored `web/firebase-config.js` (a site key is public and domain-limited).
+- Published with Ravi's approval: `firebase deploy --only hosting` -> https://nira-90d39.web.app (6 files).
+- Live test from the Claude browser pane (a browser with no registered debug token): "Explain this card" answered `IN_CLOUD` in 3,888 ms with App Check enforced; the number, method-name and colour-code checks passed. So reCAPTCHA Enterprise App Check works on the hosted page.
+- Still to do: open the link from a computer or phone that is not Ravi's.
