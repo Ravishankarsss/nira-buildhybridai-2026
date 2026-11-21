@@ -349,6 +349,9 @@
     <string name="job_artwork">கலைப்படைப்பு · %1$s</string>
     <string name="job_photo">ஆடைப் புகைப்படம் · %1$s</string>
     <string name="job_artwork_on">%1$s மீது ஆர்ட்வொர்க்</string>
+    <string name="working_colours">வேலை நடக்கிறது: அச்சு நிறங்களை அளக்கிறது…</string>
+    <string name="working_separations">வேலை நடக்கிறது: பிரிப்புகளை ஒப்பிடுகிறது…</string>
+    <string name="working_screens">வேலை நடக்கிறது: ஸ்கிரீன்களும் மையும்…</string>
     <string name="rates_title">தொழிற்சாலை விலைகள்</string>
     <string name="rates_hint">உங்கள் தொழிற்சாலையின் சொந்த விலைகள்; இந்த போனில் மட்டும் சேமிக்கப்படும். ஆர்டர் செலவைக் கணக்கிட NIRA இவற்றைப் பயன்படுத்துகிறது; விலையை ஒருபோதும் தானாக உருவாக்காது.</string>
     <string name="rates_currency">நாணயம்</string>

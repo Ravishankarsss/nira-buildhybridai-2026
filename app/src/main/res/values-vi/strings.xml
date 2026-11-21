@@ -348,6 +348,9 @@
     <string name="job_artwork">Hình in · %1$s</string>
     <string name="job_photo">Ảnh áo · %1$s</string>
     <string name="job_artwork_on">Hình in trên %1$s</string>
+    <string name="working_colours">Đang xử lý: đo màu in…</string>
+    <string name="working_separations">Đang xử lý: so sánh tách màu…</string>
+    <string name="working_screens">Đang xử lý: khung lụa và mực…</string>
     <string name="rates_title">Đơn giá xưởng</string>
     <string name="rates_hint">Đơn giá riêng của xưởng bạn, chỉ lưu trên điện thoại này. NIRA dùng để tính chi phí đơn hàng; không bao giờ tự đặt giá.</string>
     <string name="rates_currency">Tiền tệ</string>

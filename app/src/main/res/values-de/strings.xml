@@ -349,6 +349,9 @@
     <string name="job_artwork">Motiv · %1$s</string>
     <string name="job_photo">Kleidungsfoto · %1$s</string>
     <string name="job_artwork_on">Motiv auf %1$s</string>
+    <string name="working_colours">Läuft: Druckfarben werden gemessen…</string>
+    <string name="working_separations">Läuft: Separationen werden verglichen…</string>
+    <string name="working_screens">Läuft: Siebe und Farbe…</string>
     <string name="rates_title">Fabrikpreise</string>
     <string name="rates_hint">Die eigenen Preise Ihrer Fabrik, nur auf diesem Telefon. NIRA berechnet damit die Auftragskosten und erfindet nie einen Preis.</string>
     <string name="rates_currency">Währung</string>

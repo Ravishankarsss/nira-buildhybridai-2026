@@ -135,6 +135,8 @@ fun ColorIntelligenceScreen(
     headerBitmap: Bitmap? = null,
     /** The buyer's order quantity, shown in the top bar once answered. */
     orderQuantity: Int? = null,
+    /** The engine step now running (a string resource), or null when the engine is idle. */
+    workingStep: Int? = null,
     // The artwork's resolution is below the rules' limit for fine detail (a "NIRA noticed" note).
     lowResolution: Boolean = false,
     includePhotoEdgeArea: Boolean = false,
@@ -278,6 +280,7 @@ fun ColorIntelligenceScreen(
                 bitmap = headerBitmap ?: bitmap,
                 title = jobTitle,
                 summary = jobSummary,
+                workingStep = workingStep,
                 // Quantity first: the long colour note may be cut at the end of the line.
                 colourLine = (orderQuantity?.let { stringResource(R.string.sheet_quantity, it) + " · " } ?: "") + (when {
                     measuredPrintColours != null -> {
@@ -885,7 +888,8 @@ private fun JobSummaryBar(
     title: String,
     summary: com.mos.nira.features.advice.JobSummary?,
     colourLine: String,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    workingStep: Int? = null
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -929,6 +933,17 @@ private fun JobSummaryBar(
                     if (summary.verifiedByRavi) stringResource(R.string.job_verified) else null
                 )
                 Text(parts.joinToString("  ·  "), color = TextWhite, fontSize = 13.sp)
+            }
+            // The engine is still working: say which step, so numbers are not read as final.
+            if (workingStep != null) {
+                Spacer(Modifier.height(8.dp))
+                androidx.compose.material3.LinearProgressIndicator(
+                    modifier = Modifier.fillMaxWidth().height(3.dp).clip(RoundedCornerShape(2.dp)),
+                    color = Cyan,
+                    trackColor = Color.White.copy(alpha = 0.1f)
+                )
+                Spacer(Modifier.height(4.dp))
+                Text(stringResource(workingStep), color = TextMuted, fontSize = 12.sp)
             }
         }
     }

@@ -348,6 +348,9 @@
     <string name="job_artwork">Artwork · %1$s</string>
     <string name="job_photo">Garment photo · %1$s</string>
     <string name="job_artwork_on">Artwork on %1$s</string>
+    <string name="working_colours">Working: measuring the print colours…</string>
+    <string name="working_separations">Working: comparing separations…</string>
+    <string name="working_screens">Working: screens and ink…</string>
     <string name="rates_title">Factory rates</string>
     <string name="rates_hint">Your factory\'s own prices, kept only on this phone. NIRA uses them to work out the order cost; it never invents a price.</string>
     <string name="rates_currency">Currency</string>

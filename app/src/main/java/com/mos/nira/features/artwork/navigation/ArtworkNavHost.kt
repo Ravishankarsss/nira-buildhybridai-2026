@@ -210,6 +210,12 @@ fun ArtworkNavHost(
                 },
                 headerBitmap = if (uiState.partBResult?.isDarkGarment == true) uiState.previewWithBase else uiState.previewWithoutBase,
                 orderQuantity = uiState.briefQuantity,
+                workingStep = when {
+                    uiState.isComputingPrintReport -> com.mos.nira.R.string.working_colours
+                    uiState.isComputingPartB -> com.mos.nira.R.string.working_separations
+                    uiState.isComputingPartC || uiState.isComputingPartD -> com.mos.nira.R.string.working_screens
+                    else -> null
+                },
                 decisionContent = { section, askOpen, onAskOpen ->
                     val isPhotoD = uiState.printJobInputs.inputKind == com.mos.nira.core.image.InputKind.PHOTO
                     val measuredD = uiState.partAResult?.garmentProfile?.estimatedHex

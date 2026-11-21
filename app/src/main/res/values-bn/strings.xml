@@ -349,6 +349,9 @@
     <string name="job_artwork">আর্টওয়ার্ক · %1$s</string>
     <string name="job_photo">পোশাকের ছবি · %1$s</string>
     <string name="job_artwork_on">%1$s-এ আর্টওয়ার্ক</string>
+    <string name="working_colours">কাজ চলছে: প্রিন্টের রং মাপা হচ্ছে…</string>
+    <string name="working_separations">কাজ চলছে: সেপারেশন তুলনা…</string>
+    <string name="working_screens">কাজ চলছে: স্ক্রিন ও কালি…</string>
     <string name="rates_title">কারখানার দর</string>
     <string name="rates_hint">আপনার কারখানার নিজস্ব দর, শুধু এই ফোনে রাখা। NIRA এগুলো দিয়ে অর্ডারের খরচ হিসাব করে; কখনও দাম বানায় না।</string>
     <string name="rates_currency">মুদ্রা</string>
