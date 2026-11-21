@@ -4,148 +4,238 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>NIRA · Print engineering with hybrid AI</title>
-  <meta name="description" content="NIRA turns garment artwork into a print decision with an engine and an expert's rules; Gemini explains, answers and translates, on-device first.">
+  <meta name="description" content="NIRA turns garment artwork into a print decision: an engine measures, a print expert's rules decide, and Gemini explains, answers and acts, on-device first, with every number checked.">
   <link rel="icon" href="nira_mark.webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main>
-    <!-- 1. First screen -->
-    <header class="hero">
-      <div class="brandrow">
-        <img src="nira_mark.webp" alt="" class="mark">
-        <div>
-          <p class="brand">NIRA</p>
-          <p class="tag">TEXTILE INTELLIGENCE</p>
-        </div>
+  <!-- Top bar -->
+  <nav class="topbar">
+    <div class="wrap topbar-in">
+      <a href="#top" class="logo"><img src="nira_mark.webp" alt=""><span>NIRA</span></a>
+      <div class="navlinks">
+        <a href="#how">How it works</a>
+        <a href="#features">Features</a>
+        <a href="#hybrid">Hybrid AI</a>
+        <a href="#faq">FAQ</a>
       </div>
-      <h1>From garment artwork to a print decision, with AI you can check.</h1>
-      <p class="muted">NIRA's engine measures the artwork; a print expert's rules decide the method, screens, white base, mesh and ink. Gemini explains, answers and translates, on this device first, and every number it says is checked against the engine.</p>
-      <div class="badges">
-        <span class="badge">⚙ Engine on the phone</span>
-        <span class="badge">✦ Hybrid AI: on-device first</span>
-        <span class="badge">✓ Rules by a print expert</span>
-      </div>
-      <p class="links"><a href="#job">Try a real job ↓</a> · <a href="#android">Get the Android app</a> · <a href="#safety">Privacy and safety</a></p>
-    </header>
+      <a href="#try" class="btn small">Try a real job</a>
+    </div>
+  </nav>
 
-    <!-- 2. How NIRA works -->
-    <section class="card">
-      <h2>How NIRA works</h2>
-      <ol class="flow">
-        <li><b>Artwork or photo</b><span>The garment print, on the phone</span></li>
-        <li><b>Engine</b><span>Measures colours, print area, screens, ink (no AI)</span></li>
-        <li><b>Rules</b><span>An expert's rules file picks the method (no AI)</span></li>
-        <li><b>Decision</b><span>Method, screens, base, cost, risks</span></li>
-        <li class="ai"><b>AI</b><span>Explains, answers, translates, and acts on request. Numbers checked.</span></li>
+  <main id="top">
+    <!-- Hero -->
+    <section class="hero wrap">
+      <div class="hero-text">
+        <p class="eyebrow">Garment print engineering · Hybrid AI</p>
+        <h1>Artwork in.<br><span class="grad">Print decision out.</span></h1>
+        <p class="lead">NIRA measures garment artwork on the phone, a print expert's rules choose the method, screens, white base, ink and cost, and Gemini explains, answers and acts, on-device first. Every number the AI says is checked against the engine.</p>
+        <div class="cta">
+          <a href="#try" class="btn">Try a real job</a>
+          <a href="#features" class="btn ghost">See the app</a>
+        </div>
+        <ul class="stats">
+          <li><b>29</b><span>print techniques in the rules file</span></li>
+          <li><b>9</b><span>app languages, Tamil first</span></li>
+          <li><b>0</b><span>engineering values made by AI</span></li>
+        </ul>
+      </div>
+      <div class="hero-visual">
+        <figure class="phone p-main"><img src="img/job.webp" alt="NIRA job page: method, screens, cost per piece and what NIRA noticed"></figure>
+        <figure class="phone p-side"><img src="img/ask.webp" alt="Ask NIRA showing the navy ink as royal blue on the preview, with Undo"></figure>
+        <div class="float f1">💡 NIRA noticed 3 things</div>
+        <div class="float f2">☁️ In the cloud · 3.6 s · ✓ checked</div>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="wrap section" id="how">
+      <p class="eyebrow">How it works</p>
+      <h2>A print master's thinking, in four steps</h2>
+      <ol class="steps4">
+        <li><span class="num">1</span><h3>Measure</h3><p>Photograph a garment or open the artwork. The engine finds the print colours, the print area, the screens and the ink. No AI.</p></li>
+        <li><span class="num">2</span><h3>Decide</h3><p>Answer four questions: garment colour, fibre, quantity, feel. The expert's rules file picks the method and says how sure it is. No AI.</p></li>
+        <li><span class="num">3</span><h3>Cost</h3><p>Factory rates turn screens and ink into a cost per piece, with Cost-Down options and front + back orders. No AI.</p></li>
+        <li class="ai"><span class="num">4</span><h3>Explain &amp; act</h3><p>Gemini explains the card, answers questions by voice or text, reads the buyer's brief and translates the sheet. Every number checked.</p></li>
       </ol>
     </section>
 
-    <p id="setup-error" class="error" hidden></p>
-
-    <!-- 3. A real job as a decision card -->
-    <section class="card" id="job">
-      <h2>A real NIRA job</h2>
-      <p class="muted small">Computed by the NIRA Android app's engine and rules files (no AI). The AI below only explains, answers and translates these facts. Text only, never an image.</p>
-      <label class="label" for="job-select">Job</label>
-      <select id="job-select">
-        <option value="samples/card_navy_logo.json">Navy + red logo on a navy cotton T-shirt</option>
-        <option value="samples/card_white_logo.json">Navy + red logo on a white cotton T-shirt</option>
-      </select>
-      <div id="decision" class="decision"></div>
-      <details class="facts-all">
-        <summary>All engine facts sent to the AI</summary>
-        <p id="job-saved" class="muted small"></p>
-        <ul id="job-facts" class="facts"></ul>
-      </details>
-    </section>
-
-    <!-- 4–5. AI on this job -->
-    <section class="card">
-      <h2>AI on this job</h2>
-      <div class="tabs" role="tablist">
-        <button class="tab on" data-tab="explain" role="tab">Explain</button>
-        <button class="tab" data-tab="ask" role="tab">Ask NIRA</button>
-        <button class="tab" data-tab="translate" role="tab">Translate</button>
-      </div>
-
-      <div class="pane" id="pane-explain">
-        <p class="muted small">Gemini explains the card in plain words, on this computer when Chrome's model is ready, otherwise in the cloud.</p>
-        <button id="explain" type="button">✦ Explain this card</button>
-        <div id="explain-result" class="answer" hidden>
-          <p class="src" id="e-src"></p>
-          <p id="e-text"></p>
-          <p id="e-check" class="check"></p>
-        </div>
-      </div>
-
-      <div class="pane" id="pane-ask" hidden>
-        <p class="muted small">Ask about this job. Answers come only from the facts above; an answer with a number that is not in the facts or your question is held back.</p>
-        <div id="chips" class="chips"></div>
-        <div id="chat" class="chat"></div>
-        <form id="ask-form" class="askrow">
-          <input id="ask-input" type="text" maxlength="300" placeholder="Ask about this print job…" autocomplete="off">
-          <button type="submit" id="ask-send">Ask</button>
-        </form>
-      </div>
-
-      <div class="pane" id="pane-translate" hidden>
-        <p class="muted small">Translate the card for the buyer or the floor. A line is used only if every number stays the same; otherwise it stays in English.</p>
-        <select id="lang">
-          <option value="Tamil">தமிழ் (Tamil)</option>
-          <option value="Hindi">हिन्दी (Hindi)</option>
-          <option value="Bengali">বাংলা (Bengali)</option>
-          <option value="Chinese">中文 (Chinese)</option>
-          <option value="Vietnamese">Tiếng Việt (Vietnamese)</option>
-          <option value="Spanish">Español (Spanish)</option>
-          <option value="French">Français (French)</option>
-          <option value="German">Deutsch (German)</option>
-        </select>
-        <button id="translate" type="button">✦ Translate the card</button>
-        <div id="translate-result" class="answer" hidden>
-          <p class="src" id="t-src"></p>
-          <p id="t-summary" class="check"></p>
-          <ul id="t-lines" class="facts"></ul>
-        </div>
+    <!-- Features with real screenshots -->
+    <section class="wrap section" id="features">
+      <p class="eyebrow">The app</p>
+      <h2>Built for the print floor and the buyer desk</h2>
+      <div class="grid">
+        <article class="feat">
+          <div class="shot"><img src="img/decision.webp" alt="Decision card" loading="lazy"></div>
+          <h3>Decision card</h3>
+          <p>Method, second choices, screens, white base and risks. Each line says where it came from, how sure it is, and whether the expert checked it on the floor.</p>
+        </article>
+        <article class="feat">
+          <div class="shot"><img src="img/cost.webp" alt="Order cost" loading="lazy"></div>
+          <h3>Cost and Cost-Down</h3>
+          <p>Cost per piece from the factory's own rates, in any currency. Cost-Down shows what merging colours or switching method saves, with a before and after preview.</p>
+        </article>
+        <article class="feat">
+          <div class="shot"><img src="img/ask.webp" alt="Ask NIRA acting on a request" loading="lazy"></div>
+          <h3>Ask NIRA: it talks and acts</h3>
+          <p>Ask by voice in Tamil or English. "Make the navy ink royal blue", "1000 pieces", "open the sheet in Spanish": NIRA does it, checks it, and offers Undo.</p>
+        </article>
+        <article class="feat">
+          <div class="shot"><img src="img/home.webp" alt="NIRA home" loading="lazy"></div>
+          <h3>One home for every job</h3>
+          <p>Start from an artwork file or a garment photo, ask about all your jobs, and see each job's method and cost at a glance.</p>
+        </article>
+        <article class="feat">
+          <div class="shot"><img src="img/activity.webp" alt="AI activity" loading="lazy"></div>
+          <h3>AI you can audit</h3>
+          <p>Every AI request is listed: on this phone or in the cloud, how long it took, and whether NIRA's checks passed it or held it back.</p>
+        </article>
+        <article class="feat text-only">
+          <h3>Also inside</h3>
+          <ul class="ticks">
+            <li>Buyer brief reader: photo of a tech-pack page fills the brief</li>
+            <li>Print Decision Sheet for the buyer, in 9 languages</li>
+            <li>Floor job sheet in Tamil</li>
+            <li>Technique library: 29 techniques with their rules</li>
+            <li>"NIRA noticed": low resolution, ink hard to see, savings</li>
+            <li>Confidential mode: nothing leaves the phone</li>
+          </ul>
+        </article>
       </div>
     </section>
 
-    <!-- 6. Hybrid AI on this page -->
-    <section class="card">
-      <h2>Hybrid AI on this page</h2>
-      <div class="totals">
-        <div><b id="c-device">0</b><span>💻 on this device</span></div>
-        <div><b id="c-cloud">0</b><span>☁️ in the cloud</span></div>
-        <div><b id="c-held">0</b><span>🛡 held back by checks</span></div>
+    <!-- Hybrid AI -->
+    <section class="wrap section" id="hybrid">
+      <p class="eyebrow">Hybrid AI</p>
+      <h2>On-device first. Cloud when needed. Checked always.</h2>
+      <div class="route">
+        <div class="node">Your question<br><small>text, voice or a page photo</small></div>
+        <div class="arrow">→</div>
+        <div class="node">Firebase App Check<br><small>reCAPTCHA here · app token on Android</small></div>
+        <div class="arrow">→</div>
+        <div class="node split"><span>💻 Gemini Nano on this device</span><span class="or">or</span><span>☁️ Gemini in the cloud</span><small>through Firebase AI Logic</small></div>
+        <div class="arrow">→</div>
+        <div class="node verify">NIRA's checks<br><small>numbers · colour codes · actions</small></div>
       </div>
-      <ul id="activity" class="activity"><li class="muted small">No AI requests yet on this page.</li></ul>
-      <div class="row"><span class="label">On-device model in this Chrome (Prompt API)</span><span id="availability" class="value">checking…</span></div>
-      <div class="row"><span class="label">Chrome version</span><span id="chrome-version" class="value">—</span></div>
-      <button id="prepare" type="button" class="secondary">Prepare on-device model</button>
-      <p id="download" class="muted small"></p>
-    </section>
-
-    <!-- Android -->
-    <section class="card" id="android">
-      <h2>The Android app</h2>
-      <p>The full NIRA runs on an Android phone: photograph a garment or pick an artwork, answer four questions, and get the method, screens, ink, cost and a shareable sheet. Ask NIRA by voice, in Tamil or English, and it can act: change the preview, set the quantity, open the sheet.</p>
-      <p class="muted small">Judges: the download link for the "NIRA judge" app is in the Devpost testing instructions. It installs beside any other app and needs Android 8.0 or later.</p>
-    </section>
-
-    <!-- 7. Privacy and safety -->
-    <section class="card" id="safety">
-      <h2>Privacy and safety</h2>
-      <ul class="plain">
-        <li>✓ Every AI request goes through Firebase AI Logic, protected by Firebase App Check (reCAPTCHA Enterprise on this page).</li>
-        <li>✓ This page sends text only: the job's facts and your question. Never an image.</li>
-        <li>✓ On-device first: when Chrome's built-in model is ready, the answer is made on this computer.</li>
-        <li>✓ The source shown (on this device / in the cloud) is the one the Firebase SDK reports.</li>
-        <li>✓ Numbers come from the engine. An AI answer with a number that is not in the facts is not shown.</li>
-        <li>✓ The engine's values are a model result for planning; a strike-off is needed before bulk production.</li>
+      <ul class="ticks cols">
+        <li>Text goes on-device first; a page photo or a voice question goes to the cloud only after the user taps.</li>
+        <li>Confidential mode never uses the cloud.</li>
+        <li>The source shown is the one the Firebase SDK reports, never a guess.</li>
+        <li>Actions come from a fixed list and are validated before they run.</li>
       </ul>
     </section>
 
-    <details class="card dev">
+    <!-- Try it live -->
+    <section class="wrap section" id="try">
+      <p class="eyebrow">Try it live</p>
+      <h2>A real NIRA job, explained here</h2>
+      <p id="setup-error" class="error" hidden></p>
+      <div class="try-grid">
+        <div class="card" id="job">
+          <h4>The job</h4>
+          <p class="muted small">Computed by the NIRA Android app's engine and rules files (no AI). The AI only explains, answers and translates these facts. Text only.</p>
+          <label class="label" for="job-select">Job</label>
+          <select id="job-select">
+            <option value="samples/card_navy_logo.json">Navy + red logo on a navy cotton T-shirt</option>
+            <option value="samples/card_white_logo.json">Navy + red logo on a white cotton T-shirt</option>
+          </select>
+          <div id="decision" class="decision"></div>
+          <details class="facts-all">
+            <summary>All engine facts sent to the AI</summary>
+            <p id="job-saved" class="muted small"></p>
+            <ul id="job-facts" class="facts"></ul>
+          </details>
+        </div>
+
+        <div class="col">
+          <div class="card">
+            <h4>AI on this job</h4>
+            <div class="tabs" role="tablist">
+              <button class="tab on" data-tab="explain" role="tab">Explain</button>
+              <button class="tab" data-tab="ask" role="tab">Ask NIRA</button>
+              <button class="tab" data-tab="translate" role="tab">Translate</button>
+            </div>
+            <div class="pane" id="pane-explain">
+              <p class="muted small">Gemini explains the card in plain words, on this computer when Chrome's model is ready, otherwise in the cloud.</p>
+              <button id="explain" type="button" class="btn">✦ Explain this card</button>
+              <div id="explain-result" class="answer" hidden>
+                <p class="src" id="e-src"></p>
+                <p id="e-text"></p>
+                <p id="e-check" class="check"></p>
+              </div>
+            </div>
+            <div class="pane" id="pane-ask" hidden>
+              <p class="muted small">Answers come only from this job's facts; a number that is not in the facts or your question is held back.</p>
+              <div id="chips" class="chips"></div>
+              <div id="chat" class="chat"></div>
+              <form id="ask-form" class="askrow">
+                <input id="ask-input" type="text" maxlength="300" placeholder="Ask about this print job…" autocomplete="off">
+                <button type="submit" id="ask-send" class="btn">Ask</button>
+              </form>
+            </div>
+            <div class="pane" id="pane-translate" hidden>
+              <p class="muted small">For the buyer or the floor. A line is used only if every number stays the same; otherwise it stays in English.</p>
+              <select id="lang">
+                <option value="Tamil">தமிழ் (Tamil)</option>
+                <option value="Hindi">हिन्दी (Hindi)</option>
+                <option value="Bengali">বাংলা (Bengali)</option>
+                <option value="Chinese">中文 (Chinese)</option>
+                <option value="Vietnamese">Tiếng Việt (Vietnamese)</option>
+                <option value="Spanish">Español (Spanish)</option>
+                <option value="French">Français (French)</option>
+                <option value="German">Deutsch (German)</option>
+              </select>
+              <button id="translate" type="button" class="btn">✦ Translate the card</button>
+              <div id="translate-result" class="answer" hidden>
+                <p class="src" id="t-src"></p>
+                <p id="t-summary" class="check"></p>
+                <ul id="t-lines" class="facts"></ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h4>Hybrid AI on this page</h4>
+            <div class="totals">
+              <div><b id="c-device">0</b><span>💻 on this device</span></div>
+              <div><b id="c-cloud">0</b><span>☁️ in the cloud</span></div>
+              <div><b id="c-held">0</b><span>🛡 held back</span></div>
+            </div>
+            <ul id="activity" class="activity"><li class="muted small">No AI requests yet on this page.</li></ul>
+            <div class="row"><span class="label">On-device model in this Chrome</span><span id="availability" class="value">checking…</span></div>
+            <div class="row"><span class="label">Chrome version</span><span id="chrome-version" class="value">—</span></div>
+            <button id="prepare" type="button" class="btn ghost small">Prepare on-device model</button>
+            <p id="download" class="muted small"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="wrap section" id="faq">
+      <p class="eyebrow">Questions</p>
+      <h2>Straight answers</h2>
+      <div class="faq">
+        <details><summary>Does the AI choose the print method?</summary><p>No. NIRA's engine measures the artwork and a print expert's rules file chooses the method. The AI explains the decision, answers questions about it and carries out requests from a fixed list. It never invents a method, price or ink figure.</p></details>
+        <details><summary>What happens if the AI makes up a number?</summary><p>The answer is not shown. Code compares every number in the answer with the engine's facts and the user's own question; anything else is held back with the reason, and it is counted on the AI activity list.</p></details>
+        <details><summary>What runs on the device, and what in the cloud?</summary><p>Text questions go to the on-device model first (Gemini Nano in Chrome, or on supported Android phones) and fall back to Gemini in the cloud. Page photos and voice go to the cloud only after the user taps. The source shown is the one the Firebase SDK reports.</p></details>
+        <details><summary>Does my artwork leave the phone?</summary><p>The engine works on the phone. Artwork is sent only for the optional "Read with AI" and the brief photo reader, after a tap, and never in Confidential mode. This page sends text only.</p></details>
+        <details><summary>Where do the engineering values come from?</summary><p>From two rules files written with a garment print expert (mesh, ink, white base, discharge, quantity, cost-down, strike-off limits). Values not yet checked on the floor are marked as such. A strike-off is always needed before bulk production.</p></details>
+        <details><summary>How do judges try the Android app?</summary><p>The download link for the "NIRA judge" app is in the Devpost testing instructions. It needs Android 8.0 or later and installs beside any other app.</p></details>
+      </div>
+    </section>
+
+    <!-- Final call to action -->
+    <section class="wrap section final">
+      <h2>From the artwork to the floor, in one app.</h2>
+      <p class="lead">Measure, decide, cost and share, with AI you can check.</p>
+      <a href="#try" class="btn">Try a real job</a>
+    </section>
+
+    <details class="wrap card dev">
       <summary>Developer: hybrid AI test</summary>
       <p class="muted small">One free prompt through Firebase AI Logic in any inference mode, for checking the routing.</p>
       <fieldset>
@@ -157,7 +247,7 @@
       </fieldset>
       <label class="label" for="prompt">Prompt</label>
       <textarea id="prompt" rows="3">In one short sentence, what is a screen printing underbase?</textarea>
-      <button id="run" type="button">Run</button>
+      <button id="run" type="button" class="btn small">Run</button>
       <div id="result" hidden>
         <div class="row"><span class="label">Inference source (reported by the SDK)</span><span id="r-source" class="value big"></span></div>
         <div class="row"><span class="label">Requested mode</span><span id="r-mode" class="value"></span></div>
@@ -167,9 +257,14 @@
         <div class="row stack" id="r-error-row" hidden><span class="label">Error</span><span id="r-error" class="value error"></span></div>
       </div>
     </details>
-
-    <p class="muted small foot">NIRA · #BuildHybridAI 2026 · All AI through Firebase AI Logic (Gemini). Cloud model: <span id="model-name"></span>.</p>
   </main>
+
+  <footer class="foot">
+    <div class="wrap foot-in">
+      <a href="#top" class="logo"><img src="nira_mark.webp" alt=""><span>NIRA</span></a>
+      <p class="muted small">#BuildHybridAI 2026 · All AI through Firebase AI Logic (Gemini) · Cloud model: <span id="model-name"></span> · Engine values are a model result for planning; a strike-off is needed before bulk production.</p>
+    </div>
+  </footer>
   <script type="module" src="app.js"></script>
 </body>
 </html>
