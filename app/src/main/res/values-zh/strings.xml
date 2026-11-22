@@ -351,6 +351,8 @@
     <string name="working_colours">处理中：测量印花颜色…</string>
     <string name="working_separations">处理中：比较分色方案…</string>
     <string name="working_screens">处理中：网版和油墨…</string>
+    <string name="clean_artwork_button">✦ 将印花保存为干净的图案</string>
+    <string name="clean_artwork_hint">从照片中裁出，并用测得的油墨颜色重绘。用于规划的起点，不是客户的原始文件。</string>
     <string name="rates_market_title">市场附加费（可选）</string>
     <string name="rates_market_hint">如果您的报价不用此项，请留空。NIRA 从不自动填写。</string>
     <string name="rates_discharge_paste">拔染浆，每件</string>

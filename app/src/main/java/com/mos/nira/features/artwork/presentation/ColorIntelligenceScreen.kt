@@ -139,6 +139,8 @@ fun ColorIntelligenceScreen(
     workingStep: Int? = null,
     /** Screens the factory's machine can print (the user's setting), for the "needs more screens" warning. */
     machineScreens: Int? = null,
+    /** Garment photos: save the print as a clean artwork and open it as a new job. */
+    onSaveAsArtwork: (() -> Unit)? = null,
     // The artwork's resolution is below the rules' limit for fine detail (a "NIRA noticed" note).
     lowResolution: Boolean = false,
     includePhotoEdgeArea: Boolean = false,
@@ -297,6 +299,14 @@ fun ColorIntelligenceScreen(
                 }),
                 onBack = onBack
             )
+            // A garment photo: offer the print as a clean artwork (measured inks only, no AI).
+            if (onSaveAsArtwork != null && inputKind == InputKind.PHOTO && measuredPrintColours != null) {
+                Spacer(Modifier.height(8.dp))
+                androidx.compose.material3.OutlinedButton(onClick = onSaveAsArtwork, modifier = Modifier.fillMaxWidth()) {
+                    Text(stringResource(R.string.clean_artwork_button), color = Cyan, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                }
+                Text(stringResource(R.string.clean_artwork_hint), color = TextMuted, fontSize = 11.sp, lineHeight = 15.sp)
+            }
             // NIRA noticed: the page's own questions first, then what the decision card noticed.
             val screenNotes = buildList {
                 if (artworkBackground != null && artworkBackgroundAnswer == null) add(com.mos.nira.features.advice.JobNote(com.mos.nira.features.advice.NoteKind.BACKGROUND))

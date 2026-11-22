@@ -353,6 +353,8 @@
     <string name="working_colours">En cours : mesure des couleurs d\'impression…</string>
     <string name="working_separations">En cours : comparaison des séparations…</string>
     <string name="working_screens">En cours : écrans et encre…</string>
+    <string name="clean_artwork_button">✦ Enregistrer l\'impression comme motif propre</string>
+    <string name="clean_artwork_hint">Découpé de la photo et redessiné avec les encres mesurées. Un point de départ, pas le fichier original du client.</string>
     <string name="rates_market_title">Suppléments du marché (facultatif)</string>
     <string name="rates_market_hint">Laissez vide si votre devis ne l\'utilise pas. NIRA ne remplit jamais ces champs.</string>
     <string name="rates_discharge_paste">Pâte de rongeage, par pièce</string>

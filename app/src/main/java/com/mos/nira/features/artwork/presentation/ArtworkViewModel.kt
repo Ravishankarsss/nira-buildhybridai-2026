@@ -863,6 +863,41 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
 
     fun setBriefFabric(fabric: String?) = _uiState.update { it.copy(briefFabric = fabric) }
 
+    /**
+     * "Save as artwork" for a garment photo: the print cut out and redrawn in the measured inks
+     * (CleanArtwork, no AI), saved in app-private storage and opened as a new artwork job.
+     */
+    fun saveAsCleanArtwork(onOpened: () -> Unit) {
+        val s = _uiState.value
+        val partA = s.partAResult ?: return
+        val mask = partA.printMask ?: return
+        val bitmap = s.selectedBitmap ?: return
+        viewModelScope.launch {
+            val file = withContext(Dispatchers.Default) {
+                val mw = partA.maskWidth
+                val mh = partA.maskHeight
+                if (mw <= 0 || mh <= 0) return@withContext null
+                val scaled = if (bitmap.width == mw && bitmap.height == mh) bitmap else Bitmap.createScaledBitmap(bitmap, mw, mh, true)
+                val px = IntArray(mw * mh)
+                scaled.getPixels(px, 0, mw, 0, 0, mw, mh)
+                if (scaled != bitmap) scaled.recycle()
+                // The sure inks only; flagged colours (possible shadow, edge or speck) join their nearest ink.
+                val all = partA.measuredPalette
+                val sure = all.filter { !(it.possibleFoldShadow || it.possibleEdgeBlend || it.possibleSmallColour) }.ifEmpty { all }
+                val art = com.mos.nira.core.image.CleanArtwork.make(px, mw, mh, mask, sure.map { it.hex }, partA.printBox)
+                    ?: return@withContext null
+                val out = Bitmap.createBitmap(art.pixels, art.width, art.height, Bitmap.Config.ARGB_8888)
+                val dir = File(getApplication<Application>().filesDir, ArtworkImageProcessor.ARTWORK_DIR).apply { mkdirs() }
+                val f = File(dir, "clean_artwork_${System.currentTimeMillis()}.png")
+                f.outputStream().use { out.compress(Bitmap.CompressFormat.PNG, 100, it) }
+                out.recycle()
+                f
+            } ?: return@launch
+            onImageSelected(Uri.fromFile(file), InputKind.ARTWORK)
+            onOpened()
+        }
+    }
+
     fun setBriefFibre(fibre: com.mos.nira.core.advice.Fibre?) {
         if (_uiState.value.briefFibre != fibre) _uiState.update { it.copy(briefFibre = fibre) }
     }

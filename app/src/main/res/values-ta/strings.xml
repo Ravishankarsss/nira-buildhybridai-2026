@@ -352,6 +352,8 @@
     <string name="working_colours">வேலை நடக்கிறது: அச்சு நிறங்களை அளக்கிறது…</string>
     <string name="working_separations">வேலை நடக்கிறது: பிரிப்புகளை ஒப்பிடுகிறது…</string>
     <string name="working_screens">வேலை நடக்கிறது: ஸ்கிரீன்களும் மையும்…</string>
+    <string name="clean_artwork_button">✦ அச்சை சுத்தமான ஆர்ட்வொர்க்காகச் சேமி</string>
+    <string name="clean_artwork_hint">புகைப்படத்திலிருந்து வெட்டி, அளந்த மை நிறங்களில் மீண்டும் வரையப்படுகிறது. திட்டமிட ஒரு தொடக்கம்; வாங்குபவரின் அசல் கோப்பு அல்ல.</string>
     <string name="rates_market_title">சந்தைக் கூடுதல் கட்டணங்கள் (விருப்பம்)</string>
     <string name="rates_market_hint">உங்கள் விலைப்பட்டியலில் இல்லையெனில் காலியாக விடுங்கள். NIRA இவற்றை ஒருபோதும் தானாக நிரப்பாது.</string>
     <string name="rates_discharge_paste">டிஸ்சார்ஜ் பேஸ்ட், ஒரு பீஸுக்கு</string>
