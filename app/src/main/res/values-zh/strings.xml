@@ -351,6 +351,10 @@
     <string name="working_colours">处理中：测量印花颜色…</string>
     <string name="working_separations">处理中：比较分色方案…</string>
     <string name="working_screens">处理中：网版和油墨…</string>
+    <string name="machine_screens_label">您印花机的网版数</string>
+    <string name="machine_screens_value">%1$d 个网版</string>
+    <string name="machine_screens_hint">您机器的印头数。丝印方法需要更多网版时 NIRA 会提醒。</string>
+    <string name="machine_screens_warning">需要 %1$d 个网版；您的机器有 %2$d 个。</string>
     <string name="ask_early_intro">在您回答四个问题之前，NIRA只能谈论它在图案上测得的内容。</string>
     <string name="ask_early_q1">这个图案有几种颜色？</string>
     <string name="ask_early_q2">哪种颜色面积最大？</string>

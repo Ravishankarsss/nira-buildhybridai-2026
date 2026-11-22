@@ -351,6 +351,10 @@
     <string name="working_colours">Working: measuring the print colours…</string>
     <string name="working_separations">Working: comparing separations…</string>
     <string name="working_screens">Working: screens and ink…</string>
+    <string name="machine_screens_label">Screens on your printing machine</string>
+    <string name="machine_screens_value">%1$d screens</string>
+    <string name="machine_screens_hint">Your machine\'s heads. NIRA warns when a screen method needs more screens than this.</string>
+    <string name="machine_screens_warning">Needs %1$d screens; your machine has %2$d.</string>
     <string name="ask_early_intro">Before your four answers, NIRA can talk only about what it measured on the artwork.</string>
     <string name="ask_early_q1">How many colours are in this artwork?</string>
     <string name="ask_early_q2">Which colour is the biggest?</string>

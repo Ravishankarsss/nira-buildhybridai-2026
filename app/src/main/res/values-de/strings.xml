@@ -352,6 +352,10 @@
     <string name="working_colours">Läuft: Druckfarben werden gemessen…</string>
     <string name="working_separations">Läuft: Separationen werden verglichen…</string>
     <string name="working_screens">Läuft: Siebe und Farbe…</string>
+    <string name="machine_screens_label">Siebe auf Ihrer Druckmaschine</string>
+    <string name="machine_screens_value">%1$d Siebe</string>
+    <string name="machine_screens_hint">Die Köpfe Ihrer Maschine. NIRA warnt, wenn ein Siebdruckverfahren mehr Siebe braucht.</string>
+    <string name="machine_screens_warning">Braucht %1$d Siebe; Ihre Maschine hat %2$d.</string>
     <string name="ask_early_intro">Vor Ihren vier Antworten spricht NIRA nur über das, was es am Motiv gemessen hat.</string>
     <string name="ask_early_q1">Wie viele Farben hat dieses Motiv?</string>
     <string name="ask_early_q2">Welche Farbe ist am größten?</string>

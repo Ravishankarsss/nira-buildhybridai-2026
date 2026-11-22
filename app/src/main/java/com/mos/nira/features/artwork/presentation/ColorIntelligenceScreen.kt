@@ -137,6 +137,8 @@ fun ColorIntelligenceScreen(
     orderQuantity: Int? = null,
     /** The engine step now running (a string resource), or null when the engine is idle. */
     workingStep: Int? = null,
+    /** Screens the factory's machine can print (the user's setting), for the "needs more screens" warning. */
+    machineScreens: Int? = null,
     // The artwork's resolution is below the rules' limit for fine detail (a "NIRA noticed" note).
     lowResolution: Boolean = false,
     includePhotoEdgeArea: Boolean = false,
@@ -281,6 +283,7 @@ fun ColorIntelligenceScreen(
                 title = jobTitle,
                 summary = jobSummary,
                 workingStep = workingStep,
+                machineScreens = machineScreens,
                 // Quantity first: the long colour note may be cut at the end of the line.
                 colourLine = (orderQuantity?.let { stringResource(R.string.sheet_quantity, it) + " · " } ?: "") + (when {
                     measuredPrintColours != null -> {
@@ -919,7 +922,8 @@ private fun JobSummaryBar(
     summary: com.mos.nira.features.advice.JobSummary?,
     colourLine: String,
     onBack: () -> Unit,
-    workingStep: Int? = null
+    workingStep: Int? = null,
+    machineScreens: Int? = null
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -963,6 +967,11 @@ private fun JobSummaryBar(
                     if (summary.verifiedByRavi) stringResource(R.string.job_verified) else null
                 )
                 Text(parts.joinToString("  ·  "), color = TextWhite, fontSize = 13.sp)
+                // A screen method that needs more screens than the factory's machine has.
+                val need = summary.screens
+                if (!summary.digitalBase && need != null && machineScreens != null && need > machineScreens) {
+                    Text(stringResource(R.string.machine_screens_warning, need, machineScreens), color = Amber, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                }
             }
             // The engine is still working: say which step, so numbers are not read as final.
             if (workingStep != null) {

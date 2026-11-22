@@ -210,6 +210,7 @@ fun ArtworkNavHost(
                 },
                 headerBitmap = if (uiState.partBResult?.isDarkGarment == true) uiState.previewWithBase else uiState.previewWithoutBase,
                 orderQuantity = uiState.briefQuantity,
+                machineScreens = uiState.maxScreens,
                 workingStep = when {
                     uiState.isComputingPrintReport -> com.mos.nira.R.string.working_colours
                     uiState.isComputingPartB -> com.mos.nira.R.string.working_separations

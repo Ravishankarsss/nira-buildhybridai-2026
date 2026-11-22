@@ -353,6 +353,10 @@
     <string name="working_colours">Trabajando: midiendo los colores de impresión…</string>
     <string name="working_separations">Trabajando: comparando separaciones…</string>
     <string name="working_screens">Trabajando: pantallas y tinta…</string>
+    <string name="machine_screens_label">Pantallas en su máquina</string>
+    <string name="machine_screens_value">%1$d pantallas</string>
+    <string name="machine_screens_hint">Los cabezales de su máquina. NIRA avisa si un método de serigrafía necesita más pantallas.</string>
+    <string name="machine_screens_warning">Necesita %1$d pantallas; su máquina tiene %2$d.</string>
     <string name="ask_early_intro">Antes de sus cuatro respuestas, NIRA solo puede hablar de lo que midió en el diseño.</string>
     <string name="ask_early_q1">¿Cuántos colores tiene este diseño?</string>
     <string name="ask_early_q2">¿Qué color es el más grande?</string>

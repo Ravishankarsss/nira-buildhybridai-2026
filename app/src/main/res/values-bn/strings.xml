@@ -352,6 +352,10 @@
     <string name="working_colours">কাজ চলছে: প্রিন্টের রং মাপা হচ্ছে…</string>
     <string name="working_separations">কাজ চলছে: সেপারেশন তুলনা…</string>
     <string name="working_screens">কাজ চলছে: স্ক্রিন ও কালি…</string>
+    <string name="machine_screens_label">আপনার প্রিন্টিং মেশিনের স্ক্রিন</string>
+    <string name="machine_screens_value">%1$d স্ক্রিন</string>
+    <string name="machine_screens_hint">আপনার মেশিনের হেড। এর বেশি স্ক্রিন লাগলে NIRA সতর্ক করবে।</string>
+    <string name="machine_screens_warning">%1$d স্ক্রিন লাগবে; আপনার মেশিনে আছে %2$d।</string>
     <string name="ask_early_intro">আপনার চারটি উত্তরের আগে NIRA শুধু আর্টওয়ার্কে যা মেপেছে তা নিয়েই কথা বলতে পারে।</string>
     <string name="ask_early_q1">এই আর্টওয়ার্কে কয়টি রং?</string>
     <string name="ask_early_q2">কোন রং সবচেয়ে বেশি?</string>

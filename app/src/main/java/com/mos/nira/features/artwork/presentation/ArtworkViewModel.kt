@@ -142,6 +142,8 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
     private var partBJob: Job? = null
 
     init {
+        // The factory's machine size, if the user has set it before.
+        com.mos.nira.features.commercial.MachineSettings.screens(application)?.let { s -> _uiState.update { it.copy(maxScreens = s) } }
         loadSavedAnalyses()
         loadShadeLibraries()
         // Keep each saved job's answers on the phone, so reopening it does not ask again.
@@ -420,7 +422,9 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun setMaxScreens(screens: Int) {
-        _uiState.update { it.copy(maxScreens = screens.coerceIn(2, 16)) }
+        val s = screens.coerceIn(com.mos.nira.features.commercial.MachineSettings.MIN_SCREENS, com.mos.nira.features.commercial.MachineSettings.MAX_SCREENS)
+        _uiState.update { it.copy(maxScreens = s) }
+        com.mos.nira.features.commercial.MachineSettings.setScreens(getApplication(), s)
     }
 
     fun setGarmentColor(color: DominantColor?) {

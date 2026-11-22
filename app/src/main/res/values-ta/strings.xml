@@ -352,6 +352,10 @@
     <string name="working_colours">வேலை நடக்கிறது: அச்சு நிறங்களை அளக்கிறது…</string>
     <string name="working_separations">வேலை நடக்கிறது: பிரிப்புகளை ஒப்பிடுகிறது…</string>
     <string name="working_screens">வேலை நடக்கிறது: ஸ்கிரீன்களும் மையும்…</string>
+    <string name="machine_screens_label">உங்கள் அச்சு இயந்திரத்தின் ஸ்கிரீன்கள்</string>
+    <string name="machine_screens_value">%1$d ஸ்கிரீன்கள்</string>
+    <string name="machine_screens_hint">உங்கள் இயந்திரத்தின் ஹெட்கள். இதைவிட அதிக ஸ்கிரீன்கள் தேவைப்பட்டால் NIRA எச்சரிக்கும்.</string>
+    <string name="machine_screens_warning">%1$d ஸ்கிரீன்கள் தேவை; உங்கள் இயந்திரத்தில் %2$d உள்ளன.</string>
     <string name="ask_early_intro">உங்கள் நான்கு பதில்களுக்கு முன், ஆர்ட்வொர்க்கில் அளந்ததைப் பற்றி மட்டுமே NIRA பேசும்.</string>
     <string name="ask_early_q1">இந்த ஆர்ட்வொர்க்கில் எத்தனை நிறங்கள்?</string>
     <string name="ask_early_q2">எந்த நிறம் அதிகம்?</string>

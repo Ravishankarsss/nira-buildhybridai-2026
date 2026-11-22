@@ -353,6 +353,10 @@
     <string name="working_colours">En cours : mesure des couleurs d\'impression…</string>
     <string name="working_separations">En cours : comparaison des séparations…</string>
     <string name="working_screens">En cours : écrans et encre…</string>
+    <string name="machine_screens_label">Écrans sur votre machine</string>
+    <string name="machine_screens_value">%1$d écrans</string>
+    <string name="machine_screens_hint">Les têtes de votre machine. NIRA prévient si une méthode sérigraphie demande plus d\'écrans.</string>
+    <string name="machine_screens_warning">Il faut %1$d écrans ; votre machine en a %2$d.</string>
     <string name="ask_early_intro">Avant vos quatre réponses, NIRA ne peut parler que de ce qu\'il a mesuré sur le motif.</string>
     <string name="ask_early_q1">Combien de couleurs dans ce motif ?</string>
     <string name="ask_early_q2">Quelle couleur est la plus grande ?</string>

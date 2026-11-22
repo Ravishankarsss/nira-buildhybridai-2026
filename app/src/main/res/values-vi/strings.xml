@@ -351,6 +351,10 @@
     <string name="working_colours">Đang xử lý: đo màu in…</string>
     <string name="working_separations">Đang xử lý: so sánh tách màu…</string>
     <string name="working_screens">Đang xử lý: khung lụa và mực…</string>
+    <string name="machine_screens_label">Số khung trên máy in của bạn</string>
+    <string name="machine_screens_value">%1$d khung</string>
+    <string name="machine_screens_hint">Số đầu của máy. NIRA cảnh báo khi phương pháp in lụa cần nhiều khung hơn.</string>
+    <string name="machine_screens_warning">Cần %1$d khung; máy của bạn có %2$d.</string>
     <string name="ask_early_intro">Trước bốn câu trả lời của bạn, NIRA chỉ nói về những gì đã đo trên hình in.</string>
     <string name="ask_early_q1">Hình in này có bao nhiêu màu?</string>
     <string name="ask_early_q2">Màu nào lớn nhất?</string>

@@ -246,9 +246,10 @@ fun ArtworkPreviewScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Maximum Screens Allowed", color = TextMuted, fontSize = 12.sp)
-                    Text("$maxScreens SCREENS", color = Cyan, fontSize = 13.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
+                    Text(androidx.compose.ui.res.stringResource(com.mos.nira.R.string.machine_screens_label), color = TextMuted, fontSize = 12.sp)
+                    Text(androidx.compose.ui.res.stringResource(com.mos.nira.R.string.machine_screens_value, maxScreens), color = Cyan, fontSize = 13.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
                 }
+                Text(androidx.compose.ui.res.stringResource(com.mos.nira.R.string.machine_screens_hint), color = TextMuted, fontSize = 11.sp, lineHeight = 15.sp)
 
                 Slider(
                     value = maxScreens.toFloat(),

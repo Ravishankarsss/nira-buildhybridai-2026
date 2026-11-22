@@ -352,6 +352,10 @@
     <string name="working_colours">काम जारी: प्रिंट रंग मापे जा रहे हैं…</string>
     <string name="working_separations">काम जारी: सेपरेशन की तुलना…</string>
     <string name="working_screens">काम जारी: स्क्रीन और स्याही…</string>
+    <string name="machine_screens_label">आपकी प्रिंटिंग मशीन की स्क्रीन</string>
+    <string name="machine_screens_value">%1$d स्क्रीन</string>
+    <string name="machine_screens_hint">आपकी मशीन के हेड। अगर स्क्रीन विधि को इससे ज़्यादा स्क्रीन चाहिए तो NIRA चेतावनी देगा।</string>
+    <string name="machine_screens_warning">%1$d स्क्रीन चाहिए; आपकी मशीन में %2$d हैं।</string>
     <string name="ask_early_intro">आपके चार जवाबों से पहले, NIRA केवल आर्टवर्क पर मापी गई बातों पर बात कर सकता है।</string>
     <string name="ask_early_q1">इस आर्टवर्क में कितने रंग हैं?</string>
     <string name="ask_early_q2">सबसे बड़ा रंग कौन सा है?</string>
