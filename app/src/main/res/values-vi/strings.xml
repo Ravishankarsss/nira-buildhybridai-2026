@@ -351,6 +351,16 @@
     <string name="working_colours">Đang xử lý: đo màu in…</string>
     <string name="working_separations">Đang xử lý: so sánh tách màu…</string>
     <string name="working_screens">Đang xử lý: khung lụa và mực…</string>
+    <string name="rates_market_title">Phụ phí thị trường (tùy chọn)</string>
+    <string name="rates_market_hint">Để trống nếu báo giá của bạn không dùng. NIRA không bao giờ tự điền.</string>
+    <string name="rates_discharge_paste">Hồ tẩy, mỗi sản phẩm</string>
+    <string name="rates_flash">Sấy flash, mỗi sản phẩm (đơn có lớp lót trắng)</string>
+    <string name="rates_wastage">Hao hụt / loại bỏ, %</string>
+    <string name="rates_min_order">Phí đơn hàng tối thiểu</string>
+    <string name="rates_gst">Thuế GTGT, %</string>
+    <string name="cost_wastage">Gồm %1$d sản phẩm dự phòng (%2$s%% hao hụt).</string>
+    <string name="cost_min_applied">Đã nâng lên phí đơn hàng tối thiểu.</string>
+    <string name="cost_with_gst">Gồm thuế %1$s%%: %2$s</string>
     <string name="machine_screens_label">Số khung trên máy in của bạn</string>
     <string name="machine_screens_value">%1$d khung</string>
     <string name="machine_screens_hint">Số đầu của máy. NIRA cảnh báo khi phương pháp in lụa cần nhiều khung hơn.</string>

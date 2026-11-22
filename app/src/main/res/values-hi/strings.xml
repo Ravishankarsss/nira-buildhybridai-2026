@@ -352,6 +352,16 @@
     <string name="working_colours">काम जारी: प्रिंट रंग मापे जा रहे हैं…</string>
     <string name="working_separations">काम जारी: सेपरेशन की तुलना…</string>
     <string name="working_screens">काम जारी: स्क्रीन और स्याही…</string>
+    <string name="rates_market_title">बाज़ार के अतिरिक्त शुल्क (वैकल्पिक)</string>
+    <string name="rates_market_hint">अगर आपके कोटेशन में यह नहीं है तो खाली छोड़ें। NIRA इन्हें कभी अपने आप नहीं भरता।</string>
+    <string name="rates_discharge_paste">डिस्चार्ज पेस्ट, प्रति पीस</string>
+    <string name="rates_flash">फ्लैश क्योर, प्रति पीस (सफ़ेद बेस वाले काम)</string>
+    <string name="rates_wastage">वेस्टेज / रिजेक्शन भत्ता, %</string>
+    <string name="rates_min_order">न्यूनतम ऑर्डर शुल्क</string>
+    <string name="rates_gst">जीएसटी, %</string>
+    <string name="cost_wastage">%1$d अतिरिक्त पीस शामिल (%2$s%% वेस्टेज)।</string>
+    <string name="cost_min_applied">न्यूनतम ऑर्डर शुल्क तक बढ़ाया गया।</string>
+    <string name="cost_with_gst">जीएसटी %1$s%% सहित: %2$s</string>
     <string name="machine_screens_label">आपकी प्रिंटिंग मशीन की स्क्रीन</string>
     <string name="machine_screens_value">%1$d स्क्रीन</string>
     <string name="machine_screens_hint">आपकी मशीन के हेड। अगर स्क्रीन विधि को इससे ज़्यादा स्क्रीन चाहिए तो NIRA चेतावनी देगा।</string>

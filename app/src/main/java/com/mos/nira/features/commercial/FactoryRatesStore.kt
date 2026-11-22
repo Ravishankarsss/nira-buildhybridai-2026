@@ -30,6 +30,11 @@ object FactoryRatesStore {
             printRunPerScreen = d("print_run_per_screen"),
             inkCostPerKg = d("ink_cost_per_kg"),
             digitalRatePerPc = d("digital_rate_per_pc"),
+            dischargePastePerPc = d("discharge_paste_per_pc"),
+            flashCurePerPc = d("flash_cure_per_pc"),
+            wastagePercent = d("wastage_percent"),
+            minOrderCharge = d("min_order_charge"),
+            gstPercent = d("gst_percent"),
             isSample = p.getBoolean("is_sample", false)
         )
     }
@@ -43,6 +48,11 @@ object FactoryRatesStore {
             .putString("print_run_per_screen", rates.printRunPerScreen?.toString())
             .putString("ink_cost_per_kg", rates.inkCostPerKg?.toString())
             .putString("digital_rate_per_pc", rates.digitalRatePerPc?.toString())
+            .putString("discharge_paste_per_pc", rates.dischargePastePerPc?.toString())
+            .putString("flash_cure_per_pc", rates.flashCurePerPc?.toString())
+            .putString("wastage_percent", rates.wastagePercent?.toString())
+            .putString("min_order_charge", rates.minOrderCharge?.toString())
+            .putString("gst_percent", rates.gstPercent?.toString())
             .putBoolean("is_sample", rates.isSample)
             .apply()
     }

@@ -352,6 +352,16 @@
     <string name="working_colours">வேலை நடக்கிறது: அச்சு நிறங்களை அளக்கிறது…</string>
     <string name="working_separations">வேலை நடக்கிறது: பிரிப்புகளை ஒப்பிடுகிறது…</string>
     <string name="working_screens">வேலை நடக்கிறது: ஸ்கிரீன்களும் மையும்…</string>
+    <string name="rates_market_title">சந்தைக் கூடுதல் கட்டணங்கள் (விருப்பம்)</string>
+    <string name="rates_market_hint">உங்கள் விலைப்பட்டியலில் இல்லையெனில் காலியாக விடுங்கள். NIRA இவற்றை ஒருபோதும் தானாக நிரப்பாது.</string>
+    <string name="rates_discharge_paste">டிஸ்சார்ஜ் பேஸ்ட், ஒரு பீஸுக்கு</string>
+    <string name="rates_flash">ஃபிளாஷ் க்யூர், ஒரு பீஸுக்கு (வெள்ளை அடித்தளம் உள்ள வேலைகள்)</string>
+    <string name="rates_wastage">வேஸ்டேஜ் / ரிஜெக்ஷன் அளவு, %</string>
+    <string name="rates_min_order">குறைந்தபட்ச ஆர்டர் கட்டணம்</string>
+    <string name="rates_gst">ஜிஎஸ்டி, %</string>
+    <string name="cost_wastage">%1$d கூடுதல் பீஸ்கள் சேர்க்கப்பட்டுள்ளன (%2$s%% வேஸ்டேஜ்).</string>
+    <string name="cost_min_applied">குறைந்தபட்ச ஆர்டர் கட்டணத்துக்கு உயர்த்தப்பட்டது.</string>
+    <string name="cost_with_gst">ஜிஎஸ்டி %1$s%% உடன்: %2$s</string>
     <string name="machine_screens_label">உங்கள் அச்சு இயந்திரத்தின் ஸ்கிரீன்கள்</string>
     <string name="machine_screens_value">%1$d ஸ்கிரீன்கள்</string>
     <string name="machine_screens_hint">உங்கள் இயந்திரத்தின் ஹெட்கள். இதைவிட அதிக ஸ்கிரீன்கள் தேவைப்பட்டால் NIRA எச்சரிக்கும்.</string>

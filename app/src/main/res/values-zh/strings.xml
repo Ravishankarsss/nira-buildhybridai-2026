@@ -351,6 +351,16 @@
     <string name="working_colours">处理中：测量印花颜色…</string>
     <string name="working_separations">处理中：比较分色方案…</string>
     <string name="working_screens">处理中：网版和油墨…</string>
+    <string name="rates_market_title">市场附加费（可选）</string>
+    <string name="rates_market_hint">如果您的报价不用此项，请留空。NIRA 从不自动填写。</string>
+    <string name="rates_discharge_paste">拔染浆，每件</string>
+    <string name="rates_flash">闪干，每件（有白色打底的订单）</string>
+    <string name="rates_wastage">损耗/次品率，%</string>
+    <string name="rates_min_order">最低订单费</string>
+    <string name="rates_gst">税率，%</string>
+    <string name="cost_wastage">含 %1$d 件备用（%2$s%% 损耗）。</string>
+    <string name="cost_min_applied">已提高到最低订单费。</string>
+    <string name="cost_with_gst">含税 %1$s%%：%2$s</string>
     <string name="machine_screens_label">您印花机的网版数</string>
     <string name="machine_screens_value">%1$d 个网版</string>
     <string name="machine_screens_hint">您机器的印头数。丝印方法需要更多网版时 NIRA 会提醒。</string>

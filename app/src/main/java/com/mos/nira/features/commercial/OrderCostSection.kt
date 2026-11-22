@@ -147,6 +147,15 @@ fun OrderCostSection(
                         color = CMuted, fontSize = 11.sp, lineHeight = 15.sp
                     )
                 }
+                // Market extras the factory set: spare pieces, minimum charge, GST.
+                if (cost.wastagePieces > 0) Text(
+                    stringResource(R.string.cost_wastage, cost.wastagePieces, pct(rates.wastagePercent)),
+                    color = CMuted, fontSize = 11.sp, lineHeight = 15.sp
+                )
+                if (cost.minChargeApplied) Text(stringResource(R.string.cost_min_applied), color = CAmber, fontSize = 11.sp, lineHeight = 15.sp)
+                cost.totalWithTax?.let {
+                    Text(stringResource(R.string.cost_with_gst, pct(cost.taxPercent), money(rates, it, 0)), color = CWhite, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                }
                 val notIncluded = cost.missing.filter { it != Missing.QUANTITY }
                 if (notIncluded.isNotEmpty()) {
                     Spacer(Modifier.height(4.dp))
@@ -295,4 +304,11 @@ fun tradeOffFacts(cost: CostResult, options: List<CostDownOption>, rates: Factor
         }
         add("Cost-Down option: $what. New cost ${M.plain(c, o.after.perPc ?: 0.0, 2)} per piece; saves ${M.plain(c, o.savingPerPc, 2)} per piece and ${M.plain(c, o.savingTotal, 0)} on the order.")
     }
+}
+
+/** "3" or "2.5" for a percentage the factory entered. */
+private fun pct(v: Double?): String = when {
+    v == null -> ""
+    v % 1.0 == 0.0 -> v.toLong().toString()
+    else -> v.toString()
 }

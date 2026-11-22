@@ -165,4 +165,61 @@ class CommercialCostTest {
         assertEquals(450.0, j.getDouble("screen_make_cost"), 0.0)
         assertEquals(45.0, j.getDouble("digital_rate_per_pc"), 0.0)
     }
+
+    // ---------- Market extras (optional factory rates) ----------
+
+    @Test
+    fun marketExtrasNotSetChangeNothing() {
+        val r = PrintCost.digital(500, rates)
+        assertEquals(45.0 * 500, r.total!!, 1e-9)
+        assertEquals(0, r.wastagePieces)
+        assertFalse(r.minChargeApplied)
+        assertNull(r.totalWithTax)
+    }
+
+    @Test
+    fun wastageAddsSparePiecesSpreadOverGoodPieces() {
+        val r = PrintCost.digital(500, rates.copy(wastagePercent = 3.0))
+        assertEquals(15, r.wastagePieces)
+        assertEquals(45.0 * 515, r.total!!, 1e-9)
+        assertEquals(45.0 * 515 / 500, r.perPc!!, 1e-9)
+        // 3% of 100 is exactly 3 spare pieces (no floating-point extra piece).
+        assertEquals(3, PrintCost.digital(100, rates.copy(wastagePercent = 3.0)).wastagePieces)
+    }
+
+    @Test
+    fun minimumOrderChargeRaisesASmallOrder() {
+        val small = PrintCost.digital(10, rates.copy(minOrderCharge = 1000.0))
+        assertEquals(1000.0, small.total!!, 1e-9)
+        assertTrue(small.minChargeApplied)
+        assertEquals(100.0, small.perPc!!, 1e-9)
+        val big = PrintCost.digital(500, rates.copy(minOrderCharge = 1000.0))
+        assertFalse(big.minChargeApplied)
+    }
+
+    @Test
+    fun gstIsASeparateTotal() {
+        val r = PrintCost.digital(100, rates.copy(gstPercent = 5.0))
+        assertEquals(4500.0, r.total!!, 1e-9)
+        assertEquals(4725.0, r.totalWithTax!!, 1e-9)
+        assertEquals(5.0, r.taxPercent!!, 0.0)
+    }
+
+    @Test
+    fun dischargePasteRateCompletesDischargeDigital() {
+        val r = PrintCost.dischargeDigital(500, rates.copy(dischargePastePerPc = 2.0))
+        assertEquals(3.5 + 45.0 + 2.0, r.variablePerPc!!, 1e-9)
+        assertFalse(Missing.INK_GRAMS in r.missing)
+        assertTrue(r.inksWithoutGrams.isEmpty())
+        assertTrue(r.complete)
+    }
+
+    @Test
+    fun flashCureOnlyWithAWhiteBase() {
+        val withBase = listOf(scr("White base", "#FFFFFF", 1.0, base = true), scr("Red", "#C0392B", 1.0))
+        val noBase = listOf(scr("Navy", "#1F2A5C", 1.0), scr("Red", "#C0392B", 1.0))
+        val r = rates.copy(flashCurePerPc = 1.5)
+        assertEquals(PrintCost.screen(withBase, 500, rates).variablePerPc!! + 1.5, PrintCost.screen(withBase, 500, r).variablePerPc!!, 1e-9)
+        assertEquals(PrintCost.screen(noBase, 500, rates).variablePerPc!!, PrintCost.screen(noBase, 500, r).variablePerPc!!, 1e-9)
+    }
 }

@@ -79,6 +79,15 @@ fun FactoryRatesEditor(modifier: Modifier = Modifier) {
         NumberField(resetKey, stringResource(R.string.rates_run), rates.printRunPerScreen) { put(rates.copy(printRunPerScreen = it)) }
         NumberField(resetKey, stringResource(R.string.rates_ink), rates.inkCostPerKg) { put(rates.copy(inkCostPerKg = it)) }
         NumberField(resetKey, stringResource(R.string.rates_digital), rates.digitalRatePerPc) { put(rates.copy(digitalRatePerPc = it)) }
+        // Market extras: optional; an empty field is "not included", never a guess.
+        Spacer(Modifier.height(4.dp))
+        Text(stringResource(R.string.rates_market_title), color = RCyan, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+        Text(stringResource(R.string.rates_market_hint), color = RMuted, fontSize = 12.sp, lineHeight = 17.sp)
+        NumberField(resetKey, stringResource(R.string.rates_discharge_paste), rates.dischargePastePerPc) { put(rates.copy(dischargePastePerPc = it)) }
+        NumberField(resetKey, stringResource(R.string.rates_flash), rates.flashCurePerPc) { put(rates.copy(flashCurePerPc = it)) }
+        NumberField(resetKey, stringResource(R.string.rates_wastage), rates.wastagePercent) { put(rates.copy(wastagePercent = it)) }
+        NumberField(resetKey, stringResource(R.string.rates_min_order), rates.minOrderCharge) { put(rates.copy(minOrderCharge = it)) }
+        NumberField(resetKey, stringResource(R.string.rates_gst), rates.gstPercent) { put(rates.copy(gstPercent = it)) }
         Spacer(Modifier.height(4.dp))
     }
 }

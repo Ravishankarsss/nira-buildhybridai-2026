@@ -351,6 +351,16 @@
     <string name="working_colours">Working: measuring the print colours…</string>
     <string name="working_separations">Working: comparing separations…</string>
     <string name="working_screens">Working: screens and ink…</string>
+    <string name="rates_market_title">Market extras (optional)</string>
+    <string name="rates_market_hint">Leave a field empty if your quote does not use it. NIRA never fills these in.</string>
+    <string name="rates_discharge_paste">Discharge paste, per piece</string>
+    <string name="rates_flash">Flash cure, per piece (jobs with a white base)</string>
+    <string name="rates_wastage">Wastage / rejection allowance, %</string>
+    <string name="rates_min_order">Minimum order charge</string>
+    <string name="rates_gst">GST, %</string>
+    <string name="cost_wastage">Includes %1$d spare pieces (%2$s%% wastage).</string>
+    <string name="cost_min_applied">Raised to the minimum order charge.</string>
+    <string name="cost_with_gst">With GST %1$s%%: %2$s</string>
     <string name="machine_screens_label">Screens on your printing machine</string>
     <string name="machine_screens_value">%1$d screens</string>
     <string name="machine_screens_hint">Your machine\'s heads. NIRA warns when a screen method needs more screens than this.</string>

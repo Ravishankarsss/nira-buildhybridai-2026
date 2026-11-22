@@ -21,6 +21,17 @@ data class FactoryRates(
     val inkCostPerKg: Double? = null,
     /** Digital (DTG / DTF) print rate, per piece. */
     val digitalRatePerPc: Double? = null,
+    // Market extras (optional; empty = not included, never guessed).
+    /** Discharge paste and activator, per piece (discharge + digital). */
+    val dischargePastePerPc: Double? = null,
+    /** Flash curing of the white underbase, per piece, when the job has a white base screen. */
+    val flashCurePerPc: Double? = null,
+    /** Wastage / rejection allowance: extra pieces printed, as a % of the order. */
+    val wastagePercent: Double? = null,
+    /** Minimum charge for one order. */
+    val minOrderCharge: Double? = null,
+    /** GST (or other sales tax) %, shown as a separate total. */
+    val gstPercent: Double? = null,
     /** True while the rates are the "Load sample rates" values and nothing has been edited. */
     val isSample: Boolean = false
 ) {
@@ -50,7 +61,14 @@ data class CostResult(
     val perPc: Double?,
     val missing: List<Missing>,
     /** Screens whose ink grams are not in the rules file (their ink is not costed). */
-    val inksWithoutGrams: List<String> = emptyList()
+    val inksWithoutGrams: List<String> = emptyList(),
+    /** Extra pieces printed for the wastage allowance (their cost is in the total). */
+    val wastagePieces: Int = 0,
+    /** True when the order cost was raised to the factory's minimum order charge. */
+    val minChargeApplied: Boolean = false,
+    /** The total with GST, and the GST % used; null when no GST % is set. */
+    val totalWithTax: Double? = null,
+    val taxPercent: Double? = null
 ) {
     val complete: Boolean get() = missing.isEmpty() && total != null
 }
@@ -88,6 +106,30 @@ data class CostDownOption(
  */
 object PrintCost {
 
+    /**
+     * The order total from fixed and per-piece costs, with the factory's market extras:
+     * spare pieces for wastage (cost spread over the good pieces), the minimum order charge, and
+     * GST as a separate total. Extras that are not set change nothing.
+     */
+    private fun finish(
+        method: CostMethod, screens: Int, qty: Int?, fixed: Double?, variable: Double?, ink: Double?,
+        missing: List<Missing>, withoutGrams: List<String>, rates: FactoryRates
+    ): CostResult {
+        val waste = if (qty != null && rates.wastagePercent != null) ceil(qty * rates.wastagePercent / 100.0 - 1e-9).toInt().coerceAtLeast(0) else 0
+        var total = if (fixed != null && variable != null && qty != null) fixed + variable * (qty + waste) else null
+        var minApplied = false
+        if (total != null && rates.minOrderCharge != null && total < rates.minOrderCharge) {
+            total = rates.minOrderCharge
+            minApplied = true
+        }
+        val withTax = if (total != null && rates.gstPercent != null) total * (1 + rates.gstPercent / 100.0) else null
+        return CostResult(
+            method, screens, qty, fixed, variable, ink, total, total?.let { it / qty!! }, missing, withoutGrams,
+            wastagePieces = waste, minChargeApplied = minApplied, totalWithTax = withTax,
+            taxPercent = rates.gstPercent.takeIf { withTax != null }
+        )
+    }
+
     fun methodOf(card: DecisionCard): CostMethod? {
         val a = card.best?.advice ?: return null
         return when {
@@ -117,9 +159,10 @@ object PrintCost {
 
         val fixed = if (rates.screenMakeCost != null && rates.jobSetupCost != null) n * rates.screenMakeCost + rates.jobSetupCost else null
         val ink = rates.inkCostPerKg?.let { grams / 1000.0 * it }
-        val variable = if (rates.printRunPerScreen != null && ink != null) n * rates.printRunPerScreen + ink else null
-        val total = if (fixed != null && variable != null && qty != null) fixed + variable * qty else null
-        return CostResult(CostMethod.SCREEN, n, qty, fixed, variable, ink, total, total?.let { it / qty!! }, missing, withoutGrams)
+        // Flash curing applies only when there is a white underbase screen.
+        val flash = if (screens.any { it.isBaseWhite }) rates.flashCurePerPc ?: 0.0 else 0.0
+        val variable = if (rates.printRunPerScreen != null && ink != null) n * rates.printRunPerScreen + ink + flash else null
+        return finish(CostMethod.SCREEN, n, qty, fixed, variable, ink, missing, withoutGrams, rates)
     }
 
     /** Digital (DTG / DTF): total = digital rate x quantity. No screens, no set-up. */
@@ -128,8 +171,7 @@ object PrintCost {
         val missing = ArrayList<Missing>()
         if (qty == null) missing += Missing.QUANTITY
         if (rates.digitalRatePerPc == null) missing += Missing.DIGITAL_RATE
-        val total = if (qty != null && rates.digitalRatePerPc != null) rates.digitalRatePerPc * qty else null
-        return CostResult(CostMethod.DIGITAL, 0, qty, 0.0, rates.digitalRatePerPc, null, total, total?.let { it / qty!! }, missing)
+        return finish(CostMethod.DIGITAL, 0, qty, 0.0, rates.digitalRatePerPc, null, missing, emptyList(), rates)
     }
 
     /**
@@ -145,11 +187,12 @@ object PrintCost {
         if (rates.jobSetupCost == null) missing += Missing.JOB_SETUP
         if (rates.printRunPerScreen == null) missing += Missing.PRINT_RUN
         if (rates.digitalRatePerPc == null) missing += Missing.DIGITAL_RATE
-        missing += Missing.INK_GRAMS
+        // The paste weight is not in the rules file; the factory's paste rate per piece covers it.
+        val paste = rates.dischargePastePerPc
+        if (paste == null) missing += Missing.INK_GRAMS
         val fixed = if (rates.screenMakeCost != null && rates.jobSetupCost != null) rates.screenMakeCost + rates.jobSetupCost else null
-        val variable = if (rates.printRunPerScreen != null && rates.digitalRatePerPc != null) rates.printRunPerScreen + rates.digitalRatePerPc else null
-        val total = if (fixed != null && variable != null && qty != null) fixed + variable * qty else null
-        return CostResult(CostMethod.DISCHARGE_DIGITAL, 1, qty, fixed, variable, null, total, total?.let { it / qty!! }, missing, listOf("discharge paste"))
+        val variable = if (rates.printRunPerScreen != null && rates.digitalRatePerPc != null) rates.printRunPerScreen + rates.digitalRatePerPc + (paste ?: 0.0) else null
+        return finish(CostMethod.DISCHARGE_DIGITAL, 1, qty, fixed, variable, null, missing, if (paste == null) listOf("discharge paste") else emptyList(), rates)
     }
 
     /** The order cost of the card's best method; null when there is no method or no rates at all. */

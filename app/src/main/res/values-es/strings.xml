@@ -353,6 +353,16 @@
     <string name="working_colours">Trabajando: midiendo los colores de impresión…</string>
     <string name="working_separations">Trabajando: comparando separaciones…</string>
     <string name="working_screens">Trabajando: pantallas y tinta…</string>
+    <string name="rates_market_title">Extras del mercado (opcional)</string>
+    <string name="rates_market_hint">Deje el campo vacío si su cotización no lo usa. NIRA nunca los rellena.</string>
+    <string name="rates_discharge_paste">Pasta de corrosión, por pieza</string>
+    <string name="rates_flash">Curado flash, por pieza (trabajos con base blanca)</string>
+    <string name="rates_wastage">Merma / rechazo, %</string>
+    <string name="rates_min_order">Cargo mínimo por pedido</string>
+    <string name="rates_gst">IVA, %</string>
+    <string name="cost_wastage">Incluye %1$d piezas de repuesto (%2$s%% de merma).</string>
+    <string name="cost_min_applied">Ajustado al cargo mínimo por pedido.</string>
+    <string name="cost_with_gst">Con IVA %1$s%%: %2$s</string>
     <string name="machine_screens_label">Pantallas en su máquina</string>
     <string name="machine_screens_value">%1$d pantallas</string>
     <string name="machine_screens_hint">Los cabezales de su máquina. NIRA avisa si un método de serigrafía necesita más pantallas.</string>

@@ -352,6 +352,16 @@
     <string name="working_colours">Läuft: Druckfarben werden gemessen…</string>
     <string name="working_separations">Läuft: Separationen werden verglichen…</string>
     <string name="working_screens">Läuft: Siebe und Farbe…</string>
+    <string name="rates_market_title">Marktzuschläge (optional)</string>
+    <string name="rates_market_hint">Leer lassen, wenn Ihr Angebot ihn nicht nutzt. NIRA füllt diese Felder nie selbst aus.</string>
+    <string name="rates_discharge_paste">Ätzpaste, pro Stück</string>
+    <string name="rates_flash">Zwischentrocknung, pro Stück (Aufträge mit weißem Unterdruck)</string>
+    <string name="rates_wastage">Ausschuss / Makulatur, %</string>
+    <string name="rates_min_order">Mindestauftragswert</string>
+    <string name="rates_gst">MwSt., %</string>
+    <string name="cost_wastage">Enthält %1$d Ersatzstücke (%2$s%% Ausschuss).</string>
+    <string name="cost_min_applied">Auf den Mindestauftragswert angehoben.</string>
+    <string name="cost_with_gst">Mit MwSt. %1$s%%: %2$s</string>
     <string name="machine_screens_label">Siebe auf Ihrer Druckmaschine</string>
     <string name="machine_screens_value">%1$d Siebe</string>
     <string name="machine_screens_hint">Die Köpfe Ihrer Maschine. NIRA warnt, wenn ein Siebdruckverfahren mehr Siebe braucht.</string>

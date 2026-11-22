@@ -353,6 +353,16 @@
     <string name="working_colours">En cours : mesure des couleurs d\'impression…</string>
     <string name="working_separations">En cours : comparaison des séparations…</string>
     <string name="working_screens">En cours : écrans et encre…</string>
+    <string name="rates_market_title">Suppléments du marché (facultatif)</string>
+    <string name="rates_market_hint">Laissez vide si votre devis ne l\'utilise pas. NIRA ne remplit jamais ces champs.</string>
+    <string name="rates_discharge_paste">Pâte de rongeage, par pièce</string>
+    <string name="rates_flash">Séchage flash, par pièce (travaux avec sous-couche blanche)</string>
+    <string name="rates_wastage">Gâche / rebut, %</string>
+    <string name="rates_min_order">Montant minimum de commande</string>
+    <string name="rates_gst">TVA, %</string>
+    <string name="cost_wastage">Comprend %1$d pièces de réserve (%2$s%% de gâche).</string>
+    <string name="cost_min_applied">Relevé au montant minimum de commande.</string>
+    <string name="cost_with_gst">Avec TVA %1$s%% : %2$s</string>
     <string name="machine_screens_label">Écrans sur votre machine</string>
     <string name="machine_screens_value">%1$d écrans</string>
     <string name="machine_screens_hint">Les têtes de votre machine. NIRA prévient si une méthode sérigraphie demande plus d\'écrans.</string>

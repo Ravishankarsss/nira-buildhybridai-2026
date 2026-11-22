@@ -352,6 +352,16 @@
     <string name="working_colours">কাজ চলছে: প্রিন্টের রং মাপা হচ্ছে…</string>
     <string name="working_separations">কাজ চলছে: সেপারেশন তুলনা…</string>
     <string name="working_screens">কাজ চলছে: স্ক্রিন ও কালি…</string>
+    <string name="rates_market_title">বাজারের অতিরিক্ত খরচ (ঐচ্ছিক)</string>
+    <string name="rates_market_hint">আপনার কোটেশনে না থাকলে ফাঁকা রাখুন। NIRA এগুলো কখনো নিজে পূরণ করে না।</string>
+    <string name="rates_discharge_paste">ডিসচার্জ পেস্ট, প্রতি পিস</string>
+    <string name="rates_flash">ফ্ল্যাশ কিউর, প্রতি পিস (সাদা বেস আছে এমন কাজ)</string>
+    <string name="rates_wastage">অপচয় / রিজেকশন ভাতা, %</string>
+    <string name="rates_min_order">ন্যূনতম অর্ডার চার্জ</string>
+    <string name="rates_gst">জিএসটি, %</string>
+    <string name="cost_wastage">%1$d অতিরিক্ত পিস ধরা হয়েছে (%2$s%% অপচয়)।</string>
+    <string name="cost_min_applied">ন্যূনতম অর্ডার চার্জে বাড়ানো হয়েছে।</string>
+    <string name="cost_with_gst">জিএসটি %1$s%% সহ: %2$s</string>
     <string name="machine_screens_label">আপনার প্রিন্টিং মেশিনের স্ক্রিন</string>
     <string name="machine_screens_value">%1$d স্ক্রিন</string>
     <string name="machine_screens_hint">আপনার মেশিনের হেড। এর বেশি স্ক্রিন লাগলে NIRA সতর্ক করবে।</string>
