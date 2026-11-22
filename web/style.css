@@ -168,6 +168,19 @@ button { font: inherit; }
 .arch-mid { text-align: center; color: var(--muted); font-size: 13px; }
 .arch-mid b { display: block; font-size: 26px; color: var(--cyan); }
 
+/* Colour separation strip */
+.sep-flow { display: grid; grid-template-columns: 1fr auto 1.3fr auto 1fr; gap: 14px; align-items: center; margin-top: 10px; }
+.sep-step { margin: 0; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 12px; }
+.sep-step img { width: 100%; border-radius: 8px; background: #fff; }
+.sep-step figcaption { margin-top: 8px; font-family: Outfit, sans-serif; font-weight: 600; font-size: 15px; }
+.film-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.sep-arrow { color: var(--cyan); font-size: 28px; text-align: center; }
+.sep-table { width: 100%; border-collapse: collapse; margin-top: 18px; font-size: 15px; }
+.sep-table th, .sep-table td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+.sep-table th { color: var(--muted); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; }
+.active-job { margin: 4px 0 10px; font-size: 14px; color: var(--muted); }
+.active-job b { color: var(--cyan); }
+
 /* Hybrid route */
 .route { display: flex; align-items: stretch; gap: 10px; flex-wrap: wrap; }
 .node { flex: 1 1 160px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px; font-family: Outfit, sans-serif; font-weight: 600; font-size: 17px; }
@@ -268,6 +281,8 @@ fieldset label { font-size: 14px; }
   .steps4 { grid-template-columns: repeat(2, 1fr); }
   .grid { grid-template-columns: repeat(2, 1fr); }
   .try-grid { grid-template-columns: 1fr; }
+  .sep-flow { grid-template-columns: 1fr; }
+  .sep-arrow { transform: rotate(90deg); }
   .judge-grid { grid-template-columns: 1fr; }
   .evidence { grid-template-columns: repeat(2, 1fr); }
   .arch { grid-template-columns: 1fr; }

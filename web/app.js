@@ -286,6 +286,9 @@ function renderDecision() {
 
 async function loadJob() {
   const path = $("job-select").value;
+  // Show which job is active.
+  const sel = $("job-select");
+  $("active-job").textContent = sel.options[sel.selectedIndex]?.text ?? "";
   $("job-facts").textContent = "";
   $("explain-result").hidden = true;
   $("translate-result").hidden = true;

@@ -72,7 +72,7 @@
           <div class="jcard">
             <h3>📱 Android app</h3>
             <ol>
-              <li>Install the "NIRA judge" build (link in the Devpost testing instructions).</li>
+              <li>The Android judge app link is in the Devpost testing instructions. Install it (Android 8.0 or later).</li>
               <li>Open an artwork, answer the four questions, open <b>Ask NIRA</b>.</li>
               <li>Home → AI activity lists every AI request.</li>
             </ol>
@@ -91,7 +91,7 @@
           <li><b>IN_CLOUD · 3.3 s</b><span>this page, Explain, 22 Nov 2026</span></li>
           <li><b>268</b><span>unit tests passing</span></li>
           <li><b>29</b><span>print techniques in the rules file</span></li>
-          <li><b>9</b><span>app languages</span></li>
+          <li><b>9</b><span>app languages: English, Tamil, Hindi, Bengali, Chinese, Vietnamese, Spanish, French, German</span></li>
         </ul>
       </div>
     </section>
@@ -143,7 +143,7 @@
           <p>Cost per piece from the factory's own rates, in any currency. Cost-Down shows what merging colours or switching method saves, with a before and after preview.</p>
         </article>
         <article class="feat">
-          <div class="shot"><img src="img/ask.webp" alt="Ask NIRA acting on a request" loading="lazy"></div>
+          <div class="shot"><img src="img/ask-action.webp" alt="Ask NIRA showing the navy ink as royal blue, preview only, with Undo" loading="lazy"></div>
           <h3>Ask NIRA: it talks and acts</h3>
           <p>Ask by voice in Tamil or English. "Make the navy ink royal blue", "1000 pieces", "open the sheet in Spanish": NIRA does it, checks it, and offers Undo.</p>
         </article>
@@ -172,6 +172,42 @@
     </section>
 
     <!-- Hybrid AI -->
+    <!-- Colour separation: real engine output for the hummingbird job -->
+    <section class="wrap section" id="separation">
+      <p class="eyebrow">Colour separation</p>
+      <h2>From artwork to screens, on the phone</h2>
+      <p class="lead">Real engine output for a hummingbird artwork on a white cotton T-shirt: CMYK for the picture plus 2 solid colours, 6 screens.</p>
+      <div class="sep-flow">
+        <figure class="sep-step"><img src="img/sep-artwork.webp" alt="The artwork" loading="lazy"><figcaption>1 · Artwork</figcaption></figure>
+        <div class="sep-arrow">→</div>
+        <figure class="sep-step films">
+          <div class="film-grid">
+            <img src="img/sep-film-1.webp" alt="Film for the cyan screen" loading="lazy">
+            <img src="img/sep-film-2.webp" alt="Film for the magenta screen" loading="lazy">
+            <img src="img/sep-film-3.webp" alt="Film for the yellow screen" loading="lazy">
+            <img src="img/sep-film-4.webp" alt="Film for the black screen" loading="lazy">
+            <img src="img/sep-film-5.webp" alt="Film for the pink (Vivid Rose) screen" loading="lazy">
+            <img src="img/sep-film-6.webp" alt="Film for the purple (Vivid Magenta) screen" loading="lazy">
+          </div>
+          <figcaption>2 · One film per screen (black = ink)</figcaption>
+        </figure>
+        <div class="sep-arrow">→</div>
+        <figure class="sep-step"><img src="img/sep-proof.webp" alt="The proof: all screens stacked" loading="lazy"><figcaption>3 · All screens stacked (proof)</figcaption></figure>
+      </div>
+      <table class="sep-table">
+        <thead><tr><th>Screen</th><th>Mesh</th><th>Coverage</th><th>Ink per garment</th></tr></thead>
+        <tbody>
+          <tr><td>Cyan</td><td>230–305 tpi</td><td>15.9%</td><td>0.2 g</td></tr>
+          <tr><td>Magenta</td><td>230–305 tpi</td><td>34.4%</td><td>0.3 g</td></tr>
+          <tr><td>Yellow</td><td>230–305 tpi</td><td>19.4%</td><td>0.2 g</td></tr>
+          <tr><td>Black</td><td>230–305 tpi</td><td>9.4%</td><td>0.1 g</td></tr>
+          <tr><td>Pink (Vivid Rose)</td><td>137–156 tpi</td><td>9.9%</td><td>0.2 g</td></tr>
+          <tr><td>Purple (Vivid Magenta)</td><td>137–156 tpi</td><td>7.7%</td><td>0.1 g</td></tr>
+        </tbody>
+      </table>
+      <p class="muted small">Mesh from the rules file; coverage and ink from the engine. A preliminary digital separation for planning, not print-ready films.</p>
+    </section>
+
     <section class="wrap section" id="devices">
       <div class="devices">
         <div class="devices-text">
@@ -186,7 +222,7 @@
             <div class="laptop-screen"><img src="img/web-demo.webp" alt="This web page on a laptop: a real NIRA job and a real Gemini explanation from the cloud, checked by NIRA" loading="lazy"></div>
             <div class="laptop-base"></div>
           </figure>
-          <figure class="phone p-dev"><img src="img/home.webp" alt="NIRA Android app home screen" loading="lazy"></figure>
+          <figure class="phone p-dev"><img src="img/decision-lion.webp" alt="NIRA Android app: the decision card for the lion artwork on navy cotton" loading="lazy"></figure>
         </div>
       </div>
     </section>
@@ -197,7 +233,7 @@
       <div class="route">
         <div class="node">Your question<br><small>text, voice or a page photo</small></div>
         <div class="arrow">→</div>
-        <div class="node">Firebase App Check<br><small>reCAPTCHA here · app token on Android</small></div>
+        <div class="node">Firebase App Check<br><small>proves the request comes from the real NIRA app or page, so nobody else can use its AI</small></div>
         <div class="arrow">→</div>
         <div class="node split"><span>💻 Gemini Nano on this device</span><span class="or">or</span><span>☁️ Gemini in the cloud</span><small>through Firebase AI Logic</small></div>
         <div class="arrow">→</div>
@@ -206,7 +242,7 @@
       <div class="arch" aria-label="How NIRA is built">
         <div class="lane decide">
           <p class="lane-title">Decides · no AI</p>
-          <div class="box">Image engine<small>garment mask, print colours (CIEDE2000), separations, screens, ink</small></div>
+          <div class="box">Image engine<small>finds the fabric and the print colours (CIEDE2000: the standard measure of how different two colours look to the eye), then separations, screens and ink</small></div>
           <div class="box">Rules files<small>print_rules.json and 29 techniques, written by a print expert; "verified by Ravi" where floor-checked</small></div>
           <div class="box">Factory rates<small>cost per piece and Cost-Down, on the phone</small></div>
         </div>
@@ -219,8 +255,7 @@
         </div>
       </div>
       <ul class="ticks cols">
-        <li>Text goes on-device first; a page photo or a voice question goes to the cloud only after the user taps.</li>
-        <li>Confidential mode never uses the cloud.</li>
+        <li>What leaves the phone, and when: see <a href="#privacy">the privacy list</a>.</li>
         <li>The source shown is the one the Firebase SDK reports, never a guess.</li>
         <li>Actions come from a fixed list and are validated before they run.</li>
       </ul>
@@ -235,7 +270,8 @@
         <div class="card" id="job">
           <h4>The job</h4>
           <p class="muted small">Computed by the NIRA Android app's engine and rules files (no AI). The AI only explains, answers and translates these facts. Text only.</p>
-          <label class="label" for="job-select">Job</label>
+          <p class="active-job">Active job: <b id="active-job">Navy + red logo on a navy cotton T-shirt</b></p>
+          <label class="label" for="job-select">Choose another job</label>
           <select id="job-select">
             <option value="samples/card_navy_logo.json">Navy + red logo on a navy cotton T-shirt</option>
             <option value="samples/card_white_logo.json">Navy + red logo on a white cotton T-shirt</option>
@@ -325,6 +361,20 @@
       </div>
     </section>
 
+    <!-- Privacy: the one list -->
+    <section class="wrap section" id="privacy">
+      <p class="eyebrow">Privacy</p>
+      <h2>What leaves the phone, and when</h2>
+      <ul class="ticks cols">
+        <li><b>Never:</b> the engine (print colours, separations, screens, mesh, ink, cost) always runs on the phone.</li>
+        <li><b>Text questions:</b> answered on the device first; the cloud gets the job's text facts only when no on-device model is ready. Never the image.</li>
+        <li><b>Artwork or brief photo:</b> sent to the cloud only after you tap <b>Send once</b> (Read with AI, buyer brief reader).</li>
+        <li><b>Voice:</b> your recording goes to the cloud only after you tap <b>Talk to NIRA</b>.</li>
+        <li><b>Confidential mode:</b> no cloud request at all.</li>
+        <li><b>AI activity:</b> lists every request, where it ran and how long it took. This web page sends text only.</li>
+      </ul>
+    </section>
+
     <!-- Honest limits -->
     <section class="wrap section" id="limits">
       <p class="eyebrow">Honest limits</p>
@@ -343,10 +393,10 @@
       <div class="faq">
         <details><summary>Does the AI choose the print method?</summary><p>No. NIRA's engine measures the artwork and a print expert's rules file chooses the method. The AI explains the decision, answers questions about it and carries out requests from a fixed list. It never invents a method, price or ink figure.</p></details>
         <details><summary>What happens if the AI makes up a number?</summary><p>The answer is not shown. Code compares every number in the answer with the engine's facts and the user's own question; anything else is held back with the reason, and it is counted on the AI activity list.</p></details>
-        <details><summary>What runs on the device, and what in the cloud?</summary><p>Text questions go to the on-device model first (Gemini Nano in Chrome, or on supported Android phones) and fall back to Gemini in the cloud. Page photos and voice go to the cloud only after the user taps. The source shown is the one the Firebase SDK reports.</p></details>
-        <details><summary>Does my artwork leave the phone?</summary><p>The engine works on the phone. Artwork is sent only for the optional "Read with AI" and the brief photo reader, after a tap, and never in Confidential mode. This page sends text only.</p></details>
+        <details><summary>What runs on the device, and what in the cloud?</summary><p>See <a href="#privacy">What leaves the phone, and when</a>. The source shown on every answer is the one the Firebase SDK reports.</p></details>
+        <details><summary>Does my artwork leave the phone?</summary><p>Only after you tap <b>Send once</b>, and never in Confidential mode. The full list: <a href="#privacy">What leaves the phone, and when</a>.</p></details>
         <details><summary>Where do the engineering values come from?</summary><p>From two rules files written with a garment print expert (mesh, ink, white base, discharge, quantity, cost-down, strike-off limits). Values not yet checked on the floor are marked as such. A strike-off is always needed before bulk production.</p></details>
-        <details><summary>How do judges try the Android app?</summary><p>The download link for the "NIRA judge" app is in the Devpost testing instructions. It needs Android 8.0 or later and installs beside any other app.</p></details>
+        <details><summary>How do judges try the Android app?</summary><p>The Android judge app link is in the Devpost testing instructions. It needs Android 8.0 or later and installs beside any other app.</p></details>
       </div>
     </section>
 
@@ -384,7 +434,7 @@
   <footer class="foot">
     <div class="wrap foot-in">
       <a href="#top" class="logo"><img src="nira_mark.webp" alt=""><span>NIRA</span></a>
-      <p class="muted small">#BuildHybridAI 2026 · All AI through Firebase AI Logic (Gemini) · Cloud model: <span id="model-name"></span> · Engine values are a model result for planning; a strike-off is needed before bulk production.</p>
+      <p class="muted small">#BuildHybridAI 2026 · All AI through Firebase AI Logic (Gemini) · Cloud model: <span id="model-name">gemini-3.5-flash-lite</span> · Engine values are calculated from the photo and the rules, not by AI. They are a model result for planning; a strike-off is needed before bulk production.</p>
     </div>
   </footer>
   <script type="module" src="app.js"></script>
