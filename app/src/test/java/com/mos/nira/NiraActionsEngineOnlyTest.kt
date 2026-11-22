@@ -31,6 +31,6 @@ class NiraActionsEngineOnlyTest {
         val fields = NiraActions.Action.PreviewInk::class.java.declaredFields
             .filter { !java.lang.reflect.Modifier.isStatic(it.modifiers) }.map { it.name }.toSet()
         assertTrue(fields.containsAll(listOf("fromHex", "toHex")))
-        assertTrue(fields.all { it.endsWith("Hex") || it.endsWith("Name") || it.endsWith("Key") })
+        assertTrue(fields.all { it.endsWith("Hex") || it.endsWith("Hexes") || it.endsWith("Name") || it.endsWith("Key") })
     }
 }

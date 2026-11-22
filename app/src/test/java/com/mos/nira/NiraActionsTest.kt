@@ -34,6 +34,15 @@ class NiraActionsTest {
     }
 
     @Test
+    fun everyShadeOfTheColourChangesInThePreview() {
+        // Two navy shades (as in the lion artwork): both must change, not only the first.
+        val c = ctx.copy(inkHexes = listOf("#1F2A5C", "#1C2858", "#C0392B"))
+        val r = NiraActions.validate(JSONArray("""[{"type":"preview_ink","from":"navy","to":"green"}]"""), c, "Make the navy ink green")
+        val a = r[0].action as Action.PreviewInk
+        assertEquals(listOf("#1F2A5C", "#1C2858"), a.allHexes)
+    }
+
+    @Test
     fun madeUpValuesAreRejected() {
         val r = run(
             """[{"type":"preview_ink","from":"yellow","to":"green"},{"type":"preview_ink","from":"navy","to":"teal"},

@@ -595,9 +595,12 @@ fun PrintDecisionCard(
                             actions.forEach { a ->
                                 when (a) {
                                     is com.mos.nira.core.ai.NiraActions.Action.PreviewInk -> {
-                                        val before = inkSwaps[a.fromHex]
-                                        onPreviewInk(a.fromHex, a.toHex)
-                                        undo += { onPreviewInk(a.fromHex, before) }
+                                        // Every shade with this colour name changes, so the whole colour changes in the preview.
+                                        a.allHexes.forEach { hex ->
+                                            val before = inkSwaps[hex]
+                                            onPreviewInk(hex, a.toHex)
+                                            undo += { onPreviewInk(hex, before) }
+                                        }
                                     }
                                     is com.mos.nira.core.ai.NiraActions.Action.SetGarment -> {
                                         val before = garmentHex

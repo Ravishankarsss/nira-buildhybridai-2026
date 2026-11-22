@@ -14,7 +14,8 @@ object NiraActions {
 
     sealed interface Action {
         /** Show the job's [fromHex] ink as [toKey]'s colour in the garment preview (preview only). */
-        data class PreviewInk(val fromHex: String, val fromName: String, val toKey: String, val toHex: String) : Action
+        /** [allHexes]: every measured shade with this colour name, so the whole colour changes in the preview. */
+        data class PreviewInk(val fromHex: String, val fromName: String, val toKey: String, val toHex: String, val allHexes: List<String> = listOf(fromHex)) : Action
         data class SetGarment(val key: String, val hex: String) : Action
         data class SetQuantity(val pieces: Int) : Action
         data class SetFibre(val fibre: String) : Action
@@ -78,7 +79,7 @@ object NiraActions {
                     when {
                         ink == null -> null to Reject.UNKNOWN_INK
                         to == null -> null to Reject.UNKNOWN_COLOUR
-                        else -> Action.PreviewInk(ink.second, ink.first, s("to"), to) to null
+                        else -> Action.PreviewInk(ink.second, ink.first, s("to"), to, c.inkHexes.filter { ColourName.english(it).lowercase() == from }.distinct()) to null
                     }
                 }
                 "set_garment" -> colour(s("colour"))?.let { Action.SetGarment(s("colour"), it) to null } ?: (null to Reject.UNKNOWN_COLOUR)

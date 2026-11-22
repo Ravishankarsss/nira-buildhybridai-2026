@@ -422,8 +422,8 @@ fun ColorIntelligenceScreen(
         if (tab == JobTab.BRIEF) item { previewContent() }
 
         // "Ask like a master": four tap questions, then one decision card.
-        // Always composed (the Engineering tab draws nothing) so Ask NIRA, the sheet and the top bar work on every tab.
-        item { decisionContent(tab.section, askOpen) { askOpen = it } }
+        // The Ask NIRA sheet is hosted by the always-composed copy below, so it opens even when this item is off screen.
+        item { decisionContent(tab.section, false) { askOpen = it } }
 
         // AI read of the artwork (Firebase AI Logic). Engine numbers are passed in as facts.
         if (tab == JobTab.DECISION) item {
@@ -648,8 +648,9 @@ fun ColorIntelligenceScreen(
     }
         // The card inside the list stops when it scrolls off screen, so the top bar could keep an
         // early value ("0 screens"). This copy draws nothing and is always composed, so the top bar's
-        // method, screens and cost follow the engine on every tab.
-        decisionContent(com.mos.nira.features.advice.CardSection.NONE, false) { }
+        // method, screens and cost follow the engine on every tab. It also hosts the Ask NIRA sheet: the
+        // list item may be off screen (Brief tab, long preview) and then a sheet inside it never shows.
+        decisionContent(com.mos.nira.features.advice.CardSection.NONE, askOpen) { askOpen = it }
         // Before the four answers: Ask NIRA answers from the measured facts only (no actions).
         if (askOpen && jobSummary?.method == null && measuredPrintColours != null) {
             val facts = remember(measuredPrintColours, artworkBackground, artworkBackgroundAnswer, lowResolution, inputKind) {
