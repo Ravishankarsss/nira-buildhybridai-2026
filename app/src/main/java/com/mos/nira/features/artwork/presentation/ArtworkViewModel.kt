@@ -292,7 +292,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                     loadShadeLibraries()
                 } else {
                     _uiState.update {
-                        it.copy(analysisState = AnalysisState.Error("CSV Import failed: ${result.exceptionOrNull()?.message}"))
+                        it.copy(analysisState = AnalysisState.Error(str(com.mos.nira.R.string.msg_csv_failed, result.exceptionOrNull()?.message.orEmpty())))
                     }
                 }
             }
@@ -370,7 +370,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                     previewWithoutBase = null,
                     previewWithBase = null,
                     previewWarnings = emptyList(),
-                    analysisState = AnalysisState.Loading("Reading image metadata..."),
+                    analysisState = AnalysisState.Loading(str(com.mos.nira.R.string.msg_reading)),
                     selectedImageUri = uri,
                     palette = emptyList(),
                     colorGroups = emptyList(),
@@ -396,7 +396,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                 if (bitmap == null) {
                     _uiState.update {
                         it.copy(
-                            analysisState = AnalysisState.Error("Unable to decode artwork image. Please select a valid JPEG, PNG or WebP file.")
+                            analysisState = AnalysisState.Error(str(com.mos.nira.R.string.msg_decode_failed))
                         )
                     }
                     return@launch
@@ -415,7 +415,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
             } catch (e: Exception) {
                 e.printStackTrace()
                 _uiState.update {
-                    it.copy(analysisState = AnalysisState.Error("Failed to load image: ${e.localizedMessage}"))
+                    it.copy(analysisState = AnalysisState.Error(str(com.mos.nira.R.string.msg_load_failed, e.localizedMessage.orEmpty())))
                 }
             }
         }
@@ -480,7 +480,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
 
                 _uiState.update {
                     it.copy(
-                        analysisState = AnalysisState.Loading("Rendering 1024px digital separations..."),
+                        analysisState = AnalysisState.Loading(str(com.mos.nira.R.string.msg_rendering)),
                         palette = matchedPalette,
                         colorGroups = extractionResult.colorGroups,
                         selectedColor = matchedPalette.firstOrNull()
@@ -531,7 +531,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
             } catch (e: Exception) {
                 e.printStackTrace()
                 _uiState.update {
-                    it.copy(analysisState = AnalysisState.Error("Analysis failed: ${e.localizedMessage}"))
+                    it.copy(analysisState = AnalysisState.Error(str(com.mos.nira.R.string.msg_analysis_failed, e.localizedMessage.orEmpty())))
                 }
             }
         }
@@ -544,7 +544,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
         val bitmap = _uiState.value.selectedBitmap ?: return
 
         viewModelScope.launch {
-            _uiState.update { it.copy(analysisState = AnalysisState.Loading("Merging colors...")) }
+            _uiState.update { it.copy(analysisState = AnalysisState.Loading(str(com.mos.nira.R.string.msg_merging))) }
             val updatedPalette = currentPalette.filter { it.id != mergeColorId }.mapIndexed { idx, c ->
                 c.copy(id = idx)
             }
@@ -558,7 +558,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
         val bitmap = _uiState.value.selectedBitmap ?: return
 
         viewModelScope.launch {
-            _uiState.update { it.copy(analysisState = AnalysisState.Loading("Removing color...")) }
+            _uiState.update { it.copy(analysisState = AnalysisState.Loading(str(com.mos.nira.R.string.msg_removing))) }
             val updated = currentPalette.filter { it.id != colorId }.mapIndexed { idx, c ->
                 c.copy(id = idx)
             }
@@ -604,11 +604,11 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                     nearestShades = matches
                 )
 
-                _uiState.update { it.copy(analysisState = AnalysisState.Loading("Adding color and reassigning pixels...")) }
+                _uiState.update { it.copy(analysisState = AnalysisState.Loading(str(com.mos.nira.R.string.msg_adding))) }
                 val updated = currentPalette + newColor
                 reassignAndSeparate(bitmap, updated)
             } catch (e: Exception) {
-                _uiState.update { it.copy(analysisState = AnalysisState.Error("Invalid HEX color: ${e.message}")) }
+                _uiState.update { it.copy(analysisState = AnalysisState.Error(str(com.mos.nira.R.string.msg_bad_hex, e.message.orEmpty()))) }
             }
         }
     }
@@ -674,7 +674,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                     previewWithoutBase = null,
                     previewWithBase = null,
                     previewWarnings = emptyList(),
-                    analysisState = AnalysisState.Loading("Loading analysis record..."),
+                    analysisState = AnalysisState.Loading(str(com.mos.nira.R.string.msg_loading_record)),
                     selectedColor = record.palette.firstOrNull(),
                     palette = record.palette,
                     colorGroups = record.colorGroups,
@@ -914,6 +914,9 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
         }
         if (pieces != null) computePartDReport()
     }
+
+    /** A UI text in the app language (status and error lines shown on screen). */
+    private fun str(id: Int, vararg args: Any): String = getApplication<Application>().getString(id, *args)
 
     /** Shows ink [fromHex] as [toHex] in the preview (a contrast fix); null undoes it. */
     fun swapInk(fromHex: String, toHex: String?) {
@@ -1491,7 +1494,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
     fun saveSeparationSheetToDownloads(context: Context, onResult: (String) -> Unit) {
         val compositeBitmap = _uiState.value.partCResult?.compositeSheetBitmap
         if (compositeBitmap == null) {
-            onResult("Separation sheet bitmap not generated yet.")
+            onResult(str(com.mos.nira.R.string.msg_sheet_not_ready))
             return
         }
 
@@ -1520,13 +1523,13 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                 }
 
                 withContext(Dispatchers.Main) {
-                    val msg = "Saved to Downloads: $fileName"
+                    val msg = str(com.mos.nira.R.string.msg_saved, fileName)
                     _uiState.update { it.copy(exportStatusMessage = msg) }
                     onResult(msg)
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    val err = "Save failed: ${e.localizedMessage}"
+                    val err = str(com.mos.nira.R.string.msg_save_failed, e.localizedMessage.orEmpty())
                     _uiState.update { it.copy(exportStatusMessage = err) }
                     onResult(err)
                 }
@@ -1537,7 +1540,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
     fun shareSeparationSheet(context: Context, onResult: (String) -> Unit) {
         val compositeBitmap = _uiState.value.partCResult?.compositeSheetBitmap
         if (compositeBitmap == null) {
-            onResult("Separation sheet bitmap not generated yet.")
+            onResult(str(com.mos.nira.R.string.msg_sheet_not_ready))
             return
         }
 
@@ -1560,14 +1563,14 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                 }
 
                 withContext(Dispatchers.Main) {
-                    context.startActivity(Intent.createChooser(shareIntent, "Share Separation Sheet via"))
-                    val msg = "Opened share chooser for ${file.name}"
+                    context.startActivity(Intent.createChooser(shareIntent, str(com.mos.nira.R.string.msg_share_via)))
+                    val msg = str(com.mos.nira.R.string.msg_share_opened, file.name)
                     _uiState.update { it.copy(exportStatusMessage = msg) }
                     onResult(msg)
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    val err = "Share failed: ${e.localizedMessage}"
+                    val err = str(com.mos.nira.R.string.msg_share_failed, e.localizedMessage.orEmpty())
                     _uiState.update { it.copy(exportStatusMessage = err) }
                     onResult(err)
                 }

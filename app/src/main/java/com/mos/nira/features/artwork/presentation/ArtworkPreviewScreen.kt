@@ -1,5 +1,9 @@
 package com.mos.nira.features.artwork.presentation
 
+import com.mos.nira.R
+
+import androidx.compose.ui.res.stringResource
+
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -107,14 +111,14 @@ fun ArtworkPreviewScreen(
                 onClick = onBack,
                 shape = RoundedCornerShape(10.dp)
             ) {
-                Text("← Back", color = TextWhite)
+                Text(stringResource(R.string.common_back), color = TextWhite)
             }
 
             OutlinedButton(
                 onClick = { pickerLauncher.launch("image/*") },
                 shape = RoundedCornerShape(10.dp)
             ) {
-                Text("Replace Image", color = Cyan)
+                Text(stringResource(R.string.prev_replace), color = Cyan)
             }
         }
 
@@ -139,7 +143,7 @@ fun ArtworkPreviewScreen(
                 if (bitmap != null) {
                     Image(
                         bitmap = bitmap.asImageBitmap(),
-                        contentDescription = "Artwork Preview",
+                        contentDescription = stringResource(R.string.prev_cd_artwork),
                         contentScale = ContentScale.Fit,
                         modifier = Modifier
                             .fillMaxSize()
@@ -155,7 +159,7 @@ fun ArtworkPreviewScreen(
                 }
 
                 Text(
-                    text = if (scale > 1.05f) "Pinch to zoom (${String.format("%.1fx", scale)}) • Tap to reset" else "Pinch to zoom & pan",
+                    text = if (scale > 1.05f) stringResource(R.string.prev_zoom_reset, String.format("%.1fx", scale)) else stringResource(R.string.prev_zoom_hint),
                     color = TextWhite.copy(alpha = 0.6f),
                     fontSize = 11.sp,
                     modifier = Modifier
@@ -182,7 +186,7 @@ fun ArtworkPreviewScreen(
                         .padding(16.dp)
                 ) {
                     Text(
-                        text = "IMAGE SPECIFICATIONS",
+                        text = stringResource(R.string.prev_specs),
                         color = Violet,
                         fontSize = 11.sp,
                         letterSpacing = 1.sp,
@@ -194,7 +198,7 @@ fun ArtworkPreviewScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("Filename", color = TextMuted, fontSize = 12.sp)
+                        Text(stringResource(R.string.prev_filename), color = TextMuted, fontSize = 12.sp)
                         Text(metadata.fileName, color = TextWhite, fontSize = 12.sp, fontWeight = FontWeight.SemiBold, maxLines = 1)
                     }
                     Spacer(modifier = Modifier.height(6.dp))
@@ -202,7 +206,7 @@ fun ArtworkPreviewScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("Dimensions", color = TextMuted, fontSize = 12.sp)
+                        Text(stringResource(R.string.prev_dimensions), color = TextMuted, fontSize = 12.sp)
                         Text(metadata.resolutionFormatted, color = Cyan, fontSize = 12.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
                     }
                     Spacer(modifier = Modifier.height(6.dp))
@@ -210,7 +214,7 @@ fun ArtworkPreviewScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("File Size", color = TextMuted, fontSize = 12.sp)
+                        Text(stringResource(R.string.prev_filesize), color = TextMuted, fontSize = 12.sp)
                         Text(metadata.fileSizeFormatted, color = TextWhite, fontSize = 12.sp, fontFamily = FontFamily.Monospace)
                     }
                 }
@@ -231,7 +235,7 @@ fun ArtworkPreviewScreen(
                     .padding(16.dp)
             ) {
                 Text(
-                    text = "PRINT CONSTRAINTS & GARMENT BASE",
+                    text = stringResource(R.string.prev_constraints),
                     color = Violet,
                     fontSize = 11.sp,
                     letterSpacing = 1.sp,
@@ -266,7 +270,7 @@ fun ArtworkPreviewScreen(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 // Garment base swatch presets
-                Text("Garment Base Color (Excluded from Ink Layers):", color = TextMuted, fontSize = 12.sp)
+                Text(stringResource(R.string.prev_garment_base), color = TextMuted, fontSize = 12.sp)
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Row(
@@ -274,11 +278,11 @@ fun ArtworkPreviewScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     val presets = listOf(
-                        "None" to null,
-                        "White" to "#FFFFFF",
-                        "Black" to "#000000",
-                        "Navy" to "#0B1020",
-                        "Heather" to "#B0B0B0"
+                        stringResource(R.string.prev_none) to null,
+                        stringResource(R.string.colour_white) to "#FFFFFF",
+                        stringResource(R.string.colour_black) to "#000000",
+                        stringResource(R.string.colour_navy) to "#0B1020",
+                        stringResource(R.string.prev_heather) to "#B0B0B0"
                     )
 
                     presets.forEach { (name, hex) ->
@@ -341,7 +345,7 @@ fun ArtworkPreviewScreen(
                     colors = ButtonDefaults.buttonColors(containerColor = Violet),
                     shape = RoundedCornerShape(14.dp)
                 ) {
-                    Text("Retry Analysis", fontWeight = FontWeight.Bold, color = TextWhite)
+                    Text(stringResource(R.string.prev_retry), fontWeight = FontWeight.Bold, color = TextWhite)
                 }
             }
             else -> {
@@ -356,7 +360,7 @@ fun ArtworkPreviewScreen(
                     ),
                     shape = RoundedCornerShape(14.dp)
                 ) {
-                    Text("Auto-Detect Print Colours (CIEDE2000)  →", fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                    Text(stringResource(R.string.prev_start), fontWeight = FontWeight.Bold, fontSize = 15.sp)
                 }
             }
         }

@@ -206,7 +206,7 @@ fun ColorIntelligenceScreen(
             },
             dismissButton = {
                 TextButton(onClick = { showAddDialog = false }) {
-                    Text("Cancel", color = TextWhite)
+                    Text(stringResource(R.string.common_cancel), color = TextWhite)
                 }
             },
             containerColor = CardBg,
@@ -256,12 +256,12 @@ fun ColorIntelligenceScreen(
                     },
                     enabled = mergeTargetId != null
                 ) {
-                    Text("Confirm Merge", color = Cyan, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.merge_confirm), color = Cyan, fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showMergeDialog = false }) {
-                    Text("Cancel", color = TextWhite)
+                    Text(stringResource(R.string.common_cancel), color = TextWhite)
                 }
             },
             containerColor = CardBg,
@@ -497,7 +497,7 @@ fun ColorIntelligenceScreen(
                                 modifier = Modifier.weight(1f),
                                 shape = RoundedCornerShape(10.dp)
                             ) {
-                                Text("Merge...", fontSize = 11.sp, color = TextWhite)
+                                Text(stringResource(R.string.merge_button), fontSize = 11.sp, color = TextWhite)
                             }
 
                             OutlinedButton(
@@ -513,7 +513,7 @@ fun ColorIntelligenceScreen(
                                 modifier = Modifier.weight(1f),
                                 shape = RoundedCornerShape(10.dp)
                             ) {
-                                Text("Base Fabric", fontSize = 11.sp, color = Violet)
+                                Text(stringResource(R.string.base_fabric), fontSize = 11.sp, color = Violet)
                             }
 
                             OutlinedButton(
@@ -521,7 +521,7 @@ fun ColorIntelligenceScreen(
                                 modifier = Modifier.weight(1f),
                                 shape = RoundedCornerShape(10.dp)
                             ) {
-                                Text("Remove", fontSize = 11.sp, color = Color(0xFFFF6E6E))
+                                Text(stringResource(R.string.common_remove), fontSize = 11.sp, color = Color(0xFFFF6E6E))
                             }
                         }
                     }
@@ -575,7 +575,7 @@ fun ColorIntelligenceScreen(
                 item {
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        text = "PERCEPTUAL COLOR FAMILIES (CIEDE2000 < 5.0)",
+                        text = stringResource(R.string.families_title),
                         color = Violet,
                         fontSize = 11.sp,
                         letterSpacing = 1.5.sp,
@@ -631,7 +631,7 @@ fun ColorIntelligenceScreen(
                                     )
                                 }
                                 Text(
-                                    text = "${group.members.size} shades",
+                                    text = stringResource(R.string.shades_count, group.members.size),
                                     color = TextMuted,
                                     fontSize = 11.sp
                                 )

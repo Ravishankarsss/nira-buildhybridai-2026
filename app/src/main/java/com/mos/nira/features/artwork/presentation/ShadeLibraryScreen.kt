@@ -1,5 +1,9 @@
 package com.mos.nira.features.artwork.presentation
 
+import com.mos.nira.R
+
+import androidx.compose.ui.res.stringResource
+
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -97,10 +101,10 @@ fun ShadeLibraryScreen(
     if (showImportDialog && pendingImportUri != null) {
         AlertDialog(
             onDismissRequest = { showImportDialog = false },
-            title = { Text("Import Shade Library CSV", color = TextWhite, fontWeight = FontWeight.Bold) },
+            title = { Text(stringResource(R.string.shade_import_title), color = TextWhite, fontWeight = FontWeight.Bold) },
             text = {
                 Column {
-                    Text("Enter a name for this library (columns: type,code,name,L,a,b):", color = TextMuted, fontSize = 12.sp)
+                    Text(stringResource(R.string.shade_import_name), color = TextMuted, fontSize = 12.sp)
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
                         value = importLibName,
@@ -123,12 +127,12 @@ fun ShadeLibraryScreen(
                         pendingImportUri = null
                     }
                 ) {
-                    Text("Import CSV", color = Cyan, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.shade_import_csv), color = Cyan, fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showImportDialog = false }) {
-                    Text("Cancel", color = TextWhite)
+                    Text(stringResource(R.string.common_cancel), color = TextWhite)
                 }
             },
             containerColor = CardBg,
@@ -139,10 +143,10 @@ fun ShadeLibraryScreen(
     if (showAddDialog) {
         AlertDialog(
             onDismissRequest = { showAddDialog = false },
-            title = { Text("Add Custom Shade", color = TextWhite, fontWeight = FontWeight.Bold) },
+            title = { Text(stringResource(R.string.shade_add_title), color = TextWhite, fontWeight = FontWeight.Bold) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("Type (e.g. TCX, TPG, TN, FACTORY, BUYER):", color = TextMuted, fontSize = 11.sp)
+                    Text(stringResource(R.string.shade_type), color = TextMuted, fontSize = 11.sp)
                     OutlinedTextField(
                         value = inputType,
                         onValueChange = { inputType = it.uppercase() },
@@ -150,7 +154,7 @@ fun ShadeLibraryScreen(
                         colors = TextFieldDefaults.colors(focusedTextColor = TextWhite, unfocusedTextColor = TextWhite, focusedContainerColor = Color(0xFF0F1526), unfocusedContainerColor = Color(0xFF0F1526))
                     )
 
-                    Text("Shade Code (e.g. 19-4052):", color = TextMuted, fontSize = 11.sp)
+                    Text(stringResource(R.string.shade_code), color = TextMuted, fontSize = 11.sp)
                     OutlinedTextField(
                         value = inputCode,
                         onValueChange = { inputCode = it },
@@ -158,7 +162,7 @@ fun ShadeLibraryScreen(
                         colors = TextFieldDefaults.colors(focusedTextColor = TextWhite, unfocusedTextColor = TextWhite, focusedContainerColor = Color(0xFF0F1526), unfocusedContainerColor = Color(0xFF0F1526))
                     )
 
-                    Text("Shade Name (e.g. Classic Navy):", color = TextMuted, fontSize = 11.sp)
+                    Text(stringResource(R.string.shade_name), color = TextMuted, fontSize = 11.sp)
                     OutlinedTextField(
                         value = inputName,
                         onValueChange = { inputName = it },
@@ -171,9 +175,9 @@ fun ShadeLibraryScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(if (useHexInput) "Define by HEX:" else "Define by L*, a*, b*:", color = Cyan, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                        Text(if (useHexInput) stringResource(R.string.shade_by_hex) else stringResource(R.string.shade_by_lab), color = Cyan, fontSize = 11.sp, fontWeight = FontWeight.Bold)
                         TextButton(onClick = { useHexInput = !useHexInput }) {
-                            Text(if (useHexInput) "Switch to L,a,b" else "Switch to HEX", fontSize = 10.sp, color = Violet)
+                            Text(if (useHexInput) stringResource(R.string.shade_to_lab) else stringResource(R.string.shade_to_hex), fontSize = 10.sp, color = Violet)
                         }
                     }
 
@@ -246,12 +250,12 @@ fun ShadeLibraryScreen(
                         }
                     }
                 ) {
-                    Text("Save Shade", color = Cyan, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.shade_save), color = Cyan, fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showAddDialog = false }) {
-                    Text("Cancel", color = TextWhite)
+                    Text(stringResource(R.string.common_cancel), color = TextWhite)
                 }
             },
             containerColor = CardBg,
@@ -276,7 +280,7 @@ fun ShadeLibraryScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 OutlinedButton(onClick = onBack, shape = RoundedCornerShape(10.dp)) {
-                    Text("← Studio", color = TextWhite)
+                    Text(stringResource(R.string.shade_back_studio), color = TextWhite)
                 }
 
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -284,7 +288,7 @@ fun ShadeLibraryScreen(
                         onClick = { filePicker.launch("text/*") },
                         shape = RoundedCornerShape(10.dp)
                     ) {
-                        Text("Import CSV", color = Cyan, fontSize = 11.sp)
+                        Text(stringResource(R.string.shade_import_csv), color = Cyan, fontSize = 11.sp)
                     }
 
                     Button(
@@ -292,7 +296,7 @@ fun ShadeLibraryScreen(
                         colors = ButtonDefaults.buttonColors(containerColor = Violet),
                         shape = RoundedCornerShape(10.dp)
                     ) {
-                        Text("+ Add Shade", color = TextWhite, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.shade_add), color = TextWhite, fontSize = 11.sp, fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -306,10 +310,10 @@ fun ShadeLibraryScreen(
                 colors = CardDefaults.cardColors(containerColor = Color(0xFF141A2D))
             ) {
                 Column(modifier = Modifier.padding(14.dp)) {
-                    Text("COLOR STANDARDS & PRIVACY", color = Violet, fontSize = 10.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.sp)
+                    Text(stringResource(R.string.shade_privacy_title), color = Violet, fontSize = 10.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.sp)
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        "NIRA ships only with the generic NIRA demo library. User-imported CSV standards are stored exclusively in app-private device storage and never transmitted to external cloud services.",
+                        stringResource(R.string.shade_privacy_body),
                         color = TextMuted,
                         fontSize = 11.sp,
                         lineHeight = 15.sp
@@ -320,7 +324,7 @@ fun ShadeLibraryScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             // Libraries Active Toggles
-            Text("ACTIVE SHADE LIBRARIES", color = Violet, fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.5.sp)
+            Text(stringResource(R.string.shade_active), color = Violet, fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.5.sp)
         }
 
         items(libraries) { lib ->
@@ -339,7 +343,7 @@ fun ShadeLibraryScreen(
                     Column {
                         Text(lib.name, color = TextWhite, fontWeight = FontWeight.Bold, fontSize = 14.sp)
                         Spacer(modifier = Modifier.height(2.dp))
-                        Text("${lib.entryCount} standards • ${if (lib.isBuiltIn) "Built-in Asset" else "Device Local"}", color = TextMuted, fontSize = 11.sp)
+                        Text(stringResource(if (lib.isBuiltIn) R.string.shade_lib_builtin else R.string.shade_lib_local, lib.entryCount), color = TextMuted, fontSize = 11.sp)
                     }
 
                     Switch(
@@ -357,7 +361,7 @@ fun ShadeLibraryScreen(
         // Type Filter Chips (e.g. ALL, TCX, TPG, TN, TSX, FACTORY, BUYER, NIRA_DEMO)
         item {
             Spacer(modifier = Modifier.height(6.dp))
-            Text("FILTER BY STANDARD TYPE", color = Violet, fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.5.sp)
+            Text(stringResource(R.string.shade_filter), color = Violet, fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.5.sp)
             Spacer(modifier = Modifier.height(8.dp))
 
             val distinctTypes = listOf("ALL") + allShades.map { it.type }.distinct()
@@ -379,7 +383,7 @@ fun ShadeLibraryScreen(
             }
 
             Spacer(modifier = Modifier.height(14.dp))
-            Text("SHADE ENTRIES (${allShades.size})", color = Violet, fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.5.sp)
+            Text(stringResource(R.string.shade_entries, allShades.size), color = Violet, fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.5.sp)
         }
 
         val filteredShades = if (selectedTypeFilter.isNullOrBlank()) allShades else allShades.filter { it.type.equals(selectedTypeFilter, ignoreCase = true) }

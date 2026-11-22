@@ -139,7 +139,7 @@ fun SettingsScreen(
                     Text(text = stringResource(R.string.settings_language_desc), color = Muted, fontSize = 11.sp)
                 }
                 Text(
-                    text = "Change",
+                    text = stringResource(R.string.settings_change),
                     color = Cyan,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold,
@@ -231,7 +231,7 @@ fun SettingsScreen(
             },
             confirmButton = {
                 TextButton(onClick = { showLanguageDialog = false }) {
-                    Text(text = "Close", color = Cyan)
+                    Text(text = stringResource(R.string.common_close), color = Cyan)
                 }
             },
             containerColor = CardColor,
