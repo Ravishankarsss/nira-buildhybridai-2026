@@ -21,6 +21,7 @@
         <a href="#features">Features</a>
         <a href="#hybrid">Hybrid AI</a>
         <a href="#faq">FAQ</a>
+        <a href="#judges">For judges</a>
       </div>
       <a href="#try" class="btn small">Try a real job</a>
     </div>
@@ -52,6 +53,49 @@
     </section>
 
     <!-- How it works -->
+    <!-- For judges -->
+    <section class="wrap section" id="judges">
+      <div class="judges">
+        <div class="judges-head">
+          <p class="eyebrow">For judges</p>
+          <h2>Test NIRA in two minutes</h2>
+        </div>
+        <div class="judge-grid">
+          <div class="jcard">
+            <h3>💻 Web, in Chrome</h3>
+            <ol>
+              <li>Scroll to <a href="#try">Try it live</a>.</li>
+              <li>Press <b>Explain this card</b>, then try <b>Ask NIRA</b> and <b>Translate</b>.</li>
+              <li>Every answer shows where it ran and how long it took.</li>
+            </ol>
+          </div>
+          <div class="jcard">
+            <h3>📱 Android app</h3>
+            <ol>
+              <li>Install the "NIRA judge" build (link in the Devpost testing instructions).</li>
+              <li>Open an artwork, answer the four questions, open <b>Ask NIRA</b>.</li>
+              <li>Home → AI activity lists every AI request.</li>
+            </ol>
+          </div>
+          <div class="jcard">
+            <h3>🔎 Where the AI runs</h3>
+            <ul class="plain">
+              <li><b>On-device:</b> Gemini Nano in Chrome, when Chrome's model is ready.</li>
+              <li><b>Cloud:</b> Gemini through Firebase AI Logic, when on-device is not available.</li>
+              <li>Our Android test phone has no on-device model, so it shows <b>In the cloud</b>. NIRA never pretends.</li>
+            </ul>
+          </div>
+        </div>
+        <ul class="evidence">
+          <li><b>ON_DEVICE · 3.4 s</b><span>Chrome, Gemini Nano, 18 Nov 2026</span></li>
+          <li><b>IN_CLOUD · 3.3 s</b><span>this page, Explain, 22 Nov 2026</span></li>
+          <li><b>268</b><span>unit tests passing</span></li>
+          <li><b>29</b><span>print techniques in the rules file</span></li>
+          <li><b>9</b><span>app languages</span></li>
+        </ul>
+      </div>
+    </section>
+
     <section class="wrap section" id="people">
       <p class="eyebrow">Made for people</p>
       <h2>Decide with facts, <span class="grad">not with pressure.</span></h2>
@@ -159,6 +203,21 @@
         <div class="arrow">→</div>
         <div class="node verify">NIRA's checks<br><small>numbers · colour codes · actions</small></div>
       </div>
+      <div class="arch" aria-label="How NIRA is built">
+        <div class="lane decide">
+          <p class="lane-title">Decides · no AI</p>
+          <div class="box">Image engine<small>garment mask, print colours (CIEDE2000), separations, screens, ink</small></div>
+          <div class="box">Rules files<small>print_rules.json and 29 techniques, written by a print expert; "verified by Ravi" where floor-checked</small></div>
+          <div class="box">Factory rates<small>cost per piece and Cost-Down, on the phone</small></div>
+        </div>
+        <div class="arch-mid"><span>facts</span><b>→</b></div>
+        <div class="lane explain">
+          <p class="lane-title">Explains and acts · AI</p>
+          <div class="box">Firebase AI Logic<small>one hybrid gateway: on-device first, cloud when needed</small></div>
+          <div class="box">NIRA's checks<small>numbers must be in the facts · no colour codes · actions from a fixed list</small></div>
+          <div class="box">Answer with its source<small>On this device / In the cloud, time, and checked or held back</small></div>
+        </div>
+      </div>
       <ul class="ticks cols">
         <li>Text goes on-device first; a page photo or a voice question goes to the cloud only after the user taps.</li>
         <li>Confidential mode never uses the cloud.</li>
@@ -264,6 +323,18 @@
           <p class="muted">The AI never makes these values. It explains them, answers questions about them and translates them.</p>
         </div>
       </div>
+    </section>
+
+    <!-- Honest limits -->
+    <section class="wrap section" id="limits">
+      <p class="eyebrow">Honest limits</p>
+      <h2>What NIRA does not claim</h2>
+      <ul class="ticks cols limits">
+        <li>The garment preview is a model on the phone, not a proof. A strike-off is still needed before bulk.</li>
+        <li>Costs use sample factory rates until the factory enters its own. They are not a quote.</li>
+        <li>Many rule values are labelled "assumption" until checked on the floor; the app shows the label.</li>
+        <li>A large tonal artwork takes about 30–40 s to measure on a mid-range phone.</li>
+      </ul>
     </section>
 
     <section class="wrap section" id="faq">
