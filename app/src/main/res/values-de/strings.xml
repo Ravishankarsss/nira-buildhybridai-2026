@@ -221,7 +221,7 @@
     <string name="explain_unverified">Nicht angezeigt: nicht geprüft. Die Antwort enthielt Zahlen, die nicht in den Engine-Daten stehen (%1$s). Nutzen Sie die Engine-Daten unten.</string>
     <string name="explain_data_title">Engine-Daten</string>
     <string name="explain_blocked">Der vertrauliche Modus ist an und dieses Telefon hat kein On-Device-Modell, daher wurde nichts gesendet. Die Engine-Daten stehen unten.</string>
-    <string name="ai_limit_reached">Das kostenlose KI-Kontingent von NIRA ist im Moment aufgebraucht. In ein paar Minuten erneut versuchen; das Tageskontingent beginnt um Mitternacht pazifischer Zeit neu. Die Engine-Ergebnisse sind nicht betroffen.</string>
+    <string name="ai_limit_reached">Kostenloses Cloud-Limit vorerst erreicht; On-Device-KI und die Engine funktionieren weiter. Cloud-Antworten kommen nach kurzer Zeit wieder (das Tageslimit wird um Mitternacht Pacific-Zeit zurückgesetzt).</string>
     <string name="ai_timed_out">Die KI hat nicht innerhalb einer Minute geantwortet, daher hat NIRA aufgehört zu warten. Ihr Auftrag und die Ergebnisse sind sicher. Bitte erneut versuchen.</string>
     <string name="artbg_title">Das sieht nach Hintergrund aus, nicht nach Druckfarbe</string>
     <string name="artbg_body">%1$s bedeckt %2$s des Bildes und %3$s seines Randes. Drucken oder weglassen?</string>

@@ -222,7 +222,7 @@
     <string name="explain_unverified">No se muestra: sin verificar. La respuesta tenía números que no están en los datos del motor (%1$s). Use los datos del motor de abajo.</string>
     <string name="explain_data_title">Datos del motor</string>
     <string name="explain_blocked">El modo confidencial está activado y este teléfono no tiene modelo en el dispositivo, así que no se envió nada. Los datos del motor están abajo.</string>
-    <string name="ai_limit_reached">El límite gratuito de IA de NIRA se ha agotado por ahora. Inténtelo de nuevo en unos minutos; el límite diario se reinicia a medianoche, hora del Pacífico. Los resultados del motor no se ven afectados.</string>
+    <string name="ai_limit_reached">Límite gratuito de la nube alcanzado por ahora; la IA en el dispositivo y el motor siguen funcionando. Las respuestas de la nube vuelven tras una breve espera (el límite diario se reinicia a medianoche, hora del Pacífico).</string>
     <string name="ai_timed_out">La IA no respondió en un minuto, así que NIRA dejó de esperar. Su trabajo y los resultados están a salvo. Inténtelo de nuevo.</string>
     <string name="artbg_title">Parece fondo, no tinta</string>
     <string name="artbg_body">%1$s cubre el %2$s de la imagen y el %3$s de su borde. ¿Imprimirlo o quitarlo?</string>

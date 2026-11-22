@@ -220,7 +220,7 @@
     <string name="explain_unverified">未显示：未经核实。回答中含有引擎数据中没有的数字（%1$s）。请使用下方的引擎数据。</string>
     <string name="explain_data_title">引擎数据</string>
     <string name="explain_blocked">保密模式已开启，且本手机没有设备端模型，因此未发送任何内容。引擎数据见下方。</string>
-    <string name="ai_limit_reached">NIRA 的免费 AI 额度暂时已用完。请几分钟后再试；每日额度在太平洋时间午夜重置。引擎结果不受影响。</string>
+    <string name="ai_limit_reached">暂时已达到免费云端额度；设备端 AI 和计算引擎仍可使用。稍后云端回答会恢复（每日额度在太平洋时间午夜重置）。</string>
     <string name="ai_timed_out">AI 一分钟内没有回答，NIRA 已停止等待。您的订单和计算结果都安全。请再试一次。</string>
     <string name="artbg_title">这看起来是背景，不是油墨</string>
     <string name="artbg_body">%1$s 占图像的 %2$s，占边缘的 %3$s。要印刷还是去掉？</string>

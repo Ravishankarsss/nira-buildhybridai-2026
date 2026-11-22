@@ -98,7 +98,7 @@ function sourceLabel(source) {
   return "⚠ " + source;
 }
 
-const LIMIT_TEXT = "The free AI limit for NIRA is used up for now. Try again in a few minutes; the daily limit resets at midnight Pacific time.";
+const LIMIT_TEXT = "Free cloud limit reached for now; on-device AI (Chrome's Gemini Nano, when ready) and the NIRA engine still work. Cloud answers come back after a short wait; the daily limit resets at midnight Pacific time.";
 
 /** HTTP 429 / RESOURCE_EXHAUSTED: the project's free AI limit is used up (limits are per project). */
 function isLimitReached(e) {
