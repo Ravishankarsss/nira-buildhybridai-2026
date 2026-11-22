@@ -878,4 +878,16 @@
     <string name="rep_conf_sourced">有来源</string>
     <string name="rep_conf_interpolated">插值</string>
     <string name="rep_conf_assumption">假设</string>
+    <string name="live_title">在网页上显示此任务</string>
+    <string name="live_body">只将此任务的文字事实（不含图稿或照片）以一个代码发送到 NIRA 网页，保留 24 小时。知道代码的人都能读取。</string>
+    <string name="live_start">在网页上显示</string>
+    <string name="live_code">代码：%1$s</string>
+    <string name="live_where">在电脑上打开 %1$s，进入 Try it live 并输入此代码。网页会跟随您对此任务的修改。</string>
+    <string name="live_sent">已于 %1$s 发送 · 自动更新</string>
+    <string name="live_sending">发送中…</string>
+    <string name="live_stop">停止分享</string>
+    <string name="live_copy">复制链接</string>
+    <string name="live_copied">链接已复制</string>
+    <string name="live_error">无法发送：%1$s</string>
+    <string name="live_confidential">保密模式已开启，任何内容都不会离开本机。</string>
 </resources>

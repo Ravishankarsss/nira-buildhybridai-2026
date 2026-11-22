@@ -100,6 +100,9 @@ dependencies {
     // requests still go through the hybrid API and run in the cloud.
     implementation(libs.firebase.ai.ondevice)
     implementation(libs.firebase.appcheck.debug)
+    // Live link to the web page: the job's text facts only (Firestore), anonymous sign-in. Not AI.
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.auth)
 
     testImplementation(libs.junit)
     // Real JSON parser for JVM unit tests. Without it the Android org.json stubs return

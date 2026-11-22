@@ -11,6 +11,8 @@ import {
   InferenceMode,
   InferenceSource,
 } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-ai.js";
+// Live link only (not AI): reads one job's text facts that the phone shared under a code.
+import { getFirestore, doc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
 
 // Same cloud model as the Android app (HybridInferenceRepository.CLOUD_MODEL_NAME).
 // Stable on https://firebase.google.com/docs/ai-logic/models; chosen after real runs on 17 Nov 2026.
@@ -284,30 +286,124 @@ function renderDecision() {
   if (p.disclaimer) d.append(el("p", "muted small", p.disclaimer));
 }
 
-async function loadJob() {
-  // The picked job (the first one until the user picks another).
-  const opts = [...document.querySelectorAll(".job-opt")];
-  const pick = opts.find((b) => b.classList.contains("on")) ?? opts[0];
-  opts.forEach((b) => { b.classList.toggle("on", b === pick); b.setAttribute("aria-checked", String(b === pick)); });
-  const path = pick.dataset.path;
-  $("active-job").textContent = pick.dataset.title;
+function clearAnswers() {
   $("job-facts").textContent = "";
   $("explain-result").hidden = true;
   $("translate-result").hidden = true;
   chat.length = 0;
   renderChat();
-  try {
-    job = await (await fetch(path)).json();
-  } catch (e) {
-    job = null;
-    $("job-saved").textContent = "Could not load " + path + ": " + (e?.message ?? e);
-    renderDecision();
-    return;
-  }
+}
+
+function showJob(j, title) {
+  job = j;
+  $("active-job").textContent = title;
   $("job-saved").textContent = `${job.generated_by} · saved ${job.saved_at}`;
   for (const f of job.facts) $("job-facts").append(el("li", "", f));
   renderDecision();
 }
+
+async function loadJob() {
+  disconnectLive(false);
+  // The picked job (the first one until the user picks another).
+  const opts = [...document.querySelectorAll(".job-opt")];
+  const pick = opts.find((b) => b.classList.contains("on")) ?? opts[0];
+  opts.forEach((b) => { b.classList.toggle("on", b === pick); b.setAttribute("aria-checked", String(b === pick)); });
+  const path = pick.dataset.path;
+  clearAnswers();
+  try {
+    showJob(await (await fetch(path)).json(), pick.dataset.title);
+  } catch (e) {
+    job = null;
+    $("active-job").textContent = pick.dataset.title;
+    $("job-saved").textContent = "Could not load " + path + ": " + (e?.message ?? e);
+    renderDecision();
+  }
+}
+
+// ---------------------------------------------------------------- Live link to the phone
+
+// The phone ("Show on the web" on the Decision tab) writes the job's text facts to live/{code} for
+// 24 hours (firestore.rules). This page only reads that one document; it cannot list or change codes.
+const db = getFirestore(app);
+const CODE_RE = /^[A-HJ-NP-Z2-9]{8}$/;
+let liveUnsub = null;
+let liveCode = null;
+let liveKey = "";
+
+const normCode = (t) => { const c = (t || "").toUpperCase().replace(/[^A-Z0-9]/g, ""); return CODE_RE.test(c) ? c : null; };
+const showCode = (c) => c.slice(0, 4) + "-" + c.slice(4);
+
+function liveStatus(text, ok = false) {
+  $("live-status").textContent = text;
+  $("live-status").classList.toggle("ok", ok);
+}
+
+function showLive(d) {
+  const updated = d.updatedAt?.toDate?.() ?? new Date();
+  const key = JSON.stringify([d.title, d.method_name, d.facts]);
+  if (key !== liveKey) {
+    // The job changed on the phone: show it, and clear answers that belong to the old facts.
+    liveKey = key;
+    clearAnswers();
+    showJob({ generated_by: d.generated_by, saved_at: d.saved_at, facts: d.facts ?? [], prompt: d.prompt, method_name: d.method_name }, d.title);
+  }
+  liveStatus(`Live from the phone, code ${showCode(liveCode)} · last change ${updated.toLocaleTimeString()} · checked ${new Date().toLocaleTimeString()}`, true);
+}
+
+function liveMissing() {
+  liveStatus(`No shared job under ${showCode(liveCode)}. Check the code, or sharing was stopped, or the 24 hours are over.`);
+}
+
+function liveError(e) {
+  if (e?.code === "permission-denied") liveMissing();
+  else liveStatus("Could not read the live job: " + (e?.message ?? e));
+}
+
+function connectLive(code) {
+  disconnectLive(false);
+  liveCode = code;
+  liveKey = "";
+  document.querySelectorAll(".job-opt").forEach((b) => { b.classList.remove("on"); b.setAttribute("aria-checked", "false"); });
+  $("live-actions").hidden = false;
+  liveStatus("Connecting…");
+  const mine = code;
+  setTimeout(() => {
+    if (liveCode === mine && $("live-status").textContent === "Connecting…") {
+      liveStatus("Still connecting… Check the internet connection, then press Refresh.");
+    }
+  }, 10000);
+  history.replaceState(null, "", `?live=${code}#try`);
+  liveUnsub = onSnapshot(doc(db, "live", code),
+    (snap) => (snap.exists() ? showLive(snap.data()) : liveMissing()),
+    liveError);
+}
+
+function disconnectLive(reloadSample = true) {
+  if (liveUnsub) liveUnsub();
+  liveUnsub = null;
+  if (liveCode === null) return;
+  liveCode = null;
+  $("live-actions").hidden = true;
+  liveStatus("");
+  history.replaceState(null, "", location.pathname + "#try");
+  if (reloadSample) loadJob();
+}
+
+$("live-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const code = normCode($("live-code").value);
+  if (!code) { liveStatus("A code has 8 letters and numbers, like K7QP-3MZD."); return; }
+  connectLive(code);
+});
+$("live-refresh").addEventListener("click", async () => {
+  if (!liveCode) return;
+  liveStatus("Refreshing…");
+  try {
+    const snap = await getDoc(doc(db, "live", liveCode));
+    snap.exists() ? showLive(snap.data()) : liveMissing();
+  } catch (e) { liveError(e); }
+});
+$("live-stop").addEventListener("click", () => disconnectLive(true));
 
 // ---------------------------------------------------------------- Tabs
 
@@ -473,6 +569,13 @@ document.querySelectorAll(".job-opt").forEach((b) => b.addEventListener("click",
   loadJob();
 }));
 await loadJob();
+// A link from the phone ("Copy link") opens straight on the live job.
+const linked = normCode(new URLSearchParams(location.search).get("live"));
+if (linked) {
+  $("live-box").open = true;
+  $("live-code").value = showCode(linked);
+  connectLive(linked);
+}
 
 // ---------------------------------------------------------------- Developer: free prompt in any mode
 

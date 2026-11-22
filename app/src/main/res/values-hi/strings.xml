@@ -879,4 +879,16 @@
     <string name="rep_conf_sourced">स्रोत सहित</string>
     <string name="rep_conf_interpolated">अनुमानित बीच का मान</string>
     <string name="rep_conf_assumption">मान्यता</string>
+    <string name="live_title">यह काम वेब पर दिखाएँ</string>
+    <string name="live_body">इस काम के सिर्फ़ लिखित तथ्य (कोई आर्टवर्क या फ़ोटो नहीं) एक कोड के साथ 24 घंटे के लिए NIRA के वेब पेज पर भेजता है। कोड वाला कोई भी इन्हें पढ़ सकता है।</string>
+    <string name="live_start">वेब पर दिखाएँ</string>
+    <string name="live_code">कोड: %1$s</string>
+    <string name="live_where">कंप्यूटर पर %1$s खोलें, Try it live में जाकर यह कोड लिखें। इस काम में आपके बदलाव पेज पर भी दिखेंगे।</string>
+    <string name="live_sent">%1$s भेजा गया · अपने-आप अपडेट होगा</string>
+    <string name="live_sending">भेजा जा रहा है…</string>
+    <string name="live_stop">शेयर करना बंद करें</string>
+    <string name="live_copy">लिंक कॉपी करें</string>
+    <string name="live_copied">लिंक कॉपी हो गया</string>
+    <string name="live_error">नहीं भेजा जा सका: %1$s</string>
+    <string name="live_confidential">गोपनीय मोड चालू है, इसलिए कुछ भी इस फ़ोन से बाहर नहीं जाता।</string>
 </resources>

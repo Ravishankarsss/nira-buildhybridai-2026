@@ -879,4 +879,16 @@
     <string name="rep_conf_sourced">ஆதாரம் உள்ளது</string>
     <string name="rep_conf_interpolated">இடைக்கணிப்பு</string>
     <string name="rep_conf_assumption">அனுமானம்</string>
+    <string name="live_title">இந்த வேலையை இணையத்தில் காட்டு</string>
+    <string name="live_body">இந்த வேலையின் எழுத்து விவரங்களை மட்டும் (கலைப்படைப்போ புகைப்படமோ இல்லை) ஒரு குறியீட்டின் கீழ் 24 மணி நேரம் NIRA இணையப் பக்கத்துக்கு அனுப்புகிறது. குறியீடு உள்ள எவரும் படிக்கலாம்.</string>
+    <string name="live_start">இணையத்தில் காட்டு</string>
+    <string name="live_code">குறியீடு: %1$s</string>
+    <string name="live_where">கணினியில் %1$s திறந்து Try it live பகுதியில் இந்தக் குறியீட்டை உள்ளிடவும். இந்த வேலையில் நீங்கள் செய்யும் மாற்றங்களை பக்கம் பின்தொடரும்.</string>
+    <string name="live_sent">%1$s அனுப்பப்பட்டது · தானாகப் புதுப்பிக்கும்</string>
+    <string name="live_sending">அனுப்புகிறது…</string>
+    <string name="live_stop">பகிர்வை நிறுத்து</string>
+    <string name="live_copy">இணைப்பை நகலெடு</string>
+    <string name="live_copied">இணைப்பு நகலெடுக்கப்பட்டது</string>
+    <string name="live_error">அனுப்ப முடியவில்லை: %1$s</string>
+    <string name="live_confidential">ரகசிய முறை இயக்கத்தில் உள்ளது; எதுவும் இந்த போனை விட்டு வெளியேறாது.</string>
 </resources>

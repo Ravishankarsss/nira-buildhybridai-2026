@@ -187,6 +187,10 @@ button { font: inherit; }
 .job-opt small { display: block; color: var(--muted); font-size: 12px; line-height: 1.35; margin-top: 2px; }
 .job-opt:hover { border-color: var(--cyan); }
 .job-opt.on { border-color: var(--cyan); background: rgba(85,214,232,.10); }
+.live-box { margin: 4px 0 12px; padding: 10px 12px; border: 1px dashed rgba(85,214,232,.45); border-radius: 12px; }
+.live-box summary { cursor: pointer; color: var(--cyan); font-weight: 600; }
+.live-status.ok { color: var(--cyan); }
+.live-actions { display: flex; gap: 8px; margin-top: 4px; }
 @media (max-width: 560px) { .job-picker { grid-template-columns: 1fr; } }
 .active-job b { color: var(--cyan); }
 

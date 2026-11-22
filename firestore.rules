@@ -1,0 +1,36 @@
+rules_version = '2';
+
+// NIRA live link: the phone shares one job's TEXT facts (no artwork) under a random code for 24 hours.
+// Only the phone that created a code can change or delete it. Anyone with the code can read it until
+// it expires. Nobody can list codes. Everything else in the database is closed.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /live/{code} {
+      function valid() {
+        let d = request.resource.data;
+        return code.matches('^[A-HJ-NP-Z2-9]{8}$')
+          && d.keys().hasOnly(['v', 'uid', 'title', 'method_name', 'saved_at', 'generated_by', 'facts', 'prompt', 'updatedAt', 'expireAt'])
+          && d.uid == request.auth.uid
+          && d.title is string && d.title.size() <= 120
+          && (d.method_name == null || (d.method_name is string && d.method_name.size() <= 120))
+          && d.saved_at is string && d.saved_at.size() <= 40
+          && d.generated_by is string && d.generated_by.size() <= 200
+          && d.facts is list && d.facts.size() <= 60
+          && d.prompt is string && d.prompt.size() <= 20000
+          && d.updatedAt == request.time
+          && d.expireAt is timestamp && d.expireAt <= request.time + duration.value(25, 'h');
+      }
+
+      allow get: if resource.data.expireAt > request.time;
+      allow list: if false;
+      allow create: if request.auth != null && valid();
+      allow update: if request.auth != null && resource.data.uid == request.auth.uid && valid();
+      allow delete: if request.auth != null && resource.data.uid == request.auth.uid;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

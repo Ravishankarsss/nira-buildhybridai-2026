@@ -289,6 +289,19 @@
               <span><b>Same logo on a white T-shirt</b><small>Simple job: 2 spot screens, water-based pigment</small></span>
             </button>
           </div>
+          <details class="live-box" id="live-box">
+            <summary>Or connect your phone (live)</summary>
+            <p class="muted small">On the phone: open a job, Decision tab, <b>Show on the web</b>. Type the code it shows. Only the job's text facts come here, never the artwork. Change the job on the phone and this page follows.</p>
+            <form id="live-form" class="askrow">
+              <input id="live-code" type="text" maxlength="12" placeholder="Code, e.g. K7QP-3MZD" autocomplete="off" autocapitalize="characters" spellcheck="false">
+              <button type="submit" class="btn">Connect</button>
+            </form>
+            <p id="live-status" class="muted small live-status" aria-live="polite"></p>
+            <div id="live-actions" class="live-actions" hidden>
+              <button type="button" id="live-refresh" class="btn ghost small">↻ Refresh</button>
+              <button type="button" id="live-stop" class="btn ghost small">Disconnect</button>
+            </div>
+          </details>
           <p class="label">2. Press Explain, Ask NIRA or Translate on the right. 3. Each answer shows where the AI ran (this computer or the cloud) and is checked against these facts.</p>
           <p class="active-job">Active job: <b id="active-job">Lion artwork on a navy cotton T-shirt</b></p>
           <div id="decision" class="decision"></div>

@@ -485,6 +485,9 @@ fun PrintDecisionCard(
                 val facts = remember(card, contrastWarnings, quantityRules, fibreName, groundChecks) {
                     com.mos.nira.core.ai.CardExplanation.facts(card, contrastWarnings, quantityRules, fibreName, groundChecks)
                 }
+                // Live link to the web page: the hidden, always-composed copy sends changes; the Decision tab shows the card.
+                val liveTitle = "Live from the phone · " + best.advice.name
+                if (section == CardSection.NONE) com.mos.nira.features.live.LiveShareAutoUpdate(liveTitle, best.advice.name, facts)
 
                 // Order cost and Cost-Down: deterministic, from the factory's own rates.
                 var chosenOption by remember { mutableStateOf<com.mos.nira.core.commercial.CostDownOption?>(null) }
@@ -563,6 +566,7 @@ fun PrintDecisionCard(
                     facts, best.advice.name,
                     hintText = if (section == CardSection.ALL) null else stringResource(R.string.card_explain_hint_short)
                 )
+                if (show(CardSection.DECISION)) com.mos.nira.features.live.LiveShareSection(liveTitle, best.advice.name, facts, DCyan, DMuted, DWhite)
 
                 // Ask NIRA: questions about this job, answered from the same facts plus the order cost.
                 // On the job page it opens from the floating button; in ALL mode it keeps its own button.

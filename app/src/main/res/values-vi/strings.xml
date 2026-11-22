@@ -878,4 +878,16 @@
     <string name="rep_conf_sourced">có nguồn</string>
     <string name="rep_conf_interpolated">nội suy</string>
     <string name="rep_conf_assumption">giả định</string>
+    <string name="live_title">HIỂN THỊ CÔNG VIỆC NÀY TRÊN WEB</string>
+    <string name="live_body">Chỉ gửi các dữ kiện dạng chữ của công việc này (không gửi hình in hay ảnh) lên trang web NIRA theo một mã, trong 24 giờ. Ai có mã đều đọc được.</string>
+    <string name="live_start">Hiển thị trên web</string>
+    <string name="live_code">Mã: %1$s</string>
+    <string name="live_where">Trên máy tính, mở %1$s, vào Try it live và nhập mã này. Trang sẽ theo các thay đổi của bạn trong công việc này.</string>
+    <string name="live_sent">Đã gửi %1$s · tự cập nhật</string>
+    <string name="live_sending">Đang gửi…</string>
+    <string name="live_stop">Dừng chia sẻ</string>
+    <string name="live_copy">Sao chép liên kết</string>
+    <string name="live_copied">Đã sao chép liên kết</string>
+    <string name="live_error">Không gửi được: %1$s</string>
+    <string name="live_confidential">Chế độ bảo mật đang bật nên không có gì rời khỏi điện thoại này.</string>
 </resources>

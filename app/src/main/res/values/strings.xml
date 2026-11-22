@@ -878,4 +878,16 @@
     <string name="rep_conf_sourced">sourced</string>
     <string name="rep_conf_interpolated">interpolated</string>
     <string name="rep_conf_assumption">assumption</string>
+    <string name="live_title">SHOW THIS JOB ON THE WEB</string>
+    <string name="live_body">Sends only this job\'s text facts (no artwork, no photo) to NIRA\'s web page under a code, for 24 hours. Anyone with the code can read them.</string>
+    <string name="live_start">Show on the web</string>
+    <string name="live_code">Code: %1$s</string>
+    <string name="live_where">On a computer open %1$s, go to Try it live and type this code. The page follows your changes to this job.</string>
+    <string name="live_sent">Sent %1$s · updates by itself</string>
+    <string name="live_sending">Sending…</string>
+    <string name="live_stop">Stop sharing</string>
+    <string name="live_copy">Copy link</string>
+    <string name="live_copied">Link copied</string>
+    <string name="live_error">Could not send: %1$s</string>
+    <string name="live_confidential">Confidential mode is on, so nothing leaves this phone.</string>
 </resources>

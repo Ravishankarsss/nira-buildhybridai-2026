@@ -880,4 +880,16 @@
     <string name="rep_conf_sourced">con fuente</string>
     <string name="rep_conf_interpolated">interpolado</string>
     <string name="rep_conf_assumption">supuesto</string>
+    <string name="live_title">MOSTRAR ESTE TRABAJO EN LA WEB</string>
+    <string name="live_body">Envía solo los datos de texto de este trabajo (sin diseño ni foto) a la web de NIRA con un código, durante 24 horas. Cualquiera con el código puede leerlos.</string>
+    <string name="live_start">Mostrar en la web</string>
+    <string name="live_code">Código: %1$s</string>
+    <string name="live_where">En un ordenador abre %1$s, ve a Try it live y escribe este código. La página sigue tus cambios en este trabajo.</string>
+    <string name="live_sent">Enviado %1$s · se actualiza solo</string>
+    <string name="live_sending">Enviando…</string>
+    <string name="live_stop">Dejar de compartir</string>
+    <string name="live_copy">Copiar enlace</string>
+    <string name="live_copied">Enlace copiado</string>
+    <string name="live_error">No se pudo enviar: %1$s</string>
+    <string name="live_confidential">El modo confidencial está activado: nada sale de este teléfono.</string>
 </resources>

@@ -879,4 +879,16 @@
     <string name="rep_conf_sourced">belegt</string>
     <string name="rep_conf_interpolated">interpoliert</string>
     <string name="rep_conf_assumption">Annahme</string>
+    <string name="live_title">DIESEN AUFTRAG IM WEB ZEIGEN</string>
+    <string name="live_body">Sendet nur die Textfakten dieses Auftrags (kein Motiv, kein Foto) unter einem Code für 24 Stunden an die NIRA-Webseite. Wer den Code hat, kann sie lesen.</string>
+    <string name="live_start">Im Web zeigen</string>
+    <string name="live_code">Code: %1$s</string>
+    <string name="live_where">Öffne am Computer %1$s, gehe zu Try it live und gib diesen Code ein. Die Seite folgt deinen Änderungen an diesem Auftrag.</string>
+    <string name="live_sent">Gesendet %1$s · aktualisiert sich selbst</string>
+    <string name="live_sending">Wird gesendet…</string>
+    <string name="live_stop">Teilen beenden</string>
+    <string name="live_copy">Link kopieren</string>
+    <string name="live_copied">Link kopiert</string>
+    <string name="live_error">Senden nicht möglich: %1$s</string>
+    <string name="live_confidential">Der vertrauliche Modus ist an: nichts verlässt dieses Telefon.</string>
 </resources>
