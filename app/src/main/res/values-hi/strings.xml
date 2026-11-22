@@ -352,6 +352,11 @@
     <string name="working_colours">काम जारी: प्रिंट रंग मापे जा रहे हैं…</string>
     <string name="working_separations">काम जारी: सेपरेशन की तुलना…</string>
     <string name="working_screens">काम जारी: स्क्रीन और स्याही…</string>
+    <string name="ask_early_intro">आपके चार जवाबों से पहले, NIRA केवल आर्टवर्क पर मापी गई बातों पर बात कर सकता है।</string>
+    <string name="ask_early_q1">इस आर्टवर्क में कितने रंग हैं?</string>
+    <string name="ask_early_q2">सबसे बड़ा रंग कौन सा है?</string>
+    <string name="ask_early_q3">क्या बैकग्राउंड स्याही है?</string>
+    <string name="ask_early_q4">आपको मुझसे क्या चाहिए?</string>
     <string name="rates_title">फ़ैक्टरी दरें</string>
     <string name="rates_hint">आपकी फ़ैक्टरी की अपनी दरें, केवल इसी फ़ोन पर। NIRA इनसे ऑर्डर की लागत निकालता है; कोई दर खुद नहीं बनाता।</string>
     <string name="rates_currency">मुद्रा</string>

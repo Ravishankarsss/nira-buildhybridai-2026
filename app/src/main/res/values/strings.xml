@@ -351,6 +351,11 @@
     <string name="working_colours">Working: measuring the print colours…</string>
     <string name="working_separations">Working: comparing separations…</string>
     <string name="working_screens">Working: screens and ink…</string>
+    <string name="ask_early_intro">Before your four answers, NIRA can talk only about what it measured on the artwork.</string>
+    <string name="ask_early_q1">How many colours are in this artwork?</string>
+    <string name="ask_early_q2">Which colour is the biggest?</string>
+    <string name="ask_early_q3">Is the background ink?</string>
+    <string name="ask_early_q4">What do you need from me?</string>
     <string name="rates_title">Factory rates</string>
     <string name="rates_hint">Your factory\'s own prices, kept only on this phone. NIRA uses them to work out the order cost; it never invents a price.</string>
     <string name="rates_currency">Currency</string>

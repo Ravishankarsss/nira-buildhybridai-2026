@@ -352,6 +352,11 @@
     <string name="working_colours">কাজ চলছে: প্রিন্টের রং মাপা হচ্ছে…</string>
     <string name="working_separations">কাজ চলছে: সেপারেশন তুলনা…</string>
     <string name="working_screens">কাজ চলছে: স্ক্রিন ও কালি…</string>
+    <string name="ask_early_intro">আপনার চারটি উত্তরের আগে NIRA শুধু আর্টওয়ার্কে যা মেপেছে তা নিয়েই কথা বলতে পারে।</string>
+    <string name="ask_early_q1">এই আর্টওয়ার্কে কয়টি রং?</string>
+    <string name="ask_early_q2">কোন রং সবচেয়ে বেশি?</string>
+    <string name="ask_early_q3">ব্যাকগ্রাউন্ড কি কালি?</string>
+    <string name="ask_early_q4">আমার কাছ থেকে কী দরকার?</string>
     <string name="rates_title">কারখানার দর</string>
     <string name="rates_hint">আপনার কারখানার নিজস্ব দর, শুধু এই ফোনে রাখা। NIRA এগুলো দিয়ে অর্ডারের খরচ হিসাব করে; কখনও দাম বানায় না।</string>
     <string name="rates_currency">মুদ্রা</string>

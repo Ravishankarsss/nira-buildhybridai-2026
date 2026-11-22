@@ -633,8 +633,38 @@ fun ColorIntelligenceScreen(
             Spacer(modifier = Modifier.height(96.dp))
         }
     }
-        // Ask NIRA from every tab, once the card has a method to talk about.
-        if (jobSummary?.method != null) {
+        // Before the four answers: Ask NIRA answers from the measured facts only (no actions).
+        if (askOpen && jobSummary?.method == null && measuredPrintColours != null) {
+            val facts = remember(measuredPrintColours, artworkBackground, artworkBackgroundAnswer, lowResolution, inputKind) {
+                com.mos.nira.core.ai.MeasuredFacts.facts(
+                    isPhoto = inputKind == InputKind.PHOTO,
+                    colours = measuredPrintColours.map {
+                        com.mos.nira.core.ai.MeasuredFacts.Colour(
+                            com.mos.nira.core.image.ColourName.english(it.hex), it.coveragePercent,
+                            it.possibleFoldShadow || it.possibleEdgeBlend || it.possibleSmallColour
+                        )
+                    },
+                    backgroundName = artworkBackground?.let { com.mos.nira.core.image.ColourName.english(it.hex) },
+                    backgroundCoveragePercent = artworkBackground?.imageCoveragePercent,
+                    backgroundPrinted = artworkBackgroundAnswer,
+                    lowResolution = lowResolution
+                )
+            }
+            com.mos.nira.features.ai.AskNiraSheet(
+                jobKey = ArtworkKey.of(bitmap, palette.filter { !it.isGarmentBase }.map { it.hex })?.toString() ?: "job",
+                facts = facts,
+                actionContext = null,
+                onActions = { null },
+                onDismiss = { askOpen = false },
+                suggestions = listOf(
+                    stringResource(R.string.ask_early_q1), stringResource(R.string.ask_early_q2),
+                    stringResource(R.string.ask_early_q3), stringResource(R.string.ask_early_q4)
+                ),
+                intro = stringResource(R.string.ask_early_intro)
+            )
+        }
+        // Ask NIRA from every tab: about the decision once there is a method, before that about the measured artwork.
+        if (jobSummary?.method != null || measuredPrintColours != null) {
             // Full label at the top of the page; a small round button once the user scrolls.
             val expanded = listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset < 40
             val label = stringResource(R.string.ask_fab)

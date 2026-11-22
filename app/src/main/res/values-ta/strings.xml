@@ -352,6 +352,11 @@
     <string name="working_colours">வேலை நடக்கிறது: அச்சு நிறங்களை அளக்கிறது…</string>
     <string name="working_separations">வேலை நடக்கிறது: பிரிப்புகளை ஒப்பிடுகிறது…</string>
     <string name="working_screens">வேலை நடக்கிறது: ஸ்கிரீன்களும் மையும்…</string>
+    <string name="ask_early_intro">உங்கள் நான்கு பதில்களுக்கு முன், ஆர்ட்வொர்க்கில் அளந்ததைப் பற்றி மட்டுமே NIRA பேசும்.</string>
+    <string name="ask_early_q1">இந்த ஆர்ட்வொர்க்கில் எத்தனை நிறங்கள்?</string>
+    <string name="ask_early_q2">எந்த நிறம் அதிகம்?</string>
+    <string name="ask_early_q3">பின்னணி மையா?</string>
+    <string name="ask_early_q4">என்னிடம் என்ன தேவை?</string>
     <string name="rates_title">தொழிற்சாலை விலைகள்</string>
     <string name="rates_hint">உங்கள் தொழிற்சாலையின் சொந்த விலைகள்; இந்த போனில் மட்டும் சேமிக்கப்படும். ஆர்டர் செலவைக் கணக்கிட NIRA இவற்றைப் பயன்படுத்துகிறது; விலையை ஒருபோதும் தானாக உருவாக்காது.</string>
     <string name="rates_currency">நாணயம்</string>

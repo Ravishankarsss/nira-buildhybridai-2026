@@ -351,6 +351,11 @@
     <string name="working_colours">处理中：测量印花颜色…</string>
     <string name="working_separations">处理中：比较分色方案…</string>
     <string name="working_screens">处理中：网版和油墨…</string>
+    <string name="ask_early_intro">在您回答四个问题之前，NIRA只能谈论它在图案上测得的内容。</string>
+    <string name="ask_early_q1">这个图案有几种颜色？</string>
+    <string name="ask_early_q2">哪种颜色面积最大？</string>
+    <string name="ask_early_q3">背景是油墨吗？</string>
+    <string name="ask_early_q4">你需要我提供什么？</string>
     <string name="rates_title">工厂单价</string>
     <string name="rates_hint">您工厂自己的单价，只保存在本手机上。NIRA 用它们计算订单成本，从不编造价格。</string>
     <string name="rates_currency">货币</string>

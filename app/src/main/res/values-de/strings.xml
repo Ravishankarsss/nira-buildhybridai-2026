@@ -352,6 +352,11 @@
     <string name="working_colours">Läuft: Druckfarben werden gemessen…</string>
     <string name="working_separations">Läuft: Separationen werden verglichen…</string>
     <string name="working_screens">Läuft: Siebe und Farbe…</string>
+    <string name="ask_early_intro">Vor Ihren vier Antworten spricht NIRA nur über das, was es am Motiv gemessen hat.</string>
+    <string name="ask_early_q1">Wie viele Farben hat dieses Motiv?</string>
+    <string name="ask_early_q2">Welche Farbe ist am größten?</string>
+    <string name="ask_early_q3">Ist der Hintergrund Farbe?</string>
+    <string name="ask_early_q4">Was brauchst du von mir?</string>
     <string name="rates_title">Fabrikpreise</string>
     <string name="rates_hint">Die eigenen Preise Ihrer Fabrik, nur auf diesem Telefon. NIRA berechnet damit die Auftragskosten und erfindet nie einen Preis.</string>
     <string name="rates_currency">Währung</string>

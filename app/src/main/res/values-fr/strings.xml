@@ -353,6 +353,11 @@
     <string name="working_colours">En cours : mesure des couleurs d\'impression…</string>
     <string name="working_separations">En cours : comparaison des séparations…</string>
     <string name="working_screens">En cours : écrans et encre…</string>
+    <string name="ask_early_intro">Avant vos quatre réponses, NIRA ne peut parler que de ce qu\'il a mesuré sur le motif.</string>
+    <string name="ask_early_q1">Combien de couleurs dans ce motif ?</string>
+    <string name="ask_early_q2">Quelle couleur est la plus grande ?</string>
+    <string name="ask_early_q3">Le fond est-il de l\'encre ?</string>
+    <string name="ask_early_q4">De quoi as-tu besoin de ma part ?</string>
     <string name="rates_title">Tarifs de l\'usine</string>
     <string name="rates_hint">Les prix de votre usine, gardés sur ce téléphone. NIRA s\'en sert pour calculer le coût de la commande ; il n\'invente jamais de prix.</string>
     <string name="rates_currency">Devise</string>

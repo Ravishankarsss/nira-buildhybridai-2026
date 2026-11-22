@@ -351,6 +351,11 @@
     <string name="working_colours">Đang xử lý: đo màu in…</string>
     <string name="working_separations">Đang xử lý: so sánh tách màu…</string>
     <string name="working_screens">Đang xử lý: khung lụa và mực…</string>
+    <string name="ask_early_intro">Trước bốn câu trả lời của bạn, NIRA chỉ nói về những gì đã đo trên hình in.</string>
+    <string name="ask_early_q1">Hình in này có bao nhiêu màu?</string>
+    <string name="ask_early_q2">Màu nào lớn nhất?</string>
+    <string name="ask_early_q3">Nền có phải là mực không?</string>
+    <string name="ask_early_q4">Bạn cần gì từ tôi?</string>
     <string name="rates_title">Đơn giá xưởng</string>
     <string name="rates_hint">Đơn giá riêng của xưởng bạn, chỉ lưu trên điện thoại này. NIRA dùng để tính chi phí đơn hàng; không bao giờ tự đặt giá.</string>
     <string name="rates_currency">Tiền tệ</string>
