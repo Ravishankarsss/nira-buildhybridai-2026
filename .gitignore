@@ -35,3 +35,7 @@ web/firebase-config.js
 judge.properties
 # Firebase CLI cache
 .firebase/
+
+# IDE and assistant settings (kept on the laptop, not in the repository)
+.idea/
+.claude/

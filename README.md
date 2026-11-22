@@ -6,7 +6,7 @@ NIRA turns a garment artwork file or a photo of a printed garment into a print e
 
 Built for the **#BuildHybridAI 2026** hackathon (Google / Firebase).
 
-> Status: work in progress for the hackathon. See [docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md) for measured results and [docs/UNFINISHED.md](docs/UNFINISHED.md) for what is not finished.
+> Submitted to #BuildHybridAI 2026. Judges: use the `master` branch. Measured results are in [docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md); known limits are listed honestly in [docs/UNFINISHED.md](docs/UNFINISHED.md) and under "Honest limits" below.
 
 ## For judges
 
