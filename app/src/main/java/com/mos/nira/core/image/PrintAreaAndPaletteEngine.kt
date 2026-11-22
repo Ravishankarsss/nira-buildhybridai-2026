@@ -95,6 +95,9 @@ object PrintAreaAndPaletteEngine {
     /**
      * Executes complete Part A calculation for a given pixel buffer.
      */
+    /** For speed checks only (unit tests): called with the name of each Part A step as it starts. Null in the app. */
+    @Volatile internal var stepTimer: ((String) -> Unit)? = null
+
     fun computePartA(
         pixels: IntArray,
         width: Int,
@@ -134,6 +137,7 @@ object PrintAreaAndPaletteEngine {
 
         val totalPixels = width * height
 
+        stepTimer?.invoke("step 1")
         // Step 1: Measure Garment Background (Median Lab + Spread)
         val garmentProfile = estimateGarmentProfile(
             pixels, width, height, inputs.userGarmentHex, inputs.garmentColorHex, maskRules,
@@ -147,54 +151,48 @@ object PrintAreaAndPaletteEngine {
             hypot(garmentLab.a, garmentLab.b) <= decisionRules.garmentChromaThreshold
         val effectiveGarmentThreshold = max(inputs.garmentThresholdDeltaE00, garmentProfile.adaptiveThresholdDeltaE00)
 
+        stepTimer?.invoke("step 2")
         // Step 2: Illumination Flattening on fabric & knit smoothing
         // print_rules.json garment_mask: flatten_lighting and smooth_texture apply to every garment.
         val illuminationCorrectedPixels = flattenUnevenLighting(pixels, width, height, garmentLab, garmentProfile.spreadDeltaE00)
         val smoothedPixels = smoothKnitTexture(illuminationCorrectedPixels, width, height)
 
+        stepTimer?.invoke("step 3")
         // Step 3: Raw Print Masking
+        // Each distinct colour is converted and compared with the garment once, on all cores; the
+        // mask is then filled row by row in parallel. Same arithmetic as one pixel at a time.
         val rawPrintMask = BooleanArray(totalPixels)
-        val labCache = HashMap<Int, Pair<ColorConverter.Lab, Boolean>>(8192)
-
-        for (y in 0 until height) {
+        val distinctRgb = run {
+            val a = IntArray(totalPixels) { smoothedPixels[it] and 0xFFFFFF }
+            a.sort()
+            var m = 0
+            for (i in a.indices) if (i == 0 || a[i] != a[i - 1]) a[m++] = a[i]
+            a.copyOf(m)
+        }
+        val distinctIsGarment = BooleanArray(distinctRgb.size)
+        parallelFor(distinctRgb.size) { k ->
+            val c = distinctRgb[k]
+            val lab = ColorConverter.rgbToLab((c shr 16) and 0xFF, (c shr 8) and 0xFF, c and 0xFF)
+            distinctIsGarment[k] = ColorConverter.deltaE00(lab, garmentLab) <= effectiveGarmentThreshold
+        }
+        val erased = inputs.erasedRectangles
+        parallelFor(height) { y ->
             val normY = (y + 0.5f) / height
             val rowOffset = y * width
             for (x in 0 until width) {
                 val index = rowOffset + x
-                val normX = (x + 0.5f) / width
-
                 // User erased rectangle exclusion
-                val isErased = inputs.erasedRectangles.any { it.contains(normX, normY) }
-                if (isErased) {
-                    rawPrintMask[index] = false
-                    continue
+                if (erased.isNotEmpty()) {
+                    val normX = (x + 0.5f) / width
+                    if (erased.any { it.contains(normX, normY) }) continue
                 }
-
                 val p = smoothedPixels[index]
-                val alpha = (p shr 24) and 0xFF
-                if (alpha < 128) {
-                    rawPrintMask[index] = false
-                    continue
-                }
-
-                val cached = labCache[p]
-                val (lab, isGarment) = if (cached != null) {
-                    cached
-                } else {
-                    val r = (p shr 16) and 0xFF
-                    val g = (p shr 8) and 0xFF
-                    val b = p and 0xFF
-                    val computedLab = ColorConverter.rgbToLab(r, g, b)
-                    val garmentFlag = ColorConverter.deltaE00(computedLab, garmentLab) <= effectiveGarmentThreshold
-                    val entry = Pair(computedLab, garmentFlag)
-                    labCache[p] = entry
-                    entry
-                }
-
-                rawPrintMask[index] = !isGarment
+                if (((p shr 24) and 0xFF) < 128) continue
+                rawPrintMask[index] = !distinctIsGarment[java.util.Arrays.binarySearch(distinctRgb, p and 0xFFFFFF)]
             }
         }
 
+        stepTimer?.invoke("step 3a")
         // Step 3a: The plain background of an artwork file (print_rules.json artwork_background).
         // It is left out (not ink) unless the user chose to print it.
         val artworkBackground = if (inputs.inputKind == InputKind.ARTWORK && artworkBackgroundRules != null &&
@@ -247,6 +245,7 @@ object PrintAreaAndPaletteEngine {
             }
         }
 
+        stepTimer?.invoke("step 3b")
         // Step 3b: Photo or artwork? The user's mode is used; the signals only decide whether to ask.
         val inputKindAssessment = photoRules?.let { rules ->
             val background = BooleanArray(totalPixels) { !rawPrintMask[it] && ((pixels[it] ushr 24) >= 128) }
@@ -262,9 +261,11 @@ object PrintAreaAndPaletteEngine {
             )
         }
 
+        stepTimer?.invoke("step 4")
         // Step 4: Speck Removal & Print Box Isolation
         val maskWithSpecksRemoved = removeSpecks(rawPrintMask, width, height, maskRules.speckMinAreaFraction)
 
+        stepTimer?.invoke("step 4a")
         // Step 4a: Table, floor or wall at the photo edge (print_rules.json photo_background).
         val photoEdgeExcluded = if (inputs.inputKind == InputKind.PHOTO && backgroundRules != null && !inputs.includePhotoEdgeArea) {
             findPhotoEdgeBackground(maskWithSpecksRemoved, width, height, backgroundRules)
@@ -273,6 +274,7 @@ object PrintAreaAndPaletteEngine {
             else BooleanArray(totalPixels) { maskWithSpecksRemoved[it] && !photoEdgeExcluded[it] }
         val photoEdgeExcludedPercent = photoEdgeExcluded?.let { m -> m.count { it } * 100.0 / totalPixels } ?: 0.0
 
+        stepTimer?.invoke("step 4b")
         // Step 4b: Fold shadows (print_rules.json shadow_vs_ink), only on photos of light garments.
         val shadowCheck = if (inputs.inputKind == InputKind.PHOTO && isLightGarment && shadowRules != null) {
             checkFoldShadows(smoothedPixels, width, height, maskWithoutSpecks, garmentLab, inputs, shadowRules, maskRules.speckMinAreaFraction)
@@ -281,6 +283,7 @@ object PrintAreaAndPaletteEngine {
         val detectedBox = detectPrintBox(cleanedPrintMask, width, height)
         val activePrintBox = inputs.printBox ?: detectedBox
 
+        stepTimer?.invoke("step 5")
         // Step 5: Dimensions, Resolution & Bounding Box Scaling
         val boxMinXPx = (activePrintBox.minX * width).toInt().coerceIn(0, width - 1)
         val boxMaxXPx = (activePrintBox.maxX * width).toInt().coerceIn(boxMinXPx + 1, width)
@@ -311,6 +314,7 @@ object PrintAreaAndPaletteEngine {
             )
         } else null
 
+        stepTimer?.invoke("step 6")
         // Step 6: Collect Active Print Pixels INSIDE the Print Box
         val maskedRgbList = ArrayList<Int>(totalBoxPixels)
         val maskedLabList = ArrayList<ColorConverter.Lab>(totalBoxPixels)
@@ -382,6 +386,7 @@ object PrintAreaAndPaletteEngine {
 
         val trainingLabList = trainingIndices.map { maskedLabList[it] }
 
+        stepTimer?.invoke("step 7")
         // Step 7: Overcluster in Lab (K = 16, fixed seed)
         val kInitial = min(16, trainingLabList.size)
         val clusterCenters = runKMeans(trainingLabList, kInitial, seed)
@@ -443,6 +448,7 @@ object PrintAreaAndPaletteEngine {
             activeBuckets = buckets.filter { it.count > 0 }.take(1).toMutableList()
         }
 
+        stepTimer?.invoke("step 8")
         // Step 8: Merge clusters under CIEDE2000 threshold (3.2 ΔE00)
         var merged = true
         while (merged && activeBuckets.size > 1) {
@@ -488,6 +494,7 @@ object PrintAreaAndPaletteEngine {
             }
         }
 
+        stepTimer?.invoke("step 9")
         // Step 9: Colours under the minimum coverage (print_rules.json small_colours). A compact real
         // area, distinct from every other colour, is kept and flagged for the user to confirm; only
         // scattered specks are removed (their pixels go to the nearest ink) and counted. Without the
@@ -533,6 +540,7 @@ object PrintAreaAndPaletteEngine {
         }
         var finalBuckets = if (prunedBuckets.isNotEmpty()) prunedBuckets else activeBuckets.take(1).toMutableList()
 
+        stepTimer?.invoke("step 9b")
         // Step 9b: On a garment that needs a white base (not light), a colour that is a halftone of one ink over the garment,
         // or a smooth transition between two inks, is not a separate ink. Keep the fewest inks
         // that reproduce every colour within the quality tolerance from print_rules.json.
@@ -556,6 +564,7 @@ object PrintAreaAndPaletteEngine {
             }
         }
 
+        stepTimer?.invoke("step 9c")
         // Step 9c: In a photo, a light and a dark shade of one ink under uneven light are one ink
         // (print_rules.json photo_vs_artwork merge_shades_in_photo): same hue within the limit, they
         // touch, and the lightness change across their border is wider than an ink edge.
@@ -664,6 +673,7 @@ object PrintAreaAndPaletteEngine {
         val finalCenters = finalBuckets.map { it.centerLab }
         val finalAssignments = assignPixelsToCenters(maskedRgbList, maskedLabList, finalCenters)
 
+        stepTimer?.invoke("step 9d")
         // Step 9d: Edge blending (print_rules.json edge_blend). Thin bands of mixed colour between two
         // inks (or ink and fabric) from camera blur or anti-aliasing go to the nearer neighbour; a
         // pixel nearer the fabric leaves the print area. Undone by "Keep edge colours as separate inks".
@@ -802,6 +812,7 @@ object PrintAreaAndPaletteEngine {
                 )
             }
 
+        stepTimer?.invoke("step 10")
         // Step 10: Flat-separation posterisation error curve for K = 4, 6, 8, 10, 12, 16
         val targetKs = listOf(4, 6, 8, 10, 12, 16)
         // The six clusterings are independent, so they run at the same time. Each one is the
@@ -838,6 +849,7 @@ object PrintAreaAndPaletteEngine {
         }
         val errorCurve = errorCurveSlots.map { it!! }
 
+        stepTimer?.invoke("step 11")
         // Step 11: Render Mask Bitmap with print box overlay
         val maskBitmap = if (generateMaskBitmap) {
             createMaskPreviewBitmap(pixels, finalPrintMask, width, height, inputs.erasedRectangles, activePrintBox, photoEdgeExcluded)
