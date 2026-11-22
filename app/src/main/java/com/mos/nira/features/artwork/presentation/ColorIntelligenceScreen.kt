@@ -646,6 +646,10 @@ fun ColorIntelligenceScreen(
             Spacer(modifier = Modifier.height(96.dp))
         }
     }
+        // The card inside the list stops when it scrolls off screen, so the top bar could keep an
+        // early value ("0 screens"). This copy draws nothing and is always composed, so the top bar's
+        // method, screens and cost follow the engine on every tab.
+        decisionContent(com.mos.nira.features.advice.CardSection.NONE, false) { }
         // Before the four answers: Ask NIRA answers from the measured facts only (no actions).
         if (askOpen && jobSummary?.method == null && measuredPrintColours != null) {
             val facts = remember(measuredPrintColours, artworkBackground, artworkBackgroundAnswer, lowResolution, inputKind) {
