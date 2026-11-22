@@ -24,7 +24,7 @@ object SheetTranslation {
         template.replace("{language}", languageName).replace("{texts}", JSONArray(texts).toString()).trim()
 
     /** Why one translation was not used. */
-    enum class Reject { NUMBERS_CHANGED, COLOUR_CODE, EMPTY }
+    enum class Reject { NUMBERS_CHANGED, COLOUR_CODE, EMPTY, NOT_TRANSLATED }
 
     data class Result(
         /** English text -> translation, only for translations that passed. */
@@ -51,9 +51,13 @@ object SheetTranslation {
         return Result(ok, bad)
     }
 
-    /** A translation must keep exactly the same numbers and add no colour code. */
+    private val SPACES = Regex("""\s+""")
+
+    /** A translation must change the text, keep exactly the same numbers and add no colour code. */
     fun check(source: String, translation: String): Reject? = when {
         translation.isBlank() || translation == "null" -> Reject.EMPTY
+        // The model sent the English back: not a translation, even though the numbers match.
+        translation.trim().replace(SPACES, " ") == source.trim().replace(SPACES, " ") -> Reject.NOT_TRANSLATED
         CardExplanation.hasColourCode(translation) && !CardExplanation.hasColourCode(source) -> Reject.COLOUR_CODE
         ReportExplanation.numbers(translation).sorted() != ReportExplanation.numbers(source).sorted() -> Reject.NUMBERS_CHANGED
         else -> null

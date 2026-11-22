@@ -46,6 +46,13 @@ class SheetTranslationTest {
     }
 
     @Test
+    fun englishSentBackIsNotATranslation() {
+        val src = "Cure at 160 °C for 90 seconds."
+        assertEquals(SheetTranslation.Reject.NOT_TRANSLATED, SheetTranslation.check(src, "Cure at 160 °C  for 90 seconds. "))
+        assertNull(SheetTranslation.check(src, "160 °C இல் 90 விநாடிகள் க்யூர் செய்யவும்."))
+    }
+
+    @Test
     fun promptCarriesLanguageAndTexts() {
         val template = listOf(File("src/main/assets/${SheetTranslation.ASSET_PATH}"), File("app/src/main/assets/${SheetTranslation.ASSET_PATH}"))
             .first { it.exists() }.readText()

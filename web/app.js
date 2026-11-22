@@ -420,7 +420,7 @@ $("ask-form").addEventListener("submit", (ev) => {
 
 // ---------------------------------------------------------------- Translate the card
 
-const TRANSLATE_TEMPLATE = await (await fetch("prompts/translate_web_v1.txt")).text();
+const TRANSLATE_TEMPLATE = await (await fetch("prompts/translate_web_v2.txt")).text();
 
 $("translate").addEventListener("click", async () => {
   if (!job) return;
@@ -445,11 +445,13 @@ $("translate").addEventListener("click", async () => {
     let kept = 0;
     texts.forEach((src, i) => {
       const t = String(arr[i] ?? "").trim();
-      const ok = t && sameNumbers(src, t) && !(hasCode(t) && !hasCode(src));
+      // A line counts as translated only if it changed and kept its numbers.
+      const changed = t && t.replace(/\s+/g, " ") !== String(src).trim().replace(/\s+/g, " ");
+      const ok = changed && sameNumbers(src, t) && !(hasCode(t) && !hasCode(src));
       if (!ok) kept++;
-      $("t-lines").append(el("li", ok ? "" : "kept", ok ? t : src + "  (kept in English: number check)"));
+      $("t-lines").append(el("li", ok ? "" : "kept", ok ? t : src + (changed ? "  (kept in English: number check)" : "  (kept in English: the AI did not translate it)")));
     });
-    $("t-summary").textContent = `✓ ${texts.length - kept} of ${texts.length} lines translated; ${kept} kept in English (number check).`;
+    $("t-summary").textContent = `${kept ? "⚠" : "✓"} ${texts.length - kept} of ${texts.length} lines translated; ${kept} kept in English (checked).`;
     record("Translate the card", r.source, r.ms, kept ? "held" : "passed");
   } catch (e) {
     $("t-src").textContent = "⚠ Not answered";
