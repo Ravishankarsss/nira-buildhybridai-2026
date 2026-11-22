@@ -591,9 +591,9 @@
     <string name="ask_talk_speaking">🔊 NIRA is speaking</string>
     <string name="ask_talk_end">Tap to end the conversation</string>
     <string name="ask_talk_ended">Conversation ended: no voice heard. Tap to talk again.</string>
-    <string name="act_preview_ink">Preview: %1$s ink shown as %2$s (preview only; the artwork and screens do not change)</string>
-    <string name="act_garment">Garment colour: %1$s (card recalculated)</string>
-    <string name="act_quantity">Quantity: %1$d pieces (card recalculated)</string>
+    <string name="act_preview_ink">Preview only: %1$s ink shown as %2$s. The artwork, screens, ink and cost do not change.</string>
+    <string name="act_garment">Garment colour: %1$s. The engine recalculated screens, ink and cost; the AI did not set them.</string>
+    <string name="act_quantity">Quantity: %1$d pieces. The engine recalculated ink and cost; the AI did not set them.</string>
     <string name="act_fibre">Fibre: %1$s</string>
     <string name="act_fabric">Fabric: %1$s</string>
     <string name="act_feel">Feel: %1$s</string>

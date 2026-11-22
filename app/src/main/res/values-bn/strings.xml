@@ -592,9 +592,9 @@
     <string name="ask_talk_speaking">🔊 NIRA বলছে</string>
     <string name="ask_talk_end">কথোপকথন শেষ করতে ট্যাপ করুন</string>
     <string name="ask_talk_ended">কথোপকথন শেষ: কোনো কণ্ঠ শোনা যায়নি। আবার কথা বলতে ট্যাপ করুন।</string>
-    <string name="act_preview_ink">প্রিভিউ: %1$s কালি %2$s দেখানো হয়েছে (শুধু প্রিভিউ; artwork ও স্ক্রিন বদলায় না)</string>
-    <string name="act_garment">পোশাকের রং: %1$s (কার্ড আবার হিসাব করা হয়েছে)</string>
-    <string name="act_quantity">পরিমাণ: %1$dটি পিস (কার্ড আবার হিসাব করা হয়েছে)</string>
+    <string name="act_preview_ink">শুধু প্রিভিউ: %1$s কালি %2$s হিসেবে দেখানো হয়েছে। আর্টওয়ার্ক, স্ক্রিন, কালি ও খরচ বদলায় না।</string>
+    <string name="act_garment">পোশাকের রং: %1$s। ইঞ্জিন স্ক্রিন, কালি ও খরচ আবার হিসাব করেছে; AI এগুলো ঠিক করেনি।</string>
+    <string name="act_quantity">পরিমাণ: %1$d পিস। ইঞ্জিন কালি ও খরচ আবার হিসাব করেছে; AI এগুলো ঠিক করেনি।</string>
     <string name="act_fibre">ফাইবার: %1$s</string>
     <string name="act_fabric">কাপড়: %1$s</string>
     <string name="act_feel">অনুভূতি: %1$s</string>

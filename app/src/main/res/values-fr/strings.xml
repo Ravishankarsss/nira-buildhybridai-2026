@@ -593,9 +593,9 @@
     <string name="ask_talk_speaking">🔊 NIRA parle</string>
     <string name="ask_talk_end">Touchez pour terminer la conversation</string>
     <string name="ask_talk_ended">Conversation terminée : aucune voix entendue. Touchez pour parler à nouveau.</string>
-    <string name="act_preview_ink">Aperçu : encre %1$s affichée en %2$s (aperçu seulement ; le visuel et les écrans ne changent pas)</string>
-    <string name="act_garment">Couleur du vêtement : %1$s (carte recalculée)</string>
-    <string name="act_quantity">Quantité : %1$d pièces (carte recalculée)</string>
+    <string name="act_preview_ink">Aperçu seulement : encre %1$s affichée en %2$s. Le motif, les écrans, l\'encre et le coût ne changent pas.</string>
+    <string name="act_garment">Couleur du vêtement : %1$s. Le moteur a recalculé écrans, encre et coût ; l\'IA ne les a pas fixés.</string>
+    <string name="act_quantity">Quantité : %1$d pièces. Le moteur a recalculé encre et coût ; l\'IA ne les a pas fixés.</string>
     <string name="act_fibre">Fibre : %1$s</string>
     <string name="act_fabric">Tissu : %1$s</string>
     <string name="act_feel">Toucher : %1$s</string>

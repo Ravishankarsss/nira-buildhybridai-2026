@@ -591,9 +591,9 @@
     <string name="ask_talk_speaking">🔊 NIRA 正在说话</string>
     <string name="ask_talk_end">点按结束对话</string>
     <string name="ask_talk_ended">对话已结束：未听到声音。点按可再次对话。</string>
-    <string name="act_preview_ink">预览：%1$s 油墨显示为 %2$s（仅预览；图稿和网版不变）</string>
-    <string name="act_garment">服装颜色：%1$s（卡片已重新计算）</string>
-    <string name="act_quantity">数量：%1$d 件（卡片已重新计算）</string>
+    <string name="act_preview_ink">仅预览：%1$s 油墨显示为 %2$s。图案、网版、油墨和成本不变。</string>
+    <string name="act_garment">服装颜色：%1$s。网版、油墨和成本由计算引擎重新计算，不是 AI 设定。</string>
+    <string name="act_quantity">数量：%1$d 件。油墨和成本由计算引擎重新计算，不是 AI 设定。</string>
     <string name="act_fibre">纤维：%1$s</string>
     <string name="act_fabric">面料：%1$s</string>
     <string name="act_feel">手感：%1$s</string>

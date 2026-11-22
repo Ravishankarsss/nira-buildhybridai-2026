@@ -592,9 +592,9 @@
     <string name="ask_talk_speaking">🔊 NIRA spricht</string>
     <string name="ask_talk_end">Tippen, um das Gespräch zu beenden</string>
     <string name="ask_talk_ended">Gespräch beendet: keine Stimme gehört. Tippen, um wieder zu sprechen.</string>
-    <string name="act_preview_ink">Vorschau: %1$s Farbe als %2$s gezeigt (nur Vorschau; Motiv und Siebe ändern sich nicht)</string>
-    <string name="act_garment">Teilefarbe: %1$s (Karte neu berechnet)</string>
-    <string name="act_quantity">Menge: %1$d Stück (Karte neu berechnet)</string>
+    <string name="act_preview_ink">Nur Vorschau: Farbe %1$s als %2$s gezeigt. Motiv, Siebe, Farbe und Kosten ändern sich nicht.</string>
+    <string name="act_garment">Kleidungsfarbe: %1$s. Die Engine hat Siebe, Farbe und Kosten neu berechnet; die KI hat sie nicht gesetzt.</string>
+    <string name="act_quantity">Menge: %1$d Stück. Die Engine hat Farbe und Kosten neu berechnet; die KI hat sie nicht gesetzt.</string>
     <string name="act_fibre">Faser: %1$s</string>
     <string name="act_fabric">Stoff: %1$s</string>
     <string name="act_feel">Griff: %1$s</string>

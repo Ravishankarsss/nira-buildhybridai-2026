@@ -592,9 +592,9 @@
     <string name="ask_talk_speaking">🔊 NIRA பேசுகிறது</string>
     <string name="ask_talk_end">உரையாடலை முடிக்க தட்டவும்</string>
     <string name="ask_talk_ended">உரையாடல் முடிந்தது: குரல் கேட்கவில்லை. மீண்டும் பேச தட்டவும்.</string>
-    <string name="act_preview_ink">முன்னோட்டம்: %1$s மை %2$s ஆகக் காட்டப்படுகிறது (முன்னோட்டம் மட்டும்; artwork மற்றும் ஸ்கிரீன்கள் மாறாது)</string>
-    <string name="act_garment">ஆடை நிறம்: %1$s (அட்டை மீண்டும் கணக்கிடப்பட்டது)</string>
-    <string name="act_quantity">எண்ணிக்கை: %1$d துண்டுகள் (அட்டை மீண்டும் கணக்கிடப்பட்டது)</string>
+    <string name="act_preview_ink">முன்னோட்டம் மட்டும்: %1$s மை %2$s ஆகக் காட்டப்படுகிறது. ஆர்ட்வொர்க், ஸ்கிரீன்கள், மை, விலை மாறாது.</string>
+    <string name="act_garment">ஆடை நிறம்: %1$s. ஸ்கிரீன்கள், மை, விலையை engine மீண்டும் கணக்கிட்டது; AI அவற்றை அமைக்கவில்லை.</string>
+    <string name="act_quantity">அளவு: %1$d பீஸ்கள். மை, விலையை engine மீண்டும் கணக்கிட்டது; AI அவற்றை அமைக்கவில்லை.</string>
     <string name="act_fibre">இழை: %1$s</string>
     <string name="act_fabric">துணி: %1$s</string>
     <string name="act_feel">தொடு உணர்வு: %1$s</string>

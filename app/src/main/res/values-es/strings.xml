@@ -593,9 +593,9 @@
     <string name="ask_talk_speaking">🔊 NIRA está hablando</string>
     <string name="ask_talk_end">Toca para terminar la conversación</string>
     <string name="ask_talk_ended">Conversación terminada: no se oyó ninguna voz. Toca para hablar de nuevo.</string>
-    <string name="act_preview_ink">Vista previa: tinta %1$s mostrada como %2$s (solo vista previa; el diseño y las pantallas no cambian)</string>
-    <string name="act_garment">Color de prenda: %1$s (tarjeta recalculada)</string>
-    <string name="act_quantity">Cantidad: %1$d piezas (tarjeta recalculada)</string>
+    <string name="act_preview_ink">Solo vista previa: tinta %1$s mostrada como %2$s. El diseño, las pantallas, la tinta y el costo no cambian.</string>
+    <string name="act_garment">Color de la prenda: %1$s. El motor recalculó pantallas, tinta y costo; la IA no los fijó.</string>
+    <string name="act_quantity">Cantidad: %1$d piezas. El motor recalculó tinta y costo; la IA no los fijó.</string>
     <string name="act_fibre">Fibra: %1$s</string>
     <string name="act_fabric">Tejido: %1$s</string>
     <string name="act_feel">Tacto: %1$s</string>

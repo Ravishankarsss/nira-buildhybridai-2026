@@ -591,9 +591,9 @@
     <string name="ask_talk_speaking">🔊 NIRA đang nói</string>
     <string name="ask_talk_end">Chạm để kết thúc cuộc trò chuyện</string>
     <string name="ask_talk_ended">Đã kết thúc: không nghe thấy giọng nói. Chạm để nói lại.</string>
-    <string name="act_preview_ink">Xem trước: mực %1$s hiển thị thành %2$s (chỉ xem trước; hình in và khung không đổi)</string>
-    <string name="act_garment">Màu áo: %1$s (đã tính lại thẻ)</string>
-    <string name="act_quantity">Số lượng: %1$d chiếc (đã tính lại thẻ)</string>
+    <string name="act_preview_ink">Chỉ xem trước: mực %1$s hiển thị thành %2$s. Hình in, khung, mực và chi phí không đổi.</string>
+    <string name="act_garment">Màu áo: %1$s. Bộ máy đã tính lại khung, mực và chi phí; AI không đặt các số này.</string>
+    <string name="act_quantity">Số lượng: %1$d cái. Bộ máy đã tính lại mực và chi phí; AI không đặt các số này.</string>
     <string name="act_fibre">Sợi: %1$s</string>
     <string name="act_fabric">Vải: %1$s</string>
     <string name="act_feel">Cảm giác: %1$s</string>

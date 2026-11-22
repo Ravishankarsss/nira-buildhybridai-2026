@@ -592,9 +592,9 @@
     <string name="ask_talk_speaking">🔊 NIRA बोल रहा है</string>
     <string name="ask_talk_end">बातचीत ख़त्म करने के लिए टैप करें</string>
     <string name="ask_talk_ended">बातचीत ख़त्म: कोई आवाज़ नहीं सुनी। फिर बात करने के लिए टैप करें।</string>
-    <string name="act_preview_ink">प्रीव्यू: %1$s स्याही %2$s दिखाई गई (सिर्फ़ प्रीव्यू; artwork और स्क्रीन नहीं बदलते)</string>
-    <string name="act_garment">गारमेंट रंग: %1$s (कार्ड फिर से गिना गया)</string>
-    <string name="act_quantity">मात्रा: %1$d पीस (कार्ड फिर से गिना गया)</string>
+    <string name="act_preview_ink">केवल प्रीव्यू: %1$s स्याही %2$s के रूप में दिखाई गई। आर्टवर्क, स्क्रीन, स्याही और लागत नहीं बदलते।</string>
+    <string name="act_garment">गारमेंट रंग: %1$s। इंजन ने स्क्रीन, स्याही और लागत फिर से निकाली; AI ने इन्हें तय नहीं किया।</string>
+    <string name="act_quantity">मात्रा: %1$d पीस। इंजन ने स्याही और लागत फिर से निकाली; AI ने इन्हें तय नहीं किया।</string>
     <string name="act_fibre">फ़ाइबर: %1$s</string>
     <string name="act_fabric">कपड़ा: %1$s</string>
     <string name="act_feel">फ़ील: %1$s</string>
