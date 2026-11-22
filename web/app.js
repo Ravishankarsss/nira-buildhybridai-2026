@@ -285,10 +285,12 @@ function renderDecision() {
 }
 
 async function loadJob() {
-  const path = $("job-select").value;
-  // Show which job is active.
-  const sel = $("job-select");
-  $("active-job").textContent = sel.options[sel.selectedIndex]?.text ?? "";
+  // The picked job (the first one until the user picks another).
+  const opts = [...document.querySelectorAll(".job-opt")];
+  const pick = opts.find((b) => b.classList.contains("on")) ?? opts[0];
+  opts.forEach((b) => { b.classList.toggle("on", b === pick); b.setAttribute("aria-checked", String(b === pick)); });
+  const path = pick.dataset.path;
+  $("active-job").textContent = pick.dataset.title;
   $("job-facts").textContent = "";
   $("explain-result").hidden = true;
   $("translate-result").hidden = true;
@@ -465,7 +467,11 @@ $("translate").addEventListener("click", async () => {
   }
 });
 
-$("job-select").addEventListener("change", loadJob);
+document.querySelectorAll(".job-opt").forEach((b) => b.addEventListener("click", () => {
+  if (b.classList.contains("on")) return;
+  document.querySelectorAll(".job-opt").forEach((x) => x.classList.toggle("on", x === b));
+  loadJob();
+}));
 await loadJob();
 
 // ---------------------------------------------------------------- Developer: free prompt in any mode

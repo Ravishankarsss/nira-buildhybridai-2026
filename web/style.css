@@ -179,6 +179,15 @@ button { font: inherit; }
 .sep-table th, .sep-table td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); }
 .sep-table th { color: var(--muted); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; }
 .active-job { margin: 4px 0 10px; font-size: 14px; color: var(--muted); }
+.job-picker { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 8px 0 10px; }
+.job-opt { display: flex; gap: 10px; align-items: center; text-align: left; padding: 8px; border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.03); color: inherit; font: inherit; cursor: pointer; }
+.job-opt img { width: 56px; height: 56px; border-radius: 8px; flex: none; object-fit: cover; }
+.job-opt b { display: block; font-size: 14px; }
+.job-opt small { display: block; color: var(--muted); font-size: 12px; line-height: 1.35; margin-top: 2px; }
+.job-opt:hover { border-color: var(--cyan); }
+.job-opt.on { border-color: var(--cyan); background: rgba(85,214,232,.10); }
+@media (max-width: 560px) { .job-picker { grid-template-columns: 1fr; } }
 .active-job b { color: var(--cyan); }
 
 /* Hybrid route */

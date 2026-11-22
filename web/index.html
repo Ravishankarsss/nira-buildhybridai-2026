@@ -270,12 +270,27 @@
         <div class="card" id="job">
           <h4>The job</h4>
           <p class="muted small">Computed by the NIRA Android app's engine and rules files (no AI). The AI only explains, answers and translates these facts. Text only.</p>
-          <p class="active-job">Active job: <b id="active-job">Navy + red logo on a navy cotton T-shirt</b></p>
-          <label class="label" for="job-select">Choose another job</label>
-          <select id="job-select">
-            <option value="samples/card_navy_logo.json">Navy + red logo on a navy cotton T-shirt</option>
-            <option value="samples/card_white_logo.json">Navy + red logo on a white cotton T-shirt</option>
-          </select>
+          <p class="label">1. Pick a job. Each one was computed on the phone, then saved here as text facts.</p>
+          <div id="job-picker" class="job-picker" role="radiogroup" aria-label="Pick a job">
+            <button type="button" class="job-opt" role="radio" data-path="samples/card_lion_navy.json" data-title="Lion artwork on a navy cotton T-shirt">
+              <img src="img/job-thumb-lion.webp" alt="" width="64" height="64">
+              <span><b>Lion on navy cotton</b><small>Dark garment, many colours: NIRA picks discharge + digital, 1 screen</small></span>
+            </button>
+            <button type="button" class="job-opt" role="radio" data-path="samples/card_hummingbird_white.json" data-title="Hummingbird artwork on a white cotton T-shirt">
+              <img src="img/job-thumb-bird.webp" alt="" width="64" height="64">
+              <span><b>Hummingbird on white cotton</b><small>Water-based pigment, 6 screens, ink in grams per screen</small></span>
+            </button>
+            <button type="button" class="job-opt" role="radio" data-path="samples/card_navy_logo.json" data-title="Navy + red test logo on a navy cotton T-shirt">
+              <img src="img/job-thumb-logo-navy.webp" alt="" width="64" height="64">
+              <span><b>Navy logo on a navy T-shirt</b><small>The navy ink almost disappears: NIRA warns and changes the method</small></span>
+            </button>
+            <button type="button" class="job-opt" role="radio" data-path="samples/card_white_logo.json" data-title="Navy + red test logo on a white cotton T-shirt">
+              <img src="img/job-thumb-logo-white.webp" alt="" width="64" height="64">
+              <span><b>Same logo on a white T-shirt</b><small>Simple job: 2 spot screens, water-based pigment</small></span>
+            </button>
+          </div>
+          <p class="label">2. Press Explain, Ask NIRA or Translate on the right. 3. Each answer shows where the AI ran (this computer or the cloud) and is checked against these facts.</p>
+          <p class="active-job">Active job: <b id="active-job">Lion artwork on a navy cotton T-shirt</b></p>
           <div id="decision" class="decision"></div>
           <details class="facts-all">
             <summary>All engine facts sent to the AI</summary>

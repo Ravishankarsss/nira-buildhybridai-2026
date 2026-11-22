@@ -1,0 +1,30 @@
+{
+  "generated_by": "NIRA Android app (engine and rules files; no AI used to make these facts)",
+  "method_name": "Water-based pigment print",
+  "saved_at": "2026-11-22 13:55",
+  "prompt_asset": "prompts\/card_explain_v2.txt",
+  "facts": [
+    "Brief: garment colour white; fibre cotton; fabric single jersey; quantity 500 pieces; feel wanted soft.",
+    "Contrast warning: the purple ink is hard to see on the white garment (lightness difference 29).",
+    "Contrast warning: the light purple ink is hard to see on the white garment (lightness difference 12).",
+    "Contrast warning: the light green ink is hard to see on the white garment (lightness difference 14).",
+    "Method: Water-based pigment print (possible, see notes; not floor-verified; confidence not given in the rules file; feel soft).",
+    "Second choice: DTG (direct-to-garment) digital print (possible, see notes; not floor-verified; confidence not given in the rules file).",
+    "Quantity: 500 pieces, the buyer's order. Quantity does not change the method; it is used for the ink total of the order.",
+    "Separation measured by the engine: CMYK + 2 Spot.",
+    "Screens: 6 (Cyan, Magenta, Yellow, Black, Vivid Rose, Vivid Magenta).",
+    "White base: no.",
+    "Screen Cyan: mesh 230–305 tpi (sourced), ink 0.2 g per garment.",
+    "Screen Magenta: mesh 230–305 tpi (sourced), ink 0.3 g per garment.",
+    "Screen Yellow: mesh 230–305 tpi (sourced), ink 0.2 g per garment.",
+    "Screen Black: mesh 230–305 tpi (sourced), ink 0.1 g per garment.",
+    "Screen Vivid Rose: mesh 137–156 tpi (sourced), ink 0.2 g per garment.",
+    "Screen Vivid Magenta: mesh 137–156 tpi (sourced), ink 0.1 g per garment.",
+    "Ink per garment: 1.1 g (min 0.7, max 1.7).",
+    "Ink for 500 pieces: 548 g (min 366, max 838).",
+    "Risk: Stiff handle and lower rub fastness with heavy dark shades",
+    "Risk: Abrasion marks at creases on polyester\/cotton",
+    "All values are a model result for planning; a strike-off is needed before bulk production."
+  ],
+  "prompt": "You explain a garment print decision card to a merchandiser who has no print master nearby.\nWrite 3 plain sentences: what to print with and why, the main risk, and what must be checked before bulk production.\nThe first sentence must name the method exactly as written after \"Method:\".\nUse only the facts below. Do not add any number, colour, ink, chemical, method or rule that is not in the facts.\nUse colour names only, never colour codes.\nIf a fact says a line is not floor-verified, say that it still needs checking.\nDo not use lists or headings.\n\nFacts:\n- Brief: garment colour white; fibre cotton; fabric single jersey; quantity 500 pieces; feel wanted soft.\n- Contrast warning: the purple ink is hard to see on the white garment (lightness difference 29).\n- Contrast warning: the light purple ink is hard to see on the white garment (lightness difference 12).\n- Contrast warning: the light green ink is hard to see on the white garment (lightness difference 14).\n- Method: Water-based pigment print (possible, see notes; not floor-verified; confidence not given in the rules file; feel soft).\n- Second choice: DTG (direct-to-garment) digital print (possible, see notes; not floor-verified; confidence not given in the rules file).\n- Quantity: 500 pieces, the buyer's order. Quantity does not change the method; it is used for the ink total of the order.\n- Separation measured by the engine: CMYK + 2 Spot.\n- Screens: 6 (Cyan, Magenta, Yellow, Black, Vivid Rose, Vivid Magenta).\n- White base: no.\n- Screen Cyan: mesh 230–305 tpi (sourced), ink 0.2 g per garment.\n- Screen Magenta: mesh 230–305 tpi (sourced), ink 0.3 g per garment.\n- Screen Yellow: mesh 230–305 tpi (sourced), ink 0.2 g per garment.\n- Screen Black: mesh 230–305 tpi (sourced), ink 0.1 g per garment.\n- Screen Vivid Rose: mesh 137–156 tpi (sourced), ink 0.2 g per garment.\n- Screen Vivid Magenta: mesh 137–156 tpi (sourced), ink 0.1 g per garment.\n- Ink per garment: 1.1 g (min 0.7, max 1.7).\n- Ink for 500 pieces: 548 g (min 366, max 838).\n- Risk: Stiff handle and lower rub fastness with heavy dark shades\n- Risk: Abrasion marks at creases on polyester\/cotton\n- All values are a model result for planning; a strike-off is needed before bulk production."
+}
