@@ -11,6 +11,7 @@ Built for the **#BuildHybridAI 2026** hackathon (Google / Firebase).
 ## For judges
 
 - **Web (Chrome):** https://nira-90d39.web.app — choose the job, press **Explain this card**, **Ask NIRA** or **Translate**. Each answer shows the real source (`ON_DEVICE` or `IN_CLOUD`) and time.
+- **Live link (phone → web):** on the phone, open a job → Decision tab → **Show on the web**. On the web page, Try it live → **Or connect your phone (live)** → type the code. The page follows changes on the phone; **↻ Refresh** reads again.
 - **Android:** judge build "NIRA judge"; steps in [docs/JUDGE_ACCESS_PLAN.md](docs/JUDGE_ACCESS_PLAN.md).
 - **Where on-device AI runs:** Gemini Nano in Chrome (tested 18 Nov 2026, `ON_DEVICE`). The test phone (vivo V60e) has no on-device model, so the Android app shows `IN_CLOUD` there; it never pretends.
 
@@ -38,6 +39,7 @@ Every AI answer shows the real `inferenceSource` reported by the SDK (`ON_DEVICE
 
 - **Confidential mode** (Settings) blocks every cloud request.
 - An artwork image is sent to the cloud only after a clear confirmation dialog.
+- **Live link:** only after **Show on the web**, the job's text facts (never the artwork) are stored in Firestore under a random 8-character code for 24 hours. `firestore.rules`: only the phone that made a code can change or delete it, nobody can list codes, expired jobs cannot be read. **Stop sharing** deletes it.
 - Counters show answers on device, answers in cloud and images uploaded.
 - Artwork, user shade libraries and saved analyses stay in app-private storage.
 - No Pantone or other third-party colour library is included. Users import their own licensed data.
