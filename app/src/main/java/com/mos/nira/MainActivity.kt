@@ -146,7 +146,13 @@ fun NIRAAppRoot() {
                     tabs = DashboardModel.visibleTabs(),
                     currentRoute = currentRoute,
                     onNavigate = { route ->
-                        if (route != currentRoute) {
+                        if (route == RootDestinations.DASHBOARD) {
+                            // Home always goes back to Home. Saving and restoring Home's stack here would
+                            // bring back a job opened from Home, so the tab seemed to do nothing.
+                            if (!rootNavController.popBackStack(RootDestinations.DASHBOARD, inclusive = false)) {
+                                rootNavController.navigate(RootDestinations.DASHBOARD) { launchSingleTop = true }
+                            }
+                        } else if (route != currentRoute) {
                             rootNavController.navigate(route) {
                                 popUpTo(RootDestinations.DASHBOARD) {
                                     saveState = true
