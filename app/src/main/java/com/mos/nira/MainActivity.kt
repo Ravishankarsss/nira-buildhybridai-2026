@@ -700,7 +700,7 @@ private fun RecentAnalysisCard(item: RecentAnalysisItem, onClick: () -> Unit) {
                     text = if (sm?.method != null) {
                         listOfNotNull(
                             sm.method,
-                            sm.perPc?.let { stringResource(R.string.cost_per_pc, com.mos.nira.core.commercial.Money.format(sm.currency, it, 2)) + if (sm.sampleRates) " *" else "" },
+                            sm.perPc?.let { stringResource(R.string.cost_per_pc, com.mos.nira.core.commercial.Money.format(sm.currency, it, 2)) + if (sm.sampleRates) " " + stringResource(com.mos.nira.R.string.rates_sample_tag) else "" },
                         ).joinToString("  ·  ")
                     } else {
                         pluralStringResource(R.plurals.recent_colour_count, item.colourCount, item.colourCount)

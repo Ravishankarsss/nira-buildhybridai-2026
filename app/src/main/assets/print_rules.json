@@ -431,6 +431,7 @@
   },
   "display_disclaimer": "Rule-of-thumb estimate from public trade sources. Verify on the production floor and with the ink maker's technical data sheet.",
   "change_log": [
+    "22 Nov 2026 (Ravi): cost_down merge badges - close match up to the merge tolerance 3.2 (was 12), visible shift up to visible_shift_max_de00 6.0, above 6 the merge is not suggested.",
     "v2 (15 Nov 2026): added process_inks, garment_mask, white_base, recommendation, resolution and regression_cases after a device test on a real garment photo (white-to-blue gradient logo on a black T-shirt).",
     "v3 (18 Nov 2026): added shadow_vs_ink and photo_vs_artwork (proposed starting values, Ravi to confirm) after a white T-shirt photo measured fold shadows as print colours. merge_shades_in_photo_hue_within_deg holds the 6 deg from merge_shades_in_photo as a number. Added edge_blend (camera blur and anti-aliasing bands between two inks; proposed starting values, Ravi to confirm). Added small_colours: a colour under the minimum coverage is flagged, not dropped (the magenta eye on the skull print). Added screen_type_mesh_rule (mesh per screen type from mesh_rules; ink figures only where ink_consumption has an entry). Ravi: flat spot 137-156 tpi; mapping verified except highlight white. Added artwork_background. Added edge_blend.keyline_protection (Ravi: black keylines are important) and photo_background (table or floor at the photo edge). Added garment_preview (contrast check and preview chips). Added print_brief (feel tags from the technique texts, method order) and quantity_thresholds (values empty until Ravi gives them). Added mixed_separation (CMYK plus spot screens for solid colours; black text from the K screen). Ravi 19 Nov: quantity is the buyer's order and does not change the method (quantity_changes_method false). Added cost_down (Cost-Down options; values from Ravi's brief). Added print_vs_ground (Ravi's lighter-needs-discharge-or-base rule)."
   ],
@@ -549,8 +550,10 @@
   },
   "cost_down": {
     "what": "Cost-Down options on the decision card: merge the two closest print colours, switch method at the order quantity, or a light garment (no white underbase)",
-    "close_match_max_de00": 12,
-    "close_match_rule": "Two print colours within close_match_max_de00 (CIEDE2000) are a close match when merged; above it the shift is visible and the buyer must approve it.",
+    "close_match_max_de00": 3.2,
+    "visible_shift_max_de00": 6.0,
+    "merge_badges_rule": "Ravi, 22 Nov 2026: up to the merge tolerance (small_colours.merge_threshold_de00, 3.2) = Close match; above it up to visible_shift_max_de00 = Visible shift, buyer approval needed; above visible_shift_max_de00 the merge is not suggested.",
+    "close_match_rule": "Two print colours within close_match_max_de00 (CIEDE2000) are a close match when merged; above it, up to visible_shift_max_de00, the shift is visible and the buyer must approve it; above that the merge is not offered.",
     "method_switch_min_saving_percent": 5,
     "method_switch_rule": "Screen vs digital is offered as a Cost-Down only when the other method costs at least method_switch_min_saving_percent less for the order.",
     "light_garment_rule": "Dropping the white underbase means a light garment: a buyer decision, never the factory's.",

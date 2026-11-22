@@ -78,7 +78,9 @@ data class CostDownRules(
     val closeMatchMaxDeltaE00: Double,
     val methodSwitchMinSavingPercent: Double,
     val confidence: String,
-    val verifiedByRavi: Boolean
+    val verifiedByRavi: Boolean,
+    /** Above this CIEDE2000 difference a merge is not suggested (null = no upper limit in the file). */
+    val visibleShiftMaxDeltaE00: Double? = null
 )
 
 enum class CostDownKind { MERGE_COLOURS, SWITCH_METHOD, LIGHT_GARMENT }
@@ -230,13 +232,15 @@ object PrintCost {
 
             // Rule 1: merge the two closest print colours (never the white underbase).
             val colours = screens.filter { it.isArtworkColour }
-            if (colours.size >= 2 && before.complete) {
+            if (colours.size >= 2 && before.complete) run {
                 var best: Triple<PlannedScreen, PlannedScreen, Double>? = null
                 for (i in colours.indices) for (j in i + 1 until colours.size) {
                     val d = ColorConverter.deltaE00(lab(colours[i].hex), lab(colours[j].hex))
                     if (best == null || d < best.third) best = Triple(colours[i], colours[j], d)
                 }
                 val (a, b, d) = best!!
+                // Above the visible-shift limit the colours are too different: no merge is suggested.
+                if (rules.visibleShiftMaxDeltaE00 != null && d > rules.visibleShiftMaxDeltaE00) return@run
                 // The smaller colour (by ink) merges into the larger one; its ink weight moves with it.
                 val (from, into) = if ((a.gramsPerGarment ?: 0.0) <= (b.gramsPerGarment ?: 0.0)) a to b else b to a
                 val merged = screens.filter { it !== from && it !== into } + into.copy(
@@ -286,7 +290,8 @@ object PrintCost {
             r.getDouble("close_match_max_de00"),
             r.getDouble("method_switch_min_saving_percent"),
             r.getString("confidence"),
-            r.getBoolean("verified_by_ravi")
+            r.getBoolean("verified_by_ravi"),
+            if (r.has("visible_shift_max_de00")) r.getDouble("visible_shift_max_de00") else null
         )
     } catch (e: Exception) {
         null

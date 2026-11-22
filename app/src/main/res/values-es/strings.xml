@@ -354,6 +354,8 @@
     <string name="working_colours">Trabajando: midiendo los colores de impresión…</string>
     <string name="working_separations">Trabajando: comparando separaciones…</string>
     <string name="working_screens">Trabajando: pantallas y tinta…</string>
+    <string name="rates_sample_tag">(muestra)</string>
+    <string name="costdown_de">ΔE00 %1$s</string>
     <string name="clean_artwork_button">✦ Guardar la impresión como diseño limpio</string>
     <string name="clean_artwork_hint">Recortado de la foto y redibujado con las tintas medidas. Un punto de partida, no el archivo original del cliente.</string>
     <string name="rates_market_title">Extras del mercado (opcional)</string>

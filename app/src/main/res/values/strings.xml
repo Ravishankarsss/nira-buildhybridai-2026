@@ -352,6 +352,8 @@
     <string name="working_colours">Working: measuring the print colours…</string>
     <string name="working_separations">Working: comparing separations…</string>
     <string name="working_screens">Working: screens and ink…</string>
+    <string name="rates_sample_tag">(sample)</string>
+    <string name="costdown_de">ΔE00 %1$s</string>
     <string name="clean_artwork_button">✦ Save the print as a clean artwork</string>
     <string name="clean_artwork_hint">Cut out of the photo and redrawn in the measured inks, on the phone. A start for planning, not the buyer\'s original file.</string>
     <string name="rates_market_title">Market extras (optional)</string>

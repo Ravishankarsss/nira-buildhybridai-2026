@@ -352,6 +352,8 @@
     <string name="working_colours">Đang xử lý: đo màu in…</string>
     <string name="working_separations">Đang xử lý: so sánh tách màu…</string>
     <string name="working_screens">Đang xử lý: khung lụa và mực…</string>
+    <string name="rates_sample_tag">(mẫu)</string>
+    <string name="costdown_de">ΔE00 %1$s</string>
     <string name="clean_artwork_button">✦ Lưu hình in thành hình sạch</string>
     <string name="clean_artwork_hint">Cắt từ ảnh và vẽ lại bằng các màu mực đã đo. Điểm khởi đầu để lập kế hoạch, không phải tệp gốc của khách.</string>
     <string name="rates_market_title">Phụ phí thị trường (tùy chọn)</string>

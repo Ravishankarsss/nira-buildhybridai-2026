@@ -977,7 +977,7 @@ private fun JobSummaryBar(
                 Text(m, color = Cyan, fontSize = 15.sp, fontWeight = FontWeight.Bold)
                 val parts = listOfNotNull(
                     summary.screens?.let { pluralStringResource(R.plurals.job_screens, it, it) },
-                    summary.perPc?.let { stringResource(R.string.cost_per_pc, com.mos.nira.core.commercial.Money.format(summary.currency, it, 2)) + if (summary.sampleRates) " *" else "" },
+                    summary.perPc?.let { stringResource(R.string.cost_per_pc, com.mos.nira.core.commercial.Money.format(summary.currency, it, 2)) + if (summary.sampleRates) " " + stringResource(R.string.rates_sample_tag) else "" },
                     if (summary.verifiedByRavi) stringResource(R.string.job_verified) else null
                 )
                 Text(parts.joinToString("  ·  "), color = TextWhite, fontSize = 13.sp)

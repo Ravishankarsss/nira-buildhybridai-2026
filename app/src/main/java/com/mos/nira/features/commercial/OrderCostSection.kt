@@ -65,6 +65,11 @@ private val CGreen = Color(0xFF7BE0A0)
 fun money(rates: FactoryRates, v: Double, decimals: Int): String =
     com.mos.nira.core.commercial.Money.format(rates.currency, v, decimals)
 
+/** A money value as shown: with "(sample)" beside it while the rates are the sample rates. */
+@Composable
+fun moneyShown(rates: FactoryRates, v: Double, decimals: Int): String =
+    money(rates, v, decimals) + if (rates.isSample) " " + stringResource(R.string.rates_sample_tag) else ""
+
 
 
 @Composable
@@ -132,18 +137,18 @@ fun OrderCostSection(
             else -> {
                 Row(verticalAlignment = Alignment.Bottom) {
                     Text(
-                        cost.perPc?.let { stringResource(R.string.cost_per_pc, money(rates, it, 2)) } ?: "—",
+                        cost.perPc?.let { stringResource(R.string.cost_per_pc, moneyShown(rates, it, 2)) } ?: "—",
                         color = CWhite, fontSize = 20.sp, fontWeight = FontWeight.Bold
                     )
                     Spacer(Modifier.weight(1f))
-                    cost.total?.let { Text(stringResource(R.string.cost_total, money(rates, it, 0), cost.quantity), color = CWhite, fontSize = 13.sp) }
+                    cost.total?.let { Text(stringResource(R.string.cost_total, moneyShown(rates, it, 0), cost.quantity), color = CWhite, fontSize = 13.sp) }
                 }
                 RatesBadge(rates, 11)
                 Text(methodName(cost.method), color = CMuted, fontSize = 11.sp)
                 if (cost.fixed != null && cost.variablePerPc != null) {
                     Text(
-                        stringResource(R.string.cost_breakdown, cost.screens, money(rates, cost.fixed, 0), money(rates, cost.variablePerPc, 2)) +
-                            (cost.inkCostPerPc?.let { "  •  " + stringResource(R.string.cost_ink, money(rates, it, 2)) } ?: ""),
+                        stringResource(R.string.cost_breakdown, cost.screens, moneyShown(rates, cost.fixed, 0), moneyShown(rates, cost.variablePerPc, 2)) +
+                            (cost.inkCostPerPc?.let { "  •  " + stringResource(R.string.cost_ink, moneyShown(rates, it, 2)) } ?: ""),
                         color = CMuted, fontSize = 11.sp, lineHeight = 15.sp
                     )
                 }
@@ -154,7 +159,7 @@ fun OrderCostSection(
                 )
                 if (cost.minChargeApplied) Text(stringResource(R.string.cost_min_applied), color = CAmber, fontSize = 11.sp, lineHeight = 15.sp)
                 cost.totalWithTax?.let {
-                    Text(stringResource(R.string.cost_with_gst, pct(cost.taxPercent), money(rates, it, 0)), color = CWhite, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.cost_with_gst, pct(cost.taxPercent), moneyShown(rates, it, 0)), color = CWhite, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                 }
                 val notIncluded = cost.missing.filter { it != Missing.QUANTITY }
                 if (notIncluded.isNotEmpty()) {
@@ -185,7 +190,7 @@ fun OrderCostSection(
             colors = ButtonDefaults.buttonColors(containerColor = CGreen, contentColor = Color(0xFF0F1526))
         ) {
             Text(
-                if (best != null && best > 0) stringResource(R.string.costdown_button_save, money(rates, best, 2)) else stringResource(R.string.costdown_button),
+                if (best != null && best > 0) stringResource(R.string.costdown_button_save, moneyShown(rates, best, 2)) else stringResource(R.string.costdown_button),
                 fontWeight = FontWeight.Bold, fontSize = 12.sp
             )
         }
@@ -247,9 +252,9 @@ fun OrderCostSection(
                         Text(
                             stringResource(
                                 R.string.costdown_new,
-                                money(rates, o.after.perPc ?: 0.0, 2),
-                                money(rates, o.savingPerPc, 2),
-                                money(rates, o.savingTotal, 0)
+                                moneyShown(rates, o.after.perPc ?: 0.0, 2),
+                                moneyShown(rates, o.savingPerPc, 2),
+                                moneyShown(rates, o.savingTotal, 0)
                             ),
                             color = CGreen, fontSize = 12.sp, lineHeight = 17.sp
                         )
@@ -276,7 +281,8 @@ fun OrderCostSection(
 
 @Composable
 private fun optionTitle(o: CostDownOption): String = when (o.kind) {
-    CostDownKind.MERGE_COLOURS -> stringResource(R.string.costdown_merge, colourName(o.fromHex ?: ""), colourName(o.intoHex ?: ""))
+    CostDownKind.MERGE_COLOURS -> stringResource(R.string.costdown_merge, colourName(o.fromHex ?: ""), colourName(o.intoHex ?: "")) +
+        (o.deltaE00?.let { "  ·  " + stringResource(R.string.costdown_de, String.format(java.util.Locale.US, "%.1f", it)) } ?: "")
     CostDownKind.SWITCH_METHOD -> stringResource(R.string.costdown_switch, methodName(o.after.method), o.after.quantity ?: 0)
     CostDownKind.LIGHT_GARMENT -> stringResource(R.string.costdown_light)
 }

@@ -353,6 +353,8 @@
     <string name="working_colours">Läuft: Druckfarben werden gemessen…</string>
     <string name="working_separations">Läuft: Separationen werden verglichen…</string>
     <string name="working_screens">Läuft: Siebe und Farbe…</string>
+    <string name="rates_sample_tag">(Beispiel)</string>
+    <string name="costdown_de">ΔE00 %1$s</string>
     <string name="clean_artwork_button">✦ Druck als sauberes Motiv speichern</string>
     <string name="clean_artwork_hint">Aus dem Foto ausgeschnitten und in den gemessenen Farben neu gezeichnet. Ein Start für die Planung, nicht die Originaldatei des Kunden.</string>
     <string name="rates_market_title">Marktzuschläge (optional)</string>

@@ -353,6 +353,8 @@
     <string name="working_colours">काम जारी: प्रिंट रंग मापे जा रहे हैं…</string>
     <string name="working_separations">काम जारी: सेपरेशन की तुलना…</string>
     <string name="working_screens">काम जारी: स्क्रीन और स्याही…</string>
+    <string name="rates_sample_tag">(नमूना)</string>
+    <string name="costdown_de">ΔE00 %1$s</string>
     <string name="clean_artwork_button">✦ प्रिंट को साफ़ आर्टवर्क के रूप में सहेजें</string>
     <string name="clean_artwork_hint">फ़ोटो से काटकर, मापी गई स्याहियों में दोबारा बनाया गया। योजना के लिए शुरुआत, खरीदार की असली फ़ाइल नहीं।</string>
     <string name="rates_market_title">बाज़ार के अतिरिक्त शुल्क (वैकल्पिक)</string>

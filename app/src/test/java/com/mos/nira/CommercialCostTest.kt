@@ -86,10 +86,14 @@ class CommercialCostTest {
         assertEquals(true, merge.closeMatch)
         // Ink weight is unchanged, so the saving is exactly one screen and its run charge.
         assertEquals((450.0 + 3.5 * 500) / 500, merge.savingPerPc, 1e-9)
-        // Red and navy only: the merge is a visible shift that needs the buyer's approval.
-        val two = listOf(scr("Navy", "#1F2A5C", 1.5), scr("Red", "#C0392B", 0.5))
+        // Navy and a lighter navy (Delta E00 about 5.6): a visible shift that needs the buyer's approval.
+        val two = listOf(scr("Navy", "#1F2A5C", 1.5), scr("Light navy", "#2A3878", 0.5))
         val visible = PrintCost.costDown(screenCard(two, 500), two, rates, costDownRules).first { it.kind == CostDownKind.MERGE_COLOURS }
+        assertTrue(visible.deltaE00!! > costDownRules.closeMatchMaxDeltaE00 && visible.deltaE00!! <= 6.0)
         assertEquals(false, visible.closeMatch)
+        // Red and navy are far apart (above the visible-shift limit 6): no merge is suggested.
+        val far = listOf(scr("Navy", "#1F2A5C", 1.5), scr("Red", "#C0392B", 0.5))
+        assertTrue(PrintCost.costDown(screenCard(far, 500), far, rates, costDownRules).none { it.kind == CostDownKind.MERGE_COLOURS })
         // A highlight white (part of the white base) is never merged either.
         val withHighlight = listOf(scr("Navy", "#1F2A5C", 1.5), PlannedScreen("Highlight White", "#FFFFFF", false, "x", null, 0.3, 0.2, 0.4, isHighlightWhite = true))
         assertTrue(PrintCost.costDown(screenCard(withHighlight, 500), withHighlight, rates, costDownRules).none { it.kind == CostDownKind.MERGE_COLOURS })
@@ -153,7 +157,9 @@ class CommercialCostTest {
 
     @Test
     fun costDownRulesComeFromTheRulesFile() {
-        assertEquals(12.0, costDownRules.closeMatchMaxDeltaE00, 0.0)
+        // Ravi, 22 Nov 2026: close match up to the merge tolerance 3.2, visible shift up to 6.
+        assertEquals(3.2, costDownRules.closeMatchMaxDeltaE00, 0.0)
+        assertEquals(6.0, costDownRules.visibleShiftMaxDeltaE00!!, 0.0)
         assertEquals(5.0, costDownRules.methodSwitchMinSavingPercent, 0.0)
         assertNull(PrintCost.parseCostDownRules(JSONObject("{}")))
     }

@@ -233,12 +233,12 @@ object DecisionSheet {
         val cost = d.cost
         if (cost?.perPc != null && cost.total != null && cost.quantity != null) {
             section(c.getString(R.string.cost_title))
-            text(c.getString(R.string.cost_per_pc, money(d.rates, cost.perPc, 2)) + "   ·   " + c.getString(R.string.cost_total, money(d.rates, cost.total, 0), cost.quantity), 34f, ink, bold = true, gapAfter = 4f)
+            text(c.getString(R.string.cost_per_pc, sheetMoney(c, d.rates, cost.perPc, 2)) + "   ·   " + c.getString(R.string.cost_total, sheetMoney(c, d.rates, cost.total, 0), cost.quantity), 34f, ink, bold = true, gapAfter = 4f)
             text(c.getString(if (d.rates.isSample) R.string.rates_sample_badge else R.string.rates_factory_badge), 24f, if (d.rates.isSample) amber else green)
             if (!cost.complete) text(c.getString(R.string.sheet_cost_partial), 24f, amber)
             d.chosenOption?.let { o ->
                 text(c.getString(R.string.sheet_costdown, optionTitle(c, o)), 28f, gapAfter = 2f)
-                text(c.getString(R.string.costdown_new, money(d.rates, o.after.perPc ?: 0.0, 2), money(d.rates, o.savingPerPc, 2), money(d.rates, o.savingTotal, 0)), 24f, green, gapAfter = 2f)
+                text(c.getString(R.string.costdown_new, sheetMoney(c, d.rates, o.after.perPc ?: 0.0, 2), sheetMoney(c, d.rates, o.savingPerPc, 2), sheetMoney(c, d.rates, o.savingTotal, 0)), 24f, green, gapAfter = 2f)
                 when (o.kind) {
                     CostDownKind.MERGE_COLOURS -> text(c.getString(if (o.closeMatch == true) R.string.badge_close else R.string.badge_visible), 24f, if (o.closeMatch == true) green else amber)
                     CostDownKind.LIGHT_GARMENT -> text(c.getString(R.string.badge_buyer), 24f, amber)
@@ -275,3 +275,7 @@ object DecisionSheet {
         ctx.startActivity(Intent.createChooser(intent, ctx.getString(R.string.sheet_share)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
     }
 }
+
+/** Money on the shared sheet, with the "(sample)" tag while the rates are the sample rates. */
+private fun sheetMoney(c: android.content.Context, rates: com.mos.nira.core.commercial.FactoryRates, v: Double, decimals: Int): String =
+    money(rates, v, decimals) + if (rates.isSample) " " + c.getString(com.mos.nira.R.string.rates_sample_tag) else ""

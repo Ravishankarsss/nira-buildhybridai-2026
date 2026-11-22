@@ -353,6 +353,8 @@
     <string name="working_colours">কাজ চলছে: প্রিন্টের রং মাপা হচ্ছে…</string>
     <string name="working_separations">কাজ চলছে: সেপারেশন তুলনা…</string>
     <string name="working_screens">কাজ চলছে: স্ক্রিন ও কালি…</string>
+    <string name="rates_sample_tag">(নমুনা)</string>
+    <string name="costdown_de">ΔE00 %1$s</string>
     <string name="clean_artwork_button">✦ প্রিন্টটি পরিষ্কার আর্টওয়ার্ক হিসেবে সংরক্ষণ করুন</string>
     <string name="clean_artwork_hint">ছবি থেকে কেটে মাপা কালিতে আবার আঁকা। পরিকল্পনার শুরু, ক্রেতার আসল ফাইল নয়।</string>
     <string name="rates_market_title">বাজারের অতিরিক্ত খরচ (ঐচ্ছিক)</string>
