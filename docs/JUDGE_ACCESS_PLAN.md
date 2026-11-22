@@ -117,4 +117,6 @@ Never claim a path works for judges until it has been tested from a device that 
 - Published with Ravi's approval: `firebase deploy --only hosting` -> https://nira-90d39.web.app (6 files).
 - Live test from the Claude browser pane (a browser with no registered debug token): "Explain this card" answered `IN_CLOUD` in 3,888 ms with App Check enforced; the number, method-name and colour-code checks passed. So reCAPTCHA Enterprise App Check works on the hosted page.
 - 22 Nov: web page v3 published (people section, built-by section, phone and web section, FAQ). Live "Explain this card" answered `IN_CLOUD` in 3,289 ms; all checks passed. The laptop screenshot on the page is this real answer.
+- 22 Nov: judge APK (all features to commit 4b637c8) on a fresh Android emulator (Medium Phone, Android 16, x86_64, never had NIRA): Home → Ask NIRA "What can I print on nylon?" answered `IN_CLOUD` in 3,914 ms with App Check enforced. Route A works on a second, clean device.
+- 22 Nov: repository made public by Ravi's decision; `master` moved forward to the latest work (fast-forward); Apache-2.0 licence detected by GitHub; website and topics set.
 - Still to do: open the link from a computer or phone that is not Ravi's.
