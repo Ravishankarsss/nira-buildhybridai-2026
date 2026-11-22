@@ -222,6 +222,7 @@
     <string name="explain_data_title">Engine தரவு</string>
     <string name="explain_blocked">Confidential mode இயக்கத்தில் உள்ளது; இந்த போனில் சாதன AI மாதிரி இல்லை, எனவே எதுவும் அனுப்பப்படவில்லை. Engine தரவு கீழே உள்ளது.</string>
     <string name="ai_limit_reached">NIRA-வின் இலவச AI வரம்பு இப்போது தீர்ந்துவிட்டது. சில நிமிடங்களில் மீண்டும் முயலவும்; தினசரி வரம்பு பசிபிக் நேரம் நள்ளிரவில் மீண்டும் தொடங்கும். Engine முடிவுகள் பாதிக்கப்படாது.</string>
+    <string name="ai_timed_out">AI ஒரு நிமிடத்துக்குள் பதில் தரவில்லை, எனவே NIRA காத்திருப்பதை நிறுத்தியது. உங்கள் வேலையும் engine முடிவுகளும் பாதுகாப்பாக உள்ளன. மீண்டும் முயற்சிக்கவும்.</string>
     <string name="artbg_title">இது பின்னணி போல் தெரிகிறது, மை அல்ல</string>
     <string name="artbg_body">%1$s படத்தின் %2$s மற்றும் அதன் ஓரத்தின் %3$s பகுதியை மூடுகிறது. அச்சிடவா, நீக்கவா?</string>
     <string name="artbg_drop">நீக்கு (மை அல்ல)</string>

@@ -7,6 +7,8 @@ import com.mos.nira.core.ai.HybridInferenceResult
 
 /** The text shown when an AI request fails: a clear message when the free limit is used up. */
 @Composable
-fun aiErrorText(result: HybridInferenceResult): String =
-    if (result.limitReached) stringResource(R.string.ai_limit_reached)
-    else stringResource(R.string.ai_read_error, result.errorMessage ?: "")
+fun aiErrorText(result: HybridInferenceResult): String = when {
+    result.limitReached -> stringResource(R.string.ai_limit_reached)
+    result.timedOut -> stringResource(R.string.ai_timed_out)
+    else -> stringResource(R.string.ai_read_error, result.errorMessage ?: "")
+}

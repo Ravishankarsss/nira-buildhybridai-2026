@@ -37,7 +37,9 @@ data class HybridInferenceResult(
     val cloudModelName: String,
     val errorMessage: String? = null,
     /** The project's free AI limit is used up (HTTP 429 / QuotaExceededException). */
-    val limitReached: Boolean = false
+    val limitReached: Boolean = false,
+    /** No answer within [HybridInferenceRepository.TIMEOUT_MS]; the request was stopped. */
+    val timedOut: Boolean = false
 )
 
 /**
@@ -78,7 +80,7 @@ class HybridInferenceRepository {
                 modelName = CLOUD_MODEL_NAME,
                 onDeviceConfig = OnDeviceConfig(mode = sdkMode(mode))
             )
-            val response = if (image != null) {
+            val response = kotlinx.coroutines.withTimeoutOrNull(TIMEOUT_MS) { if (image != null) {
                 model.generateContent(
                     content {
                         image(image)
@@ -87,7 +89,7 @@ class HybridInferenceRepository {
                 )
             } else {
                 model.generateContent(prompt)
-            }
+            } } ?: return timedOut(start, mode)
             HybridInferenceResult(
                 text = response.text,
                 inferenceSource = sourceName(response.inferenceSource),
@@ -120,12 +122,14 @@ class HybridInferenceRepository {
                 modelName = CLOUD_MODEL_NAME,
                 onDeviceConfig = OnDeviceConfig(mode = sdkMode(mode))
             )
-            val response = model.generateContent(
-                content {
-                    inlineData(audio, mimeType)
-                    text(prompt)
-                }
-            )
+            val response = kotlinx.coroutines.withTimeoutOrNull(TIMEOUT_MS) {
+                model.generateContent(
+                    content {
+                        inlineData(audio, mimeType)
+                        text(prompt)
+                    }
+                )
+            } ?: return timedOut(start, mode)
             HybridInferenceResult(
                 text = response.text,
                 inferenceSource = sourceName(response.inferenceSource),
@@ -171,6 +175,18 @@ class HybridInferenceRepository {
             limitReached = AiLimit.isLimitReached(e.javaClass.name, e.message)
         )
 
+    /** The request was stopped after [TIMEOUT_MS] with no answer. */
+    private fun timedOut(start: Long, mode: HybridMode) =
+        HybridInferenceResult(
+            text = null,
+            inferenceSource = "ERROR",
+            durationMs = elapsedMs(start),
+            requestedMode = mode,
+            cloudModelName = CLOUD_MODEL_NAME,
+            errorMessage = "No answer within ${TIMEOUT_MS / 1000} s",
+            timedOut = true
+        )
+
     private fun elapsedMs(startNanos: Long): Long = (System.nanoTime() - startNanos) / 1_000_000
 
     private fun sdkMode(mode: HybridMode): InferenceMode = when (mode) {
@@ -202,5 +218,13 @@ class HybridInferenceRepository {
          *   gemini-3.8-flash       no answer: timed out after 180 s, twice
          */
         const val CLOUD_MODEL_NAME = "gemini-3.5-flash-lite"
+
+        /**
+         * Longest wait for one AI answer before the app stops the request and says so. An app
+         * setting, not a print value. Measured answers: 2.4 to 22 s in the cloud on the vivo V60e
+         * (17 to 22 Nov 2026) and up to 24 s on-device in Chrome; one request on 22 Nov never
+         * answered, which left "NIRA is thinking..." on screen.
+         */
+        const val TIMEOUT_MS = 60_000L
     }
 }

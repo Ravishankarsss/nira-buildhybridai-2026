@@ -222,6 +222,7 @@
     <string name="explain_data_title">इंजन डेटा</string>
     <string name="explain_blocked">Confidential mode चालू है और इस फ़ोन में ऑन-डिवाइस मॉडल नहीं है, इसलिए कुछ नहीं भेजा गया। इंजन डेटा नीचे है।</string>
     <string name="ai_limit_reached">NIRA की मुफ़्त AI सीमा अभी समाप्त हो गई है। कुछ मिनट बाद फिर कोशिश करें; दैनिक सीमा पैसिफ़िक समय की आधी रात को फिर शुरू होती है। इंजन के परिणामों पर असर नहीं पड़ता।</string>
+    <string name="ai_timed_out">AI ने एक मिनट में जवाब नहीं दिया, इसलिए NIRA ने इंतज़ार बंद कर दिया। आपका काम और इंजन के नतीजे सुरक्षित हैं। कृपया फिर से कोशिश करें।</string>
     <string name="artbg_title">यह पृष्ठभूमि लगती है, स्याही नहीं</string>
     <string name="artbg_body">%1$s इमेज का %2$s और उसके किनारे का %3$s ढकता है। इसे छापें या हटाएँ?</string>
     <string name="artbg_drop">हटाएँ (स्याही नहीं)</string>

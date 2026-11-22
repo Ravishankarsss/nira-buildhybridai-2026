@@ -221,6 +221,7 @@
     <string name="explain_data_title">Dữ liệu của bộ máy</string>
     <string name="explain_blocked">Chế độ bảo mật đang bật và điện thoại này không có mô hình trên thiết bị, nên không gửi gì cả. Dữ liệu của bộ máy ở bên dưới.</string>
     <string name="ai_limit_reached">Hạn mức AI miễn phí của NIRA tạm thời đã hết. Hãy thử lại sau vài phút; hạn mức hằng ngày được đặt lại lúc nửa đêm giờ Thái Bình Dương. Kết quả của bộ máy không bị ảnh hưởng.</string>
+    <string name="ai_timed_out">AI không trả lời trong một phút nên NIRA đã ngừng chờ. Công việc và kết quả của bạn vẫn an toàn. Vui lòng thử lại.</string>
     <string name="artbg_title">Đây có vẻ là nền, không phải mực</string>
     <string name="artbg_body">%1$s chiếm %2$s hình và %3$s phần mép. In hay bỏ?</string>
     <string name="artbg_drop">Bỏ (không phải mực)</string>

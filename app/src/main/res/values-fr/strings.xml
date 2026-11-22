@@ -223,6 +223,7 @@
     <string name="explain_data_title">Données du moteur</string>
     <string name="explain_blocked">Le mode confidentiel est activé et ce téléphone n\'a pas de modèle sur l\'appareil : rien n\'a été envoyé. Les données du moteur sont ci-dessous.</string>
     <string name="ai_limit_reached">La limite gratuite d\'IA de NIRA est épuisée pour le moment. Réessayez dans quelques minutes ; la limite quotidienne se réinitialise à minuit, heure du Pacifique. Les résultats du moteur ne sont pas touchés.</string>
+    <string name="ai_timed_out">L\'IA n\'a pas répondu en une minute, NIRA a donc arrêté d\'attendre. Votre travail et les résultats sont intacts. Veuillez réessayer.</string>
     <string name="artbg_title">Cela ressemble à un fond, pas à de l\'encre</string>
     <string name="artbg_body">%1$s couvre %2$s de l\'image et %3$s de son bord. L\'imprimer ou le retirer ?</string>
     <string name="artbg_drop">Retirer (pas d\'encre)</string>
