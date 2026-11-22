@@ -133,12 +133,12 @@ fun PrintReportScreen(
                 title = {
                     Column {
                         Text(
-                            text = "NIRA Print Report",
+                            text = stringResource(R.string.rep_title),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "Technical Print Engineering Report",
+                            text = stringResource(R.string.rep_subtitle),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.primary
                         )
@@ -146,12 +146,12 @@ fun PrintReportScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.camera_back))
                     }
                 },
                 actions = {
                     IconButton(onClick = onRecalculate) {
-                        Icon(Icons.Default.Refresh, contentDescription = "Recalculate")
+                        Icon(Icons.Default.Refresh, contentDescription = stringResource(R.string.rep_cd_recalc))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -171,7 +171,7 @@ fun PrintReportScreen(
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     CircularProgressIndicator()
                     Spacer(modifier = Modifier.height(16.dp))
-                    Text("Calculating print area, mask & CIEDE2000 palette...")
+                    Text(stringResource(R.string.rep_calculating))
                 }
             }
             return@Scaffold
@@ -260,7 +260,7 @@ fun PrintReportScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "1. Print Area & Mask",
+                                text = stringResource(R.string.rep_s1),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold
                             )
@@ -269,7 +269,7 @@ fun PrintReportScreen(
                                 FilterChip(
                                     selected = eraseModeEnabled,
                                     onClick = { eraseModeEnabled = !eraseModeEnabled },
-                                    label = { Text(if (eraseModeEnabled) "Erase Active" else "Erase Tool") },
+                                    label = { Text(if (eraseModeEnabled) stringResource(R.string.rep_erase_on) else stringResource(R.string.rep_erase_off)) },
                                     leadingIcon = {
                                         Icon(Icons.Default.Clear, contentDescription = null, modifier = Modifier.size(16.dp))
                                     }
@@ -280,7 +280,7 @@ fun PrintReportScreen(
                                         onClick = onClearErasedRects,
                                         modifier = Modifier.size(32.dp)
                                     ) {
-                                        Icon(Icons.Default.Clear, contentDescription = "Clear Erased", tint = MaterialTheme.colorScheme.error)
+                                        Icon(Icons.Default.Clear, contentDescription = stringResource(R.string.rep_cd_clear_erased), tint = MaterialTheme.colorScheme.error)
                                     }
                                 }
                             }
@@ -288,14 +288,14 @@ fun PrintReportScreen(
 
                         if (eraseModeEnabled) {
                             Text(
-                                text = "Drag your finger over unwanted elements (e.g. captions, hands) on the preview below to exclude them from the print mask.",
+                                text = stringResource(R.string.rep_erase_hint),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.padding(top = 4.dp, bottom = 8.dp)
                             )
                         } else {
                             Text(
-                                text = "Garment background automatically masked out. Inked print pixels shown in colour with tight print box.",
+                                text = stringResource(R.string.rep_mask_hint),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.padding(top = 4.dp, bottom = 8.dp)
@@ -328,7 +328,7 @@ fun PrintReportScreen(
                             ) {
                                 Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                                        Text("Print Dimensions:", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                        Text(stringResource(R.string.rep_dims), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                         Text(
                                             String.format("%.1f × %.1f cm", partAResult.printWidthCm, partAResult.printHeightCm),
                                             style = MaterialTheme.typography.bodySmall,
@@ -336,14 +336,14 @@ fun PrintReportScreen(
                                         )
                                     }
                                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                                        Text("Print Bounding Box Area:", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                        Text(stringResource(R.string.rep_box_area), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                         Text(
                                             String.format("%.1f cm²", partAResult.totalBoxAreaCm2),
                                             style = MaterialTheme.typography.bodySmall
                                         )
                                     }
                                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                                        Text("Effective Inked Print Area:", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold)
+                                        Text(stringResource(R.string.rep_inked_area), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold)
                                         Text(
                                             String.format("%.1f cm² (%.1f%%)", partAResult.effectivePrintAreaCm2, partAResult.printMaskCoveragePercent),
                                             style = MaterialTheme.typography.bodySmall,
@@ -352,7 +352,7 @@ fun PrintReportScreen(
                                         )
                                     }
                                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                                        Text("Print Box Resolution:", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                        Text(stringResource(R.string.rep_resolution), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                         Text(
                                             String.format("%.1f px/cm (~%d dpi)", partAResult.pixelsPerCm, (partAResult.pixelsPerCm * 2.54).toInt()),
                                             style = MaterialTheme.typography.bodySmall,
@@ -369,7 +369,7 @@ fun PrintReportScreen(
                                             horizontalArrangement = Arrangement.SpaceBetween,
                                             verticalAlignment = Alignment.CenterVertically
                                         ) {
-                                            Text("Measured Fabric:", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                            Text(stringResource(R.string.rep_fabric), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                             Row(verticalAlignment = Alignment.CenterVertically) {
                                                 Box(
                                                     modifier = Modifier
@@ -380,7 +380,7 @@ fun PrintReportScreen(
                                                 )
                                                 Spacer(modifier = Modifier.width(4.dp))
                                                 Text(
-                                                    text = "${colourName(garmentProf.estimatedHex)} · L* ${String.format("%.1f", garmentProf.medianLab.l)} (spread ΔE ${String.format("%.1f", garmentProf.spreadDeltaE00)})",
+                                                    text = stringResource(R.string.rep_fabric_value, colourName(garmentProf.estimatedHex), String.format("%.1f", garmentProf.medianLab.l), String.format("%.1f", garmentProf.spreadDeltaE00)),
                                                     style = MaterialTheme.typography.labelSmall,
                                                     fontFamily = FontFamily.Monospace
                                                 )
@@ -390,7 +390,7 @@ fun PrintReportScreen(
 
                                     if (inputs.erasedRectangles.isNotEmpty()) {
                                         Text(
-                                            "${inputs.erasedRectangles.size} manual exclusion zone(s) applied",
+                                            stringResource(R.string.rep_excluded, "${inputs.erasedRectangles.size}"),
                                             style = MaterialTheme.typography.labelSmall,
                                             color = MaterialTheme.colorScheme.error
                                         )
@@ -412,7 +412,7 @@ fun PrintReportScreen(
                 ) {
                     Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         Text(
-                            text = "2. Engineering Inputs",
+                            text = stringResource(R.string.rep_s2),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
@@ -426,7 +426,7 @@ fun PrintReportScreen(
 
                         // White Underbase Controls
                         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                            Text("White Underbase Controls", style = MaterialTheme.typography.labelMedium)
+                            Text(stringResource(R.string.rep_underbase), style = MaterialTheme.typography.labelMedium)
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -434,17 +434,17 @@ fun PrintReportScreen(
                                 FilterChip(
                                     selected = inputs.useWhiteBaseOverride == null,
                                     onClick = { onToggleWhiteBase(null) },
-                                    label = { Text("Auto (Dark Fabric)") }
+                                    label = { Text(stringResource(R.string.rep_ub_auto)) }
                                 )
                                 FilterChip(
                                     selected = inputs.useWhiteBaseOverride == true,
                                     onClick = { onToggleWhiteBase(true) },
-                                    label = { Text("Force Underbase") }
+                                    label = { Text(stringResource(R.string.rep_ub_force)) }
                                 )
                                 FilterChip(
                                     selected = inputs.useWhiteBaseOverride == false,
                                     onClick = { onToggleWhiteBase(false) },
-                                    label = { Text("No Underbase") }
+                                    label = { Text(stringResource(R.string.rep_ub_none)) }
                                 )
                             }
 
@@ -454,13 +454,13 @@ fun PrintReportScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    "White Print Acts As Base (Solid White Spot)",
+                                    stringResource(R.string.rep_white_as_base),
                                     style = MaterialTheme.typography.bodySmall
                                 )
                                 FilterChip(
                                     selected = inputs.whitePrintActsAsBase,
                                     onClick = { onToggleWhitePrintActsAsBase(!inputs.whitePrintActsAsBase) },
-                                    label = { Text(if (inputs.whitePrintActsAsBase) "Enabled" else "Off") }
+                                    label = { Text(if (inputs.whitePrintActsAsBase) stringResource(R.string.rep_on) else stringResource(R.string.rep_off)) }
                                 )
                             }
                         }
@@ -479,7 +479,7 @@ fun PrintReportScreen(
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
                                         Text(
-                                            "Garment Mask Threshold (CIEDE2000):",
+                                            stringResource(R.string.rep_mask_threshold),
                                             style = MaterialTheme.typography.labelSmall
                                         )
                                         Text(
@@ -514,14 +514,14 @@ fun PrintReportScreen(
                                         onUpdatePrintWidth(v)
                                     }
                                 },
-                                label = { Text("Print Width (cm)") },
+                                label = { Text(stringResource(R.string.rep_width)) },
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                                 modifier = Modifier.weight(1f),
                                 singleLine = true
                             )
 
                             Column(modifier = Modifier.weight(1f)) {
-                                Text("Height (Calculated)", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Text(stringResource(R.string.rep_height), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 Text(
                                     text = String.format("%.1f cm", partAResult?.printHeightCm ?: 0.0),
                                     style = MaterialTheme.typography.bodyLarge,
@@ -545,7 +545,7 @@ fun PrintReportScreen(
                                         onUpdateOrderPieces(pcs)
                                     }
                                 },
-                                label = { Text("Order Quantity (Pieces)") },
+                                label = { Text(stringResource(R.string.rep_quantity)) },
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                                 modifier = Modifier.weight(1f),
                                 singleLine = true
@@ -571,7 +571,7 @@ fun PrintReportScreen(
                         // Mesh Count Selector & Confidence Tag
                         Column {
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text("Mesh Count (tpi)", style = MaterialTheme.typography.labelMedium)
+                                Text(stringResource(R.string.rep_mesh), style = MaterialTheme.typography.labelMedium)
                                 Spacer(modifier = Modifier.width(8.dp))
                                 ConfidenceBadge("sourced")
                             }
@@ -591,7 +591,7 @@ fun PrintReportScreen(
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                             Column(modifier = Modifier.weight(1f)) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Text("Strokes", style = MaterialTheme.typography.labelMedium)
+                                    Text(stringResource(R.string.rep_strokes), style = MaterialTheme.typography.labelMedium)
                                     Spacer(modifier = Modifier.width(4.dp))
                                     ConfidenceBadge("sourced")
                                 }
@@ -609,7 +609,7 @@ fun PrintReportScreen(
 
                             Column(modifier = Modifier.weight(1f)) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Text("Wastage %", style = MaterialTheme.typography.labelMedium)
+                                    Text(stringResource(R.string.rep_wastage), style = MaterialTheme.typography.labelMedium)
                                     Spacer(modifier = Modifier.width(4.dp))
                                     ConfidenceBadge("assumption")
                                 }
@@ -639,12 +639,12 @@ fun PrintReportScreen(
                 ) {
                     Column {
                         Text(
-                            text = "3. Measured Print Palette",
+                            text = stringResource(R.string.rep_s3),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "CIEDE2000 clustering (K=16) • merged < 3.2 ΔE00 • pruned < 1.5%",
+                            text = stringResource(R.string.rep_clustering),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -655,7 +655,7 @@ fun PrintReportScreen(
                         shape = RoundedCornerShape(12.dp)
                     ) {
                         Text(
-                            text = "${partAResult?.measuredPalette?.size ?: 0} Screens",
+                            text = stringResource(R.string.rep_screens_n, "${partAResult?.measuredPalette?.size ?: 0}"),
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                             style = MaterialTheme.typography.labelMedium,
                             fontWeight = FontWeight.Bold,
@@ -669,7 +669,7 @@ fun PrintReportScreen(
             if (3 !in openSections) Unit else if (palette.isEmpty()) {
                 item {
                     Text(
-                        "No print colours detected in active mask.",
+                        stringResource(R.string.rep_no_colours),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -693,14 +693,14 @@ fun PrintReportScreen(
                             Icon(Icons.Default.Info, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = "4. Flat-Separation Error Curve",
+                                text = stringResource(R.string.rep_s4),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold
                             )
                         }
 
                         Text(
-                            text = "Mean CIEDE2000 color fidelity error of posterised artwork across screen counts K = 4, 6, 8, 10, 12, 16.",
+                            text = stringResource(R.string.rep_curve_hint),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(vertical = 4.dp)
@@ -731,7 +731,7 @@ fun PrintReportScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "5. Separation Strategies",
+                                text = stringResource(R.string.rep_s5),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold
                             )
@@ -742,7 +742,7 @@ fun PrintReportScreen(
                                     shape = RoundedCornerShape(8.dp)
                                 ) {
                                     Text(
-                                        text = "${partBResult.executionTimeMs} ms (1024px)",
+                                        text = stringResource(R.string.rep_ms_1024, "${partBResult.executionTimeMs}"),
                                         modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
                                         style = MaterialTheme.typography.labelSmall,
                                         fontFamily = FontFamily.Monospace,
@@ -755,7 +755,7 @@ fun PrintReportScreen(
 
                         // Mandatory Model Disclaimer
                         Text(
-                            text = "“Model result. No dot gain or registration error included.”",
+                            text = stringResource(R.string.rep_model_note),
                             style = MaterialTheme.typography.bodySmall,
                             fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
                             color = MaterialTheme.colorScheme.primary,
@@ -781,7 +781,7 @@ fun PrintReportScreen(
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Text(
-                                        text = "Dark or coloured garment: a white base is needed under the print. Each option below shows the white screens it adds; a white print colour can also act as the base. CMYK alone is not suitable without a white base.",
+                                        text = stringResource(R.string.rep_dark_note),
                                         style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.onErrorContainer,
                                         fontWeight = FontWeight.Medium
@@ -801,7 +801,7 @@ fun PrintReportScreen(
                                     CircularProgressIndicator(modifier = Modifier.size(28.dp))
                                     Spacer(modifier = Modifier.height(8.dp))
                                     Text(
-                                        "Solving Lawson-Hanson NNLS on 1024px artwork...",
+                                        stringResource(R.string.rep_solving),
                                         style = MaterialTheme.typography.bodySmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
@@ -841,12 +841,12 @@ fun PrintReportScreen(
                         ) {
                             Column {
                                 Text(
-                                    text = "6. Screens & Proof Preview",
+                                    text = stringResource(R.string.rep_s6),
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Bold
                                 )
                                 Text(
-                                    text = "Chosen Strategy: ${partCResult?.strategyName ?: "Loading..."}",
+                                    text = stringResource(R.string.rep_chosen, partCResult?.strategyName ?: stringResource(R.string.rep_loading)),
                                     style = MaterialTheme.typography.labelSmall,
                                     color = MaterialTheme.colorScheme.primary
                                 )
@@ -858,7 +858,7 @@ fun PrintReportScreen(
                                     shape = RoundedCornerShape(8.dp)
                                 ) {
                                     Text(
-                                        text = "${partCResult.channels.size} Screens  |  ${partCResult.executionTimeMs} ms",
+                                        text = stringResource(R.string.rep_screens_ms, "${partCResult.channels.size}", "${partCResult.executionTimeMs}"),
                                         modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
                                         style = MaterialTheme.typography.labelSmall,
                                         fontFamily = FontFamily.Monospace,
@@ -887,7 +887,7 @@ fun PrintReportScreen(
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
-                                    text = "“Preliminary digital separation, not print-ready films. Model has no dot gain or registration error. Needs original artwork at about 300 dpi at print size.”",
+                                    text = stringResource(R.string.rep_prelim),
                                     style = MaterialTheme.typography.labelSmall,
                                     fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
                                     color = MaterialTheme.colorScheme.onSecondaryContainer,
@@ -907,7 +907,7 @@ fun PrintReportScreen(
                                     CircularProgressIndicator(modifier = Modifier.size(28.dp))
                                     Spacer(modifier = Modifier.height(8.dp))
                                     Text(
-                                        "Generating greyscale film positives & proof...",
+                                        stringResource(R.string.rep_generating),
                                         style = MaterialTheme.typography.bodySmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
@@ -916,7 +916,7 @@ fun PrintReportScreen(
                         } else if (partCResult != null) {
                             // Side-by-side: Original Artwork vs Reconstructed Proof
                             Text(
-                                text = "Side-by-Side Proof Comparison",
+                                text = stringResource(R.string.rep_side_by_side),
                                 style = MaterialTheme.typography.titleSmall,
                                 fontWeight = FontWeight.Bold
                             )
@@ -933,7 +933,7 @@ fun PrintReportScreen(
                                 ) {
                                     Column(modifier = Modifier.padding(8.dp)) {
                                         Text(
-                                            text = "Original Artwork",
+                                            text = stringResource(R.string.rep_original),
                                             style = MaterialTheme.typography.labelSmall,
                                             fontWeight = FontWeight.Bold
                                         )
@@ -942,7 +942,7 @@ fun PrintReportScreen(
                                         if (origBmp != null) {
                                             Image(
                                                 bitmap = origBmp.asImageBitmap(),
-                                                contentDescription = "Original Artwork",
+                                                contentDescription = stringResource(R.string.rep_original),
                                                 modifier = Modifier
                                                     .fillMaxWidth()
                                                     .height(130.dp)
@@ -957,7 +957,7 @@ fun PrintReportScreen(
                                                     .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(6.dp)),
                                                 contentAlignment = Alignment.Center
                                             ) {
-                                                Text("Original unavailable", style = MaterialTheme.typography.labelSmall)
+                                                Text(stringResource(R.string.rep_original_na), style = MaterialTheme.typography.labelSmall)
                                             }
                                         }
                                     }
@@ -971,7 +971,7 @@ fun PrintReportScreen(
                                 ) {
                                     Column(modifier = Modifier.padding(8.dp)) {
                                         Text(
-                                            text = "Reconstructed Proof",
+                                            text = stringResource(R.string.rep_proof),
                                             style = MaterialTheme.typography.labelSmall,
                                             fontWeight = FontWeight.Bold,
                                             color = MaterialTheme.colorScheme.primary
@@ -981,7 +981,7 @@ fun PrintReportScreen(
                                         if (proofBmp != null) {
                                             Image(
                                                 bitmap = proofBmp.asImageBitmap(),
-                                                contentDescription = "Reconstructed Model Proof",
+                                                contentDescription = stringResource(R.string.rep_proof),
                                                 modifier = Modifier
                                                     .fillMaxWidth()
                                                     .height(130.dp)
@@ -996,7 +996,7 @@ fun PrintReportScreen(
                                                     .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(6.dp)),
                                                 contentAlignment = Alignment.Center
                                             ) {
-                                                Text("Proof unavailable", style = MaterialTheme.typography.labelSmall)
+                                                Text(stringResource(R.string.rep_proof_na), style = MaterialTheme.typography.labelSmall)
                                             }
                                         }
                                     }
@@ -1005,7 +1005,7 @@ fun PrintReportScreen(
 
                             // Film Positives Channels Section
                             Text(
-                                text = "Film Positive Screens (Black = 100% Ink, White = 0% Ink)",
+                                text = stringResource(R.string.rep_films),
                                 style = MaterialTheme.typography.titleSmall,
                                 fontWeight = FontWeight.Bold
                             )
@@ -1031,12 +1031,12 @@ fun PrintReportScreen(
                                     ) {
                                         Column(modifier = Modifier.weight(1f)) {
                                             Text(
-                                                text = "Composite Separation Sheet",
+                                                text = stringResource(R.string.rep_sheet),
                                                 style = MaterialTheme.typography.titleSmall,
                                                 fontWeight = FontWeight.Bold
                                             )
                                             Text(
-                                                text = "All screens + proofs compiled side-by-side",
+                                                text = stringResource(R.string.rep_sheet_hint),
                                                 style = MaterialTheme.typography.labelSmall,
                                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                                             )
@@ -1047,7 +1047,7 @@ fun PrintReportScreen(
                                                 onClick = onExportSeparationSheet,
                                                 shape = RoundedCornerShape(8.dp)
                                             ) {
-                                                Text("Save PNG", style = MaterialTheme.typography.labelMedium)
+                                                Text(stringResource(R.string.rep_save_png), style = MaterialTheme.typography.labelMedium)
                                             }
                                             Button(
                                                 onClick = onShareSeparationSheet,
@@ -1055,7 +1055,7 @@ fun PrintReportScreen(
                                             ) {
                                                 Icon(Icons.Default.Share, contentDescription = null, modifier = Modifier.size(16.dp))
                                                 Spacer(modifier = Modifier.width(4.dp))
-                                                Text("Share", style = MaterialTheme.typography.labelMedium)
+                                                Text(stringResource(R.string.sheet_share), style = MaterialTheme.typography.labelMedium)
                                             }
                                         }
                                     }
@@ -1081,7 +1081,7 @@ fun PrintReportScreen(
                                                     onClick = onClearExportMessage,
                                                     modifier = Modifier.size(20.dp)
                                                 ) {
-                                                    Icon(Icons.Default.Clear, contentDescription = "Clear", modifier = Modifier.size(14.dp))
+                                                    Icon(Icons.Default.Clear, contentDescription = stringResource(R.string.rep_clear), modifier = Modifier.size(14.dp))
                                                 }
                                             }
                                         }
@@ -1091,7 +1091,7 @@ fun PrintReportScreen(
                                     if (sheetBmp != null) {
                                         Image(
                                             bitmap = sheetBmp.asImageBitmap(),
-                                            contentDescription = "Composite Separation Sheet",
+                                            contentDescription = stringResource(R.string.rep_sheet),
                                             modifier = Modifier
                                                 .fillMaxWidth()
                                                 .height(200.dp)
@@ -1125,12 +1125,12 @@ fun PrintReportScreen(
                         ) {
                             Column {
                                 Text(
-                                    text = "7. Ink Consumption Requirements",
+                                    text = stringResource(R.string.rep_s7),
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Bold
                                 )
                                 Text(
-                                    text = "Formula: Ink (g) = Coverage × Box Area × Deposit × Strokes × (1 + Wastage)",
+                                    text = stringResource(R.string.rep_formula),
                                     style = MaterialTheme.typography.labelSmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -1156,7 +1156,7 @@ fun PrintReportScreen(
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
-                                    text = "“Screen residue and set-up loss are not included.”",
+                                    text = stringResource(R.string.rep_residue),
                                     style = MaterialTheme.typography.bodySmall,
                                     fontWeight = FontWeight.Bold,
                                     color = MaterialTheme.colorScheme.onPrimaryContainer
@@ -1186,7 +1186,7 @@ fun PrintReportScreen(
                                         horizontalArrangement = Arrangement.SpaceBetween
                                     ) {
                                         Text(
-                                            "Total Ink / Garment:",
+                                            stringResource(R.string.rep_total_garment),
                                             style = MaterialTheme.typography.bodySmall,
                                             fontWeight = FontWeight.SemiBold
                                         )
@@ -1209,7 +1209,7 @@ fun PrintReportScreen(
                                         horizontalArrangement = Arrangement.SpaceBetween
                                     ) {
                                         Text(
-                                            "Total Ink for ${partDResult.orderPieces} pieces:",
+                                            stringResource(R.string.rep_total_order, "${partDResult.orderPieces}"),
                                             style = MaterialTheme.typography.bodySmall,
                                             fontWeight = FontWeight.SemiBold
                                         )
@@ -1226,7 +1226,7 @@ fun PrintReportScreen(
                                         horizontalArrangement = Arrangement.SpaceBetween
                                     ) {
                                         Text(
-                                            "Order Range (Min – Max):",
+                                            stringResource(R.string.rep_order_range),
                                             style = MaterialTheme.typography.labelSmall,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
@@ -1238,8 +1238,8 @@ fun PrintReportScreen(
                                     }
                                     if (partDResult.unavailableInks.isNotEmpty()) {
                                         Text(
-                                            "Not included (no ink rule in print_rules.json for its mesh): " +
-                                                partDResult.unavailableInks.joinToString(", "),
+                                            stringResource(R.string.rep_not_included,
+                                                partDResult.unavailableInks.joinToString(", ")),
                                             style = MaterialTheme.typography.labelSmall,
                                             color = MaterialTheme.colorScheme.error
                                         )
@@ -1249,7 +1249,7 @@ fun PrintReportScreen(
 
                             // Per-channel consumption table
                             Text(
-                                text = "Channel Breakdown (${partDResult.channels.size} screens)",
+                                text = stringResource(R.string.rep_breakdown, "${partDResult.channels.size}"),
                                 style = MaterialTheme.typography.labelMedium,
                                 fontWeight = FontWeight.Bold
                             )
@@ -1277,7 +1277,7 @@ fun PrintReportScreen(
                         Icon(Icons.Default.CheckCircle, contentDescription = null, tint = Color(0xFF2E7D32), modifier = Modifier.size(20.dp))
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "All figures above are calculated on this phone by the NIRA engine. No AI is used for the numbers.",
+                            text = stringResource(R.string.rep_engine_note),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -1316,7 +1316,7 @@ fun InkConsumptionChannelRow(channel: InkChannelConsumption, orderPieces: Int) {
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = "Screen ${channel.channelIndex}: ${inkLabel(channel.inkName)}",
+                        text = stringResource(R.string.rep_screen_ink, "${channel.channelIndex}", inkLabel(channel.inkName)),
                         style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.Bold
                     )
@@ -1328,7 +1328,7 @@ fun InkConsumptionChannelRow(channel: InkChannelConsumption, orderPieces: Int) {
                 ) {
                     Text(
                         text = (if (channel.meshTpiMax != channel.meshTpi) "${channel.meshTpi}–${channel.meshTpiMax} tpi" else "${channel.meshTpi} tpi") +
-                            (if (channel.inkAvailable) " • ${channel.depositGPerM2Default.toInt()} g/m²" else " • no ink rule"),
+                            (if (channel.inkAvailable) " • ${channel.depositGPerM2Default.toInt()} g/m²" else " • " + stringResource(R.string.rep_no_ink_rule)),
                         modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
                         style = MaterialTheme.typography.labelSmall,
                         fontFamily = FontFamily.Monospace,
@@ -1342,12 +1342,12 @@ fun InkConsumptionChannelRow(channel: InkChannelConsumption, orderPieces: Int) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Active Coverage: ${String.format("%.1f%%", channel.boxCoveragePercent)}",
+                    text = stringResource(R.string.rep_active_cov, String.format("%.1f%%", channel.boxCoveragePercent)),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = "Strokes: ${channel.strokes} • Wastage: ${channel.wastagePercent.toInt()}%",
+                    text = stringResource(R.string.rep_strokes_wastage, "${channel.strokes}", "${channel.wastagePercent.toInt()}"),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -1360,13 +1360,13 @@ fun InkConsumptionChannelRow(channel: InkChannelConsumption, orderPieces: Int) {
             ) {
                 Column {
                     Text(
-                        text = "Per Garment:",
+                        text = stringResource(R.string.rep_per_garment),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 10.sp
                     )
                     Text(
-                        text = if (channel.inkAvailable) String.format("%.2f g", channel.inkGramsPerGarment) else "not available",
+                        text = if (channel.inkAvailable) String.format("%.2f g", channel.inkGramsPerGarment) else stringResource(R.string.rep_na),
                         style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
@@ -1379,13 +1379,13 @@ fun InkConsumptionChannelRow(channel: InkChannelConsumption, orderPieces: Int) {
                     val chOrderKg = chOrderGrams / 1000.0
 
                     Text(
-                        text = "For $orderPieces Pieces:",
+                        text = stringResource(R.string.rep_for_pieces, "$orderPieces"),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 10.sp
                     )
                     Text(
-                        text = if (channel.inkAvailable) String.format("%.1f g (%.3f kg)", chOrderGrams, chOrderKg) else "not available",
+                        text = if (channel.inkAvailable) String.format("%.1f g (%.3f kg)", chOrderGrams, chOrderKg) else stringResource(R.string.rep_na),
                         style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
@@ -1394,8 +1394,8 @@ fun InkConsumptionChannelRow(channel: InkChannelConsumption, orderPieces: Int) {
             }
 
             Text(
-                text = if (channel.inkAvailable) "Deposit range: ${channel.depositGPerM2Min.toInt()}–${channel.depositGPerM2Max.toInt()} g/m² (${channel.depositConfidence})"
-                    else "Ink: not available. print_rules.json has no ink deposit for this mesh.",
+                text = if (channel.inkAvailable) stringResource(R.string.rep_deposit, "${channel.depositGPerM2Min.toInt()}", "${channel.depositGPerM2Max.toInt()}", "${channel.depositConfidence}")
+                    else stringResource(R.string.rep_ink_na),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 9.sp
@@ -1452,7 +1452,7 @@ fun StrategyCard(
                                 Icon(Icons.Default.Star, contentDescription = null, tint = Color.White, modifier = Modifier.size(12.dp))
                                 Spacer(modifier = Modifier.width(2.dp))
                                 Text(
-                                    text = "RECOMMENDED",
+                                    text = stringResource(R.string.rep_recommended),
                                     style = MaterialTheme.typography.labelSmall,
                                     color = Color.White,
                                     fontSize = 9.sp,
@@ -1468,7 +1468,7 @@ fun StrategyCard(
                     color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondaryContainer
                 ) {
                     Text(
-                        text = "${strategy.screenCount} Screens",
+                        text = stringResource(R.string.rep_screens_n, "${strategy.screenCount}"),
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Bold,
@@ -1558,7 +1558,7 @@ fun StrategyCard(
                 ) {
                     // Metric 1: Mean ΔE00
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text("Mean Error", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 10.sp)
+                        Text(stringResource(R.string.rep_mean_error), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 10.sp)
                         Text(
                             text = String.format("ΔE %.2f", strategy.meanDeltaE00),
                             style = MaterialTheme.typography.bodySmall,
@@ -1573,7 +1573,7 @@ fun StrategyCard(
 
                     // Metric 2: 95th Percentile ΔE00
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text("95th %ile", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 10.sp)
+                        Text(stringResource(R.string.rep_p95), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 10.sp)
                         Text(
                             text = String.format("ΔE %.2f", strategy.percentile95DeltaE00),
                             style = MaterialTheme.typography.bodySmall,
@@ -1583,7 +1583,7 @@ fun StrategyCard(
 
                     // Metric 3: % of Pixels Within 3.0 ΔE00
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text("Within 3.0 ΔE", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 10.sp)
+                        Text(stringResource(R.string.rep_within), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 10.sp)
                         Text(
                             text = String.format("%.1f%%", strategy.percentWithinDeltaE3),
                             style = MaterialTheme.typography.bodySmall,
@@ -1671,7 +1671,7 @@ fun InteractiveMaskCanvas(
         ) {
             Image(
                 bitmap = maskBitmap.asImageBitmap(),
-                contentDescription = "Mask Preview",
+                contentDescription = stringResource(R.string.rep_cd_mask),
                 modifier = Modifier.fillMaxSize()
             )
 
@@ -1774,7 +1774,7 @@ fun MeasuredColorRow(color: MeasuredColor) {
                     Spacer(modifier = Modifier.height(2.dp))
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = "Match: ${color.nearestShade.name} (${color.nearestShade.code})",
+                            text = stringResource(R.string.rep_match, color.nearestShade.name, color.nearestShade.code),
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Medium
                         )
@@ -1867,7 +1867,12 @@ fun ConfidenceBadge(confidence: String) {
         color = bgColor
     ) {
         Text(
-            text = confidence,
+            text = when (confidence.lowercase()) {
+                "sourced" -> stringResource(R.string.rep_conf_sourced)
+                "interpolated" -> stringResource(R.string.rep_conf_interpolated)
+                "assumption" -> stringResource(R.string.rep_conf_assumption)
+                else -> confidence
+            },
             modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp),
             style = MaterialTheme.typography.labelSmall,
             color = textColor,
@@ -1896,7 +1901,7 @@ fun FilmPositiveCard(channel: FilmPositiveChannel) {
             if (filmBmp != null) {
                 Image(
                     bitmap = filmBmp.asImageBitmap(),
-                    contentDescription = "Film Positive ${inkLabel(channel.inkName)}",
+                    contentDescription = stringResource(R.string.rep_cd_film, inkLabel(channel.inkName)),
                     modifier = Modifier
                         .size(68.dp)
                         .clip(RoundedCornerShape(6.dp))
@@ -1911,7 +1916,7 @@ fun FilmPositiveCard(channel: FilmPositiveChannel) {
                         .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(6.dp)),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text("Film", style = MaterialTheme.typography.labelSmall)
+                    Text(stringResource(R.string.rep_film), style = MaterialTheme.typography.labelSmall)
                 }
             }
 
@@ -1929,7 +1934,7 @@ fun FilmPositiveCard(channel: FilmPositiveChannel) {
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = "Screen ${channel.channelIndex}: ${inkLabel(channel.inkName)}",
+                        text = stringResource(R.string.rep_screen_ink, "${channel.channelIndex}", inkLabel(channel.inkName)),
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Bold
                     )
@@ -1951,7 +1956,7 @@ fun FilmPositiveCard(channel: FilmPositiveChannel) {
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
-                        text = "Mesh: ${channel.recommendedMesh}",
+                        text = stringResource(R.string.rep_mesh_value, "${channel.recommendedMesh}"),
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.primary
@@ -1963,12 +1968,12 @@ fun FilmPositiveCard(channel: FilmPositiveChannel) {
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Text(
-                        text = "Active Coverage: ${channel.formattedCoverage}",
+                        text = stringResource(R.string.rep_active_cov, channel.formattedCoverage),
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = "(Box: ${channel.formattedBoxCoverage})",
+                        text = stringResource(R.string.rep_box, channel.formattedBoxCoverage),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
