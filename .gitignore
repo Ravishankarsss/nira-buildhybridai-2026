@@ -39,3 +39,6 @@ judge.properties
 # IDE and assistant settings (kept on the laptop, not in the repository)
 .idea/
 .claude/
+
+# Firebase CLI log (may hold request details)
+firebase-debug.log
