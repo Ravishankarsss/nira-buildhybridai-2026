@@ -495,8 +495,17 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                 val context = getApplication<Application>()
                 val thumbPath = ArtworkImageProcessor.saveThumbnail(context, currentBitmap, analysisId)
                 // Keep a private copy so the analysis can be reopened after the app closes.
-                val savedImageUri = ArtworkImageProcessor.saveArtworkCopy(context, currentUri, analysisId)
-                    ?: currentUri.toString()
+                val savedCopy = ArtworkImageProcessor.saveArtworkCopy(context, currentUri, analysisId)
+                val savedImageUri = savedCopy ?: currentUri.toString()
+                // A photo from the in-app camera is now copied into the job: use the copy and delete the capture.
+                if (savedCopy != null && currentUri.authority == "${context.packageName}.fileprovider") {
+                    val capturesDir = File(context.filesDir, com.mos.nira.core.image.CaptureCleanup.DIR)
+                    val capture = currentUri.lastPathSegment?.let { File(capturesDir, it) }
+                    if (capture != null && com.mos.nira.core.image.CaptureCleanup.isCapture(capture.path, capturesDir) && capture.exists()) {
+                        _uiState.update { it.copy(selectedImageUri = Uri.parse(savedCopy)) }
+                        capture.delete()
+                    }
+                }
 
                 val record = ArtworkAnalysisRecord(
                     id = analysisId,

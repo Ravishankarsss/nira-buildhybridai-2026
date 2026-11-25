@@ -197,8 +197,10 @@ fun GarmentCameraScreen(
             onClick = {
                 isSaving = true
                 errorText = null
-                val dir = File(context.filesDir, "captures").apply { mkdirs() }
+                val dir = File(context.filesDir, com.mos.nira.core.image.CaptureCleanup.DIR).apply { mkdirs() }
                 val file = File(dir, "garment_${System.currentTimeMillis()}.jpg")
+                // Captures from jobs that were never saved are removed after a day.
+                com.mos.nira.core.image.CaptureCleanup.deleteOld(dir, keep = file)
                 imageCapture.takePicture(
                     ImageCapture.OutputFileOptions.Builder(file).build(),
                     ContextCompat.getMainExecutor(context),
