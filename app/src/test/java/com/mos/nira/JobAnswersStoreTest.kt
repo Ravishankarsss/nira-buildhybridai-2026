@@ -29,9 +29,26 @@ class JobAnswersStoreTest {
             keepEdgeColours = true,
             includePhotoEdgeArea = true,
             userGarmentHex = "#111111",
-            useWhiteBaseOverride = false
+            useWhiteBaseOverride = false,
+            printBox = com.mos.nira.features.artwork.domain.NormalizedRect(0.1f, 0.2f, 0.9f, 0.75f),
+            erasedRectangles = listOf(com.mos.nira.features.artwork.domain.NormalizedRect(0.05f, 0.05f, 0.2f, 0.15f)),
+            printWidthCm = 28.0,
+            meshTpi = 230,
+            strokes = 2,
+            wastagePercent = 7.5,
+            whitePrintActsAsBase = false
         )
         assertEquals(a, JobAnswersStore.decode(JobAnswersStore.encode(a)))
+    }
+
+    @Test
+    fun reportSettingsNotChangedStayEmpty() {
+        val back = JobAnswersStore.decode(JobAnswersStore.encode(JobAnswers(quantity = 300)))!!
+        assertNull(back.printBox)
+        assertTrue(back.erasedRectangles.isEmpty())
+        assertNull(back.printWidthCm)
+        assertNull(back.meshTpi)
+        assertNull(back.whitePrintActsAsBase)
     }
 
     @Test

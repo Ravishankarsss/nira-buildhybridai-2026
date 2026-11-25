@@ -210,8 +210,20 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
         keepEdgeColours = s.printJobInputs.keepEdgeColours,
         includePhotoEdgeArea = s.printJobInputs.includePhotoEdgeArea,
         userGarmentHex = s.printJobInputs.userGarmentHex,
-        useWhiteBaseOverride = s.printJobInputs.useWhiteBaseOverride
+        useWhiteBaseOverride = s.printJobInputs.useWhiteBaseOverride,
+        printBox = s.printJobInputs.printBox,
+        erasedRectangles = s.printJobInputs.erasedRectangles,
+        printWidthCm = s.printJobInputs.printWidthCm.takeIf { it != DEFAULT_INPUTS.printWidthCm },
+        meshTpi = s.printJobInputs.meshTpi.takeIf { it != DEFAULT_INPUTS.meshTpi },
+        strokes = s.printJobInputs.strokes.takeIf { it != DEFAULT_INPUTS.strokes },
+        wastagePercent = s.printJobInputs.wastagePercent.takeIf { it != DEFAULT_INPUTS.wastagePercent },
+        whitePrintActsAsBase = s.printJobInputs.whitePrintActsAsBase.takeIf { it != DEFAULT_INPUTS.whitePrintActsAsBase }
     )
+
+    private companion object {
+        /** The app's default Print Report settings (what a setting goes back to when the job never changed it). */
+        val DEFAULT_INPUTS = PrintJobInputs()
+    }
 
     fun loadSavedAnalyses() {
         viewModelScope.launch {
@@ -671,6 +683,14 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                         targetGarmentHex = saved.garmentHex,
                         userGarmentHex = saved.userGarmentHex,
                         useWhiteBaseOverride = saved.useWhiteBaseOverride,
+                        // The Print Report settings of this job (not the previous job's).
+                        printBox = saved.printBox,
+                        erasedRectangles = saved.erasedRectangles,
+                        printWidthCm = saved.printWidthCm ?: DEFAULT_INPUTS.printWidthCm,
+                        meshTpi = saved.meshTpi ?: DEFAULT_INPUTS.meshTpi,
+                        strokes = saved.strokes ?: DEFAULT_INPUTS.strokes,
+                        wastagePercent = saved.wastagePercent ?: DEFAULT_INPUTS.wastagePercent,
+                        whitePrintActsAsBase = saved.whitePrintActsAsBase ?: DEFAULT_INPUTS.whitePrintActsAsBase,
                         orderPieces = saved.quantity?.coerceAtLeast(1) ?: it.printJobInputs.orderPieces
                     ),
                     previewGarmentHex = saved.garmentHex,
@@ -1151,7 +1171,8 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
         computePartAReport()
     }
 
-    fun setPrintBox(box: NormalizedRect) {
+    /** The print box moved by hand on the mask picture; null goes back to the detected box. */
+    fun setPrintBox(box: NormalizedRect?) {
         _uiState.update { current ->
             current.copy(printJobInputs = current.printJobInputs.copy(printBox = box))
         }

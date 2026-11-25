@@ -893,4 +893,8 @@
     <string name="live_error">No se pudo enviar: %1$s</string>
     <string name="live_confidential">El modo confidencial está activado: nada sale de este teléfono.</string>
     <string name="ai_busy">La IA en la nube está ocupada para todos ahora mismo (Google indica alta demanda). Inténtalo de nuevo en un minuto; las cifras del motor no cambian.</string>
+    <string name="rep_box_off">Recuadro de impresión</string>
+    <string name="rep_box_on">Ajustando el recuadro</string>
+    <string name="rep_box_hint">Arrastra un lado o una esquina del recuadro cian, o arrastra dentro para moverlo. NIRA vuelve a medir al soltar.</string>
+    <string name="rep_box_reset">Restablecer recuadro</string>
 </resources>

@@ -891,4 +891,8 @@
     <string name="live_error">Could not send: %1$s</string>
     <string name="live_confidential">Confidential mode is on, so nothing leaves this phone.</string>
     <string name="ai_busy">The cloud AI is busy for everyone right now (Google reports high demand). Please try again in a minute; the engine\'s numbers are not affected.</string>
+    <string name="rep_box_off">Print box</string>
+    <string name="rep_box_on">Adjusting the box</string>
+    <string name="rep_box_hint">Drag a side or corner of the cyan box, or drag inside it to move it. NIRA measures again when you let go.</string>
+    <string name="rep_box_reset">Reset box</string>
 </resources>

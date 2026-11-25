@@ -112,6 +112,7 @@ fun PrintReportScreen(
     onSetUserGarmentColor: (String?) -> Unit,
     onAddErasedRect: (NormalizedRect) -> Unit,
     onClearErasedRects: () -> Unit,
+    onSetPrintBox: (NormalizedRect?) -> Unit = {},
     onSelectStrategy: (SeparationStrategyType) -> Unit,
     onExportSeparationSheet: () -> Unit,
     onShareSeparationSheet: () -> Unit,
@@ -124,6 +125,7 @@ fun PrintReportScreen(
     footer: @Composable () -> Unit = {}
 ) {
     var eraseModeEnabled by remember { mutableStateOf(false) }
+    var boxModeEnabled by remember { mutableStateOf(false) }
     var widthInputText by remember(inputs.printWidthCm) { mutableStateOf(inputs.printWidthCm.toString()) }
     var orderPiecesText by remember(inputs.orderPieces) { mutableStateOf(inputs.orderPieces.toString()) }
 
@@ -268,7 +270,7 @@ fun PrintReportScreen(
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 FilterChip(
                                     selected = eraseModeEnabled,
-                                    onClick = { eraseModeEnabled = !eraseModeEnabled },
+                                    onClick = { eraseModeEnabled = !eraseModeEnabled; if (eraseModeEnabled) boxModeEnabled = false },
                                     label = { Text(if (eraseModeEnabled) stringResource(R.string.rep_erase_on) else stringResource(R.string.rep_erase_off)) },
                                     leadingIcon = {
                                         Icon(Icons.Default.Clear, contentDescription = null, modifier = Modifier.size(16.dp))
@@ -286,7 +288,29 @@ fun PrintReportScreen(
                             }
                         }
 
-                        if (eraseModeEnabled) {
+                        // Move the print box by hand (edges, corners, or the whole box).
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            FilterChip(
+                                selected = boxModeEnabled,
+                                onClick = { boxModeEnabled = !boxModeEnabled; if (boxModeEnabled) eraseModeEnabled = false },
+                                label = { Text(if (boxModeEnabled) stringResource(R.string.rep_box_on) else stringResource(R.string.rep_box_off)) }
+                            )
+                            if (inputs.printBox != null) {
+                                Spacer(modifier = Modifier.width(8.dp))
+                                androidx.compose.material3.TextButton(onClick = { onSetPrintBox(null) }) {
+                                    Text(stringResource(R.string.rep_box_reset))
+                                }
+                            }
+                        }
+
+                        if (boxModeEnabled) {
+                            Text(
+                                text = stringResource(R.string.rep_box_hint),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.padding(top = 4.dp, bottom = 8.dp)
+                            )
+                        } else if (eraseModeEnabled) {
                             Text(
                                 text = stringResource(R.string.rep_erase_hint),
                                 style = MaterialTheme.typography.bodySmall,
@@ -309,6 +333,9 @@ fun PrintReportScreen(
                                 maskBitmap = maskBmp,
                                 erasedRectangles = inputs.erasedRectangles,
                                 eraseEnabled = eraseModeEnabled,
+                                printBox = partAResult.printBox,
+                                boxEnabled = boxModeEnabled,
+                                onPrintBox = onSetPrintBox,
                                 onRectErased = { normRect ->
                                     onAddErasedRect(normRect)
                                 },
@@ -1620,10 +1647,15 @@ fun InteractiveMaskCanvas(
     erasedRectangles: List<NormalizedRect>,
     eraseEnabled: Boolean,
     onRectErased: (NormalizedRect) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    printBox: NormalizedRect? = null,
+    boxEnabled: Boolean = false,
+    onPrintBox: (NormalizedRect) -> Unit = {}
 ) {
     var dragStart by remember { mutableStateOf<Offset?>(null) }
     var dragCurrent by remember { mutableStateOf<Offset?>(null) }
+    // The box while it is being dragged (null = show the engine's box).
+    var liveBox by remember { mutableStateOf<NormalizedRect?>(null) }
 
     BoxWithConstraints(modifier = modifier) {
         val density = androidx.compose.ui.platform.LocalDensity.current
@@ -1635,6 +1667,32 @@ fun InteractiveMaskCanvas(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(with(density) { boxHeightPx.toDp() })
+                .pointerInput(boxEnabled, printBox) {
+                    if (boxEnabled && printBox != null) {
+                        var grip = com.mos.nira.features.artwork.domain.PrintBoxDrag.NONE
+                        val slop = 24.dp.toPx()
+                        detectDragGestures(
+                            onDragStart = { o ->
+                                grip = com.mos.nira.features.artwork.domain.PrintBoxDrag.grip(
+                                    printBox, o.x / boxWidthPx, o.y / boxHeightPx, slop / boxWidthPx, slop / boxHeightPx
+                                )
+                                liveBox = if (grip.none) null else printBox
+                            },
+                            onDrag = { change, amount ->
+                                val b = liveBox
+                                if (b != null) {
+                                    change.consume()
+                                    liveBox = com.mos.nira.features.artwork.domain.PrintBoxDrag.drag(b, grip, amount.x / boxWidthPx, amount.y / boxHeightPx)
+                                }
+                            },
+                            onDragEnd = {
+                                liveBox?.let { if (it != printBox) onPrintBox(it) }
+                                liveBox = null
+                            },
+                            onDragCancel = { liveBox = null }
+                        )
+                    }
+                }
                 .pointerInput(eraseEnabled) {
                     if (eraseEnabled) {
                         detectDragGestures(
@@ -1674,6 +1732,24 @@ fun InteractiveMaskCanvas(
                 contentDescription = stringResource(R.string.rep_cd_mask),
                 modifier = Modifier.fillMaxSize()
             )
+
+            // The print box being adjusted: dimmed outside, cyan outline, corner handles.
+            val shownBox = liveBox ?: printBox
+            if (boxEnabled && shownBox != null) {
+                androidx.compose.foundation.Canvas(modifier = Modifier.fillMaxSize()) {
+                    val l = shownBox.minX * size.width; val t = shownBox.minY * size.height
+                    val r = shownBox.maxX * size.width; val b = shownBox.maxY * size.height
+                    val cyan = Color(0xFF55D6E8)
+                    val dim = Color.Black.copy(alpha = 0.35f)
+                    drawRect(dim, topLeft = Offset.Zero, size = androidx.compose.ui.geometry.Size(size.width, t))
+                    drawRect(dim, topLeft = Offset(0f, b), size = androidx.compose.ui.geometry.Size(size.width, size.height - b))
+                    drawRect(dim, topLeft = Offset(0f, t), size = androidx.compose.ui.geometry.Size(l, b - t))
+                    drawRect(dim, topLeft = Offset(r, t), size = androidx.compose.ui.geometry.Size(size.width - r, b - t))
+                    drawRect(cyan, topLeft = Offset(l, t), size = androidx.compose.ui.geometry.Size(r - l, b - t), style = androidx.compose.ui.graphics.drawscope.Stroke(width = 3.dp.toPx()))
+                    val h = 7.dp.toPx()
+                    listOf(Offset(l, t), Offset(r, t), Offset(l, b), Offset(r, b)).forEach { drawCircle(cyan, radius = h, center = it) }
+                }
+            }
 
             // Render existing user erased rectangles
             erasedRectangles.forEach { rect ->

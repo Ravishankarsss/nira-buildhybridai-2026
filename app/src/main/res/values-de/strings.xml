@@ -892,4 +892,8 @@
     <string name="live_error">Senden nicht möglich: %1$s</string>
     <string name="live_confidential">Der vertrauliche Modus ist an: nichts verlässt dieses Telefon.</string>
     <string name="ai_busy">Die Cloud-KI ist gerade für alle ausgelastet (Google meldet hohe Nachfrage). Bitte in einer Minute erneut versuchen; die Zahlen der Engine sind nicht betroffen.</string>
+    <string name="rep_box_off">Druckrahmen</string>
+    <string name="rep_box_on">Rahmen wird angepasst</string>
+    <string name="rep_box_hint">Ziehe eine Seite oder Ecke des cyanfarbenen Rahmens oder ziehe innen, um ihn zu verschieben. NIRA misst neu, sobald du loslässt.</string>
+    <string name="rep_box_reset">Rahmen zurücksetzen</string>
 </resources>

@@ -318,6 +318,7 @@ fun ArtworkNavHost(
                 onSetUserGarmentColor = { viewModel.setUserGarmentColor(it) },
                 onAddErasedRect = { viewModel.addErasedRectangle(it) },
                 onClearErasedRects = { viewModel.clearErasedRectangles() },
+                onSetPrintBox = { viewModel.setPrintBox(it) },
                 onSelectStrategy = { viewModel.selectSeparationStrategy(it) },
                 onExportSeparationSheet = { viewModel.saveSeparationSheetToDownloads(context) { } },
                 onShareSeparationSheet = { viewModel.shareSeparationSheet(context) { } },

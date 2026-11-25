@@ -891,4 +891,8 @@
     <string name="live_error">无法发送：%1$s</string>
     <string name="live_confidential">保密模式已开启，任何内容都不会离开本机。</string>
     <string name="ai_busy">云端 AI 目前对所有人都很繁忙（Google 报告需求过高）。请一分钟后重试；引擎计算的数字不受影响。</string>
+    <string name="rep_box_off">印花框</string>
+    <string name="rep_box_on">正在调整印花框</string>
+    <string name="rep_box_hint">拖动青色框的边或角，或在框内拖动以移动它。松手后 NIRA 会重新测量。</string>
+    <string name="rep_box_reset">重置印花框</string>
 </resources>
