@@ -139,6 +139,8 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
 
     private val enabledLibraryNames = mutableSetOf("Built-in NIRA Demo")
     private var partAJob: Job? = null
+    /** The inputs that produced the Part A result on screen (to save results only under their own answers). */
+    private var partAInputs: PrintJobInputs? = null
     private var partBJob: Job? = null
 
     init {
@@ -181,6 +183,31 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
         val bmp = s.selectedBitmap ?: return
         if (s.isComputingPrintReport || s.isComputingPartB || s.isComputingPartC || s.isComputingPartD) return
         engineCache[id] = EngineSnapshot(s.printJobInputs, bmp, a, s.partBResult, s.partCResult, s.partDResult, s.selectedStrategyType, s.userPickedStrategy)
+    }
+
+    /** The key of the saved engine results for these answers (app version and rules files included). */
+    private fun engineKey(inputs: PrintJobInputs): String {
+        val app = getApplication<Application>()
+        val installed = runCatching { app.packageManager.getPackageInfo(app.packageName, 0).lastUpdateTime }.getOrDefault(0L)
+        return com.mos.nira.features.artwork.data.EngineDiskCache.key(app, inputs.copy(cameraExif = null).toString(), installed)
+    }
+
+    /**
+     * Keeps Part A and Part B of the open saved job on the phone, so reopening it is quick.
+     * Only when both were made from the answers now on screen.
+     */
+    private fun saveEngineToDisk() {
+        val s = _uiState.value
+        val id = s.currentRecordId ?: return
+        val a = s.partAResult ?: return
+        val b = s.partBResult ?: return
+        if (s.isComputingPrintReport || s.isComputingPartB || partAInputs != s.printJobInputs) return
+        val strategy = s.selectedStrategyType
+        val picked = s.userPickedStrategy
+        val inputs = s.printJobInputs
+        viewModelScope.launch(Dispatchers.IO) {
+            com.mos.nira.features.artwork.data.EngineDiskCache.save(getApplication(), id, engineKey(inputs), a, b, strategy, picked)
+        }
     }
 
     /** The same answers, ignoring what only describes the file (camera information is read again). */
@@ -734,6 +761,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
             val cached = engineCache[record.id]?.takeIf { sameAnswers(it.inputs, _uiState.value.printJobInputs) }
             if (cached != null) {
                 android.util.Log.i("NiraTiming", "reopen from session cache")
+                partAInputs = cached.inputs
                 _uiState.update {
                     it.copy(
                         selectedImageUri = uri,
@@ -754,6 +782,34 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
             }
 
             val bitmap = ArtworkImageProcessor.decodeBitmapSafely(context, uri)
+            // Saved on this phone with the same answers, app and rules: no need to measure again.
+            val openInputs = _uiState.value.printJobInputs
+            val savedEngine = if (bitmap == null) null else withContext(Dispatchers.IO) {
+                com.mos.nira.features.artwork.data.EngineDiskCache.load(context, record.id, engineKey(openInputs))
+            }
+            if (savedEngine != null && _uiState.value.currentRecordId == record.id) {
+                android.util.Log.i("NiraTiming", "reopen from saved results")
+                partAJob?.cancel(); partBJob?.cancel()
+                partAInputs = openInputs
+                _uiState.update {
+                    it.copy(
+                        selectedImageUri = uri,
+                        selectedBitmap = bitmap,
+                        metadata = meta,
+                        analysisState = AnalysisState.Success,
+                        partAResult = savedEngine.partA,
+                        partBResult = savedEngine.partB,
+                        selectedStrategyType = savedEngine.strategy,
+                        userPickedStrategy = savedEngine.userPickedStrategy,
+                        isComputingPrintReport = false,
+                        isComputingPartB = false
+                    )
+                }
+                refreshPaletteShadeMatches()
+                computeGarmentPreview()
+                computePartCReport(savedEngine.strategy)
+                return@launch
+            }
             _uiState.update {
                 it.copy(
                     selectedImageUri = uri,
@@ -1133,6 +1189,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch {
             repository.deleteAnalysis(id)
             com.mos.nira.features.artwork.data.JobAnswersStore.remove(getApplication(), id)
+            com.mos.nira.features.artwork.data.EngineDiskCache.remove(getApplication(), id)
             com.mos.nira.features.dashboard.JobSummaryStore.remove(getApplication(), id)
             val updated = repository.getAllAnalyses()
             _uiState.update { current ->
@@ -1295,6 +1352,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                     )
                 }
 
+                partAInputs = inputs
                 _uiState.update { it.copy(partAResult = result, isComputingPrintReport = false) }
                 computeGarmentPreview()
                 saveMeasuredColourCount(result.measuredPalette.size)
@@ -1323,6 +1381,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                 partBResult = current.partBResult?.copy(selectedStrategyType = type)
             )
         }
+        saveEngineToDisk()
         computePartCReport(type)
     }
 
@@ -1399,6 +1458,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                 _uiState.update {
                     it.copy(partBResult = finalResult, selectedStrategyType = chosen, isComputingPartB = false)
                 }
+                saveEngineToDisk()
 
                 // Automatically trigger Part C generation for chosen strategy
                 computePartCReport(chosen)
