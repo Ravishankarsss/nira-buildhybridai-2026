@@ -1,7 +1,21 @@
 # NIRA — Project Status
 
-Last updated: 15 November 2026, 20:15 IST (by Claude Code).
+Last updated: 25 November 2026, 22:00 IST (by Claude Code).
 Rule for this file: only write what was actually run. Numbers below come from real runs on the laptop.
+
+## 0000000. Update 22–25 Nov 2026 — feature freeze reached; live link; clean-install tests
+
+Pushed to GitHub (`kotlin-2.4-ondevice` and `master`, commit `79da6e3`) and web published, with Ravi's yes.
+
+- **Fixes:** Ask NIRA colour change now reaches the preview (every shade of a colour name); the Ask sheet opens on every tab; the Home tab always returns Home; Google's "high demand" error becomes a plain "AI is busy" message (Android and web).
+- **Languages:** about 175 more texts in 9 languages (artwork preview, merge, shade library, colour details, status messages, Print Report, live link, AI busy). Checked on the vivo in Tamil.
+- **Web Try it live:** 4 real phone jobs with pictures (lion on navy, hummingbird on white, two logo jobs), exported from the phone's engine.
+- **Live link (last feature before the freeze):** phone "Show on the web" writes only the job's text facts to Firestore `live/{code}` for 24 hours (anonymous sign-in, owner-only writes, no listing, `firestore.rules`); the web reads it live with Refresh. Firestore `asia-south1`; App Check **enforced** for Firestore and AI Logic.
+  - Rules tested from outside: read 200 before enforcement; list, overwrite, delete, other collections and other users all 403; after enforcement, reads without App Check 403.
+  - Automatic delete (TTL) needs the Blaze plan; on Spark, expired jobs are unreadable by the rules and Stop sharing deletes them.
+- **Tests run (judge APK, clean install):** Android 8.0 emulator: engine 16 colours, Ask NIRA in cloud 1.7 s. Android 14 emulator: engine, four answers → Discharge + digital print, Explain in cloud 4.7 s, live link read on the public page with App Check enforced, Refresh, Explain on the live job (in cloud 12.3 s, check passed). vivo (debug build, 25 Nov): Explain in cloud 4.9 s; live link to the public page works.
+- Build passes; unit tests 286 run, 286 pass.
+- **Open for Ravi:** upload the new judge APK over the Drive file; video captions check and YouTube upload; Devpost form and submit by 30 Nov.
 
 ## 000000. Update 17 Nov 2026 — web version: cloud call works in Chrome
 
