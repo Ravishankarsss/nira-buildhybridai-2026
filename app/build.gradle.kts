@@ -64,7 +64,9 @@ android {
     }
     testOptions {
         unitTests {
-            isReturnDefaultValues = true
+            // Off: an Android call in a JVM test fails instead of quietly returning 0 / null,
+            // so no test can pass on stub values (checked 25 Nov 2026: all tests pass with it off).
+            isReturnDefaultValues = false
         }
     }
 }

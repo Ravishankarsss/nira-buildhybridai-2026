@@ -54,7 +54,7 @@ Test devices:
 
 Firebase project: nira-90d39 (Android app com.mos.nira registered).
 
-GitHub repository: nira-buildhybridai-2026, currently PRIVATE.
+GitHub repository: github.com/Ravishankarsss/nira-buildhybridai-2026, PUBLIC (Apache 2.0). Judges use the master branch.
 
 Do not mix NIRA with unrelated AADAI modules, KINS commerce, or the old SPERTEX / SPECTRA TEX Python application.
 

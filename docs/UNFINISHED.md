@@ -1,5 +1,26 @@
 # NIRA — What is not finished
 
+## Current status, 25 November 2026 (read this first)
+
+The tables further down are the 16–18 Nov record and are kept as history; many rows there are now done. Feature freeze was 24 Nov. Details of the work: `docs/PROJECT_STATUS.md` (dated updates at the top).
+
+**Done since the tables were written:** repository public (Apache 2.0) with a clean secret scan; web page hosted with reCAPTCHA Enterprise App Check; judge build (App Check debug token) tested on clean Android 8.0 and Android 14 emulators and on the vivo; Ask NIRA (text and voice, checked actions), Explain this card, AI artwork read, buyer brief reader, translation of the decision sheet, Cost and Cost-Down, technique library, AI activity screen; nearly all UI text in `strings.xml` in 9 languages; OpenCV removed (APK about 18 MB); `isReturnDefaultValues = false` (all 286 unit tests pass without Android stubs); live link phone → web (Firestore, owner-only rules, App Check enforced); demo video v2 made.
+
+**Still open for the submission (Ravi):** upload the new judge APK over the Drive file; confirm the video captions and upload the video to YouTube; Devpost form and submit by 30 Nov.
+
+**Still open after the hackathon:**
+- Rule values marked "proposed, Ravi to confirm" (screen type mesh, neutral chroma and hue width, photo edge, fold shadow vs ink, edge blend, highlight white range); contrast rule (chroma?) and the 1254 px resolution warning.
+- Native check of the 8 machine-written languages (Ravi: Tamil).
+- Revoke the judge and phone App Check debug tokens after judging; Play Integrity and release signing for a store build.
+- Photos from the in-app camera are never cleaned up.
+- No automatic 24-hour delete of live-link jobs on the free plan (TTL needs Blaze); expired jobs are unreadable by the rules.
+- `docs/ARCHITECTURE.md` and a changelog (named in the master context) not written.
+- Print placement and tech-pack PDF from a measurement spec; NIRA as an app in the AADAI SaaS.
+
+---
+
+## History: the list as of 16–18 November
+
 First written 16 November 2026; updated 17 November 2026. Checked against `docs/MASTER_CONTEXT.md` (version 2) and the code at commit `9c7bb37`.
 Build passes; 102 unit tests pass. Feature freeze: 24 November. Deadline: 1 December, 3:30 am India time.
 

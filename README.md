@@ -88,6 +88,8 @@ Every value carries a confidence label (sourced, interpolated, article only, con
 
 `./gradlew :app:testDebugUnitTest` runs the JVM unit tests: colour maths (CIEDE2000 reference pairs), print mask and palette, separation strategies, a regression test from a real dark-garment device test, ink quantity against hand-calculated values, rules-file loading, adjustment operations, privacy rules, prompt and answer parsing, print method advice and language-file completeness.
 
+Unit tests run with `isReturnDefaultValues = false`, so a test that touches an Android class (Bitmap, Color) fails instead of passing on stub values. Checked on 25 Nov 2026: all 286 tests pass this way. Bitmap output (film images, separation sheet) is checked on the phone, not in JVM tests.
+
 ## Work done for the hackathon
 
 - The NIRA Android app in this repository was written during the contest period. The Git history starts on 15 November 2026.

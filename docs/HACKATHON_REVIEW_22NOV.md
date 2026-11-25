@@ -88,7 +88,7 @@ For this hackathon the judges score *how well hybrid AI is used*, not the percen
 
 ---
 
-## 2. What is still pending for the hackathon (must-have gate first)
+## 2. What is still pending for the hackathon (must-have gate first) — updated 25 Nov
 
 | # | Requirement (Stage One, pass/fail) | Status |
 |---|---|---|
@@ -97,12 +97,12 @@ For this hackathon the judges score *how well hybrid AI is used*, not the percen
 | 3 | Cloud inference | Done (IN_CLOUD, Android and web) |
 | 4 | Actual hybrid routing | Done (PREFER_ON_DEVICE / PREFER_IN_CLOUD, real source shown) |
 | 5 | App Check | Done (Android debug provider + judge build; web reCAPTCHA Enterprise) |
-| 6 | **Public repository + licence in About** | **Pending** — Phase 1 (needs your click) |
-| 7 | Working project, free, for judges | Web live; judge APK route A tested. **Test on a second phone/emulator pending.** |
+| 6 | Public repository + licence in About | Done (public, Apache 2.0) |
+| 7 | Working project, free, for judges | Done: web live; judge APK tested on clean Android 8.0 and 14 emulators (25 Nov) |
 | 8 | English materials and interface | Done (app default English, 9 languages) |
-| 9 | **Public YouTube video ≤ 3 min** | **Pending** — Phase 3 |
-| 10 | **Devpost text, disclosure of pre-existing work** | **Pending** — text in section 7 |
-| 11 | No production keys / PII / confidential data in repo or form | Pending final scan — Phase 1 |
+| 9 | **Public YouTube video ≤ 3 min** | Video v2 made (2:48); **Ravi: confirm captions, upload** |
+| 10 | **Devpost text, disclosure of pre-existing work** | Text ready in section 7; **Ravi: fill the form and submit by 30 Nov** |
+| 11 | No production keys / PII / confidential data in repo or form | Done: secret scans clean (latest 24 Nov, before the push) |
 
 Other open items: step 7 Part C (read the free limits for gemini-3.5-flash-lite), revoke the judge token after judging, strike-off check screen, your answers on the contrast rule (chroma?) and the 1254 px resolution warning.
 
