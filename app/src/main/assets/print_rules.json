@@ -210,7 +210,7 @@
     "choke_mm_min": 0.2,
     "choke_mm_max": 0.5,
     "confidence": "sourced",
-    "note": "0.5 mm is the published figure. The lower limit 0.2 mm is an assumption for tight-registration presses. Never choke so far that thin text loses its white base.",
+    "note": "0.5 mm is the published figure. The lower limit 0.2 mm is an assumption for tight-registration presses. Printer forums (checked 25 Nov 2026) report about 0.1 to 0.3 mm on tight presses, and some shops do not choke at all; set it from your own press registration. Never choke so far that thin text loses its white base.",
     "underbase_mesh_rule_id": "underbase_white_dark_garment",
     "source": "https://photo2vector.com/blog/screen-printing-artwork-from-photo ; https://texloom.studio/blog/color-separation-photoshop-screen-printing"
   },
@@ -229,7 +229,7 @@
     "plastisol_flash_seconds_min": 3,
     "plastisol_flash_seconds_max": 5,
     "confidence": "sourced",
-    "note": "Light-to-dark colour order within the top colours is common shop practice but was not confirmed by a source here; treat it as an assumption.",
+    "note": "Top colours light to dark is the industry default for spot colour work (sources checked 25 Nov 2026: mrprint.com, printablepress.com); on dark garments the underbase and highlight white come first and black is often flashed before or printed last. Always test the order on press.",
     "source": "https://blog.madelab.io/how-to-choose-the-right-mesh-count-for-every-print-job/ ; https://mclogan.com/blogs/news/choosing-compatible-screen-printing-inks"
   },
   "ink_systems": [
@@ -415,7 +415,7 @@
     "underbase_strokes_confidence": "assumption",
     "wastage_fraction_default": 0.1,
     "wastage_confidence": "assumption",
-    "wastage_note": "No reliable public figure found. One trade example adds 5% extra. 10% is a placeholder; replace with factory data.",
+    "wastage_note": "No reliable public figure found. One trade example adds 5% extra. 10% is a placeholder. Checked again 25 Nov 2026: the 1 to 3% often quoted is garment spoilage, not ink. Weigh the ink before and after a job to get your own figure.",
     "source": "https://4calculators.com/calculators/screen-print-ink-usage-calculator/ ; https://qcrsolutions.com/photochromic-textile-screen-ink-technical-data/ ; https://screenprintingmag.com/how-much-ink-do-you-need/ ; https://www.textileschool.com/calculators/print-paste-consumption/"
   },
   "dye_calculator": {
@@ -484,7 +484,7 @@
     "cmyk_min_hue_families": 4,
     "user_choice": "The user can always pick another option. Show the reason for the recommendation in one line.",
     "confidence": "assumption",
-    "note": "Tolerances are placeholders aligned with the shade match grades (below 2 good, 2 to 4 visible). Tune with real jobs."
+    "note": "Tolerances are starting values aligned with the shade match grades (below 2 good, 2 to 4 visible). Checked 25 Nov 2026: there is no published CIEDE2000 limit for textile strike-offs; ASTM D2244 says buyer and seller agree the tolerance, and trade guidance puts 2 to 3.5 dE as often acceptable for textile printing (drupa.com). Tune with real jobs and the buyer's specification."
   },
   "resolution": {
     "px_per_cm_min_for_fine_detail": 59,
