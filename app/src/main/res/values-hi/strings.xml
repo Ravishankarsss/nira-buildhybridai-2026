@@ -894,6 +894,6 @@
     <string name="ai_busy">क्लाउड AI अभी सभी के लिए व्यस्त है (Google ज़्यादा माँग बता रहा है)। एक मिनट बाद फिर कोशिश करें; इंजन के आँकड़ों पर कोई असर नहीं है।</string>
     <string name="rep_box_off">प्रिंट बॉक्स</string>
     <string name="rep_box_on">बॉक्स ठीक कर रहे हैं</string>
-    <string name="rep_box_hint">नीले बॉक्स का कोई किनारा या कोना खींचें, या खिसकाने के लिए अंदर से खींचें। उँगली हटाते ही NIRA फिर से मापेगा।</string>
+    <string name="rep_box_hint">नीले बॉक्स का कोई किनारा या कोना खींचें। उँगली हटाते ही NIRA फिर से मापेगा।</string>
     <string name="rep_box_reset">बॉक्स रीसेट करें</string>
 </resources>

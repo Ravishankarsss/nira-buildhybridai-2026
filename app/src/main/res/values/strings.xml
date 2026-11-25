@@ -893,6 +893,6 @@
     <string name="ai_busy">The cloud AI is busy for everyone right now (Google reports high demand). Please try again in a minute; the engine\'s numbers are not affected.</string>
     <string name="rep_box_off">Print box</string>
     <string name="rep_box_on">Adjusting the box</string>
-    <string name="rep_box_hint">Drag a side or corner of the cyan box, or drag inside it to move it. NIRA measures again when you let go.</string>
+    <string name="rep_box_hint">Drag a side or a corner of the cyan box. NIRA measures again when you let go.</string>
     <string name="rep_box_reset">Reset box</string>
 </resources>

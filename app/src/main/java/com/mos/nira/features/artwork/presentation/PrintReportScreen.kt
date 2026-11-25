@@ -68,6 +68,9 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.drag
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -326,6 +329,15 @@ fun PrintReportScreen(
                             )
                         }
 
+                        // Measuring again after a change (print box, erase): say so, it takes a while on a phone.
+                        if (isComputingA && partAResult != null) {
+                            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(bottom = 8.dp)) {
+                                CircularProgressIndicator(modifier = Modifier.size(16.dp), strokeWidth = 2.dp)
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(stringResource(R.string.working_colours), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+                            }
+                        }
+
                         // Canvas View with Drag Detector for Erase Tool
                         val maskBmp = partAResult?.maskBitmap
                         if (maskBmp != null) {
@@ -333,7 +345,8 @@ fun PrintReportScreen(
                                 maskBitmap = maskBmp,
                                 erasedRectangles = inputs.erasedRectangles,
                                 eraseEnabled = eraseModeEnabled,
-                                printBox = partAResult.printBox,
+                                // The box the user set shows at once, before the new measurement is ready.
+                                printBox = inputs.printBox ?: partAResult.printBox,
                                 boxEnabled = boxModeEnabled,
                                 onPrintBox = onSetPrintBox,
                                 onRectErased = { normRect ->
@@ -1669,28 +1682,26 @@ fun InteractiveMaskCanvas(
                 .height(with(density) { boxHeightPx.toDp() })
                 .pointerInput(boxEnabled, printBox) {
                     if (boxEnabled && printBox != null) {
-                        var grip = com.mos.nira.features.artwork.domain.PrintBoxDrag.NONE
                         val slop = 24.dp.toPx()
-                        detectDragGestures(
-                            onDragStart = { o ->
-                                grip = com.mos.nira.features.artwork.domain.PrintBoxDrag.grip(
-                                    printBox, o.x / boxWidthPx, o.y / boxHeightPx, slop / boxWidthPx, slop / boxHeightPx
-                                )
-                                liveBox = if (grip.none) null else printBox
-                            },
-                            onDrag = { change, amount ->
-                                val b = liveBox
-                                if (b != null) {
-                                    change.consume()
-                                    liveBox = com.mos.nira.features.artwork.domain.PrintBoxDrag.drag(b, grip, amount.x / boxWidthPx, amount.y / boxHeightPx)
-                                }
-                            },
-                            onDragEnd = {
-                                liveBox?.let { if (it != printBox) onPrintBox(it) }
-                                liveBox = null
-                            },
-                            onDragCancel = { liveBox = null }
-                        )
+                        // Only a touch near a side or corner moves the box; any other touch scrolls the page.
+                        awaitEachGesture {
+                            val down = awaitFirstDown(requireUnconsumed = false)
+                            val grip = com.mos.nira.features.artwork.domain.PrintBoxDrag.grip(
+                                printBox, down.position.x / boxWidthPx, down.position.y / boxHeightPx, slop / boxWidthPx, slop / boxHeightPx
+                            )
+                            if (grip.none || grip.move) return@awaitEachGesture
+                            down.consume()
+                            var box: NormalizedRect = printBox
+                            liveBox = box
+                            val finished = drag(down.id) { change ->
+                                val d = change.position - change.previousPosition
+                                box = com.mos.nira.features.artwork.domain.PrintBoxDrag.drag(box, grip, d.x / boxWidthPx, d.y / boxHeightPx)
+                                liveBox = box
+                                change.consume()
+                            }
+                            if (finished && box != printBox) onPrintBox(box)
+                            liveBox = null
+                        }
                     }
                 }
                 .pointerInput(eraseEnabled) {

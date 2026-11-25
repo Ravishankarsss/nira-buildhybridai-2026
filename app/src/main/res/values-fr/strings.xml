@@ -895,6 +895,6 @@
     <string name="ai_busy">L\'IA cloud est saturée pour tout le monde en ce moment (Google signale une forte demande). Réessayez dans une minute ; les chiffres du moteur ne sont pas touchés.</string>
     <string name="rep_box_off">Cadre d\'impression</string>
     <string name="rep_box_on">Réglage du cadre</string>
-    <string name="rep_box_hint">Faites glisser un côté ou un coin du cadre cyan, ou glissez à l\'intérieur pour le déplacer. NIRA mesure de nouveau quand vous relâchez.</string>
+    <string name="rep_box_hint">Faites glisser un côté ou un coin du cadre cyan. NIRA mesure de nouveau quand vous relâchez.</string>
     <string name="rep_box_reset">Réinitialiser le cadre</string>
 </resources>

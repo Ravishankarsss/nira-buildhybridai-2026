@@ -894,6 +894,6 @@
     <string name="ai_busy">ক্লাউড AI এখন সবার জন্য ব্যস্ত (Google বেশি চাহিদার কথা জানাচ্ছে)। এক মিনিট পরে আবার চেষ্টা করুন; ইঞ্জিনের সংখ্যায় কোনো প্রভাব নেই।</string>
     <string name="rep_box_off">প্রিন্ট বক্স</string>
     <string name="rep_box_on">বক্স ঠিক করা হচ্ছে</string>
-    <string name="rep_box_hint">নীল বক্সের একটি পাশ বা কোণ টানুন, অথবা সরাতে ভেতর থেকে টানুন। আঙুল তুললেই NIRA আবার মাপবে।</string>
+    <string name="rep_box_hint">নীল বক্সের একটি পাশ বা কোণ টানুন। আঙুল তুললেই NIRA আবার মাপবে।</string>
     <string name="rep_box_reset">বক্স আগের মতো করুন</string>
 </resources>

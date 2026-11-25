@@ -893,6 +893,6 @@
     <string name="ai_busy">AI đám mây đang bận với mọi người lúc này (Google báo nhu cầu cao). Hãy thử lại sau một phút; các con số của bộ máy không bị ảnh hưởng.</string>
     <string name="rep_box_off">Khung in</string>
     <string name="rep_box_on">Đang chỉnh khung</string>
-    <string name="rep_box_hint">Kéo một cạnh hoặc góc của khung xanh, hoặc kéo bên trong để di chuyển. NIRA đo lại khi bạn thả tay.</string>
+    <string name="rep_box_hint">Kéo một cạnh hoặc góc của khung xanh. NIRA đo lại khi bạn thả tay.</string>
     <string name="rep_box_reset">Đặt lại khung</string>
 </resources>
