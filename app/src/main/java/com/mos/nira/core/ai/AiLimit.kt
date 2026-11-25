@@ -14,4 +14,10 @@ object AiLimit {
         return "resource_exhausted" in m || "quota" in m || Regex("\\b429\\b").containsMatchIn(m) ||
             "rate limit" in m || "too many requests" in m
     }
+
+    /** The model is busy for everyone (HTTP 500/503 "high demand", UNAVAILABLE, overloaded): try again later. */
+    fun isBusy(message: String?): Boolean {
+        val m = message?.lowercase() ?: return false
+        return "high demand" in m || "overloaded" in m || "unavailable" in m || Regex("""\b503\b""").containsMatchIn(m)
+    }
 }

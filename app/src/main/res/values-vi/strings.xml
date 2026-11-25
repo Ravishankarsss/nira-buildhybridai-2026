@@ -890,4 +890,5 @@
     <string name="live_copied">Đã sao chép liên kết</string>
     <string name="live_error">Không gửi được: %1$s</string>
     <string name="live_confidential">Chế độ bảo mật đang bật nên không có gì rời khỏi điện thoại này.</string>
+    <string name="ai_busy">AI đám mây đang bận với mọi người lúc này (Google báo nhu cầu cao). Hãy thử lại sau một phút; các con số của bộ máy không bị ảnh hưởng.</string>
 </resources>

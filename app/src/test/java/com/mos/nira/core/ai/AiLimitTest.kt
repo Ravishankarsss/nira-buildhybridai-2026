@@ -21,4 +21,14 @@ class AiLimitTest {
         assertFalse(AiLimit.isLimitReached("java.lang.Exception", "took 4290 ms")) // 429 only as a whole number
         assertFalse(AiLimit.isLimitReached("java.lang.Exception", null))
     }
+
+    @Test
+    fun busyModelIsToldApartFromTheLimit() {
+        val m = "Error fetching from https://firebasevertexai.googleapis.com/...: [500 ] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
+        org.junit.Assert.assertTrue(AiLimit.isBusy(m))
+        org.junit.Assert.assertFalse(AiLimit.isLimitReached("FirebaseAIException", m))
+        org.junit.Assert.assertTrue(AiLimit.isBusy("HTTP 503 Service Unavailable"))
+        org.junit.Assert.assertFalse(AiLimit.isBusy("Firebase App Check token is invalid."))
+        org.junit.Assert.assertFalse(AiLimit.isBusy(null))
+    }
 }

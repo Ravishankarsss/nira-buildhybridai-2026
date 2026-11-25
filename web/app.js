@@ -110,6 +110,19 @@ function isLimitReached(e) {
     text.includes("rate limit") || text.includes("too many requests");
 }
 
+const BUSY_TEXT = "The cloud AI is busy for everyone right now (Google reports high demand). Please try again in a minute; the NIRA engine's numbers above are not affected.";
+
+/** HTTP 500/503 "high demand", UNAVAILABLE or overloaded: busy for everyone, try again later. */
+function isBusy(e) {
+  const text = String(e?.message ?? e).toLowerCase();
+  return text.includes("high demand") || text.includes("overloaded") || text.includes("unavailable") || /\b503\b/.test(text);
+}
+
+/** The text shown when a cloud answer fails: plain words for the limit and busy cases. */
+function aiErrorText(e) {
+  return isLimitReached(e) ? LIMIT_TEXT : isBusy(e) ? BUSY_TEXT : (e?.message ?? String(e));
+}
+
 $("model-name").textContent = CLOUD_MODEL_NAME;
 
 // ---------------------------------------------------------------- Hybrid AI on this page
@@ -438,7 +451,7 @@ $("explain").addEventListener("click", async () => {
     record("Explain this card", r.source, r.ms, outcome);
   } catch (e) {
     $("e-src").textContent = "⚠ Not answered";
-    $("e-text").textContent = isLimitReached(e) ? LIMIT_TEXT : (e?.message ?? String(e));
+    $("e-text").textContent = aiErrorText(e);
     record("Explain this card", "ERROR", e.ms ?? 0, "error");
   } finally {
     $("explain").disabled = false;
@@ -504,7 +517,7 @@ async function ask(question) {
     }
   } catch (e) {
     msg.src = "⚠ Not answered";
-    msg.check = isLimitReached(e) ? LIMIT_TEXT : (e?.message ?? String(e));
+    msg.check = aiErrorText(e);
     record("Ask NIRA", "ERROR", e.ms ?? 0, "error");
   } finally {
     msg.pending = false;
@@ -556,7 +569,7 @@ $("translate").addEventListener("click", async () => {
     record("Translate the card", r.source, r.ms, kept ? "held" : "passed");
   } catch (e) {
     $("t-src").textContent = "⚠ Not answered";
-    $("t-summary").textContent = isLimitReached(e) ? LIMIT_TEXT : (e?.message ?? String(e));
+    $("t-summary").textContent = aiErrorText(e);
     record("Translate the card", "ERROR", e.ms ?? 0, "error");
   } finally {
     $("translate").disabled = false;
@@ -599,7 +612,7 @@ $("run").addEventListener("click", async () => {
     record("Developer test", r.source, r.ms, "passed");
   } catch (e) {
     $("r-source").textContent = modeName === "ONLY_ON_DEVICE" ? "UNAVAILABLE / ERROR" : "ERROR";
-    $("r-error").textContent = isLimitReached(e) ? LIMIT_TEXT : (e?.message ?? String(e));
+    $("r-error").textContent = aiErrorText(e);
     $("r-error-row").hidden = false;
     $("r-duration").textContent = `${e.ms ?? 0} ms`;
     record("Developer test", "ERROR", e.ms ?? 0, "error");

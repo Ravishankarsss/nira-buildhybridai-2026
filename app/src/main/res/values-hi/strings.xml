@@ -891,4 +891,5 @@
     <string name="live_copied">लिंक कॉपी हो गया</string>
     <string name="live_error">नहीं भेजा जा सका: %1$s</string>
     <string name="live_confidential">गोपनीय मोड चालू है, इसलिए कुछ भी इस फ़ोन से बाहर नहीं जाता।</string>
+    <string name="ai_busy">क्लाउड AI अभी सभी के लिए व्यस्त है (Google ज़्यादा माँग बता रहा है)। एक मिनट बाद फिर कोशिश करें; इंजन के आँकड़ों पर कोई असर नहीं है।</string>
 </resources>

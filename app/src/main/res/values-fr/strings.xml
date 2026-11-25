@@ -892,4 +892,5 @@
     <string name="live_copied">Lien copié</string>
     <string name="live_error">Envoi impossible : %1$s</string>
     <string name="live_confidential">Le mode confidentiel est activé : rien ne quitte ce téléphone.</string>
+    <string name="ai_busy">L\'IA cloud est saturée pour tout le monde en ce moment (Google signale une forte demande). Réessayez dans une minute ; les chiffres du moteur ne sont pas touchés.</string>
 </resources>

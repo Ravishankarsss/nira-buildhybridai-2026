@@ -891,4 +891,5 @@
     <string name="live_copied">Link kopiert</string>
     <string name="live_error">Senden nicht möglich: %1$s</string>
     <string name="live_confidential">Der vertrauliche Modus ist an: nichts verlässt dieses Telefon.</string>
+    <string name="ai_busy">Die Cloud-KI ist gerade für alle ausgelastet (Google meldet hohe Nachfrage). Bitte in einer Minute erneut versuchen; die Zahlen der Engine sind nicht betroffen.</string>
 </resources>

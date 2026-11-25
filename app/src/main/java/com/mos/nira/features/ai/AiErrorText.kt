@@ -10,5 +10,6 @@ import com.mos.nira.core.ai.HybridInferenceResult
 fun aiErrorText(result: HybridInferenceResult): String = when {
     result.limitReached -> stringResource(R.string.ai_limit_reached)
     result.timedOut -> stringResource(R.string.ai_timed_out)
+    com.mos.nira.core.ai.AiLimit.isBusy(result.errorMessage) -> stringResource(R.string.ai_busy)
     else -> stringResource(R.string.ai_read_error, result.errorMessage ?: "")
 }

@@ -890,4 +890,5 @@
     <string name="live_copied">Link copied</string>
     <string name="live_error">Could not send: %1$s</string>
     <string name="live_confidential">Confidential mode is on, so nothing leaves this phone.</string>
+    <string name="ai_busy">The cloud AI is busy for everyone right now (Google reports high demand). Please try again in a minute; the engine\'s numbers are not affected.</string>
 </resources>

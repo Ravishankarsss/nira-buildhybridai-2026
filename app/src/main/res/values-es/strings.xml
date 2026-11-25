@@ -892,4 +892,5 @@
     <string name="live_copied">Enlace copiado</string>
     <string name="live_error">No se pudo enviar: %1$s</string>
     <string name="live_confidential">El modo confidencial está activado: nada sale de este teléfono.</string>
+    <string name="ai_busy">La IA en la nube está ocupada para todos ahora mismo (Google indica alta demanda). Inténtalo de nuevo en un minuto; las cifras del motor no cambian.</string>
 </resources>

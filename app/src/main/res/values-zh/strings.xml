@@ -890,4 +890,5 @@
     <string name="live_copied">链接已复制</string>
     <string name="live_error">无法发送：%1$s</string>
     <string name="live_confidential">保密模式已开启，任何内容都不会离开本机。</string>
+    <string name="ai_busy">云端 AI 目前对所有人都很繁忙（Google 报告需求过高）。请一分钟后重试；引擎计算的数字不受影响。</string>
 </resources>
