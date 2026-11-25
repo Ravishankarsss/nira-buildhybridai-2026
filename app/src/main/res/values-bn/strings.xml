@@ -896,4 +896,9 @@
     <string name="rep_box_on">বক্স ঠিক করা হচ্ছে</string>
     <string name="rep_box_hint">নীল বক্সের একটি পাশ বা কোণ টানুন। আঙুল তুললেই NIRA আবার মাপবে।</string>
     <string name="rep_box_reset">বক্স আগের মতো করুন</string>
+    <string name="str_button">সোজা করুন (৪টি কোণ)</string>
+    <string name="str_title">ছবি সোজা করুন</string>
+    <string name="str_hint">চারটি বিন্দু পোশাক বা প্রিন্টের জায়গার চার কোণে টেনে আনুন। মাপার আগে NIRA ওই অংশকে সোজা আয়তক্ষেত্র করবে।</string>
+    <string name="str_apply">সোজা করুন</string>
+    <string name="str_bad">চার কোণ এমন বক্স তৈরি করবে যার বাহু একে অপরকে কাটে না।</string>
 </resources>

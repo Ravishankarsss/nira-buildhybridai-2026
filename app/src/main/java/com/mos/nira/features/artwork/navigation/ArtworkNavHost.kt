@@ -118,6 +118,7 @@ fun ArtworkNavHost(
                     }
                 },
                 onReplaceImage = { uri -> viewModel.onImageSelected(uri) },
+                onStraighten = { corners -> viewModel.straightenPhoto(corners) },
                 onStartAnalysis = {
                     viewModel.analyzeArtwork()
                     navController.navigate(ArtworkDestinations.COLOR_INTELLIGENCE)

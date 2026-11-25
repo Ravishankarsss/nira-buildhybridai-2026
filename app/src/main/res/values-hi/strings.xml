@@ -896,4 +896,9 @@
     <string name="rep_box_on">बॉक्स ठीक कर रहे हैं</string>
     <string name="rep_box_hint">नीले बॉक्स का कोई किनारा या कोना खींचें। उँगली हटाते ही NIRA फिर से मापेगा।</string>
     <string name="rep_box_reset">बॉक्स रीसेट करें</string>
+    <string name="str_button">सीधा करें (4 कोने)</string>
+    <string name="str_title">फ़ोटो सीधा करें</string>
+    <string name="str_hint">चारों बिंदुओं को कपड़े या प्रिंट क्षेत्र के चार कोनों पर खींचें। मापने से पहले NIRA उस हिस्से को सीधा आयत बना देगा।</string>
+    <string name="str_apply">सीधा करें</string>
+    <string name="str_bad">चारों कोने ऐसा बॉक्स बनाएँ जिसकी भुजाएँ एक-दूसरे को न काटें।</string>
 </resources>

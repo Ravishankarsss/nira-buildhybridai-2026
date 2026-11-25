@@ -897,4 +897,9 @@
     <string name="rep_box_on">Ajustando el recuadro</string>
     <string name="rep_box_hint">Arrastra un lado o una esquina del recuadro cian. NIRA vuelve a medir al soltar.</string>
     <string name="rep_box_reset">Restablecer recuadro</string>
+    <string name="str_button">Enderezar (4 esquinas)</string>
+    <string name="str_title">Enderezar la foto</string>
+    <string name="str_hint">Arrastra los cuatro puntos a las cuatro esquinas de la prenda o del área de impresión. NIRA convierte esa zona en un rectángulo recto antes de medir.</string>
+    <string name="str_apply">Enderezar</string>
+    <string name="str_bad">Las cuatro esquinas deben formar un recuadro sin lados cruzados.</string>
 </resources>

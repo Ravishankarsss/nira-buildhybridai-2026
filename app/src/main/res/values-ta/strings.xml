@@ -896,4 +896,9 @@
     <string name="rep_box_on">பெட்டியைச் சரிசெய்கிறது</string>
     <string name="rep_box_hint">நீல நிறப் பெட்டியின் ஒரு பக்கத்தையோ மூலையையோ இழுக்கவும். விரலை எடுத்ததும் NIRA மீண்டும் அளவிடும்.</string>
     <string name="rep_box_reset">பெட்டியை மீட்டமை</string>
+    <string name="str_button">நேராக்கு (4 மூலைகள்)</string>
+    <string name="str_title">புகைப்படத்தை நேராக்கு</string>
+    <string name="str_hint">நான்கு புள்ளிகளையும் ஆடையின் அல்லது அச்சுப் பகுதியின் நான்கு மூலைகளுக்கு இழுக்கவும். அளவிடும் முன் NIRA அந்தப் பகுதியை நேரான செவ்வகமாக்கும்.</string>
+    <string name="str_apply">நேராக்கு</string>
+    <string name="str_bad">நான்கு மூலைகளும் பக்கங்கள் குறுக்கிடாத பெட்டியாக இருக்க வேண்டும்.</string>
 </resources>

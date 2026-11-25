@@ -895,4 +895,9 @@
     <string name="rep_box_on">正在调整印花框</string>
     <string name="rep_box_hint">拖动青色框的边或角。松手后 NIRA 会重新测量。</string>
     <string name="rep_box_reset">重置印花框</string>
+    <string name="str_button">拉正（4 个角）</string>
+    <string name="str_title">拉正照片</string>
+    <string name="str_hint">把四个点拖到服装或印花区域的四个角上。测量前 NIRA 会把该区域拉成规整的矩形。</string>
+    <string name="str_apply">拉正</string>
+    <string name="str_bad">四个角必须围成边不交叉的四边形。</string>
 </resources>

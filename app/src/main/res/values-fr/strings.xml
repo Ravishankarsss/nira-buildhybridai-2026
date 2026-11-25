@@ -897,4 +897,9 @@
     <string name="rep_box_on">Réglage du cadre</string>
     <string name="rep_box_hint">Faites glisser un côté ou un coin du cadre cyan. NIRA mesure de nouveau quand vous relâchez.</string>
     <string name="rep_box_reset">Réinitialiser le cadre</string>
+    <string name="str_button">Redresser (4 coins)</string>
+    <string name="str_title">Redresser la photo</string>
+    <string name="str_hint">Faites glisser les quatre points sur les quatre coins du vêtement ou de la zone imprimée. NIRA en fait un rectangle droit avant de mesurer.</string>
+    <string name="str_apply">Redresser</string>
+    <string name="str_bad">Les quatre coins doivent former un cadre sans côtés croisés.</string>
 </resources>

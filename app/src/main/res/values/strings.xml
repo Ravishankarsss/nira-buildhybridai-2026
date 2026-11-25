@@ -895,4 +895,9 @@
     <string name="rep_box_on">Adjusting the box</string>
     <string name="rep_box_hint">Drag a side or a corner of the cyan box. NIRA measures again when you let go.</string>
     <string name="rep_box_reset">Reset box</string>
+    <string name="str_button">Straighten (4 corners)</string>
+    <string name="str_title">Straighten the photo</string>
+    <string name="str_hint">Drag the four dots onto the four corners of the garment or the print area. NIRA turns that area into a straight rectangle before measuring.</string>
+    <string name="str_apply">Straighten</string>
+    <string name="str_bad">The four corners must form a box whose sides do not cross.</string>
 </resources>

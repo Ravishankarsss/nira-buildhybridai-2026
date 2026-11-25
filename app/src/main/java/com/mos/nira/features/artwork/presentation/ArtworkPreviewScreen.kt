@@ -77,8 +77,13 @@ fun ArtworkPreviewScreen(
     onReplaceImage: (Uri) -> Unit,
     onStartAnalysis: () -> Unit,
     onBack: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onStraighten: (FloatArray) -> Unit = {}
 ) {
+    var showStraighten by remember { mutableStateOf(false) }
+    if (showStraighten && bitmap != null) {
+        StraightenDialog(bitmap = bitmap, onStraighten = onStraighten, onDismiss = { showStraighten = false })
+    }
     val pickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
@@ -168,6 +173,18 @@ fun ArtworkPreviewScreen(
                         .background(Color.Black.copy(alpha = 0.6f), RoundedCornerShape(6.dp))
                         .padding(horizontal = 8.dp, vertical = 4.dp)
                 )
+            }
+        }
+
+        // Garment photo taken at an angle: make the garment or print area a straight rectangle first.
+        if (bitmap != null && analysisState !is AnalysisState.Loading) {
+            Spacer(modifier = Modifier.height(10.dp))
+            OutlinedButton(
+                onClick = { showStraighten = true },
+                shape = RoundedCornerShape(10.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(stringResource(R.string.str_button), color = Cyan)
             }
         }
 

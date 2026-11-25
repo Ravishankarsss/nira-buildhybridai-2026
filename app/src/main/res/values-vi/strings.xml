@@ -895,4 +895,9 @@
     <string name="rep_box_on">Đang chỉnh khung</string>
     <string name="rep_box_hint">Kéo một cạnh hoặc góc của khung xanh. NIRA đo lại khi bạn thả tay.</string>
     <string name="rep_box_reset">Đặt lại khung</string>
+    <string name="str_button">Làm thẳng (4 góc)</string>
+    <string name="str_title">Làm thẳng ảnh</string>
+    <string name="str_hint">Kéo bốn chấm vào bốn góc của áo hoặc vùng in. NIRA biến vùng đó thành hình chữ nhật thẳng trước khi đo.</string>
+    <string name="str_apply">Làm thẳng</string>
+    <string name="str_bad">Bốn góc phải tạo thành khung có các cạnh không cắt nhau.</string>
 </resources>

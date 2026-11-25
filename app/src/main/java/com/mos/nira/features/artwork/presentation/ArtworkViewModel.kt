@@ -382,6 +382,44 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
      * A new image. [kind] is how the user loaded it: PHOTO from "Photograph a garment" (camera or
      * gallery), ARTWORK from "Analyse artwork"; null keeps the current mode (replace image).
      */
+    /**
+     * Straightens the loaded photo: the region inside [corners] (x,y pairs in the loaded picture's
+     * pixels: top-left, top-right, bottom-right, bottom-left) becomes a straight rectangle. The result
+     * replaces the loaded picture and is the file saved with the job. Before measuring only.
+     */
+    fun straightenPhoto(corners: FloatArray) {
+        val bitmap = _uiState.value.selectedBitmap ?: return
+        if (!com.mos.nira.core.image.PhotoStraighten.isUsable(corners)) return
+        viewModelScope.launch {
+            val app = getApplication<Application>()
+            val result = runCatching {
+                withContext(Dispatchers.Default) {
+                    val w = bitmap.width; val h = bitmap.height
+                    val px = IntArray(w * h).also { bitmap.getPixels(it, 0, w, 0, 0, w, h) }
+                    val (ow, oh) = com.mos.nira.core.image.PhotoStraighten.outputSize(corners, maxOf(w, h))
+                    val out = com.mos.nira.core.image.KotlinImageOps.perspectiveWarp(px, w, h, corners, ow, oh)
+                    val straight = Bitmap.createBitmap(out, ow, oh, Bitmap.Config.ARGB_8888)
+                    // Kept with the other camera files until the job saves its own copy.
+                    val dir = File(app.filesDir, com.mos.nira.core.image.CaptureCleanup.DIR).apply { mkdirs() }
+                    val file = File(dir, "straight_${System.currentTimeMillis()}.png")
+                    file.outputStream().use { straight.compress(Bitmap.CompressFormat.PNG, 100, it) }
+                    Triple(straight, file, ow to oh)
+                }
+            }.getOrNull() ?: return@launch
+            val (straight, file, size) = result
+            _uiState.update {
+                it.copy(
+                    selectedBitmap = straight,
+                    selectedImageUri = Uri.fromFile(file),
+                    metadata = it.metadata?.copy(
+                        fileName = "straightened_" + (it.metadata.fileName),
+                        width = size.first, height = size.second, fileSizeBytes = file.length(), mimeType = "image/png"
+                    )
+                )
+            }
+        }
+    }
+
     fun onImageSelected(uri: Uri, kind: InputKind? = null) {
         viewModelScope.launch {
             val cameraExif = readCameraExif(uri)
@@ -537,7 +575,7 @@ class ArtworkViewModel(application: Application) : AndroidViewModel(application)
                 val savedCopy = ArtworkImageProcessor.saveArtworkCopy(context, currentUri, analysisId)
                 val savedImageUri = savedCopy ?: currentUri.toString()
                 // A photo from the in-app camera is now copied into the job: use the copy and delete the capture.
-                if (savedCopy != null && currentUri.authority == "${context.packageName}.fileprovider") {
+                if (savedCopy != null && (currentUri.authority == "${context.packageName}.fileprovider" || currentUri.scheme == "file")) {
                     val capturesDir = File(context.filesDir, com.mos.nira.core.image.CaptureCleanup.DIR)
                     val capture = currentUri.lastPathSegment?.let { File(capturesDir, it) }
                     if (capture != null && com.mos.nira.core.image.CaptureCleanup.isCapture(capture.path, capturesDir) && capture.exists()) {

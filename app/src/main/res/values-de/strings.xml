@@ -896,4 +896,9 @@
     <string name="rep_box_on">Rahmen wird angepasst</string>
     <string name="rep_box_hint">Ziehe eine Seite oder Ecke des cyanfarbenen Rahmens. NIRA misst neu, sobald du loslässt.</string>
     <string name="rep_box_reset">Rahmen zurücksetzen</string>
+    <string name="str_button">Gerade ausrichten (4 Ecken)</string>
+    <string name="str_title">Foto gerade ausrichten</string>
+    <string name="str_hint">Ziehe die vier Punkte auf die vier Ecken des Textils oder der Druckfläche. NIRA macht daraus vor dem Messen ein gerades Rechteck.</string>
+    <string name="str_apply">Ausrichten</string>
+    <string name="str_bad">Die vier Ecken müssen ein Viereck ohne sich kreuzende Seiten bilden.</string>
 </resources>
